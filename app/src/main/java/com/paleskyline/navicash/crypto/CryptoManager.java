@@ -59,6 +59,14 @@ public class CryptoManager {
         return nonce;
     }
 
+    private String encode(byte[] value) {
+        return Base64.encodeToString(value, Base64.NO_WRAP);
+    }
+
+    private byte[] decode(String value) {
+        return Base64.decode(value, Base64.NO_WRAP);
+    }
+
     public KeyPackage generateKeyPackage(char[] password) {
 
         // Generate a master key
@@ -90,7 +98,11 @@ public class CryptoManager {
 
         // Create a key package to persistently store key data
 
-        KeyPackage keyPackage = new KeyPackage(encryptedMasterKey, nonce, salt, opslimit, memlimit);
+        String encodedMasterKey = encode(encryptedMasterKey);
+        String encodedNonce = encode(nonce);
+        String encodedSalt = encode(salt);
+
+        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce, encodedSalt, opslimit, memlimit);
 
         // Override values
 
@@ -110,15 +122,15 @@ public class CryptoManager {
         byte[] passwordBytes = passwordToByteArray(password);
         byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
 
-        byte[] salt = keyPackage.getSalt();
+        byte[] salt = decode(keyPackage.getSalt());
         int opslimit = keyPackage.getOpslimit();
         int memlimit = keyPackage.getMemlimit();
 
         Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
                 passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
 
-        byte[] nonce = keyPackage.getNonce();
-        byte[] encryptedMasterKey = keyPackage.getEncryptedMasterKey();
+        byte[] nonce = decode(keyPackage.getNonce());
+        byte[] encryptedMasterKey = decode(keyPackage.getEncryptedMasterKey());
 
         SecretBox box = new SecretBox(dataPasswordKey);
         masterKey = box.decrypt(nonce, encryptedMasterKey);

@@ -1,22 +1,18 @@
 package com.paleskyline.navicash.crypto;
 
-import android.util.Base64;
-
-import java.util.Arrays;
-
 /**
  * Created by oscar on 4/03/17.
  */
 
 public class KeyPackage {
 
-    private byte[] encryptedMasterKey;
-    private byte[] nonce;
-    private byte[] salt;
+    private String encryptedMasterKey;
+    private String nonce;
+    private String salt;
     private int opslimit;
     private int memlimit;
 
-    public KeyPackage(byte[] encryptedMasterKey, byte[] nonce, byte[] salt, int opslimit, int memlimit) {
+    public KeyPackage(String encryptedMasterKey, String nonce, String salt, int opslimit, int memlimit) {
 
         this.encryptedMasterKey = encryptedMasterKey;
         this.nonce = nonce;
@@ -26,39 +22,27 @@ public class KeyPackage {
 
     }
 
-    protected byte[] getEncryptedMasterKey() {
+    public String getEncryptedMasterKey() {
         return encryptedMasterKey;
     }
 
-    public String getEncodedEncryptedMasterKey() {
-        return Base64.encodeToString(encryptedMasterKey, Base64.NO_WRAP);
-    }
-
-    protected void setEncryptedMasterKey(byte[] encryptedMasterKey) {
+    public void setEncryptedMasterKey(String encryptedMasterKey) {
         this.encryptedMasterKey = encryptedMasterKey;
     }
 
-    protected byte[] getNonce() {
+    public String getNonce() {
         return nonce;
     }
 
-    public String getEncodedNonce() {
-        return Base64.encodeToString(nonce, Base64.NO_WRAP);
-    }
-
-    protected void setNonce(byte[] nonce) {
+    public void setNonce(String nonce) {
         this.nonce = nonce;
     }
 
-    protected byte[] getSalt() {
+    public String getSalt() {
         return salt;
     }
 
-    public String getEncodedSalt() {
-        return Base64.encodeToString(salt, Base64.NO_WRAP);
-    }
-
-    protected void setSalt(byte[] salt) {
+    public void setSalt(String salt) {
         this.salt = salt;
     }
 
@@ -66,7 +50,7 @@ public class KeyPackage {
         return opslimit;
     }
 
-    protected void setOpslimit(int opslimit) {
+    public void setOpslimit(int opslimit) {
         this.opslimit = opslimit;
     }
 
@@ -74,18 +58,7 @@ public class KeyPackage {
         return memlimit;
     }
 
-    protected void setMemlimit(int memlimit) {
+    public void setMemlimit(int memlimit) {
         this.memlimit = memlimit;
-    }
-
-    @Override
-    public String toString() {
-        return "KeyPackage{" +
-                "encryptedMasterKey=" + Arrays.toString(encryptedMasterKey) +
-                ", nonce=" + Arrays.toString(nonce) +
-                ", salt=" + Arrays.toString(salt) +
-                ", opslimit=" + opslimit +
-                ", memlimit=" + memlimit +
-                '}';
     }
 }

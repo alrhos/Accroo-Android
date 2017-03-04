@@ -2,6 +2,9 @@ package com.paleskyline.navicash.model;
 
 import com.paleskyline.navicash.crypto.KeyPackage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by oscar on 4/03/17.
  */
@@ -16,6 +19,11 @@ public class User {
         this.emailAddress = emailAddress;
         this.password = password;
         this.keyPackage = keyPackage;
+    }
+
+    public User(String emailAddress, char[] password) {
+        this.emailAddress = emailAddress;
+        this.password = password;
     }
 
     public String getEmailAddress() {
@@ -40,6 +48,33 @@ public class User {
 
     public void setKeyPackage(KeyPackage keyPackage) {
         this.keyPackage = keyPackage;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("email", emailAddress);
+            json.put("password", String.copyValueOf(password));
+            json.put("masterkey", keyPackage.getEncryptedMasterKey());
+            json.put("salt", keyPackage.getSalt());
+            json.put("nonce", keyPackage.getNonce());
+            json.put("opslimit", keyPackage.getOpslimit());
+            json.put("memlimit", keyPackage.getMemlimit());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public JSONObject toJSONLogin() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("email", emailAddress);
+            json.put("password", String.copyValueOf(password));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 
 }
