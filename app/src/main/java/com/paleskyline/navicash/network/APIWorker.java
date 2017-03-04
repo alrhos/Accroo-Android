@@ -1,9 +1,7 @@
 package com.paleskyline.navicash.network;
 
 import android.content.Context;
-import android.util.Base64;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,14 +11,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.paleskyline.navicash.model.User;
+import com.paleskyline.navicash.crypto.KeyPackage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by oscar on 4/03/17.
@@ -30,7 +26,6 @@ public class APIWorker {
 
     private String baseURL = "http://192.168.1.21:5000/api/";
     private RequestQueue requestQueue;
-
     private static APIWorker instance = null;
 
     public static APIWorker getInstance(Context context) {
@@ -44,11 +39,20 @@ public class APIWorker {
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public void registerAccount(User user) {
+    public void registerAccount(String email, char[] password, KeyPackage keyPackage) {
         String url = baseURL + "register";
-        JSONObject json = user.toJSON();
 
-        JsonObjectRequest request = new JsonObjectRequest(
+        JSONObject json = new JSONObject();
+        try {
+            json.put("email", email);
+            json.put("password", String.copyValueOf(password));
+            json.put("masterkey", keyPackage.getEncryptedMasterKey());
+            json.put("salt", keyPackage.getSalt());
+            json.put("nonce", keyPackage.getNonce());
+            json.put("opslimit", keyPackage.getOpslimit());
+            json.put("memlimit", keyPackage.getMemlimit());
+
+            JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -56,7 +60,6 @@ public class APIWorker {
                         System.out.println(response.toString());
                     }
                 },
-
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -66,47 +69,13 @@ public class APIWorker {
                 });
 
             requestQueue.add(request);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public void getTokenOld(final User user) {
-        String url = baseURL + "token";
-        JSONObject json = user.toJSONLogin();
-
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET, url, json,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response.toString());
-                    }
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("AUTHORIZATION FAILURE");
-                    }
-
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        //add params <key,value>
-                        return params;
-                    }
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String,String> headers = new HashMap<>();
-                        String credentials = user.getEmailAddress() + ":" + String.copyValueOf(user.getPassword());
-                        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                        headers.put("Authorization", auth);
-                        return headers;
-                    }
-                };
-
-        requestQueue.add(request);
-    }
 
     public void getToken(String email, String password) {
 
@@ -118,7 +87,6 @@ public class APIWorker {
                  System.out.println(response.toString());
              }
         };
-
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -142,7 +110,6 @@ public class APIWorker {
                 System.out.println(response.toString());
             }
         };
-
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

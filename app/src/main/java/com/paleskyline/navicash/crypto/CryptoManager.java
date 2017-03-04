@@ -23,7 +23,6 @@ public class CryptoManager {
     private Random random;
     private byte[] masterKey;
     private SecretBox secretBox;
-
     private static CryptoManager instance = null;
 
     public static CryptoManager getInstance() {
@@ -146,11 +145,6 @@ public class CryptoManager {
 
     }
 
-    public byte[] getMasterKey() {
-        return masterKey;
-    }
-
-
     public String[] encrypt(String plainText) {
         byte[] nonce = generateNonce();
         byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
@@ -160,9 +154,18 @@ public class CryptoManager {
         return values;
     }
 
+    public SecureJson encrypt2(String plainText) {
+        byte[] nonce = generateNonce();
+        byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
+        SecureJson secureJson = new SecureJson(encode(cipherText), encode(nonce));
+        return secureJson;
+    }
+
     public String decrypt(String nonce, String cipherText) {
-        byte[] cipherTextBytes = Base64.decode(cipherText, Base64.NO_WRAP);
-        byte[] nonceBytes = Base64.decode(nonce, Base64.NO_WRAP);
+        //byte[] cipherTextBytes = Base64.decode(cipherText, Base64.NO_WRAP);
+        //byte[] nonceBytes = Base64.decode(nonce, Base64.NO_WRAP);
+        byte[] cipherTextBytes = decode(cipherText);
+        byte[] nonceBytes = decode(nonce);
         byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
         String value = null;
         try {

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
-import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.APIWorker;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,24 +25,13 @@ public class MainActivity extends AppCompatActivity {
         char[] loginPassword = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
         char[] dataPassword = {'s', 'e', 'c', 'r', 'e', 't', 's', 'a', 'u', 'c', 'e', '!'};
         String email = "oscar.alston@protonmail.com";
-
-        System.out.println("VARIABLES DECLARED");
-
         KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPassword);
-
-        System.out.println("KEYPACKAGE CREATED");
-
-        User user = new User(email, loginPassword, keyPackage);
-
-        APIWorker.getInstance(this).registerAccount(user);
-
-        System.out.println("DONE");
+        APIWorker.getInstance(this).registerAccount(email, loginPassword, keyPackage);
     }
 
     public void getToken() {
         String email = "oscar.alston@protonmail.com";
         char[] loginPassword = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
-        User user = new User(email, loginPassword);
         APIWorker.getInstance(this).getToken(email, String.copyValueOf(loginPassword));
     }
 
