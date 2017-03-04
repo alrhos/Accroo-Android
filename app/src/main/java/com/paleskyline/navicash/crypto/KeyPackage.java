@@ -26,7 +26,7 @@ public class KeyPackage {
 
     }
 
-    public byte[] getEncryptedMasterKey() {
+    protected byte[] getEncryptedMasterKey() {
         return encryptedMasterKey;
     }
 
@@ -34,11 +34,11 @@ public class KeyPackage {
         return Base64.encodeToString(encryptedMasterKey, Base64.NO_WRAP);
     }
 
-    public void setEncryptedMasterKey(byte[] encryptedMasterKey) {
+    protected void setEncryptedMasterKey(byte[] encryptedMasterKey) {
         this.encryptedMasterKey = encryptedMasterKey;
     }
 
-    public byte[] getNonce() {
+    protected byte[] getNonce() {
         return nonce;
     }
 
@@ -46,11 +46,11 @@ public class KeyPackage {
         return Base64.encodeToString(nonce, Base64.NO_WRAP);
     }
 
-    public void setNonce(byte[] nonce) {
+    protected void setNonce(byte[] nonce) {
         this.nonce = nonce;
     }
 
-    public byte[] getSalt() {
+    protected byte[] getSalt() {
         return salt;
     }
 
@@ -58,7 +58,7 @@ public class KeyPackage {
         return Base64.encodeToString(salt, Base64.NO_WRAP);
     }
 
-    public void setSalt(byte[] salt) {
+    protected void setSalt(byte[] salt) {
         this.salt = salt;
     }
 
@@ -66,7 +66,7 @@ public class KeyPackage {
         return opslimit;
     }
 
-    public void setOpslimit(int opslimit) {
+    protected void setOpslimit(int opslimit) {
         this.opslimit = opslimit;
     }
 
@@ -74,7 +74,7 @@ public class KeyPackage {
         return memlimit;
     }
 
-    public void setMemlimit(int memlimit) {
+    protected void setMemlimit(int memlimit) {
         this.memlimit = memlimit;
     }
 

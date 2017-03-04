@@ -23,7 +23,6 @@ public class CryptoManager {
     private Random random;
     private byte[] masterKey;
     private SecretBox secretBox;
-    //private final int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
 
     private static CryptoManager instance = null;
 
@@ -52,6 +51,12 @@ public class CryptoManager {
         Arrays.fill(byteBuffer.array(), (byte) 0);
 
         return passwordBytes;
+    }
+
+    private byte[] generateNonce() {
+        int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
+        byte[] nonce = random.randomBytes(nonceSize);
+        return nonce;
     }
 
     public KeyPackage generateKeyPackage(char[] password) {
@@ -135,8 +140,7 @@ public class CryptoManager {
 
 
     public String[] encrypt(String plainText) {
-        int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
-        byte[] nonce = random.randomBytes(nonceSize);
+        byte[] nonce = generateNonce();
         byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
         String[] values = new String[2];
         values[0] = Base64.encodeToString(nonce, Base64.NO_WRAP);
