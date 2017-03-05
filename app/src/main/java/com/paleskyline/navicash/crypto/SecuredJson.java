@@ -4,12 +4,12 @@ package com.paleskyline.navicash.crypto;
  * Created by oscar on 4/03/17.
  */
 
-public class SecureJson {
+public class SecuredJson {
 
     private String encryptedJson;
     private String nonce;
 
-    public SecureJson(String encryptedJson, String nonce) {
+    public SecuredJson(String encryptedJson, String nonce) {
         this.encryptedJson = encryptedJson;
         this.nonce = nonce;
     }

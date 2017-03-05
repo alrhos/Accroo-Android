@@ -6,17 +6,18 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
+import com.paleskyline.navicash.crypto.SecuredJson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 
 /**
  * Created by oscar on 4/03/17.
@@ -77,20 +78,25 @@ public class APIWorker {
     }
 
 
-    public void getToken(String email, String password) {
+    public void getToken() {
 
         String url = baseURL + "token";
+        String email = AuthManager.USERNAME;
+        String password = String.copyValueOf(AuthManager.LOGINPASSWORD);
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
              @Override
              public void onResponse(JSONObject response) {
                  System.out.println(response.toString());
+                 // Need to parse response and set token in AuthManager
              }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println("AN ERROR OCCURRED");
+                // If error is because of incorrect login details then re-direct
+                // user to login screen.
             }
         };
 
@@ -108,6 +114,19 @@ public class APIWorker {
             @Override
             public void onResponse(JSONObject response) {
                 System.out.println(response.toString());
+                try {
+                    JSONArray obj = response.getJSONArray("key");
+                    JSONObject arr = obj.getJSONObject(0);
+                    KeyPackage keyPackage = new KeyPackage(
+                            arr.getString("MasterKey"),
+                            arr.getString("Nonce"),
+                            arr.getString("Salt"),
+                            arr.getInt("Opslimit"),
+                            arr.getInt("Memlimit")
+                    );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -124,10 +143,50 @@ public class APIWorker {
 
     }
 
+    public void createGeneralCategory(SecuredJson sJson) {
+
+        String url = baseURL + "generalcategory";
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("category_details", sJson.getEncryptedJson());
+            json.put("nonce", sJson.getNonce());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response.toString());
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("AN ERROR OCCURRED");
+                parseVolleyException(error);
+                error.printStackTrace();
+                //System.out.println(parseVolleyException(error).toString());
+            }
+        };
+
+        AuthRequest authRequest = new AuthRequest(Request.Method.POST, url, json,
+                responseListener, errorListener, AuthRequest.TOKEN, null, null, AuthManager.TOKEN);
+
+        requestQueue.add(authRequest);
+
+    }
+
     private JSONObject parseVolleyException(VolleyError error) {
         JSONObject obj = null;
         NetworkResponse response = error.networkResponse;
-        if (error instanceof ServerError && response != null) {
+        System.out.println("HERE WE ARE");
+        //if (error instanceof ServerError && response != null) {
+        if (response != null && response.statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            // Expired or invalid token
+
+            /*
             try {
                 String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
                 obj = new JSONObject(res);
@@ -136,6 +195,7 @@ public class APIWorker {
             } catch (JSONException e2) {
                 e2.printStackTrace();
             }
+            */
         }
         return obj;
     }

@@ -2,6 +2,7 @@ package com.paleskyline.navicash.crypto;
 
 import android.util.Base64;
 
+import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
 import org.libsodium.jni.SodiumConstants;
 import org.libsodium.jni.crypto.Random;
@@ -33,6 +34,10 @@ public class CryptoManager {
     }
 
     private CryptoManager() {
+        NaCl.sodium();
+        if (Sodium.sodium_init() == -1) {
+            throw new IllegalStateException("Sodium couldn't be initialised");
+        }
         random = new Random();
     }
 
@@ -132,11 +137,11 @@ public class CryptoManager {
         byte[] encryptedMasterKey = decode(keyPackage.getEncryptedMasterKey());
 
         SecretBox box = new SecretBox(dataPasswordKey);
-        masterKey = box.decrypt(nonce, encryptedMasterKey);
+        this.masterKey = box.decrypt(nonce, encryptedMasterKey);
 
         // Initialise the application secret box
 
-        secretBox = new SecretBox(masterKey);
+        this.secretBox = new SecretBox(masterKey);
 
         // Override values
 
@@ -145,25 +150,14 @@ public class CryptoManager {
 
     }
 
-    public String[] encrypt(String plainText) {
+    public SecuredJson encrypt(String plainText) {
         byte[] nonce = generateNonce();
         byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
-        String[] values = new String[2];
-        values[0] = Base64.encodeToString(nonce, Base64.NO_WRAP);
-        values[1] = Base64.encodeToString(cipherText, Base64.NO_WRAP);
-        return values;
-    }
-
-    public SecureJson encrypt2(String plainText) {
-        byte[] nonce = generateNonce();
-        byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
-        SecureJson secureJson = new SecureJson(encode(cipherText), encode(nonce));
+        SecuredJson secureJson = new SecuredJson(encode(cipherText), encode(nonce));
         return secureJson;
     }
 
     public String decrypt(String nonce, String cipherText) {
-        //byte[] cipherTextBytes = Base64.decode(cipherText, Base64.NO_WRAP);
-        //byte[] nonceBytes = Base64.decode(nonce, Base64.NO_WRAP);
         byte[] cipherTextBytes = decode(cipherText);
         byte[] nonceBytes = decode(nonce);
         byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
