@@ -28,6 +28,14 @@ public class APIWorker {
     private String baseURL = "http://192.168.1.21:5000/api/";
     private RequestQueue requestQueue;
     private static APIWorker instance = null;
+    /*
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println("ERROR!!!");
+        }
+    };
+    */
 
     public static APIWorker getInstance(Context context) {
         if (instance == null) {
@@ -145,9 +153,9 @@ public class APIWorker {
 
     public void createGeneralCategory(SecuredJson sJson) {
 
-        String url = baseURL + "generalcategory";
+        final String url = baseURL + "generalcategory";
 
-        JSONObject json = new JSONObject();
+        final JSONObject json = new JSONObject();
         try {
             json.put("category_details", sJson.getEncryptedJson());
             json.put("nonce", sJson.getNonce());
@@ -155,19 +163,30 @@ public class APIWorker {
             e.printStackTrace();
         }
 
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+        final Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                System.out.println("WE'RE HERE!!!!!!!!!!!!!!");
                 System.out.println(response.toString());
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("AN ERROR OCCURRED");
-                parseVolleyException(error);
-                error.printStackTrace();
+                AuthRequest r2 = new AuthRequest(Request.Method.POST, url, json,
+                        responseListener, this, AuthRequest.TOKEN, null, null, null);
+                tokenRefresh(r2);
+
+                //System.out.println("AN ERROR OCCURRED");
+                //parseVolleyException(error);
+                //error.printStackTrace();
                 //System.out.println(parseVolleyException(error).toString());
+
+                // Make request to get new token here and pass sJson as well
+                // If the token request succeeds then it should call back to the
+                // start of this method again to retry.
+
+
             }
         };
 
@@ -181,7 +200,6 @@ public class APIWorker {
     private JSONObject parseVolleyException(VolleyError error) {
         JSONObject obj = null;
         NetworkResponse response = error.networkResponse;
-        System.out.println("HERE WE ARE");
         //if (error instanceof ServerError && response != null) {
         if (response != null && response.statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // Expired or invalid token
@@ -198,5 +216,42 @@ public class APIWorker {
             */
         }
         return obj;
+    }
+
+    public void tokenRefresh(final AuthRequest originalRequest) {
+        System.out.println("REFRESH TEST");
+        String url = baseURL + "token";
+        String email = AuthManager.USERNAME;
+        String password = String.copyValueOf(AuthManager.LOGINPASSWORD);
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String newToken = response.getString("token");
+                    AuthManager.setToken(newToken);
+                    originalRequest.setToken(newToken);
+                    System.out.println(newToken);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("NEW TOKEN OBTAINED...RETRYING ORIGINAL REQUEST");
+
+                requestQueue.add(originalRequest);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("REFRESH ERROR");
+                // If error is because of incorrect login details then re-direct
+                // user to login screen.
+            }
+        };
+
+        AuthRequest authRequest = new AuthRequest(Request.Method.GET, url, null,
+                responseListener, errorListener, AuthRequest.BASIC, email, password, null);
+
+        requestQueue.add(authRequest);
     }
 }

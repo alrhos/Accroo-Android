@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         initKey();
         createGeneralCategory();
 
+
     }
 
     public void register() {
@@ -56,5 +57,6 @@ public class MainActivity extends AppCompatActivity {
         SecuredJson sJson = CryptoManager.getInstance().encrypt(category.getCategoryDetails());
         String token = "eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4ODcwODEzNCwiaWF0IjoxNDg4NzA4MTA0fQ.MQ.Og2C_CmbLqZ8CTDkIloue5Lj7V_ZhKatTfiNjcNRPH4";
         APIWorker.getInstance(this).createGeneralCategory(sJson);
+        //APIWorker.getInstance(this).createGeneralCategory(sJson);
     }
 }

@@ -57,4 +57,8 @@ public class AuthRequest extends JsonObjectRequest {
         headerMap.put("Authorization", "Token " + token);
         return headerMap;
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
