@@ -10,6 +10,10 @@ import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.crypto.SecuredJson;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.network.APIWorker;
+import com.paleskyline.navicash.network.RequestCoordinator;
+import com.paleskyline.navicash.network.RestMethods;
+
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +25,28 @@ public class MainActivity extends AppCompatActivity {
        // register();
         //getToken();
         initKey();
-        createGeneralCategory();
+        RequestCoordinator coordinator = new RequestCoordinator() {
+            @Override
+            protected void onSuccess() {
+                System.out.println("SUCCESS");
+
+                for (JSONObject json : this.returnRequestResults()) {
+                    System.out.println(json.toString());
+                }
+
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("FAILED");
+            }
+        };
+
+        coordinator.addRequests(RestMethods.getToken(0, coordinator), RestMethods.getToken(1, coordinator), RestMethods.getToken(2, coordinator),
+                RestMethods.getToken(3, coordinator), RestMethods.getToken(4, coordinator));
+        coordinator.start(getApplicationContext());
+
+
 
 
     }

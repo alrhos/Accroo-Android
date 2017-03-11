@@ -108,10 +108,10 @@ public class APIWorker {
             }
         };
 
-        AuthRequest authRequest = new AuthRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, AuthRequest.BASIC, email, password, null);
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
+                responseListener, errorListener, RestRequest.BASIC, email, password, null);
 
-        requestQueue.add(authRequest);
+        requestQueue.add(restRequest);
     }
 
     public void getEncryptionKey(String token) {
@@ -144,10 +144,10 @@ public class APIWorker {
             }
         };
 
-        AuthRequest authRequest = new AuthRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, AuthRequest.TOKEN, null, null, token);
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
+                responseListener, errorListener, RestRequest.TOKEN, null, null, token);
 
-        requestQueue.add(authRequest);
+        requestQueue.add(restRequest);
 
     }
 
@@ -173,8 +173,8 @@ public class APIWorker {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                AuthRequest r2 = new AuthRequest(Request.Method.POST, url, json,
-                        responseListener, this, AuthRequest.TOKEN, null, null, null);
+                RestRequest r2 = new RestRequest(Request.Method.POST, url, json,
+                        responseListener, this, RestRequest.TOKEN, null, null, null);
                 tokenRefresh(r2);
 
                 //System.out.println("AN ERROR OCCURRED");
@@ -190,10 +190,10 @@ public class APIWorker {
             }
         };
 
-        AuthRequest authRequest = new AuthRequest(Request.Method.POST, url, json,
-                responseListener, errorListener, AuthRequest.TOKEN, null, null, AuthManager.TOKEN);
+        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json,
+                responseListener, errorListener, RestRequest.TOKEN, null, null, AuthManager.TOKEN);
 
-        requestQueue.add(authRequest);
+        requestQueue.add(restRequest);
 
     }
 
@@ -218,7 +218,7 @@ public class APIWorker {
         return obj;
     }
 
-    public void tokenRefresh(final AuthRequest originalRequest) {
+    public void tokenRefresh(final RestRequest originalRequest) {
         System.out.println("REFRESH TEST");
         String url = baseURL + "token";
         String email = AuthManager.USERNAME;
@@ -249,9 +249,9 @@ public class APIWorker {
             }
         };
 
-        AuthRequest authRequest = new AuthRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, AuthRequest.BASIC, email, password, null);
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
+                responseListener, errorListener, RestRequest.BASIC, email, password, null);
 
-        requestQueue.add(authRequest);
+        requestQueue.add(restRequest);
     }
 }

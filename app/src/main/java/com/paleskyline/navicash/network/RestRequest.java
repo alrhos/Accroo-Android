@@ -15,15 +15,15 @@ import java.util.Map;
  * Created by oscar on 4/03/17.
  */
 
-public class AuthRequest extends JsonObjectRequest {
+public class RestRequest extends JsonObjectRequest {
 
     private String email, password, token, authType;
     public static final String BASIC = "Basic";
     public static final String TOKEN = "Token";
 
-    protected AuthRequest(int method, String url, JSONObject json,
-                       Response.Listener<JSONObject> listener,
-                       Response.ErrorListener errorListener,
+    protected RestRequest(int method, String url, JSONObject json,
+                          Response.Listener<JSONObject> listener,
+                          Response.ErrorListener errorListener,
                           String authType, String email,
                           String password, String token) {
 
