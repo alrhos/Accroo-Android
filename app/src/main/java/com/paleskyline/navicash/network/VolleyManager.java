@@ -13,12 +13,14 @@ public class VolleyManager {
 
     private RequestQueue requestQueue;
     private static VolleyManager instance = null;
+    private static Context context;
 
     private VolleyManager(Context context) {
+        this.context = context;
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public static VolleyManager getInstance(Context context) {
+    public static synchronized VolleyManager getInstance(Context context) {
         if (instance == null) {
             instance = new VolleyManager(context);
         }
@@ -29,6 +31,10 @@ public class VolleyManager {
         if (requestQueue != null) {
             requestQueue.add(restRequest);
         }
+    }
+
+    public void flushRequests(String tag) {
+        requestQueue.cancelAll(tag);
     }
 
 

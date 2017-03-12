@@ -108,10 +108,14 @@ public class APIWorker {
             }
         };
 
+        /*
+
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
                 responseListener, errorListener, RestRequest.BASIC, email, password, null);
 
         requestQueue.add(restRequest);
+
+        */
     }
 
     public void getEncryptionKey(String token) {
@@ -143,15 +147,17 @@ public class APIWorker {
                 System.out.println("AN ERROR OCCURRED");
             }
         };
-
+        /*
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
                 responseListener, errorListener, RestRequest.TOKEN, null, null, token);
 
         requestQueue.add(restRequest);
+        */
 
     }
 
     public void createGeneralCategory(SecuredJson sJson) {
+        /*
 
         final String url = baseURL + "generalcategory";
 
@@ -194,6 +200,7 @@ public class APIWorker {
                 responseListener, errorListener, RestRequest.TOKEN, null, null, AuthManager.TOKEN);
 
         requestQueue.add(restRequest);
+        */
 
     }
 
@@ -215,6 +222,8 @@ public class APIWorker {
             }
             */
         }
+
+
         return obj;
     }
 
@@ -230,7 +239,7 @@ public class APIWorker {
                 try {
                     String newToken = response.getString("token");
                     AuthManager.setToken(newToken);
-                    originalRequest.setToken(newToken);
+                    //originalRequest.setToken(newToken);
                     System.out.println(newToken);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -249,9 +258,12 @@ public class APIWorker {
             }
         };
 
+        /*
+
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
                 responseListener, errorListener, RestRequest.BASIC, email, password, null);
 
         requestQueue.add(restRequest);
+        */
     }
 }

@@ -23,47 +23,37 @@ public class RestMethods {
 
     private RestMethods() {}
 
-    public static RestRequest getToken(final RequestCoordinator coordinator, final RestRequest originalRequest) {
+    protected static RestRequest getToken(final RequestCoordinator coordinator) {
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     AuthManager.setToken(response.getString("token"));
-                    if (originalRequest != null) {
-
-                    }
-                    //System.out.println(response.getString("token"));
-                    System.out.println("TOKEN HAS BEEN AQUIRED");
+                    coordinator.tokenRefresh();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                coordinator.done();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("AN ERROR OCCURRED");
                 JSONObject json = parseVolleyException(error);
                 coordinator.onFailure(json);
-                // If error is because of incorrect login details then re-direct
-                // user to login screen.
             }
         };
 
         String url = baseURL + "token";
-        String email = AuthManager.USERNAME;
-        String password = String.copyValueOf(AuthManager.LOGINPASSWORD);
 
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.BASIC, email, password, null);
+                responseListener, errorListener, RestRequest.BASIC, coordinator.getTag());
 
         return restRequest;
 
     }
 
-    private int getResponseCode(VolleyError error) {
+    private static int getResponseCode(VolleyError error) {
         NetworkResponse response = error.networkResponse;
         if (response != null) {
             return response.statusCode;
@@ -85,25 +75,29 @@ public class RestMethods {
         return json;
     }
 
-    public static RestRequest getEncryptionKey(final RequestCoordinator coordinator) {
-
-        String url = baseURL + "key";
+    public static RestRequest getEncryptionKey(final int index, final RequestCoordinator coordinator) {
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                coordinator.done();
+                System.out.println("WE HAVE A RESPONSE FOR GET ENCRYPTION KEY");
+                coordinator.done(index, response);
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("AN ERROR OCCURRED");
+                int responseCode = getResponseCode(error);
+                JSONObject json = parseVolleyException(error);
+                coordinator.receiveError(responseCode, json);
+                System.out.println("THERE WAS AN ERROR IN GET ENCRYPTION KEY");
             }
         };
 
+        String url = baseURL + "key";
+
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.TOKEN, null, null, AuthManager.TOKEN);
+                responseListener, errorListener, RestRequest.TOKEN, coordinator.getTag());
 
         return restRequest;
 

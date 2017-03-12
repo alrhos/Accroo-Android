@@ -17,6 +17,8 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String tag = "MAIN";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,13 +27,14 @@ public class MainActivity extends AppCompatActivity {
        // register();
         //getToken();
         initKey();
-        RequestCoordinator coordinator = new RequestCoordinator() {
+        RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
             @Override
             protected void onSuccess() {
                 System.out.println("SUCCESS");
 
                 for (JSONObject json : this.returnRequestResults()) {
                     System.out.println(json.toString());
+                    System.out.println("RESULT PARSED");
                 }
 
             }
@@ -42,9 +45,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        /*
+        RestRequest request = RestMethods.getEncryptionKey(0, coordinator);
+        coordinator.addRequests(request);
+        coordinator.start();
+        */
+
+
+        coordinator.addRequests(RestMethods.getEncryptionKey(0, coordinator), RestMethods.getEncryptionKey(1, coordinator));
+        coordinator.start();
+
+        /*
         coordinator.addRequests(RestMethods.getToken(0, coordinator), RestMethods.getToken(1, coordinator), RestMethods.getToken(2, coordinator),
                 RestMethods.getToken(3, coordinator), RestMethods.getToken(4, coordinator));
         coordinator.start(getApplicationContext());
+        */
 
 
 

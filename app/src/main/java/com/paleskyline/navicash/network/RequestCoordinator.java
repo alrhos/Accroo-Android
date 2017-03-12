@@ -4,9 +4,8 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by oscar on 11/03/17.
@@ -15,24 +14,39 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 public abstract class RequestCoordinator {
 
     private int doneCount = 0;
+    private Context context;
+    private String tag;
     private ArrayList<RestRequest> requests;
-    //private T[] requestResults;
     private JSONObject[] requestResults;
 
-    public RequestCoordinator() {
+
+    private ArrayList<RestRequest> retryRequests;
+
+    public RequestCoordinator(Context context, String tag) {
+        this.context = context;
+        this.tag = tag;
         requests = new ArrayList<>();
+        retryRequests = new ArrayList<>();
+    }
+
+    protected String getTag() {
+        return tag;
     }
 
     public void addRequests(RestRequest... requests) {
         for (RestRequest request : requests) {
             this.requests.add(request);
+            try {
+                retryRequests.add((RestRequest) request.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+
         }
         requestResults = new JSONObject[this.requests.size()];
-
-
     }
 
-    public void start(Context context) {
+    public void start() {
         if (!requests.isEmpty()) {
             for (RestRequest request : requests) {
                 VolleyManager.getInstance(context).addRequest(request);
@@ -40,14 +54,43 @@ public abstract class RequestCoordinator {
         }
     }
 
-    protected synchronized void receiveData(int index, JSONObject data) {
+    protected synchronized void done(int index, JSONObject data) {
         requestResults[index] = data;
-    }
-
-    protected synchronized void done() {
         doneCount++;
         if (doneCount == requests.size()) {
             onSuccess();
+        }
+    }
+
+    protected synchronized void tokenRefresh() {
+        System.out.println("TOKEN REFRESH SUCCESSFUL - RETRYING ORIGINAL REQUESTS");
+        doneCount = 0;
+        retry();
+        //start();
+    }
+
+    // TEST METHOD
+    protected void retry() {
+        System.out.println("RETRYING");
+        if (!retryRequests.isEmpty()) {
+            for (RestRequest request : retryRequests) {
+                VolleyManager.getInstance(context).addRequest(request);
+            }
+        }
+    }
+
+    protected synchronized void receiveError(int responseCode, JSONObject json) {
+        System.out.println("RECEIVED ERROR CODE " + responseCode);
+        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            // Remove all requests from the request queue
+            VolleyManager.getInstance(context).flushRequests(tag);
+            // Create a request for a new token
+            RestRequest tokenRequest = RestMethods.getToken(this);
+            VolleyManager.getInstance(context).addRequest(tokenRequest);
+        } else {
+            // Remove any existing requests from the queue
+            VolleyManager.getInstance(context).flushRequests(tag);
+            onFailure(json);
         }
     }
 
@@ -64,5 +107,6 @@ public abstract class RequestCoordinator {
 
     protected abstract void onSuccess();
 
-    protected abstract void onFailure(T data);
+    protected abstract void onFailure(JSONObject json);
+
 }
