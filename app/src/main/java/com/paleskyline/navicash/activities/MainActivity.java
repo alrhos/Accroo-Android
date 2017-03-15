@@ -7,12 +7,13 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
-import com.paleskyline.navicash.crypto.SecuredJson;
+import com.paleskyline.navicash.crypto.SecurePayload;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.network.APIWorker;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,27 +43,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onFailure(JSONObject json) {
                 System.out.println("FAILED");
+                System.out.println(json.toString());
             }
         };
 
-        /*
-        RestRequest request = RestMethods.getEncryptionKey(0, coordinator);
-        coordinator.addRequests(request);
-        coordinator.start();
-        */
 
+        char[] loginPassword = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
+        char[] dataPassword = {'s', 'e', 'c', 'r', 'e', 't', 's', 'a', 'u', 'c', 'e', '!'};
+        String email = "oscar.alston@protonmail.com";
+        KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPassword);
 
-        coordinator.addRequests(RestMethods.getEncryptionKey(0, coordinator), RestMethods.getEncryptionKey(1, coordinator));
-        coordinator.start();
+        JSONObject json = new JSONObject();
+        try {
 
-        /*
-        coordinator.addRequests(RestMethods.getToken(0, coordinator), RestMethods.getToken(1, coordinator), RestMethods.getToken(2, coordinator),
-                RestMethods.getToken(3, coordinator), RestMethods.getToken(4, coordinator));
-        coordinator.start(getApplicationContext());
-        */
+            json.put("email", email);
+            json.put("password", loginPassword);
+            json.put("masterkey", keyPackage.getEncryptedMasterKey());
+            json.put("salt", keyPackage.getSalt());
+            json.put("nonce", keyPackage.getNonce());
+            json.put("opslimit", keyPackage.getOpslimit());
+            json.put("memlimit", keyPackage.getMemlimit());
 
+            coordinator.addRequests(RestMethods.registerAccount(0, coordinator, json));
+            coordinator.start();
 
-
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -94,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public void createGeneralCategory() {
         GeneralCategory category = new GeneralCategory("Holidays", "Expenses");
         System.out.println("Value is: " + category.getCategoryDetails());
-        SecuredJson sJson = CryptoManager.getInstance().encrypt(category.getCategoryDetails());
+        SecurePayload sJson = CryptoManager.getInstance().encrypt(category.getCategoryDetails());
         String token = "eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4ODcwODEzNCwiaWF0IjoxNDg4NzA4MTA0fQ.MQ.Og2C_CmbLqZ8CTDkIloue5Lj7V_ZhKatTfiNjcNRPH4";
         APIWorker.getInstance(this).createGeneralCategory(sJson);
         //APIWorker.getInstance(this).createGeneralCategory(sJson);

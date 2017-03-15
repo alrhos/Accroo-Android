@@ -18,7 +18,7 @@ public class AuthManager {
             16777216
     );
 
-    public static void setToken(String token) {
+    public static synchronized void setToken(String token) {
         TOKEN = token;
     }
 

@@ -11,7 +11,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
-import com.paleskyline.navicash.crypto.SecuredJson;
+import com.paleskyline.navicash.crypto.SecurePayload;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -156,7 +156,7 @@ public class APIWorker {
 
     }
 
-    public void createGeneralCategory(SecuredJson sJson) {
+    public void createGeneralCategory(SecurePayload sJson) {
         /*
 
         final String url = baseURL + "generalcategory";

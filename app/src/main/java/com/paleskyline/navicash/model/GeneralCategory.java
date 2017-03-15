@@ -7,10 +7,12 @@ import org.json.JSONObject;
  * Created by oscar on 4/03/17.
  */
 
-public class GeneralCategory {
+public class GeneralCategory implements Securable {
 
     private int id;
     private String categoryName, rootCategory;
+
+    private GeneralCategory() {}
 
     public GeneralCategory(int id, JSONObject json) {
         this.id = id;
@@ -51,7 +53,8 @@ public class GeneralCategory {
         this.rootCategory = rootCategory;
     }
 
-    public String getCategoryDetails() {
+    @Override
+    public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
             json.put("name", categoryName);
@@ -59,7 +62,12 @@ public class GeneralCategory {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return json.toString();
+        return json;
+    }
+
+    @Override
+    public GeneralCategory fromJSON(JSONObject json) {
+        return null;
     }
 
 }

@@ -23,6 +23,32 @@ public class RestMethods {
 
     private RestMethods() {}
 
+    public static RestRequest registerAccount(final int index, final RequestCoordinator coordinator,
+                                             JSONObject json) {
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                coordinator.done(index, response);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                int responseCode = getResponseCode(error);
+                JSONObject json = parseVolleyException(error);
+                coordinator.receiveError(responseCode, json);
+            }
+        };
+
+        String url = baseURL + "register";
+
+        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
+                errorListener, RestRequest.NONE, coordinator.getTag());
+
+        return restRequest;
+    }
+
     protected static RestRequest getToken(final RequestCoordinator coordinator) {
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
@@ -53,6 +79,57 @@ public class RestMethods {
 
     }
 
+    public static RestRequest getEncryptionKey(final int index, final RequestCoordinator coordinator) {
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                coordinator.done(index, response);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                int responseCode = getResponseCode(error);
+                JSONObject json = parseVolleyException(error);
+                coordinator.receiveError(responseCode, json);
+            }
+        };
+
+        String url = baseURL + "key";
+
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
+                responseListener, errorListener, RestRequest.TOKEN, coordinator.getTag());
+
+        return restRequest;
+
+    }
+
+    public static RestRequest addGeneralCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                coordinator.done(index, response);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                int responseCode = getResponseCode(error);
+                JSONObject json = parseVolleyException(error);
+                coordinator.receiveError(responseCode, json);
+            }
+        };
+
+        String url = baseURL + "generalcategory";
+
+        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
+                errorListener, RestRequest.TOKEN, coordinator.getTag());
+
+        return restRequest;
+    }
+
     private static int getResponseCode(VolleyError error) {
         NetworkResponse response = error.networkResponse;
         if (response != null) {
@@ -73,34 +150,6 @@ public class RestMethods {
             }
         }
         return json;
-    }
-
-    public static RestRequest getEncryptionKey(final int index, final RequestCoordinator coordinator) {
-
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println("WE HAVE A RESPONSE FOR GET ENCRYPTION KEY");
-                coordinator.done(index, response);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                int responseCode = getResponseCode(error);
-                JSONObject json = parseVolleyException(error);
-                coordinator.receiveError(responseCode, json);
-                System.out.println("THERE WAS AN ERROR IN GET ENCRYPTION KEY");
-            }
-        };
-
-        String url = baseURL + "key";
-
-        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.TOKEN, coordinator.getTag());
-
-        return restRequest;
-
     }
 
 }

@@ -22,6 +22,7 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     private String authType;
     public static final String BASIC = "Basic";
     public static final String TOKEN = "Token";
+    public static final String NONE = "None";
 
     public RestRequest(int method, String url, JSONObject json,
                           Response.Listener<JSONObject> listener,
@@ -43,6 +44,8 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
             return createBasicAuthHeader();
         } else if (authType.equals(TOKEN)) {
             return createTokenAuthHeader();
+        } else if (authType.equals(NONE)) {
+            return createEmptyHeader();
         }
         return null;
     }
@@ -58,6 +61,11 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     Map<String, String> createTokenAuthHeader() {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Authorization", "Token " + AuthManager.TOKEN);
+        return headerMap;
+    }
+
+    Map<String, String> createEmptyHeader() {
+        Map<String, String> headerMap = new HashMap<>();
         return headerMap;
     }
 

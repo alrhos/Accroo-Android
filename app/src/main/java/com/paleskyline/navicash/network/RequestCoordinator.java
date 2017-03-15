@@ -63,15 +63,11 @@ public abstract class RequestCoordinator {
     }
 
     protected synchronized void tokenRefresh() {
-        System.out.println("TOKEN REFRESH SUCCESSFUL - RETRYING ORIGINAL REQUESTS");
         doneCount = 0;
         retry();
-        //start();
     }
 
-    // TEST METHOD
     protected void retry() {
-        System.out.println("RETRYING");
         if (!retryRequests.isEmpty()) {
             for (RestRequest request : retryRequests) {
                 VolleyManager.getInstance(context).addRequest(request);
@@ -80,7 +76,6 @@ public abstract class RequestCoordinator {
     }
 
     protected synchronized void receiveError(int responseCode, JSONObject json) {
-        System.out.println("RECEIVED ERROR CODE " + responseCode);
         if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // Remove all requests from the request queue
             VolleyManager.getInstance(context).flushRequests(tag);

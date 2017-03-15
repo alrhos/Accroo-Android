@@ -150,11 +150,11 @@ public class CryptoManager {
 
     }
 
-    public SecuredJson encrypt(String plainText) {
+    public SecurePayload encrypt(String plainText) {
         byte[] nonce = generateNonce();
         byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
-        SecuredJson secureJson = new SecuredJson(encode(cipherText), encode(nonce));
-        return secureJson;
+        SecurePayload securePayload = new SecurePayload(encode(cipherText), encode(nonce));
+        return securePayload;
     }
 
     public String decrypt(String nonce, String cipherText) {
