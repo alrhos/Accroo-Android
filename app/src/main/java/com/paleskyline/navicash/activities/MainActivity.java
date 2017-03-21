@@ -7,7 +7,7 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
-import com.paleskyline.navicash.crypto.SecurePayload;
+import com.paleskyline.navicash.model.EncryptedGeneralCategory;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.network.APIWorker;
 import com.paleskyline.navicash.network.RequestCoordinator;
@@ -28,6 +28,39 @@ public class MainActivity extends AppCompatActivity {
        // register();
         //getToken();
         initKey();
+
+        
+
+        GeneralCategory category = new GeneralCategory("Food and Drink", "Expenses");
+        EncryptedGeneralCategory encryptedGeneralCategory = category.encryptObject();
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("category_details", encryptedGeneralCategory.getPayload().getEncryptedJson());
+            json.put("nonce", encryptedGeneralCategory.getPayload().getNonce());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
+            @Override
+            protected void onSuccess() {
+                System.out.println("SUCCESS");
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("FAILED");
+            }
+        };
+
+        coordinator.addRequests(RestMethods.addGeneralCategory(0, coordinator, json));
+        coordinator.start();
+
+
+
+        /*
+
         RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
             @Override
             protected void onSuccess() {
@@ -48,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
+
         char[] loginPassword = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
         char[] dataPassword = {'s', 'e', 'c', 'r', 'e', 't', 's', 'a', 'u', 'c', 'e', '!'};
         String email = "oscar.alston@protonmail.com";
@@ -57,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             json.put("email", email);
-            json.put("password", loginPassword);
+            json.put("password", String.copyValueOf(loginPassword));
             json.put("masterkey", keyPackage.getEncryptedMasterKey());
             json.put("salt", keyPackage.getSalt());
             json.put("nonce", keyPackage.getNonce());
@@ -70,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        */
 
     }
 
@@ -97,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /*
     public void createGeneralCategory() {
         GeneralCategory category = new GeneralCategory("Holidays", "Expenses");
         System.out.println("Value is: " + category.getCategoryDetails());
@@ -106,4 +142,5 @@ public class MainActivity extends AppCompatActivity {
         APIWorker.getInstance(this).createGeneralCategory(sJson);
         //APIWorker.getInstance(this).createGeneralCategory(sJson);
     }
+    */
 }

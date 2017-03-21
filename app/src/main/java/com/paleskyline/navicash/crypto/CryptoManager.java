@@ -157,10 +157,13 @@ public class CryptoManager {
         return securePayload;
     }
 
-    public String decrypt(String nonce, String cipherText) {
+    public String decrypt(String nonce, String cipherText) throws UnsupportedEncodingException {
         byte[] cipherTextBytes = decode(cipherText);
         byte[] nonceBytes = decode(nonce);
         byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
+        String value = new String(plainText, "UTF-8");
+        return value;
+        /*
         String value = null;
         try {
             value = new String(plainText, "UTF-8");
@@ -169,6 +172,7 @@ public class CryptoManager {
         } finally {
             return value;
         }
+        */
     }
 
 }

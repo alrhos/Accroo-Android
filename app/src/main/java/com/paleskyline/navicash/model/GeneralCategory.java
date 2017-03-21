@@ -1,5 +1,8 @@
 package com.paleskyline.navicash.model;
 
+import com.paleskyline.navicash.crypto.CryptoManager;
+import com.paleskyline.navicash.crypto.SecurePayload;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,8 +14,6 @@ public class GeneralCategory implements Securable {
 
     private int id;
     private String categoryName, rootCategory;
-
-    private GeneralCategory() {}
 
     public GeneralCategory(int id, JSONObject json) {
         this.id = id;
@@ -54,6 +55,22 @@ public class GeneralCategory implements Securable {
     }
 
     @Override
+    public EncryptedGeneralCategory encryptObject() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("name", categoryName);
+            json.put("root_category", rootCategory);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        SecurePayload securePayload = CryptoManager.getInstance().encrypt(json.toString());
+        EncryptedGeneralCategory encryptedGeneralCategory = new EncryptedGeneralCategory(securePayload);
+        return encryptedGeneralCategory;
+    }
+
+    /*
+    @Override
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
@@ -64,10 +81,7 @@ public class GeneralCategory implements Securable {
         }
         return json;
     }
+    */
 
-    @Override
-    public GeneralCategory fromJSON(JSONObject json) {
-        return null;
-    }
 
 }
