@@ -157,6 +157,14 @@ public class CryptoManager {
         return securePayload;
     }
 
+    public String decrypt(SecurePayload payload) throws UnsupportedEncodingException {
+        byte[] cipherTextBytes = decode(payload.getData());
+        byte[] nonceBytes = decode(payload.getNonce());
+        byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
+        String value = new String(plainText, "UTF-8");
+        return value;
+    }
+
     public String decrypt(String nonce, String cipherText) throws UnsupportedEncodingException {
         byte[] cipherTextBytes = decode(cipherText);
         byte[] nonceBytes = decode(nonce);

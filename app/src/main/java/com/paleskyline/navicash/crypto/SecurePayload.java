@@ -6,20 +6,20 @@ package com.paleskyline.navicash.crypto;
 
 public class SecurePayload {
 
-    private String encryptedJson;
+    private String data;
     private String nonce;
 
-    public SecurePayload(String encryptedJson, String nonce) {
-        this.encryptedJson = encryptedJson;
+    public SecurePayload(String data, String nonce) {
+        this.data = data;
         this.nonce = nonce;
     }
 
-    public String getEncryptedJson() {
-        return encryptedJson;
+    public String getData() {
+        return data;
     }
 
-    public void setEncryptedJson(String encryptedJson) {
-        this.encryptedJson = encryptedJson;
+    public void setData(String encryptedJson) {
+        this.data = data;
     }
 
     public String getNonce() {

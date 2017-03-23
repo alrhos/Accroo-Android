@@ -7,7 +7,6 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
-import com.paleskyline.navicash.model.EncryptedGeneralCategory;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.network.APIWorker;
 import com.paleskyline.navicash.network.RequestCoordinator;
@@ -15,6 +14,8 @@ import com.paleskyline.navicash.network.RestMethods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,38 +26,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // register();
-        //getToken();
         initKey();
 
-        
 
-        GeneralCategory category = new GeneralCategory("Food and Drink", "Expenses");
-        EncryptedGeneralCategory encryptedGeneralCategory = category.encryptObject();
 
-        JSONObject json = new JSONObject();
+        GeneralCategory category = new GeneralCategory("Wages", "Income", "moneybag.png");
         try {
-            json.put("category_details", encryptedGeneralCategory.getPayload().getEncryptedJson());
-            json.put("nonce", encryptedGeneralCategory.getPayload().getNonce());
+            JSONObject json = category.encrypt();
+            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
+                @Override
+                protected void onSuccess() {
+                    System.out.println("SUCCESS");
+                }
+
+                @Override
+                protected void onFailure(JSONObject json) {
+                    System.out.println("FAILED");
+                }
+            };
+
+            try {
+                GeneralCategory decrypted = new GeneralCategory(json);
+                System.out.println(decrypted.toString());
+            } catch (JSONException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            coordinator.addRequests(RestMethods.addGeneralCategory(0, coordinator, json));
+            coordinator.start();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
-            @Override
-            protected void onSuccess() {
-                System.out.println("SUCCESS");
-            }
-
-            @Override
-            protected void onFailure(JSONObject json) {
-                System.out.println("FAILED");
-            }
-        };
-
-        coordinator.addRequests(RestMethods.addGeneralCategory(0, coordinator, json));
-        coordinator.start();
-
 
 
         /*
