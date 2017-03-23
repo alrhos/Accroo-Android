@@ -83,7 +83,8 @@ public class CryptoManager {
 
         // Derive key from password byte array
 
-        byte[] salt = random.randomBytes(Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes());
+        int saltSize = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
+        byte[] salt = random.randomBytes(saltSize);
         byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
 
         int opslimit = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
