@@ -130,6 +130,31 @@ public class RestMethods {
         return restRequest;
     }
 
+    public static RestRequest addSubCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                coordinator.done(index, response);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                int responseCode = getResponseCode(error);
+                JSONObject json = parseVolleyException(error);
+                coordinator.receiveError(responseCode, json);
+            }
+        };
+
+        String url = baseURL + "subcategory";
+
+        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
+                errorListener, RestRequest.TOKEN, coordinator.getTag());
+
+        return restRequest;
+    }
+
     private static int getResponseCode(VolleyError error) {
         NetworkResponse response = error.networkResponse;
         if (response != null) {

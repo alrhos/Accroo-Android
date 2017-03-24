@@ -77,7 +77,7 @@ public class GeneralCategory implements Securable {
         SecurePayload payload = new SecurePayload(json.getString("payload"), json.getString("nonce"));
         String categoryString = CryptoManager.getInstance().decrypt(payload);
         JSONObject categoryData = new JSONObject(categoryString);
-     //   this.id = json.getInt("id");
+        this.id = json.getInt("id");
         this.categoryName = categoryData.getString("categoryName");
         this.rootCategory = categoryData.getString("rootCategory");
         this.iconFile = categoryData.getString("iconFile");
