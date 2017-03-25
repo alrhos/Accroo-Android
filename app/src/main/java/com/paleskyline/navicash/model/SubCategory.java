@@ -80,4 +80,5 @@ public class SubCategory implements Securable {
                 ", categoryName='" + categoryName + '\'' +
                 '}';
     }
+
 }

@@ -17,11 +17,11 @@ public abstract class RequestCoordinator {
     private Context context;
     private String tag;
     private ArrayList<RestRequest> requests;
-    private ArrayList<JSONObject> dataReceiver;
+    private JSONObject[] dataReceiver;
 
     private ArrayList<RestRequest> retryRequests;
 
-    public RequestCoordinator(Context context, String tag, ArrayList<JSONObject> dataReceiver) {
+    public RequestCoordinator(Context context, String tag, JSONObject[] dataReceiver) {
         this.context = context;
         this.tag = tag;
         this.dataReceiver = dataReceiver;
@@ -53,7 +53,7 @@ public abstract class RequestCoordinator {
     }
 
     protected synchronized void done(int index, JSONObject data) {
-        dataReceiver.add(index, data);
+        dataReceiver[index] = data;
         doneCount++;
         if (doneCount == requests.size()) {
             onSuccess();

@@ -20,8 +20,16 @@ import java.io.UnsupportedEncodingException;
 public class RestMethods {
 
     private final static String baseURL = "http://192.168.1.21:5000/api/";
+    public final static String REGISTER = "register";
+    public final static String KEY = "key";
+    public final static String GENERAL_CATEGORY = "generalcategory";
+    public final static String SUB_CATEGORY = "subcategory";
+    public final static String TRANSACTION = "transaction";
+    public final static String TRANSACTION_PARAM = "transaction?transactionid=";
 
     private RestMethods() {}
+
+    /*
 
     public static RestRequest registerAccount(final int index, final RequestCoordinator coordinator,
                                              JSONObject json) {
@@ -36,6 +44,8 @@ public class RestMethods {
 
         return restRequest;
     }
+
+    */
 
     protected static RestRequest getToken(final RequestCoordinator coordinator) {
 
@@ -67,6 +77,8 @@ public class RestMethods {
 
     }
 
+    /*
+
     public static RestRequest getEncryptionKey(final int index, final RequestCoordinator coordinator) {
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
@@ -93,56 +105,33 @@ public class RestMethods {
 
     }
 
-    public static RestRequest addGeneralCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
+    */
+
+    public static RestRequest get(final int index, final String endpoint, String parameter,
+                                   final RequestCoordinator coordinator) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = baseURL + "generalcategory";
-
-        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
-                errorListener, RestRequest.TOKEN, coordinator.getTag());
-
-        return restRequest;
-    }
-
-    public static RestRequest addSubCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
-
-        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = baseURL + "subcategory";
-
-        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
-                errorListener, RestRequest.TOKEN, coordinator.getTag());
-
-        return restRequest;
-    }
-
-    public static RestRequest getGeneralCategories(final int index, final RequestCoordinator coordinator) {
-
-        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = baseURL + "generalcategory";
-
+        String url = baseURL + endpoint;
+        if (parameter != null) {
+            url += parameter;
+        }
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
                 errorListener, RestRequest.TOKEN, coordinator.getTag());
-
         return restRequest;
+
     }
 
-    public static RestRequest getSubCategories(final int index, final RequestCoordinator coordinator) {
+    public static RestRequest post(final int index, final String endpoint,
+                                   final RequestCoordinator coordinator, JSONObject json) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = baseURL + "subcategory";
-
-        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
+        String url = baseURL + endpoint;
+        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
                 errorListener, RestRequest.TOKEN, coordinator.getTag());
-
         return restRequest;
+
     }
 
     private static int getResponseCode(VolleyError error) {

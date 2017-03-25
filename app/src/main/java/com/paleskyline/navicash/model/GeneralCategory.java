@@ -95,36 +95,4 @@ public class GeneralCategory implements Securable {
                 '}';
     }
 
-    /*
-    @Override
-    public EncryptedGeneralCategory encryptObject() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("name", categoryName);
-            json.put("root_category", rootCategory);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        SecurePayload securePayload = CryptoManager.getInstance().encrypt(json.toString());
-        EncryptedGeneralCategory encryptedGeneralCategory = new EncryptedGeneralCategory(securePayload);
-        return encryptedGeneralCategory;
-    }
-
-
-
-    @Override
-    public JSONObject toJSON() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("name", categoryName);
-            json.put("root_category", rootCategory);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
-    */
-
-
 }

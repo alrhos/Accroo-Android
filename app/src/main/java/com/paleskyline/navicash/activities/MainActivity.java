@@ -10,6 +10,7 @@ import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 
@@ -29,14 +30,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //register();
 
-        initKey();
-        categoryLoader();
+        register();
+
+        //initKey();
+        //categoryLoader();
         //getGeneralCategories();
         //insertGeneralCategories();
         //insertSubCategories();
         //getSubCategories();
+        //insertTransaction();
+        //defaultLoader();
 
 
 
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             json.put("opslimit", keyPackage.getOpslimit());
             json.put("memlimit", keyPackage.getMemlimit());
 
-            ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+            final JSONObject[] dataReceiver = new JSONObject[1];
             RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
                 @Override
                 protected void onSuccess() {
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.registerAccount(0, coordinator, json));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator, json));
             coordinator.start();
 
         } catch (JSONException e) {
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(objects.toString());
 
 
-            ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+            final JSONObject[] dataReceiver = new JSONObject[1];
             RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
                 @Override
                 protected void onSuccess() {
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.addGeneralCategory(0, coordinator, objects));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY, coordinator, objects));
             coordinator.start();
 
         } catch (JSONException e) {
@@ -150,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             objects.put("categories", array);
             System.out.println(objects.toString());
 
-            ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+            final JSONObject[] dataReceiver = new JSONObject[1];
             RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
                 @Override
                 protected void onSuccess() {
@@ -163,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.addSubCategory(0, coordinator, objects));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY, coordinator, objects));
             coordinator.start();
 
 
@@ -173,8 +177,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void insertTransaction() {
+
+        Transaction t1 = new Transaction(1, "10/02/2017", 15.39, "test description");
+        try {
+            JSONObject json = t1.encrypt();
+            System.out.println(json.toString());
+            final JSONObject[] dataReceiver = new JSONObject[1];
+            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
+                @Override
+                protected void onSuccess() {
+                    System.out.println("SUCCESS");
+                }
+
+                @Override
+                protected void onFailure(JSONObject json) {
+                    System.out.println("FAILED");
+                }
+            };
+
+            coordinator.addRequests(RestMethods.post(0, RestMethods.TRANSACTION, coordinator, json));
+            coordinator.start();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /*
     public void getGeneralCategories() {
-        final ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+        final JSONObject[] dataReceiver = new JSONObject[1];
         final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -197,12 +230,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        coordinator.addRequests(RestMethods.getGeneralCategories(0, coordinator));
+        coordinator.addRequests(RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator));
         coordinator.start();
     }
 
+
     public void getSubCategories() {
-        final ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+        final JSONObject[] dataReceiver = new JSONObject[1];
         final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -229,12 +263,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        coordinator.addRequests(RestMethods.getSubCategories(0, coordinator));
+        coordinator.addRequests(RestMethods.get(0, RestMethods.SUB_CATEGORY, null, coordinator));
         coordinator.start();
     }
+    */
 
-    public void categoryLoader() {
-        final ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+    public void defaultLoader() {
+        final JSONObject[] dataReceiver = new JSONObject[3];
         final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -247,20 +282,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        coordinator.addRequests(RestMethods.getGeneralCategories(0, coordinator), RestMethods.getSubCategories(1, coordinator));
+        coordinator.addRequests(RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator),
+                RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator),
+                RestMethods.get(2, RestMethods.TRANSACTION_PARAM, "1", coordinator));
         coordinator.start();
     }
 
-    class DecryptionTask extends AsyncTask<ArrayList<JSONObject>, Void, Void> {
+    class DecryptionTask extends AsyncTask<JSONObject[], Void, Void> {
 
         private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
         private ArrayList<SubCategory> subCategories = new ArrayList<>();
+        private ArrayList<Transaction> transactions = new ArrayList<>();
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            System.out.println("ABOUT TO START JOB");
         }
 
         @Override
@@ -269,26 +306,34 @@ public class MainActivity extends AppCompatActivity {
             for (GeneralCategory gc : generalCategories) {
                 System.out.println(gc.toString());
             }
-            System.out.println("\n");
             for (SubCategory sc : subCategories) {
                 System.out.println(sc.toString());
+            }
+            for (Transaction t : transactions) {
+                System.out.println(t.toString());
             }
         }
 
         @Override
-        protected Void doInBackground(ArrayList<JSONObject>... dataReceiver) {
-            JSONObject generalCategoriesJson = dataReceiver[0].get(0);
-            JSONObject subCategoriesJson = dataReceiver[0].get(1);
+        protected Void doInBackground(JSONObject[]... dataReceiver) {
+            JSONObject generalCategoriesJson = dataReceiver[0][0];
+            JSONObject subCategoriesJson = dataReceiver[0][1];
+            JSONObject transactionsJson = dataReceiver[0][2];
             try {
                 JSONArray generalCategoriesArray = generalCategoriesJson.getJSONArray("categories");
                 for (int i = 0; i < generalCategoriesArray.length(); i++) {
-                    GeneralCategory category = new GeneralCategory(generalCategoriesArray.getJSONObject(i));
-                    generalCategories.add(category);
+                    GeneralCategory generalCategory = new GeneralCategory(generalCategoriesArray.getJSONObject(i));
+                    generalCategories.add(generalCategory);
                 }
                 JSONArray subCategoriesArray = subCategoriesJson.getJSONArray("categories");
                 for (int j = 0; j < subCategoriesArray.length(); j++) {
-                    SubCategory category = new SubCategory(subCategoriesArray.getJSONObject(j));
-                    subCategories.add(category);
+                    SubCategory subCategory = new SubCategory(subCategoriesArray.getJSONObject(j));
+                    subCategories.add(subCategory);
+                }
+                JSONArray transactionsArray = transactionsJson.getJSONArray("transactions");
+                for (int k = 0; k < transactionsArray.length(); k++) {
+                    Transaction transaction = new Transaction(transactionsArray.getJSONObject(k));
+                    transactions.add(transaction);
                 }
             } catch (JSONException | UnsupportedEncodingException e) {
                 e.printStackTrace();
