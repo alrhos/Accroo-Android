@@ -16,6 +16,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private final static String tag = "MAIN";
@@ -25,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //register();
 
         initKey();
+        //getGeneralCategories();
+        //insertGeneralCategories();
         insertSubCategories();
 
 
@@ -55,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
             json.put("opslimit", keyPackage.getOpslimit());
             json.put("memlimit", keyPackage.getMemlimit());
 
-            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
+            ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
                 @Override
                 protected void onSuccess() {
                     System.out.println("SUCCESS");
@@ -96,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(objects.toString());
 
 
-            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
+            ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
                 @Override
                 protected void onSuccess() {
                     System.out.println("SUCCESS");
@@ -117,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void insertSubCategories() {
-        SubCategory category = new SubCategory("Eating out", 2);
-        SubCategory category2 = new SubCategory("Take away", 6);
+        SubCategory category = new SubCategory("Eating out", 3);
+        SubCategory category2 = new SubCategory("Take away", 1);
 
         try {
 
@@ -140,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
             objects.put("categories", array);
             System.out.println(objects.toString());
 
-
-            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag) {
+            ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+            RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
                 @Override
                 protected void onSuccess() {
                     System.out.println("SUCCESS");
@@ -161,6 +168,38 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getGeneralCategories() {
+        final ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+        final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                ArrayList<GeneralCategory> categories = new ArrayList<>();
+                JSONObject categoriesJson = dataReceiver.get(0);
+                try {
+                    JSONArray array = categoriesJson.getJSONArray("categories");
+                    for (int i = 0; i < array.length(); i++) {
+                        GeneralCategory category = new GeneralCategory(array.getJSONObject(i));
+                        categories.add(category);
+                    }
+                } catch (JSONException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("FAILED");
+            }
+        };
+
+        coordinator.addRequests(RestMethods.getGeneralCategories(0, coordinator));
+        coordinator.start();
+
+
+
+
     }
 
 }

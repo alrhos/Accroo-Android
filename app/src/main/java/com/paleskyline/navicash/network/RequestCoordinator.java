@@ -17,14 +17,25 @@ public abstract class RequestCoordinator {
     private Context context;
     private String tag;
     private ArrayList<RestRequest> requests;
-    private JSONObject[] requestResults;
+    private ArrayList<JSONObject> dataReceiver;
+    //private JSONObject[] requestResults;
 
 
     private ArrayList<RestRequest> retryRequests;
+    /*
 
     public RequestCoordinator(Context context, String tag) {
         this.context = context;
         this.tag = tag;
+        requests = new ArrayList<>();
+        retryRequests = new ArrayList<>();
+    }
+    */
+
+    public RequestCoordinator(Context context, String tag, ArrayList<JSONObject> dataReceiver) {
+        this.context = context;
+        this.tag = tag;
+        this.dataReceiver = dataReceiver;
         requests = new ArrayList<>();
         retryRequests = new ArrayList<>();
     }
@@ -43,7 +54,7 @@ public abstract class RequestCoordinator {
             }
 
         }
-        requestResults = new JSONObject[this.requests.size()];
+       // requestResults = new JSONObject[this.requests.size()];
     }
 
     public void start() {
@@ -55,7 +66,10 @@ public abstract class RequestCoordinator {
     }
 
     protected synchronized void done(int index, JSONObject data) {
-        requestResults[index] = data;
+       // requestResults[index] = data;
+
+        dataReceiver.add(index, data);
+
         doneCount++;
         if (doneCount == requests.size()) {
             onSuccess();
@@ -89,6 +103,8 @@ public abstract class RequestCoordinator {
         }
     }
 
+    /*
+
     public JSONObject getData(int index) {
         if (index >= 0 && index < requestResults.length) {
             return requestResults[index];
@@ -99,6 +115,8 @@ public abstract class RequestCoordinator {
     public JSONObject[] returnRequestResults() {
         return requestResults;
     }
+
+    */
 
     protected abstract void onSuccess();
 

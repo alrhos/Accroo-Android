@@ -26,6 +26,7 @@ public class RestMethods {
     public static RestRequest registerAccount(final int index, final RequestCoordinator coordinator,
                                              JSONObject json) {
 
+        /*
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -40,6 +41,10 @@ public class RestMethods {
                 coordinator.receiveError(responseCode, json);
             }
         };
+        */
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + "register";
 
@@ -107,6 +112,8 @@ public class RestMethods {
 
     public static RestRequest addGeneralCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
 
+        /*
+
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -121,6 +128,11 @@ public class RestMethods {
                 coordinator.receiveError(responseCode, json);
             }
         };
+
+        */
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + "generalcategory";
 
@@ -132,6 +144,7 @@ public class RestMethods {
 
     public static RestRequest addSubCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
 
+        /*
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -146,10 +159,27 @@ public class RestMethods {
                 coordinator.receiveError(responseCode, json);
             }
         };
+        */
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + "subcategory";
 
         RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
+                errorListener, RestRequest.TOKEN, coordinator.getTag());
+
+        return restRequest;
+    }
+
+    public static RestRequest getGeneralCategories(final int index, final RequestCoordinator coordinator) {
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
+
+        String url = baseURL + "generalcategory";
+
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
                 errorListener, RestRequest.TOKEN, coordinator.getTag());
 
         return restRequest;
@@ -175,6 +205,28 @@ public class RestMethods {
             }
         }
         return json;
+    }
+
+    private static Response.Listener<JSONObject> createResponseListener(final int index, final RequestCoordinator coordinator) {
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                coordinator.done(index, response);
+            }
+        };
+        return responseListener;
+    }
+
+    private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator) {
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                int responseCode = getResponseCode(error);
+                JSONObject json = parseVolleyException(error);
+                coordinator.receiveError(responseCode, json);
+            }
+        };
+        return errorListener;
     }
 
 }
