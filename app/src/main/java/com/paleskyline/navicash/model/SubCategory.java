@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 /**
  * Created by oscar on 24/03/17.
@@ -16,6 +17,7 @@ public class SubCategory implements Securable {
 
     private int id, generalCategoryID;
     private String categoryName;
+    private ArrayList<Transaction> transactions = new ArrayList<>();
 
     public SubCategory(String categoryName, int generalCategoryID) {
         this.categoryName = categoryName;
@@ -48,6 +50,14 @@ public class SubCategory implements Securable {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(ArrayList<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     @Override

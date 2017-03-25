@@ -9,6 +9,7 @@ import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.RootCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.network.RequestCoordinator;
@@ -31,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        register();
+        //register();
 
-        //initKey();
+        initKey();
         //categoryLoader();
         //getGeneralCategories();
         //insertGeneralCategories();
         //insertSubCategories();
         //getSubCategories();
         //insertTransaction();
-        //defaultLoader();
+        defaultLoader();
 
 
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void insertGeneralCategories() {
         GeneralCategory category = new GeneralCategory("Wages", "Income", "moneybag.png");
-        GeneralCategory category2 = new GeneralCategory("Food and Drink", "Expenses", "hamburger.png");
+        GeneralCategory category2 = new GeneralCategory("Accomodation", "Expenses", "house.png");
 
         try {
 
@@ -131,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void insertSubCategories() {
-        SubCategory category = new SubCategory("Eating out", 3);
-        SubCategory category2 = new SubCategory("Take away", 1);
+        SubCategory category = new SubCategory("Tutoring", 1);
+        SubCategory category2 = new SubCategory("Phone", 2);
 
         try {
 
@@ -179,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void insertTransaction() {
 
-        Transaction t1 = new Transaction(1, "10/02/2017", 15.39, "test description");
+        //Transaction t1 = new Transaction(2, "24/03/2017", 95.03, null);
+        Transaction t1 = new Transaction(4, "15/03/2017", 40, "first optus phone bill");
         try {
             JSONObject json = t1.encrypt();
             System.out.println(json.toString());
@@ -290,10 +292,10 @@ public class MainActivity extends AppCompatActivity {
 
     class DecryptionTask extends AsyncTask<JSONObject[], Void, Void> {
 
+        private ArrayList<RootCategory> rootCategories = new ArrayList<>();
         private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
         private ArrayList<SubCategory> subCategories = new ArrayList<>();
         private ArrayList<Transaction> transactions = new ArrayList<>();
-
 
         @Override
         protected void onPreExecute() {
@@ -303,15 +305,41 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            /*
             for (GeneralCategory gc : generalCategories) {
                 System.out.println(gc.toString());
+                for (SubCategory sc : gc.getSubCategories()) {
+                    System.out.println(sc.toString());
+                    for (Transaction t : sc.getTransactions()) {
+                        System.out.println(t.toString());
+                    }
+                }
             }
+            */
+            for (RootCategory rc : rootCategories) {
+                System.out.println(rc.getCategoryName().toUpperCase());
+                for (GeneralCategory gc : rc.getGeneralCategories()) {
+                    System.out.println(gc.toString());
+                    for (SubCategory sc : gc.getSubCategories()) {
+                        System.out.println(sc.toString());
+                        for (Transaction t : sc.getTransactions()) {
+                            System.out.println(t.toString());
+                        }
+                    }
+                }
+            }
+            /*
             for (SubCategory sc : subCategories) {
                 System.out.println(sc.toString());
+                for (Transaction t : sc.getTransactions()) {
+                    System.out.println(t.toString());
+                }
             }
+
             for (Transaction t : transactions) {
                 System.out.println(t.toString());
             }
+            */
         }
 
         @Override
@@ -335,6 +363,40 @@ public class MainActivity extends AppCompatActivity {
                     Transaction transaction = new Transaction(transactionsArray.getJSONObject(k));
                     transactions.add(transaction);
                 }
+
+                for (SubCategory subCategory : subCategories) {
+                    int id = subCategory.getId();
+                    for (Transaction transaction : transactions) {
+                        if (transaction.getSubCategoryID() == id) {
+                            subCategory.getTransactions().add(transaction);
+                        }
+                    }
+                }
+
+                for (GeneralCategory generalCategory : generalCategories) {
+                    int id = generalCategory.getId();
+                    for (SubCategory subCategory : subCategories) {
+                        if (subCategory.getGeneralCategoryID() == id) {
+                            generalCategory.getSubCategories().add(subCategory);
+                        }
+                    }
+                }
+
+                RootCategory income = new RootCategory("Income");
+                RootCategory expenses = new RootCategory("Expenses");
+                rootCategories.add(income);
+                rootCategories.add(expenses);
+
+                for (RootCategory rootCategory : rootCategories) {
+                    String category = rootCategory.getCategoryName();
+                    for (GeneralCategory generalCategory : generalCategories) {
+                        if (generalCategory.getRootCategory().equals(category)) {
+                            rootCategory.getGeneralCategories().add(generalCategory);
+                        }
+                    }
+                }
+
+
             } catch (JSONException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

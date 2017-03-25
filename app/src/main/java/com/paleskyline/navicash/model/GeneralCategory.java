@@ -61,6 +61,14 @@ public class GeneralCategory implements Securable {
         this.iconFile = iconFile;
     }
 
+    public ArrayList<SubCategory> getSubCategories() {
+        return subCategories;
+    }
+
+    public void setSubCategories(ArrayList<SubCategory> subCategories) {
+        this.subCategories = subCategories;
+    }
+
     @Override
     public JSONObject encrypt() throws JSONException {
         JSONObject categoryData = new JSONObject();
