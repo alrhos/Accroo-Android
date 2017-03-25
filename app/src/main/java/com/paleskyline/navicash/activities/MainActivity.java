@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -31,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
         //register();
 
         initKey();
+        categoryLoader();
         //getGeneralCategories();
         //insertGeneralCategories();
-        insertSubCategories();
+        //insertSubCategories();
+        //getSubCategories();
 
 
 
@@ -196,10 +199,102 @@ public class MainActivity extends AppCompatActivity {
 
         coordinator.addRequests(RestMethods.getGeneralCategories(0, coordinator));
         coordinator.start();
+    }
+
+    public void getSubCategories() {
+        final ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+        final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                ArrayList<SubCategory> categories = new ArrayList<>();
+                JSONObject categoriesJson = dataReceiver.get(0);
+                System.out.println(categoriesJson.toString());
+                try {
+                    JSONArray array = categoriesJson.getJSONArray("categories");
+                    for (int i = 0; i < array.length(); i++) {
+                        SubCategory category = new SubCategory(array.getJSONObject(i));
+                        categories.add(category);
+                    }
+                    for (SubCategory c : categories) {
+                        System.out.println(c.toString());
+                    }
+                } catch (JSONException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("FAILED");
+            }
+        };
+
+        coordinator.addRequests(RestMethods.getSubCategories(0, coordinator));
+        coordinator.start();
+    }
+
+    public void categoryLoader() {
+        final ArrayList<JSONObject> dataReceiver = new ArrayList<>();
+        final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new DecryptionTask().execute(dataReceiver, null, null);
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("FAILED");
+            }
+        };
+
+        coordinator.addRequests(RestMethods.getGeneralCategories(0, coordinator), RestMethods.getSubCategories(1, coordinator));
+        coordinator.start();
+    }
+
+    class DecryptionTask extends AsyncTask<ArrayList<JSONObject>, Void, Void> {
+
+        private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
+        private ArrayList<SubCategory> subCategories = new ArrayList<>();
 
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            System.out.println("ABOUT TO START JOB");
+        }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            for (GeneralCategory gc : generalCategories) {
+                System.out.println(gc.toString());
+            }
+            System.out.println("\n");
+            for (SubCategory sc : subCategories) {
+                System.out.println(sc.toString());
+            }
+        }
 
+        @Override
+        protected Void doInBackground(ArrayList<JSONObject>... dataReceiver) {
+            JSONObject generalCategoriesJson = dataReceiver[0].get(0);
+            JSONObject subCategoriesJson = dataReceiver[0].get(1);
+            try {
+                JSONArray generalCategoriesArray = generalCategoriesJson.getJSONArray("categories");
+                for (int i = 0; i < generalCategoriesArray.length(); i++) {
+                    GeneralCategory category = new GeneralCategory(generalCategoriesArray.getJSONObject(i));
+                    generalCategories.add(category);
+                }
+                JSONArray subCategoriesArray = subCategoriesJson.getJSONArray("categories");
+                for (int j = 0; j < subCategoriesArray.length(); j++) {
+                    SubCategory category = new SubCategory(subCategoriesArray.getJSONObject(j));
+                    subCategories.add(category);
+                }
+            } catch (JSONException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

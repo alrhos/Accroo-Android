@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 /**
  * Created by oscar on 4/03/17.
@@ -16,6 +17,7 @@ public class GeneralCategory implements Securable {
 
     private int id;
     private String categoryName, rootCategory, iconFile;
+    private ArrayList<SubCategory> subCategories = new ArrayList<>();
 
     public GeneralCategory(String categoryName, String rootCategory, String iconFile) {
         this.categoryName = categoryName;

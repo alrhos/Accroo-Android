@@ -26,23 +26,6 @@ public class RestMethods {
     public static RestRequest registerAccount(final int index, final RequestCoordinator coordinator,
                                              JSONObject json) {
 
-        /*
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                coordinator.done(index, response);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                int responseCode = getResponseCode(error);
-                JSONObject json = parseVolleyException(error);
-                coordinator.receiveError(responseCode, json);
-            }
-        };
-        */
-
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
@@ -112,25 +95,6 @@ public class RestMethods {
 
     public static RestRequest addGeneralCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
 
-        /*
-
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                coordinator.done(index, response);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                int responseCode = getResponseCode(error);
-                JSONObject json = parseVolleyException(error);
-                coordinator.receiveError(responseCode, json);
-            }
-        };
-
-        */
-
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
@@ -143,23 +107,6 @@ public class RestMethods {
     }
 
     public static RestRequest addSubCategory(final int index, final RequestCoordinator coordinator, JSONObject json) {
-
-        /*
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                coordinator.done(index, response);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                int responseCode = getResponseCode(error);
-                JSONObject json = parseVolleyException(error);
-                coordinator.receiveError(responseCode, json);
-            }
-        };
-        */
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
@@ -178,6 +125,19 @@ public class RestMethods {
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + "generalcategory";
+
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
+                errorListener, RestRequest.TOKEN, coordinator.getTag());
+
+        return restRequest;
+    }
+
+    public static RestRequest getSubCategories(final int index, final RequestCoordinator coordinator) {
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
+
+        String url = baseURL + "subcategory";
 
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
                 errorListener, RestRequest.TOKEN, coordinator.getTag());

@@ -71,4 +71,13 @@ public class SubCategory implements Securable {
         this.generalCategoryID = json.getInt("generalCategoryID");
         this.categoryName = categoryData.getString("categoryName");
     }
+
+    @Override
+    public String toString() {
+        return "SubCategory{" +
+                "id=" + id +
+                ", generalCategoryID=" + generalCategoryID +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
+    }
 }
