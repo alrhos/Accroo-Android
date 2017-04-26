@@ -84,14 +84,14 @@ public class Transaction implements Securable {
         SecurePayload payload = CryptoManager.getInstance().encrypt(transactionData.toString());
         JSONObject json = new JSONObject();
         json.put("subCategoryID", subCategoryID);
-        json.put("payload", payload.getData());
+        json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
         return json;
     }
 
     @Override
     public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
-        SecurePayload payload = new SecurePayload(json.getString("payload"), json.getString("nonce"));
+        SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
         String transactionString = CryptoManager.getInstance().decrypt(payload);
         JSONObject transactionData = new JSONObject(transactionString);
         this.id = json.getInt("id");

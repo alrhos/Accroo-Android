@@ -67,14 +67,14 @@ public class SubCategory implements Securable {
         SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
         JSONObject json = new JSONObject();
         json.put("generalCategoryID", generalCategoryID);
-        json.put("payload", payload.getData());
+        json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
         return json;
     }
 
     @Override
     public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
-        SecurePayload payload = new SecurePayload(json.getString("payload"), json.getString("nonce"));
+        SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
         String categoryString = CryptoManager.getInstance().decrypt(payload);
         JSONObject categoryData = new JSONObject(categoryString);
         this.id = json.getInt("id");

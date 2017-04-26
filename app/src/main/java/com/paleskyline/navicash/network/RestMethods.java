@@ -19,11 +19,11 @@ import java.io.UnsupportedEncodingException;
 
 public class RestMethods {
 
-    private final static String baseURL = "http://192.168.1.21:5000/api/";
-    public final static String REGISTER = "register";
+    private final static String baseURL = "http://192.168.1.15:5000/";
+    public final static String REGISTER = "user/register";
     public final static String KEY = "key";
-    public final static String GENERAL_CATEGORY = "generalcategory";
-    public final static String SUB_CATEGORY = "subcategory";
+    public final static String GENERAL_CATEGORY = "category/general";
+    public final static String SUB_CATEGORY = "category/sub";
     public final static String TRANSACTION = "transaction";
     public final static String TRANSACTION_PARAM = "transaction?transactionid=";
 
@@ -68,7 +68,7 @@ public class RestMethods {
             }
         };
 
-        String url = baseURL + "token";
+        String url = baseURL + "user/token";
 
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
                 responseListener, errorListener, RestRequest.BASIC, coordinator.getTag());

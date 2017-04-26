@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
         //categoryLoader();
         //getGeneralCategories();
         //insertGeneralCategories();
-        //insertSubCategories();
+        insertSubCategories();
         //getSubCategories();
         //insertTransaction();
-        defaultLoader();
+        //defaultLoader();
 
 
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public void register() {
         char[] loginPassword = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
         char[] dataPassword = {'s', 'e', 'c', 'r', 'e', 't', 's', 'a', 'u', 'c', 'e', '!'};
-        String email = "oscar.alston@protonmail.com";
+        String email = "oscar.alston2@protonmail.com";
         KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPassword);
 
         JSONObject json = new JSONObject();
@@ -62,11 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
             json.put("email", email);
             json.put("password", String.copyValueOf(loginPassword));
-            json.put("masterKey", keyPackage.getEncryptedMasterKey());
+            json.put("dataKey", keyPackage.getEncryptedMasterKey());
             json.put("salt", keyPackage.getSalt());
             json.put("nonce", keyPackage.getNonce());
-            json.put("opslimit", keyPackage.getOpslimit());
-            json.put("memlimit", keyPackage.getMemlimit());
+            json.put("opsLimit", keyPackage.getOpslimit());
+            json.put("memLimit", keyPackage.getMemlimit());
+
+            System.out.println(json.toString());
 
             final JSONObject[] dataReceiver = new JSONObject[1];
             RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
             JSONObject objects = new JSONObject();
             objects.put("categories", array);
+
             System.out.println(objects.toString());
 
 
@@ -268,8 +271,8 @@ public class MainActivity extends AppCompatActivity {
         coordinator.addRequests(RestMethods.get(0, RestMethods.SUB_CATEGORY, null, coordinator));
         coordinator.start();
     }
-    */
 
+    */
     public void defaultLoader() {
         final JSONObject[] dataReceiver = new JSONObject[3];
         final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
@@ -347,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject generalCategoriesJson = dataReceiver[0][0];
             JSONObject subCategoriesJson = dataReceiver[0][1];
             JSONObject transactionsJson = dataReceiver[0][2];
+            System.out.println("READY TO PROCESS");
             try {
                 JSONArray generalCategoriesArray = generalCategoriesJson.getJSONArray("categories");
                 for (int i = 0; i < generalCategoriesArray.length(); i++) {
@@ -363,6 +367,7 @@ public class MainActivity extends AppCompatActivity {
                     Transaction transaction = new Transaction(transactionsArray.getJSONObject(k));
                     transactions.add(transaction);
                 }
+                System.out.println("ALL EXPECTED JSON RETRIEVED");
 
                 for (SubCategory subCategory : subCategories) {
                     int id = subCategory.getId();
