@@ -107,7 +107,8 @@ public class CryptoManager {
         String encodedNonce = encode(nonce);
         String encodedSalt = encode(salt);
 
-        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce, encodedSalt, opslimit, memlimit);
+        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce,
+                encodedSalt, opslimit, memlimit);
 
         // Override values
 
@@ -164,24 +165,6 @@ public class CryptoManager {
         byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
         String value = new String(plainText, "UTF-8");
         return value;
-    }
-
-    public String decrypt(String nonce, String cipherText) throws UnsupportedEncodingException {
-        byte[] cipherTextBytes = decode(cipherText);
-        byte[] nonceBytes = decode(nonce);
-        byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
-        String value = new String(plainText, "UTF-8");
-        return value;
-        /*
-        String value = null;
-        try {
-            value = new String(plainText, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } finally {
-            return value;
-        }
-        */
     }
 
 }

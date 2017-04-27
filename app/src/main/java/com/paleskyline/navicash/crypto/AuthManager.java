@@ -1,10 +1,15 @@
 package com.paleskyline.navicash.crypto;
 
+import javax.crypto.Cipher;
+
 /**
  * Created by oscar on 5/03/17.
  */
 
 public class AuthManager {
+
+    private KeyStoreManager keyStoreManager;
+    private Cipher cipher;
 
     public static final String USERNAME = "oscar.alston@protonmail.com";
     public static final char[] LOGINPASSWORD = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
@@ -21,5 +26,13 @@ public class AuthManager {
     public static synchronized void setToken(String token) {
         TOKEN = token;
     }
+
+    /*
+    public AuthManager() throws NoSuchAlgorithmException, NoSuchPaddingException {
+        keyStoreManager = new KeyStoreManager();
+        cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+    }
+    */
 
 }
