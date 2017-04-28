@@ -18,10 +18,15 @@ public class LaunchActivity extends AppCompatActivity {
     public void keystoreTest() {
         try {
             KeyStoreManager localKey = new KeyStoreManager();
+            String cipherText = localKey.encrypt("secret string :)");
+            System.out.println("'" + cipherText + "'");
+            System.out.println("'" + localKey.decrypt(cipherText) + "'");
+            //String c2 = localKey.encrypt("dit");
+            //localKey.decrypt(c2);
             //localKey.generateKey();
             //localKey.loadKey();
         } catch (Exception e) {
-            System.out.println("KEY EXCEPTION");
+            e.printStackTrace();
         }
     }
 }
