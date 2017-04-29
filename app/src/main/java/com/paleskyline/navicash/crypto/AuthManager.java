@@ -74,7 +74,7 @@ public class AuthManager {
             String encryptedValue = keyStoreManager.encrypt(value);
             editor = sharedPreferences.edit();
             editor.putString(key, encryptedValue);
-            editor.apply();
+            editor.commit();
         } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
                 KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
                 IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
@@ -98,6 +98,7 @@ public class AuthManager {
                 InvalidAlgorithmParameterException e) {
 
             e.printStackTrace();
+            // TODO: review exception that is thrown here
             throw new Exception("Decryption exception!");
         }
     }

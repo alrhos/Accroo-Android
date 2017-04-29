@@ -55,11 +55,12 @@ public class User {
         try {
             json.put("email", emailAddress);
             json.put("password", String.copyValueOf(password));
-            json.put("masterkey", keyPackage.getEncryptedMasterKey());
+            json.put("dataKey", keyPackage.getEncryptedMasterKey());
             json.put("salt", keyPackage.getSalt());
             json.put("nonce", keyPackage.getNonce());
-            json.put("opslimit", keyPackage.getOpslimit());
-            json.put("memlimit", keyPackage.getMemlimit());
+            json.put("opsLimit", keyPackage.getOpslimit());
+            json.put("memLimit", keyPackage.getMemlimit());
+            // TODO: Wipe password array
         } catch (JSONException e) {
             e.printStackTrace();
         }
