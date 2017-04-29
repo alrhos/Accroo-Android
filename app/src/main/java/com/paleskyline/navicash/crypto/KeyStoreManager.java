@@ -69,15 +69,16 @@ public class KeyStoreManager {
             KeyStoreException, InvalidKeyException, InvalidAlgorithmParameterException,
             IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException {
 
-        byte[] plainTextBytes = plainText.getBytes();
         Cipher cipher = Cipher.getInstance(AES_MODE);
         cipher.init(Cipher.ENCRYPT_MODE, getSecretKey());
         byte[] iv = cipher.getIV();
-        byte[] cipherText = cipher.doFinal(plainTextBytes);
+        byte[] cipherText = cipher.doFinal(plainText.getBytes());
         byte[] record = new byte[IV_LENGTH + cipherText.length];
 
         System.arraycopy(iv, 0, record, 0, 12);
         System.arraycopy(cipherText, 0, record, 12, cipherText.length);
+
+        // TODO: Consider overwriting the cipherText array at this point.
 
         return Base64.encodeToString(record, Base64.NO_WRAP);
     }

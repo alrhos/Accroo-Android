@@ -1,6 +1,21 @@
 package com.paleskyline.navicash.crypto;
 
-import javax.crypto.Cipher;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by oscar on 5/03/17.
@@ -8,8 +23,15 @@ import javax.crypto.Cipher;
 
 public class AuthManager {
 
-    private KeyStoreManager keyStoreManager;
-    private Cipher cipher;
+    private static AuthManager instance = null;
+    private static KeyStoreManager keyStoreManager;
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
+    private static final String APP = "com.paleskyline.navicash";
+    public static final String PASSWORD_KEY = "passwordKey";
+    public static final String ENCRYPTION_KEY = "encryptionKey";
+    public static final String TOKEN_KEY = "tokenKey";
+
 
     public static final String USERNAME = "oscar.alston@protonmail.com";
     public static final char[] LOGINPASSWORD = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
@@ -23,16 +45,68 @@ public class AuthManager {
             16777216
     );
 
+    private AuthManager() throws KeyStoreException, NoSuchAlgorithmException,
+            NoSuchProviderException, InvalidAlgorithmParameterException,
+            IOException, CertificateException, NoSuchPaddingException {
+
+        keyStoreManager = new KeyStoreManager();
+    }
+
+    public static AuthManager getInstance(Context context) throws Exception {
+        if (instance == null) {
+            try {
+                instance = new AuthManager();
+            } catch (KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException |
+                    InvalidAlgorithmParameterException | IOException | CertificateException |
+                    NoSuchPaddingException e) {
+
+                e.printStackTrace();
+                // TODO: review exception that is thrown here
+                throw new Exception("KeyStore exception!");
+            }
+        }
+        sharedPreferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE);
+        return instance;
+    }
+
+    public static void saveEntry(String key, String value) throws Exception {
+        try {
+            String encryptedValue = keyStoreManager.encrypt(value);
+            editor = sharedPreferences.edit();
+            editor.putString(key, encryptedValue);
+            editor.apply();
+        } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
+                KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
+                IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
+
+            e.printStackTrace();
+            // TODO: review exception that is thrown here
+            throw new Exception("Encryption exception!");
+        }
+    }
+
+    public static String getEntry(String key) throws Exception {
+        try {
+            String encryptedValue = sharedPreferences.getString(key, null);
+            if (encryptedValue == null) {
+                throw new Exception("Value doesn't exist!");
+            }
+            return keyStoreManager.decrypt(encryptedValue);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | UnrecoverableEntryException |
+                KeyStoreException | InvalidKeyException | IllegalBlockSizeException |
+                BadPaddingException | UnsupportedEncodingException |
+                InvalidAlgorithmParameterException e) {
+
+            e.printStackTrace();
+            throw new Exception("Decryption exception!");
+        }
+    }
+
+
+
+    // THIS METHOD WILL BE REPLACED/REPLACED
     public static synchronized void setToken(String token) {
         TOKEN = token;
     }
-
-    /*
-    public AuthManager() throws NoSuchAlgorithmException, NoSuchPaddingException {
-        keyStoreManager = new KeyStoreManager();
-        cipher = Cipher.getInstance("AES/GCM/NoPadding");
-
-    }
-    */
 
 }

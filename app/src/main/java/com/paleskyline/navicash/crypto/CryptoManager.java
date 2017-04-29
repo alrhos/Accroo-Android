@@ -59,8 +59,7 @@ public class CryptoManager {
 
     private byte[] generateNonce() {
         int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
-        byte[] nonce = random.randomBytes(nonceSize);
-        return nonce;
+        return random.randomBytes(nonceSize);
     }
 
     private String encode(byte[] value) {
@@ -93,7 +92,7 @@ public class CryptoManager {
         Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
                 passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
 
-        // Encrypt the data key using the key derived from the password
+        // Encrypt the master key using the key derived from the password
 
         SecretBox box = new SecretBox(dataPasswordKey);
         int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
@@ -155,16 +154,14 @@ public class CryptoManager {
     public SecurePayload encrypt(String plainText) {
         byte[] nonce = generateNonce();
         byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
-        SecurePayload securePayload = new SecurePayload(encode(cipherText), encode(nonce));
-        return securePayload;
+        return new SecurePayload(encode(cipherText), encode(nonce));
     }
 
     public String decrypt(SecurePayload payload) throws UnsupportedEncodingException {
         byte[] cipherTextBytes = decode(payload.getData());
         byte[] nonceBytes = decode(payload.getNonce());
         byte[] plainText = secretBox.decrypt(nonceBytes, cipherTextBytes);
-        String value = new String(plainText, "UTF-8");
-        return value;
+        return new String(plainText, "UTF-8");
     }
 
 }
