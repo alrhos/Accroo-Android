@@ -69,7 +69,7 @@ public class AuthManager {
         return instance;
     }
 
-    public static void saveEntry(String key, String value) throws Exception {
+    public void saveEntry(String key, String value) throws Exception {
         try {
             String encryptedValue = keyStoreManager.encrypt(value);
             editor = sharedPreferences.edit();
@@ -85,7 +85,7 @@ public class AuthManager {
         }
     }
 
-    public static String getEntry(String key) throws Exception {
+    public String getEntry(String key) throws Exception {
         try {
             String encryptedValue = sharedPreferences.getString(key, null);
             if (encryptedValue == null) {
@@ -102,7 +102,6 @@ public class AuthManager {
             throw new Exception("Decryption exception!");
         }
     }
-
 
 
     // THIS METHOD WILL BE REPLACED/REPLACED

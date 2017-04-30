@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.crypto;
 
+import android.content.Context;
 import android.util.Base64;
 
 import org.libsodium.jni.NaCl;
@@ -38,7 +39,8 @@ public class CryptoManager {
         if (Sodium.sodium_init() == -1) {
             throw new IllegalStateException("Sodium couldn't be initialised");
         }
-        random = new Random();
+        //this.context = context;
+        this.random = new Random();
     }
 
     private byte[] passwordToByteArray(char[] password) {
@@ -56,6 +58,10 @@ public class CryptoManager {
 
         return passwordBytes;
     }
+
+/*    public String getMasterKey() {
+        return encode(masterKey);
+    }*/
 
     private byte[] generateNonce() {
         int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
@@ -149,6 +155,10 @@ public class CryptoManager {
         Arrays.fill(passwordBytes, (byte) 0);
         Arrays.fill(dataPasswordKey, (byte) 0);
 
+    }
+
+    public void saveMasterKey(Context context) throws Exception {
+        AuthManager.getInstance(context).saveEntry(AuthManager.ENCRYPTION_KEY, encode(masterKey));
     }
 
     public SecurePayload encrypt(String plainText) {

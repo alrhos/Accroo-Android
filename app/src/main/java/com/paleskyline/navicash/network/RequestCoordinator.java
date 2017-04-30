@@ -15,13 +15,13 @@ public abstract class RequestCoordinator {
 
     private int doneCount = 0;
     private Context context;
-    private String tag;
+    private Object tag;
     private ArrayList<RestRequest> requests;
     private JSONObject[] dataReceiver;
 
     private ArrayList<RestRequest> retryRequests;
 
-    public RequestCoordinator(Context context, String tag, JSONObject[] dataReceiver) {
+    public RequestCoordinator(Context context, Object tag, JSONObject[] dataReceiver) {
         this.context = context;
         this.tag = tag;
         this.dataReceiver = dataReceiver;
@@ -29,16 +29,18 @@ public abstract class RequestCoordinator {
         retryRequests = new ArrayList<>();
     }
 
-    protected String getTag() {
+    protected Object getTag() {
         return tag;
     }
 
     public void addRequests(RestRequest... requests) {
         for (RestRequest request : requests) {
+            request.setTag(tag);
             this.requests.add(request);
             try {
                 retryRequests.add((RestRequest) request.clone());
             } catch (CloneNotSupportedException e) {
+                // TODO: review exception handling here
                 e.printStackTrace();
             }
         }

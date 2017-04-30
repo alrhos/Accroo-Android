@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.model.User;
@@ -16,10 +16,13 @@ import com.paleskyline.navicash.network.RestMethods;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText emailAddress, loginPassword, confirmLoginPassword, dataPassword, confirmDataPassword;
     private Button register;
+    private char[] loginPwd, dataPwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,71 +40,184 @@ public class RegisterActivity extends AppCompatActivity {
         addListeners();
     }
 
+    private boolean isEmailValid() {
+        boolean valid = true;
+        String emailString = emailAddress.getText().toString();
+        String emailRegEx = ".*";
+        if (!emailString.matches(emailRegEx)) {
+            // TODO: Add toast
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isLoginPasswordValid() {
+        // Check if passwords match
+        if (!loginPassword.getText().toString().equals(confirmLoginPassword.getText().toString())) {
+            // TODO: toast that passwords do not match
+            return false;
+        }
+
+        // Check password length
+        if (loginPassword.getText().length() < 10) {
+            // TODO: toast that password length is too short
+            return false;
+        }
+
+        // Could add another condition here to check password complexity
+
+
+        // Return true if all tests pass
+
+        return true;
+
+    }
+
+    private boolean isDataPasswordValid() {
+        // Check if passwords match
+        if (!dataPassword.getText().toString().equals(confirmDataPassword.getText().toString())) {
+            // TODO: toast that passwords do not match
+            return false;
+        }
+
+        // Check password length
+        if (dataPassword.getText().length() < 10) {
+            // TODO: toast that password length is too short
+            return false;
+        }
+
+        // Could add another condition here to check password complexity
+
+
+        // Return true if all checks pass
+
+        return true;
+
+    }
+
+
+    private void registerUser(final User user) {
+        final JSONObject[] dataReceiver = new JSONObject[1];
+        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+                this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                System.out.println("SUCCESS!!!");
+                try {
+
+                    AuthManager.getInstance(getApplicationContext()).saveEntry(
+                            AuthManager.USERNAME, user.getEmailAddress());
+
+                    AuthManager.getInstance(getApplicationContext()).saveEntry(
+                            AuthManager.PASSWORD_KEY, String.copyValueOf(user.getPassword()));
+
+                    CryptoManager.getInstance().saveMasterKey(getApplicationContext());
+
+                    // Populate general categories
+                    createGeneralCategories();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // TODO: raise toast
+                } finally {
+                    Arrays.fill(loginPwd, '\u0000');
+                    Arrays.fill(dataPwd, '\u0000');
+                }
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("ERROR: " + json.toString());
+                Arrays.fill(loginPwd, '\u0000');
+                Arrays.fill(dataPwd, '\u0000');
+            }
+        };
+
+        System.out.println(user.toJSON());
+        coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator, user.toJSON()));
+        coordinator.start();
+    }
+
+    private void createGeneralCategories() {
+        final JSONObject[] dataReceiver = new JSONObject[1];
+        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+                this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                System.out.println("GENERAL CATEGORIES CREATED");
+                createSubCategories();
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("GENERAL CATEGORY ERROR");
+            }
+        };
+
+        // TODO: add requests and start coordinator (needs to get category data from local db)
+
+    }
+
+    private void createSubCategories() {
+        final JSONObject[] dataReceiver = new JSONObject[1];
+        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+                this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                System.out.println("SUB CATEGORIES CREATED");
+            }
+
+            @Override
+            protected void onFailure(JSONObject json) {
+                System.out.println("SUB CATEGORY ERROR");
+            }
+        };
+
+        // TODO: add requests and start coordinator (needs to get category data from local db)
+    }
+
+
+
     private void addListeners() {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Add check to ensure email address is valid
 
-                String emailString = emailAddress.getText().toString();
-
-                // TODO: Add check to ensure login password length is sufficient
-
-                if (loginPassword.getText().toString().equals(confirmDataPassword.getText().toString())) {
-                    // Login passwords match
-                   // Toast.makeText(getApplicationContext(), "LOGIN PASSWORDS MATCH", Toast.LENGTH_SHORT).show();
+                if (!isEmailValid()) {
+                    return;
                 }
 
-                // TODO: Add check to ensure data password length is sufficient
-
-                if (dataPassword.getText().toString().equals(confirmDataPassword.getText().toString())) {
-                    // Data passwords match
-                    //Toast.makeText(getApplicationContext(), "DATA PASSWORDS MATCH", Toast.LENGTH_SHORT).show();
+                if (!isLoginPasswordValid()) {
+                    return;
                 }
 
-                if (emailString.length() > 0 && loginPassword.getText().toString().equals(confirmLoginPassword.getText().toString())
-                        && dataPassword.getText().toString().equals(confirmDataPassword.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "WE'RE GOOD TO GO!", Toast.LENGTH_SHORT).show();
-
-                    // PROCESS LOGIN PASSWORD
-
-                    int loginPasswordLength = dataPassword.getText().length();
-                    char[] loginPwd = new char[loginPasswordLength];
-                    dataPassword.getText().getChars(0, loginPasswordLength, loginPwd, 0);
-
-                    // PROCESS DATA PASSWORD
-
-                    int dataPasswordLength = dataPassword.getText().length();
-                    char[] dataPwd = new char[dataPasswordLength];
-                    dataPassword.getText().getChars(0, dataPasswordLength, dataPwd, 0);
-
-                    System.out.println(String.copyValueOf(dataPwd));
-
-                    KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPwd);
-                    User user = new User(emailString, loginPwd, keyPackage);
-
-                    // HIT API ENDPOINT
-
-                    final JSONObject[] dataReceiver = new JSONObject[1];
-                    RequestCoordinator coordinator = new RequestCoordinator(RegisterActivity.super.getApplicationContext(),
-                            "REGISTER_ACTIVITY_TAG", dataReceiver) {
-
-                        @Override
-                        protected void onSuccess() {
-                            System.out.println("SUCCESS!!!");
-                        }
-
-                        @Override
-                        protected void onFailure(JSONObject json) {
-                            System.out.println("ERROR: " + json.toString());
-                        }
-                    };
-
-                    System.out.println(user.toJSON());
-                    coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator, user.toJSON()));
-                    coordinator.start();
+                if (!isDataPasswordValid()) {
+                    return;
                 }
+
+                // All checks passed - register account
+
+                // PROCESS LOGIN PASSWORD
+
+                int loginPasswordLength = loginPassword.getText().length();
+                loginPwd = new char[loginPasswordLength];
+                loginPassword.getText().getChars(0, loginPasswordLength, loginPwd, 0);
+
+                // PROCESS DATA PASSWORD
+
+                int dataPasswordLength = dataPassword.getText().length();
+                dataPwd = new char[dataPasswordLength];
+                dataPassword.getText().getChars(0, dataPasswordLength, dataPwd, 0);
+
+                KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPwd);
+                User user = new User(emailAddress.getText().toString(), loginPwd, keyPackage);
+
+                registerUser(user);
             }
         });
     }
+
 }
