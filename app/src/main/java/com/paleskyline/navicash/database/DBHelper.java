@@ -21,7 +21,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        sqLiteDatabase.execSQL(DBContract.CREATE_GENERAL_CATEGORIES);
+        sqLiteDatabase.execSQL(DBContract.CREATE_SUB_CATEGORIES);
+        sqLiteDatabase.execSQL(DBContract.POPULATE_GENERAL_CATEGORY);
     }
 
     @Override
@@ -34,6 +36,6 @@ public class DBHelper extends SQLiteOpenHelper {
         super.onDowngrade(db, oldVersion, newVersion);
     }
 
-    
+
 
 }
