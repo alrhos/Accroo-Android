@@ -1,6 +1,9 @@
 package com.paleskyline.navicash.network;
 
 import android.content.Context;
+import android.util.Base64;
+
+import com.paleskyline.navicash.crypto.AuthManager;
 
 import org.json.JSONObject;
 
@@ -35,14 +38,30 @@ public abstract class RequestCoordinator {
 
     public void addRequests(RestRequest... requests) {
         for (RestRequest request : requests) {
-            request.setTag(tag);
-            this.requests.add(request);
             try {
+                request.setTag(tag);
+                setAuthHeader(request);
+                this.requests.add(request);
                 retryRequests.add((RestRequest) request.clone());
-            } catch (CloneNotSupportedException e) {
+            } catch (Exception e) {
                 // TODO: review exception handling here
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void setAuthHeader(RestRequest request) throws Exception {
+        switch(request.getAuthType()) {
+            case RestRequest.BASIC:
+                String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+                // TODO: review password security
+                String password = AuthManager.getInstance(context).getEntry(AuthManager.PASSWORD_KEY);
+                String credentials = username + ":" + password;
+                request.setHeader(Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
+                break;
+            case RestRequest.TOKEN:
+                String token = AuthManager.getInstance(context).getEntry(AuthManager.TOKEN_KEY);
+                request.setHeader(token);
         }
     }
 

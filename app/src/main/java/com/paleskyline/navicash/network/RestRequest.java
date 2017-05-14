@@ -23,20 +23,31 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     public static final String BASIC = "Basic";
     public static final String TOKEN = "Token";
     public static final String NONE = "None";
+    private Map<String, String> headerMap;
 
     public RestRequest(int method, String url, JSONObject json,
                           Response.Listener<JSONObject> listener,
                           Response.ErrorListener errorListener,
-                          String authType, String tag) {
+                          String authType) {
 
         super(method, url, json, listener, errorListener);
         this.authType = authType;
-        this.setTag(tag);
 
         DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
                 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         this.setRetryPolicy(retryPolicy);
     }
+
+    public String getAuthType() {
+        return authType;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return headerMap;
+    }
+
+    /*
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -66,7 +77,15 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     Map<String, String> createEmptyHeader() {
         Map<String, String> headerMap = new HashMap<>();
+        //return new HashMap<>();
         return headerMap;
+    }
+
+    */
+
+    public void setHeader(String headerValue) {
+        headerMap = new HashMap<>();
+        headerMap.put("Authorization", authType + " " + headerValue);
     }
 
     protected Object clone() throws CloneNotSupportedException {

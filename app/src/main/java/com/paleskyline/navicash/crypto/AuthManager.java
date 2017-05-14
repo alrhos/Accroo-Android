@@ -28,11 +28,13 @@ public class AuthManager {
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static final String APP = "com.paleskyline.navicash";
+    public static final String USERNAME_KEY = "usernameKey";
     public static final String PASSWORD_KEY = "passwordKey";
     public static final String ENCRYPTION_KEY = "encryptionKey";
     public static final String TOKEN_KEY = "tokenKey";
 
 
+    /*
     public static final String USERNAME = "oscar.alston@protonmail.com";
     public static final char[] LOGINPASSWORD = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};
     public static final char[] DATAPASSWORD = {'s', 'e', 'c', 'r', 'e', 't', 's', 'a', 'u', 'c', 'e', '!'};
@@ -44,6 +46,7 @@ public class AuthManager {
             524288,
             16777216
     );
+    */
 
     private AuthManager() throws KeyStoreException, NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException,
@@ -103,10 +106,5 @@ public class AuthManager {
         }
     }
 
-
-    // THIS METHOD WILL BE REPLACED/REPLACED
-    public static synchronized void setToken(String token) {
-        TOKEN = token;
-    }
 
 }

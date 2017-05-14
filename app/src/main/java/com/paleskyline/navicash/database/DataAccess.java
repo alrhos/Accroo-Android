@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,39 @@ public class DataAccess {
                     cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_ROOT_CATEGORY)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_ICON))
+            ));
+        }
+
+        cursor.close();
+        dbHelper.close();
+        db.close();
+
+        return categories;
+    }
+
+    public ArrayList<SubCategory> getSubCategories() {
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {
+                DBContract.SubCategory.COLUMN_CATEGORY_NAME,
+                DBContract.SubCategory.COLUMN_GENERAL_CATEGORY,
+        };
+
+        cursor = db.query(
+                DBContract.GeneralCategory.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        ArrayList<SubCategory> categories = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            categories.add(new SubCategory(
+                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_CATEGORY_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_GENERAL_CATEGORY))
             ));
         }
 

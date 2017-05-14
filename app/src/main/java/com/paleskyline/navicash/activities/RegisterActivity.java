@@ -5,17 +5,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
+import com.paleskyline.navicash.database.DataAccess;
+import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -43,9 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isEmailValid() {
         boolean valid = true;
         String emailString = emailAddress.getText().toString();
+        // TODO: add proper regex
         String emailRegEx = ".*";
         if (!emailString.matches(emailRegEx)) {
-            // TODO: Add toast
+            Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -54,13 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isLoginPasswordValid() {
         // Check if passwords match
         if (!loginPassword.getText().toString().equals(confirmLoginPassword.getText().toString())) {
-            // TODO: toast that passwords do not match
+            Toast.makeText(getApplicationContext(), "Login passwords do not match", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        // Check password length
-        if (loginPassword.getText().length() < 10) {
-            // TODO: toast that password length is too short
+        // TODO: Check password length
+        if (loginPassword.getText().length() < 1) {
+            Toast.makeText(getApplicationContext(), "Login password must be at least 10 characters",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -76,13 +84,14 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isDataPasswordValid() {
         // Check if passwords match
         if (!dataPassword.getText().toString().equals(confirmDataPassword.getText().toString())) {
-            // TODO: toast that passwords do not match
+            Toast.makeText(getApplicationContext(), "Data passwords do not match", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        // Check password length
-        if (dataPassword.getText().length() < 10) {
-            // TODO: toast that password length is too short
+        // TODO: Change password length value
+        if (dataPassword.getText().length() < 1) {
+            Toast.makeText(getApplicationContext(), "Data password must be at least 10 characters",
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -107,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 try {
 
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
-                            AuthManager.USERNAME, user.getEmailAddress());
+                            AuthManager.USERNAME_KEY, user.getEmailAddress());
 
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
                             AuthManager.PASSWORD_KEY, String.copyValueOf(user.getPassword()));
@@ -128,7 +137,11 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             protected void onFailure(JSONObject json) {
-                System.out.println("ERROR: " + json.toString());
+                if (json != null) {
+                    System.out.println("ERROR: " + json.toString());
+                } else {
+                    System.out.println("COMMS ERROR");
+                }
                 Arrays.fill(loginPwd, '\u0000');
                 Arrays.fill(dataPwd, '\u0000');
             }
@@ -147,7 +160,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onSuccess() {
                 System.out.println("GENERAL CATEGORIES CREATED");
-                createSubCategories();
+                // We need to get the general categories here to get the IDs
+                //createSubCategories();
             }
 
             @Override
@@ -156,7 +170,25 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-        // TODO: add requests and start coordinator (needs to get category data from local db)
+        ArrayList<GeneralCategory> categories = DataAccess.getInstance(getApplicationContext()).getGeneralCategories();
+
+        // TODO: shuffle categories to make more anonymous
+
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for (GeneralCategory category : categories) {
+                System.out.println(category.toString());
+                jsonArray.put(category.encrypt());
+            }
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("categories", jsonArray);
+            System.out.println(jsonObject.toString());
+            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK, coordinator, jsonObject));
+            coordinator.start();
+        } catch (JSONException e) {
+            // TODO: error handling
+            e.printStackTrace();
+        }
 
     }
 

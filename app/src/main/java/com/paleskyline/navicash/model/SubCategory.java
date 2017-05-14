@@ -16,12 +16,17 @@ import java.util.ArrayList;
 public class SubCategory implements Securable {
 
     private int id, generalCategoryID;
-    private String categoryName;
+    private String categoryName, generalCategoryName;
     private ArrayList<Transaction> transactions = new ArrayList<>();
 
     public SubCategory(String categoryName, int generalCategoryID) {
         this.categoryName = categoryName;
         this.generalCategoryID = generalCategoryID;
+    }
+
+    public SubCategory(String categoryName, String generalCategoryName) {
+        this.categoryName = categoryName;
+        this.generalCategoryName = generalCategoryName;
     }
 
     public SubCategory(JSONObject json) throws JSONException, UnsupportedEncodingException {
@@ -40,16 +45,12 @@ public class SubCategory implements Securable {
         return generalCategoryID;
     }
 
-    public void setGeneralCategoryID(int generalCategoryID) {
-        this.generalCategoryID = generalCategoryID;
-    }
-
     public String getCategoryName() {
         return categoryName;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public String getGeneralCategoryName() {
+        return generalCategoryName;
     }
 
     public ArrayList<Transaction> getTransactions() {

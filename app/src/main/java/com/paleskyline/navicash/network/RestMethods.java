@@ -19,33 +19,16 @@ import java.io.UnsupportedEncodingException;
 
 public class RestMethods {
 
-    private final static String baseURL = "http://192.168.1.15:5000/";
+    private final static String baseURL = "http://192.168.1.75:5000/";
     public final static String REGISTER = "user/register";
     public final static String KEY = "key";
     public final static String GENERAL_CATEGORY = "category/general";
+    public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";
     public final static String SUB_CATEGORY = "category/sub";
     public final static String TRANSACTION = "transaction";
     public final static String TRANSACTION_PARAM = "transaction?transactionid=";
 
     private RestMethods() {}
-
-    /*
-
-    public static RestRequest registerAccount(final int index, final RequestCoordinator coordinator,
-                                             JSONObject json) {
-
-        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = baseURL + "register";
-
-        RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
-                errorListener, RestRequest.NONE, coordinator.getTag());
-
-        return restRequest;
-    }
-
-    */
 
     protected static RestRequest getToken(final RequestCoordinator coordinator) {
 
@@ -71,7 +54,7 @@ public class RestMethods {
         String url = baseURL + "user/token";
 
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.BASIC, coordinator.getTag());
+                responseListener, errorListener, RestRequest.BASIC);
 
         return restRequest;
 
@@ -117,7 +100,7 @@ public class RestMethods {
             url += parameter;
         }
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
-                errorListener, RestRequest.TOKEN, coordinator.getTag());
+                errorListener, RestRequest.TOKEN);
         return restRequest;
 
     }
@@ -129,7 +112,7 @@ public class RestMethods {
         Response.ErrorListener errorListener = createErrorListener(coordinator);
         String url = baseURL + endpoint;
         RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
-                errorListener, RestRequest.TOKEN, coordinator.getTag());
+                errorListener, RestRequest.TOKEN);
         return restRequest;
 
     }
