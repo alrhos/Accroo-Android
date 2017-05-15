@@ -36,8 +36,7 @@ public class RestMethods {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    AuthManager.setToken(response.getString("token"));
-                    coordinator.tokenRefresh();
+                    coordinator.tokenRefresh(response.getString("token"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -130,7 +129,8 @@ public class RestMethods {
         NetworkResponse response = error.networkResponse;
         if (error instanceof ServerError && response != null) {
             try {
-                String responseString = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
+                String responseString = new String(response.data,
+                        HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
                 json = new JSONObject(responseString);
             } catch (JSONException | UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -139,7 +139,8 @@ public class RestMethods {
         return json;
     }
 
-    private static Response.Listener<JSONObject> createResponseListener(final int index, final RequestCoordinator coordinator) {
+    private static Response.Listener<JSONObject> createResponseListener(
+            final int index, final RequestCoordinator coordinator) {
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

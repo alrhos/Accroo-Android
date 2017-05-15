@@ -58,7 +58,6 @@ public abstract class RequestCoordinator {
                 String password = AuthManager.getInstance(context).getEntry(AuthManager.PASSWORD_KEY);
                 String credentials = username + ":" + password;
                 request.setHeader(Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
-                break;
             case RestRequest.TOKEN:
                 String token = AuthManager.getInstance(context).getEntry(AuthManager.TOKEN_KEY);
                 request.setHeader(token);
@@ -81,7 +80,13 @@ public abstract class RequestCoordinator {
         }
     }
 
-    protected synchronized void tokenRefresh() {
+    protected synchronized void tokenRefresh(String token) {
+        try {
+            AuthManager.getInstance(context).saveEntry(AuthManager.TOKEN_KEY, token);
+        } catch (Exception e) {
+            // TODO: error handling
+            e.printStackTrace();
+        }
         doneCount = 0;
         retry();
     }

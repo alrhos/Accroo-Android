@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         //register();
 
-        initKey();
+        //initKey();
         //categoryLoader();
         //getGeneralCategories();
         //insertGeneralCategories();
@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void initKey() {
-        CryptoManager.getInstance().decryptMasterKey(AuthManager.DATAPASSWORD, AuthManager.KEYPACKAGE);
-    }
+//    public void initKey() {
+//        CryptoManager.getInstance().decryptMasterKey(AuthManager.DATAPASSWORD, AuthManager.KEYPACKAGE);
+//    }
 
     public void register() {
         char[] loginPassword = {'l', 'o', 'g', 'm', 'e', 'i', 'n', '!'};

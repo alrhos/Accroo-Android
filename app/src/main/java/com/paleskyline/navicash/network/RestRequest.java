@@ -1,12 +1,9 @@
 package com.paleskyline.navicash.network;
 
-import android.util.Base64;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.paleskyline.navicash.crypto.AuthManager;
 
 import org.json.JSONObject;
 
