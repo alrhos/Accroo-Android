@@ -82,6 +82,7 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     public void setHeader(String headerValue) {
         headerMap = new HashMap<>();
+        System.out.println("HEADER VALUE IS: " + headerValue);
         headerMap.put("Authorization", authType + " " + headerValue);
     }
 

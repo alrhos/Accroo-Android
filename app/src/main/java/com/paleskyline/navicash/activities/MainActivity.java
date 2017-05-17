@@ -14,6 +14,7 @@ import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
+import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator, json));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator,
+                    json, RestRequest.NONE));
             coordinator.start();
 
         } catch (JSONException e) {
@@ -126,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY, coordinator, objects));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY, coordinator,
+                    objects, RestRequest.TOKEN));
             coordinator.start();
 
         } catch (JSONException e) {
@@ -171,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY, coordinator, objects));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY, coordinator,
+                    objects, RestRequest.TOKEN));
             coordinator.start();
 
 
@@ -201,7 +205,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            coordinator.addRequests(RestMethods.post(0, RestMethods.TRANSACTION, coordinator, json));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.TRANSACTION, coordinator,
+                    json, RestRequest.TOKEN));
             coordinator.start();
 
         } catch (JSONException e) {

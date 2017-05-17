@@ -105,13 +105,14 @@ public class RestMethods {
     }
 
     public static RestRequest post(final int index, final String endpoint,
-                                   final RequestCoordinator coordinator, JSONObject json) {
+                                   final RequestCoordinator coordinator,
+                                   JSONObject json, String authType) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
         String url = baseURL + endpoint;
         RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
-                errorListener, RestRequest.TOKEN);
+                errorListener, authType);
         return restRequest;
 
     }

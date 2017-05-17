@@ -16,6 +16,7 @@ import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
+import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,7 +114,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onSuccess() {
                 System.out.println("SUCCESS!!!");
+                System.out.println("DATA RECEIVED " + dataReceiver[0]);
                 try {
+
+                    JSONObject json = dataReceiver[0];
+                    String token = json.getString("token");
+
+                    AuthManager.getInstance(getApplicationContext()).saveEntry(
+                            AuthManager.TOKEN_KEY, token);
 
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
                             AuthManager.USERNAME_KEY, user.getEmailAddress());
@@ -122,6 +130,10 @@ public class RegisterActivity extends AppCompatActivity {
                             AuthManager.PASSWORD_KEY, String.copyValueOf(user.getPassword()));
 
                     CryptoManager.getInstance().saveMasterKey(getApplicationContext());
+
+
+
+                    System.out.println("TOKEN IS: " + AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.TOKEN_KEY));
 
                     // Populate general categories
                     createGeneralCategories();
@@ -148,7 +160,10 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         System.out.println(user.toJSON());
-        coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator, user.toJSON()));
+        System.out.println("-----------------------------");
+
+        coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator,
+                user.toJSON(), RestRequest.NONE));
         coordinator.start();
     }
 
@@ -183,7 +198,8 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("categories", jsonArray);
             System.out.println(jsonObject.toString());
-            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK, coordinator, jsonObject));
+            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK,
+                    coordinator, jsonObject, RestRequest.TOKEN));
             coordinator.start();
         } catch (JSONException e) {
             // TODO: error handling
