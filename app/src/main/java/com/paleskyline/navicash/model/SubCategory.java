@@ -45,6 +45,10 @@ public class SubCategory implements Securable {
         return generalCategoryID;
     }
 
+    public void setGeneralCategoryID(int generalCategoryID) {
+        this.generalCategoryID = generalCategoryID;
+    }
+
     public String getCategoryName() {
         return categoryName;
     }

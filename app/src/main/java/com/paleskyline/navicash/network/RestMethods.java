@@ -6,7 +6,6 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.paleskyline.navicash.crypto.AuthManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,12 +18,13 @@ import java.io.UnsupportedEncodingException;
 
 public class RestMethods {
 
-    private final static String baseURL = "http://192.168.1.75:5000/";
+    private final static String baseURL = "http://192.168.1.15:5000/";
     public final static String REGISTER = "user/register";
     public final static String KEY = "key";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";
     public final static String SUB_CATEGORY = "category/sub";
+    public final static String SUB_CATEGORY_BULK = "category/sub/bulk";
     public final static String TRANSACTION = "transaction";
     public final static String TRANSACTION_PARAM = "transaction?transactionid=";
 

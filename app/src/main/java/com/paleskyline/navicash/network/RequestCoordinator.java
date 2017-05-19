@@ -51,8 +51,6 @@ public abstract class RequestCoordinator {
     }
 
     private void setAuthHeader(RestRequest request) throws Exception {
-        System.out.println("!!!!!REQUEST: " + request.toString());
-        System.out.println("REQUEST TYPE IS: " + request.getAuthType());
         switch(request.getAuthType()) {
             case RestRequest.BASIC:
                 String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
@@ -64,14 +62,10 @@ public abstract class RequestCoordinator {
             case RestRequest.TOKEN:
                 String token = AuthManager.getInstance(context).getEntry(AuthManager.TOKEN_KEY);
                 request.setHeader(token);
-                System.out.println("REQUEST TYPE IS: " + request.getAuthType());
                 break;
             case RestRequest.NONE:
-                System.out.println("IN REQUEST NONE TYPE");
-                System.out.println("REQUEST TYPE IS: " + request.getAuthType());
                 // TODO: review how headers without auth are handled
                 request.setHeader(RestRequest.NONE);
-                System.out.println("END REQUEST NONE TYPE");
         }
     }
 

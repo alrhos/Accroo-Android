@@ -35,28 +35,28 @@ public class DataAccess {
     public ArrayList<GeneralCategory> getGeneralCategories() {
         db = dbHelper.getReadableDatabase();
         String[] columns = {
-                DBContract.GeneralCategory.COLUMN_CATEGORY_NAME,
-                DBContract.GeneralCategory.COLUMN_ROOT_CATEGORY,
-                DBContract.GeneralCategory.COLUMN_CATEGORY_ICON
+            DBContract.GeneralCategory.COLUMN_CATEGORY_NAME,
+            DBContract.GeneralCategory.COLUMN_ROOT_CATEGORY,
+            DBContract.GeneralCategory.COLUMN_CATEGORY_ICON
         };
 
         cursor = db.query(
-                DBContract.GeneralCategory.TABLE_NAME,
-                columns,
-                null,
-                null,
-                null,
-                null,
-                null
+            DBContract.GeneralCategory.TABLE_NAME,
+            columns,
+            null,
+            null,
+            null,
+            null,
+            null
         );
 
         ArrayList<GeneralCategory> categories = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             categories.add(new GeneralCategory(
-                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_ROOT_CATEGORY)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_ICON))
+                cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_ROOT_CATEGORY)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_ICON))
             ));
         }
 
@@ -70,26 +70,26 @@ public class DataAccess {
     public ArrayList<SubCategory> getSubCategories() {
         db = dbHelper.getReadableDatabase();
         String[] columns = {
-                DBContract.SubCategory.COLUMN_CATEGORY_NAME,
-                DBContract.SubCategory.COLUMN_GENERAL_CATEGORY,
+            DBContract.SubCategory.COLUMN_CATEGORY_NAME,
+            DBContract.SubCategory.COLUMN_GENERAL_CATEGORY,
         };
 
         cursor = db.query(
-                DBContract.GeneralCategory.TABLE_NAME,
-                columns,
-                null,
-                null,
-                null,
-                null,
-                null
+            DBContract.SubCategory.TABLE_NAME,
+            columns,
+            null,
+            null,
+            null,
+            null,
+            null
         );
 
         ArrayList<SubCategory> categories = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             categories.add(new SubCategory(
-                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_CATEGORY_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_GENERAL_CATEGORY))
+                cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_CATEGORY_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_GENERAL_CATEGORY))
             ));
         }
 

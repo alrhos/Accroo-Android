@@ -13,6 +13,7 @@ import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText emailAddress, loginPassword, confirmLoginPassword, dataPassword, confirmDataPassword;
     private Button register;
     private char[] loginPwd, dataPwd;
+    private ArrayList<GeneralCategory> generalCategories;
+    private ArrayList<SubCategory> subCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +118,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onSuccess() {
                 System.out.println("SUCCESS!!!");
-                System.out.println("DATA RECEIVED " + dataReceiver[0]);
                 try {
 
-                    JSONObject json = dataReceiver[0];
-                    String token = json.getString("token");
+                    String token = dataReceiver[0].get("token").toString();
 
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
                             AuthManager.TOKEN_KEY, token);
@@ -131,12 +133,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                     CryptoManager.getInstance().saveMasterKey(getApplicationContext());
 
-
-
-                    System.out.println("TOKEN IS: " + AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.TOKEN_KEY));
-
                     // Populate general categories
                     createGeneralCategories();
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -175,8 +175,25 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onSuccess() {
                 System.out.println("GENERAL CATEGORIES CREATED");
-                // We need to get the general categories here to get the IDs
-                //createSubCategories();
+                System.out.println(dataReceiver[0].toString());
+
+                // Process the returned general categories
+
+                generalCategories = new ArrayList<>();
+
+                try {
+                    JSONArray categories = dataReceiver[0].getJSONArray("categories");
+                    for (int i = 0; i < categories.length(); i++) {
+                        GeneralCategory gc = new GeneralCategory((JSONObject) categories.get(i));
+                        generalCategories.add(gc);
+                    }
+
+                    createSubCategories();
+
+                } catch (JSONException | UnsupportedEncodingException e) {
+                    // TODO: error handling
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -195,11 +212,15 @@ public class RegisterActivity extends AppCompatActivity {
                 System.out.println(category.toString());
                 jsonArray.put(category.encrypt());
             }
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("categories", jsonArray);
+
             System.out.println(jsonObject.toString());
+
             coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK,
                     coordinator, jsonObject, RestRequest.TOKEN));
+
             coordinator.start();
         } catch (JSONException e) {
             // TODO: error handling
@@ -216,15 +237,74 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onSuccess() {
                 System.out.println("SUB CATEGORIES CREATED");
+                System.out.println(dataReceiver[0].toString());
+
+                // Process the returned general categories
+
+                subCategories = new ArrayList<>();
+
+                try {
+                    JSONArray categories = dataReceiver[0].getJSONArray("categories");
+                    for (int i = 0; i < categories.length(); i++) {
+                        SubCategory sc = new SubCategory((JSONObject) categories.get(i));
+                        subCategories.add(sc);
+                    }
+
+                } catch (JSONException | UnsupportedEncodingException e) {
+                    // TODO: error handling
+                    e.printStackTrace();
+                }
             }
 
             @Override
             protected void onFailure(JSONObject json) {
                 System.out.println("SUB CATEGORY ERROR");
+                System.out.println(json.toString());
             }
         };
 
         // TODO: add requests and start coordinator (needs to get category data from local db)
+
+        ArrayList<SubCategory> categories = DataAccess.getInstance(getApplicationContext()).getSubCategories();
+
+        for (SubCategory sc: categories) {
+            for (GeneralCategory gc: generalCategories) {
+                if (sc.getGeneralCategoryName().equals(gc.getCategoryName())) {
+                    sc.setGeneralCategoryID(gc.getId());
+                    //sc.setGeneralCategoryID(101);
+                    break;
+                }
+            }
+        }
+
+        for (GeneralCategory g : generalCategories) {
+            System.out.println(g.toString());
+        }
+        for (SubCategory s : categories) {
+            System.out.println(s.toString());
+        }
+
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for (SubCategory category : categories) {
+                jsonArray.put(category.encrypt());
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("categories", jsonArray);
+
+            System.out.println(jsonObject.toString());
+
+            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY_BULK,
+                    coordinator, jsonObject, RestRequest.TOKEN));
+
+            coordinator.start();
+
+        } catch (JSONException e) {
+            // TODO: error handling
+            e.printStackTrace();
+        }
+
     }
 
 

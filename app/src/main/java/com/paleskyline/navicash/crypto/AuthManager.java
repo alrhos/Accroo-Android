@@ -72,6 +72,9 @@ public class AuthManager {
         return instance;
     }
 
+
+    // TODO: consider another method which takes char[] instead of string.
+
     public void saveEntry(String key, String value) throws Exception {
         try {
             String encryptedValue = keyStoreManager.encrypt(value);

@@ -37,9 +37,13 @@ public final class DBContract {
             GeneralCategory.COLUMN_CATEGORY_NAME + ", " +
             GeneralCategory.COLUMN_CATEGORY_ICON + ", " +
             GeneralCategory.COLUMN_ROOT_CATEGORY + ") VALUES (" +
-            "'Wages', 'placeholder', 'Income'), ('Takeaway', 'placeholder', 'Expenses');";
+            "'Wages', 'placeholder', 'Income'), ('Food and Drink', 'placeholder', 'Expenses');";
 
-
-    protected static final String POPULATE_SUB_CATEGORY = "";
+    protected static final String POPULATE_SUB_CATEGORY =
+            "INSERT INTO " + SubCategory.TABLE_NAME + "(" +
+            SubCategory.COLUMN_CATEGORY_NAME + ", " +
+            SubCategory.COLUMN_GENERAL_CATEGORY + ") VALUES " +
+            "('Salary', 'Wages'), ('Groceries', 'Food and Drink')," +
+            "('Takeaway', 'Food and Drink');";
 
 }
