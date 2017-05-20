@@ -38,6 +38,7 @@ public class RestMethods {
                 try {
                     coordinator.tokenRefresh(response.getString("token"));
                 } catch (JSONException e) {
+                    // TODO: error handling
                     e.printStackTrace();
                 }
             }
@@ -90,7 +91,7 @@ public class RestMethods {
     */
 
     public static RestRequest get(final int index, final String endpoint, String parameter,
-                                   final RequestCoordinator coordinator) {
+                                   final RequestCoordinator coordinator, String authType) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
@@ -99,7 +100,7 @@ public class RestMethods {
             url += parameter;
         }
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
-                errorListener, RestRequest.TOKEN);
+                errorListener, authType);
         return restRequest;
 
     }
@@ -134,6 +135,7 @@ public class RestMethods {
                         HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
                 json = new JSONObject(responseString);
             } catch (JSONException | UnsupportedEncodingException e) {
+                // TODO: error handling
                 e.printStackTrace();
             }
         }

@@ -15,7 +15,7 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
 
-        Button login = (Button) findViewById(R.id.login_button);
+        Button login = (Button) findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -23,7 +23,7 @@ public class LaunchActivity extends AppCompatActivity {
             }
         });
 
-        Button register = (Button) findViewById(R.id.registration_button);
+        Button register = (Button) findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);

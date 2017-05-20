@@ -24,14 +24,14 @@
         android:layout_below="@+id/welcome_image">
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LOGIN"
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/registration_button"
+            android:id="@+id/register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="REGISTER"
