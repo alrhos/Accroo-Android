@@ -34,6 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
     private char[] loginPwd, dataPwd;
     private ArrayList<GeneralCategory> generalCategories;
     private ArrayList<SubCategory> subCategories;
+    private int retryCount = 0;
+    private static final int MAX_RETRIES = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +201,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected void onFailure(JSONObject json) {
                 System.out.println("GENERAL CATEGORY ERROR");
+                retryCount++;
+                if (retryCount > MAX_RETRIES) {
+                    // ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
+                    return;
+                } else {
+                    createGeneralCategories();
+                }
             }
         };
 
@@ -250,6 +259,9 @@ public class RegisterActivity extends AppCompatActivity {
                         subCategories.add(sc);
                     }
 
+                    // SUCCESS! - Continue to main activity
+
+
                 } catch (JSONException | UnsupportedEncodingException e) {
                     // TODO: error handling
                     e.printStackTrace();
@@ -260,10 +272,15 @@ public class RegisterActivity extends AppCompatActivity {
             protected void onFailure(JSONObject json) {
                 System.out.println("SUB CATEGORY ERROR");
                 System.out.println(json.toString());
+                retryCount++;
+                if (retryCount > MAX_RETRIES) {
+                    // ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
+                    return;
+                } else {
+                    createGeneralCategories();
+                }
             }
         };
-
-        // TODO: add requests and start coordinator (needs to get category data from local db)
 
         ArrayList<SubCategory> categories = DataAccess.getInstance(getApplicationContext()).getSubCategories();
 

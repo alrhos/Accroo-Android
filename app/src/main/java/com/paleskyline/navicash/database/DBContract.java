@@ -36,8 +36,21 @@ public final class DBContract {
             "INSERT INTO " + GeneralCategory.TABLE_NAME + "(" +
             GeneralCategory.COLUMN_CATEGORY_NAME + ", " +
             GeneralCategory.COLUMN_CATEGORY_ICON + ", " +
-            GeneralCategory.COLUMN_ROOT_CATEGORY + ") VALUES (" +
-            "'Wages', 'placeholder', 'Income'), ('Food and Drink', 'placeholder', 'Expenses');";
+            GeneralCategory.COLUMN_ROOT_CATEGORY + ") VALUES " +
+            "('Wages', 'placeholder', 'Income'), " +
+            "('Food and Drink', 'placeholder', 'Expenses'), " +
+            "('Transport', 'placeholder', 'Expenses'), " +
+            "('Pets', 'placeholder', 'Expenses'), " +
+            "('Health', 'placeholder', 'Expenses'), " +
+            "('Miscellaneous Income', 'placeholder', 'Income'), " +
+            "('Sport', 'placeholder', 'Expenses'), " +
+            "('Investments', 'placeholder', 'Income'), " +
+            "('Holidays', 'placeholder', 'Expenses'), " +
+            "('Entertainment', 'placeholder', 'Expenses'), " +
+            "('Education', 'placeholder', 'Expenses'), " +
+            "('Miscellaneous Expenses', 'placeholder', 'Expenses'), " +
+            "('Accommodation', 'placeholder', 'Expenses');";
+
 
     protected static final String POPULATE_SUB_CATEGORY =
             "INSERT INTO " + SubCategory.TABLE_NAME + "(" +
