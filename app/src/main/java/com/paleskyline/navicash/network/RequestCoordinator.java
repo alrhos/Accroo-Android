@@ -92,16 +92,18 @@ public abstract class RequestCoordinator {
             // TODO: error handling
             e.printStackTrace();
         }
-        doneCount = 0;
-        retry();
+//        doneCount = 0;
+//        retry();
     }
 
-    protected void retry() {
+    protected synchronized void retry() {
+        doneCount = 0;
         if (!retryRequests.isEmpty()) {
             for (RestRequest request : retryRequests) {
                 VolleyManager.getInstance(context).addRequest(request);
             }
         }
+        // TODO: consider an else statement to call onSuccess() if there are no retry requests.
     }
 
     protected synchronized void receiveError(int responseCode, JSONObject json) {

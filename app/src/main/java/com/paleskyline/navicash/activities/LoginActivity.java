@@ -7,9 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
-import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONObject;
 
@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                     final JSONObject[] dataReceiver = new JSONObject[1];
                     RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
                             this, dataReceiver) {
+
                         @Override
                         protected void onSuccess() {
 
@@ -47,8 +48,21 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     };
 
-                    coordinator.addRequests(RestMethods.get(0, RestMethods.KEY, null,
-                            coordinator, RestRequest.BASIC));
+                    // SAVE CREDENTIALS TO SHARED PREFERENCES
+
+                    try {
+                        AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
+                        AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
+                    } catch (Exception e) {
+                        // TODO: Exception handling
+                        e.printStackTrace();
+                    }
+
+//                    coordinator.addRequests(RestMethods.get(0, RestMethods.KEY, null,
+//                            coordinator, RestRequest.BASIC));
+
+                    coordinator.addRequests(RestMethods.getKey(coordinator, 0));
+                    coordinator.start();
                 }
 //                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 //                startActivity(intent);

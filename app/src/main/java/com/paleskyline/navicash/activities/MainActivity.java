@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.model.GeneralCategory;
@@ -277,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         coordinator.start();
     }
 
-    */
+
     public void defaultLoader() {
         final JSONObject[] dataReceiver = new JSONObject[3];
         final RequestCoordinator coordinator = new RequestCoordinator(this.getApplicationContext(), tag, dataReceiver) {
@@ -297,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
                 RestMethods.get(2, RestMethods.TRANSACTION_PARAM, "1", coordinator));
         coordinator.start();
     }
+
+    */
 
     class DecryptionTask extends AsyncTask<JSONObject[], Void, Void> {
 

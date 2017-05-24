@@ -20,7 +20,6 @@ public class RestMethods {
 
     private final static String baseURL = "http://192.168.1.15:5000/";
     public final static String REGISTER = "user/register";
-    public final static String KEY = "key";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";
     public final static String SUB_CATEGORY = "category/sub";
@@ -37,6 +36,7 @@ public class RestMethods {
             public void onResponse(JSONObject response) {
                 try {
                     coordinator.tokenRefresh(response.getString("token"));
+                    coordinator.retry();
                 } catch (JSONException e) {
                     // TODO: error handling
                     e.printStackTrace();
@@ -57,7 +57,36 @@ public class RestMethods {
                 responseListener, errorListener, RestRequest.BASIC);
 
         return restRequest;
+    }
 
+    public static RestRequest getKey(final RequestCoordinator coordinator, final int index) {
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    coordinator.tokenRefresh(response.getString("token"));
+                    coordinator.done(index, response);
+                } catch (JSONException e) {
+                    // TODO: error handling
+                    e.printStackTrace();
+                }
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                JSONObject json = parseVolleyException(error);
+                coordinator.onFailure(json);
+            }
+        };
+
+        String url = baseURL + "user/key";
+
+        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
+                responseListener, errorListener, RestRequest.BASIC);
+
+        return restRequest;
     }
 
     /*
