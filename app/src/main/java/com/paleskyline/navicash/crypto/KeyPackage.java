@@ -1,10 +1,13 @@
 package com.paleskyline.navicash.crypto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by oscar on 4/03/17.
  */
 
-public class KeyPackage {
+public class KeyPackage implements Parcelable {
 
     private String encryptedMasterKey;
     private String nonce;
@@ -60,5 +63,50 @@ public class KeyPackage {
 
     public void setMemlimit(int memlimit) {
         this.memlimit = memlimit;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.encryptedMasterKey);
+        dest.writeString(this.nonce);
+        dest.writeString(this.salt);
+        dest.writeInt(this.opslimit);
+        dest.writeInt(this.memlimit);
+    }
+
+    protected KeyPackage(Parcel in) {
+        this.encryptedMasterKey = in.readString();
+        this.nonce = in.readString();
+        this.salt = in.readString();
+        this.opslimit = in.readInt();
+        this.memlimit = in.readInt();
+    }
+
+    public static final Parcelable.Creator<KeyPackage> CREATOR = new Parcelable.Creator<KeyPackage>() {
+        @Override
+        public KeyPackage createFromParcel(Parcel source) {
+            return new KeyPackage(source);
+        }
+
+        @Override
+        public KeyPackage[] newArray(int size) {
+            return new KeyPackage[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "KeyPackage{" +
+                "encryptedMasterKey='" + encryptedMasterKey + '\'' +
+                ", nonce='" + nonce + '\'' +
+                ", salt='" + salt + '\'' +
+                ", opslimit=" + opslimit +
+                ", memlimit=" + memlimit +
+                '}';
     }
 }

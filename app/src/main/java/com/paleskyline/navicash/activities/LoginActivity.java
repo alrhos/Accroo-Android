@@ -5,12 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.content.Intent;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
+import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -33,22 +36,39 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (isValidInput()) {
+
                     final JSONObject[] dataReceiver = new JSONObject[1];
                     RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
                             this, dataReceiver) {
 
                         @Override
                         protected void onSuccess() {
+                            try {
+                                JSONObject keyData = dataReceiver[0].getJSONObject("key");
+                                String key = keyData.getString("dataKey");
+                                String nonce = keyData.getString("nonce");
+                                String salt = keyData.getString("salt");
+                                int memlimit = keyData.getInt("memLimit");
+                                int opslimit = keyData.getInt("opsLimit");
 
+                                KeyPackage keyPackage = new KeyPackage(key, nonce, salt, opslimit, memlimit);
+
+                                Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
+                                intent.putExtra("keyPackage", keyPackage);
+                                startActivity(intent);
+
+                            } catch (JSONException e) {
+                                // TODO: exception handling
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
                         protected void onFailure(JSONObject json) {
-
+                            System.out.println("AN ERROR OCCURRED!");
+                            System.out.println(json.toString());
                         }
                     };
-
-                    // SAVE CREDENTIALS TO SHARED PREFERENCES
 
                     try {
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
@@ -58,14 +78,9 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-//                    coordinator.addRequests(RestMethods.get(0, RestMethods.KEY, null,
-//                            coordinator, RestRequest.BASIC));
-
                     coordinator.addRequests(RestMethods.getKey(coordinator, 0));
                     coordinator.start();
                 }
-//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                startActivity(intent);
             }
         });
 
