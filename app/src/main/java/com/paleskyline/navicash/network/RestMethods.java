@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 
 public class RestMethods {
 
-    private final static String baseURL = "http://192.168.1.75:5000/";
+    private final static String baseURL = "http://192.168.1.15:5000/";
     public final static String REGISTER = "user/register";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";

@@ -1,11 +1,11 @@
 package com.paleskyline.navicash.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.Intent;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
@@ -31,8 +31,18 @@ public class LoginActivity extends AppCompatActivity {
 
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
-
         loginButton = (Button) findViewById(R.id.login_button);
+
+        addListeners();
+    }
+
+
+    // TODO: implement logic
+    private boolean isValidInput() {
+        return true;
+    }
+
+    private void addListeners() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (isValidInput()) {
@@ -44,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         protected void onSuccess() {
                             try {
+
                                 JSONObject keyData = dataReceiver[0].getJSONObject("key");
                                 String key = keyData.getString("dataKey");
                                 String nonce = keyData.getString("nonce");
@@ -71,25 +82,21 @@ public class LoginActivity extends AppCompatActivity {
                     };
 
                     try {
+
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
+
+                        coordinator.addRequests(RestMethods.getKey(coordinator, 0));
+                        coordinator.start();
+
                     } catch (Exception e) {
                         // TODO: Exception handling
                         e.printStackTrace();
                     }
 
-                    coordinator.addRequests(RestMethods.getKey(coordinator, 0));
-                    coordinator.start();
                 }
             }
         });
-
-    }
-
-
-    // TODO: implement logic
-    private boolean isValidInput() {
-        return true;
     }
 
 }

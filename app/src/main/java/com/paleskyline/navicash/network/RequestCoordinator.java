@@ -42,6 +42,11 @@ public abstract class RequestCoordinator {
                 request.setTag(tag);
                 setAuthHeader(request);
                 this.requests.add(request);
+
+                // TODO: this needs to be changed. Cloning the request here will mean that the retry
+                // requests will have the same auth headers so they will fail if the token is expired
+                // because the token value will not be updated.
+
                 retryRequests.add((RestRequest) request.clone());
             } catch (Exception e) {
                 // TODO: review exception handling here
@@ -92,12 +97,12 @@ public abstract class RequestCoordinator {
             // TODO: error handling
             e.printStackTrace();
         }
-//        doneCount = 0;
-//        retry();
     }
 
     protected synchronized void retry() {
         doneCount = 0;
+        // TODO: could iterate through the requestQueue, clone each request, set the authHeader then add it to the volley queue
+        // WE MIGHT NOT EVEN NEED THE RETRYREQUESTS ARRAY LIST IF WE'RE GRABBING EVERYTHING FROM THE ORIGINAL QUEUE
         if (!retryRequests.isEmpty()) {
             for (RestRequest request : retryRequests) {
                 VolleyManager.getInstance(context).addRequest(request);
@@ -111,8 +116,7 @@ public abstract class RequestCoordinator {
             // Remove all requests from the request queue
             VolleyManager.getInstance(context).flushRequests(tag);
             // Create a request for a new token
-            RestRequest tokenRequest = RestMethods.getToken(this);
-            VolleyManager.getInstance(context).addRequest(tokenRequest);
+            VolleyManager.getInstance(context).addRequest(RestMethods.getToken(this));
         } else {
             // Remove any existing requests from the queue
             VolleyManager.getInstance(context).flushRequests(tag);
