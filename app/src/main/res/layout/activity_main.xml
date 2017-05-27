@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AppTheme.AppBarOverlay"
-    tools:context="oscaralston.fintel.activities.MainActivity">
+    tools:context="com.paleskyline.navicash.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,7 +24,6 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
             android:layout_below="@+id/toolbar"
@@ -35,30 +34,23 @@
             app:tabMode="fixed"
             app:tabIndicatorColor="@android:color/white" />
 
-
-
-
     </android.support.design.widget.AppBarLayout>
 
-    <!--
-    <include layout="@layout/content_main" />
-    -->
-
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_below="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:id="@+id/viewpager"
+            android:layout_below="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_black_24dp"
-        android:tint="#FFFFFF"
-        />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_add_black_24dp"
+            android:tint="#FFFFFF" />
+
 
 </android.support.design.widget.CoordinatorLayout>

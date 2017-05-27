@@ -12,19 +12,23 @@ import android.view.ViewGroup;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.SummaryListAdapter;
-import com.paleskyline.navicash.other.SimpleDividerItemDecoration;
+import com.paleskyline.navicash.other.DividerItemDecoration;
 
 public class SummaryFragment extends Fragment implements SummaryListAdapter.ClickListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public SummaryFragment() {
-        // Required empty public constructor
-    }
+    public SummaryFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("Fragment - onCreated");
+
+
+
+      //  loadData();
+
 
     }
 
@@ -35,7 +39,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
         View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
 
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
-        rv.addItemDecoration(new SimpleDividerItemDecoration(rootView.getContext()));
+        rv.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
         rv.setHasFixedSize(true);
         SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getContext(), new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"});
         summaryListAdapter.setClickListener(this);
@@ -46,6 +50,8 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
+
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE);
@@ -59,12 +65,46 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
                 }
         );
 
+        System.out.println("Fragment - onCreateView");
+
         return rootView;
     }
 
     @Override
     public void itemClicked(View view, int position) {
         System.out.println("CLICKED ITEM " + position);
+
     }
+
+//    private void loadData() {
+//        final JSONObject[] dataReceiver = new JSONObject[3];
+//        RequestCoordinator coordinator = new RequestCoordinator(getContext(), this, dataReceiver) {
+//
+//            @Override
+//            protected void onSuccess() {
+//                System.out.println("LOAD DATA SUCCESS");
+//                System.out.println(dataReceiver[0].toString());
+//                System.out.println(dataReceiver[1].toString());
+//                System.out.println(dataReceiver[2].toString());
+//                //swipeRefreshLayout.setRefreshing(false);
+//            }
+//
+//            @Override
+//            protected void onFailure(JSONObject json) {
+//                System.out.println("ERROR");
+//                System.out.println(json.toString());
+//                //swipeRefreshLayout.setRefreshing(false);
+//            }
+//        };
+//
+//        //swipeRefreshLayout.setRefreshing(true);
+//
+//        coordinator.addRequests(
+//                RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN),
+//                RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN),
+//                RestMethods.get(2, RestMethods.TRANSACTION_PARAM, "1", coordinator, RestRequest.TOKEN));
+//
+//        coordinator.start();
+//    }
 
 }

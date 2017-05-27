@@ -30,7 +30,9 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         super(method, url, json, listener, errorListener);
         this.authType = authType;
 
-        DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+        // DefaultRetryPolicy.DEFAULT_TIMEOUT_MS
+
+        DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(5000,
                 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         this.setRetryPolicy(retryPolicy);
     }

@@ -100,6 +100,7 @@ public abstract class RequestCoordinator {
     }
 
     protected synchronized void retry() {
+        System.out.println("RETRYING...");
         doneCount = 0;
         // TODO: could iterate through the requestQueue, clone each request, set the authHeader then add it to the volley queue
         // WE MIGHT NOT EVEN NEED THE RETRYREQUESTS ARRAY LIST IF WE'RE GRABBING EVERYTHING FROM THE ORIGINAL QUEUE
@@ -111,7 +112,8 @@ public abstract class RequestCoordinator {
         // TODO: consider an else statement to call onSuccess() if there are no retry requests.
     }
 
-    protected synchronized void receiveError(int responseCode, JSONObject json) {
+    protected synchronized void receiveError(int responseCode, String errorMessage) {
+        System.out.println("ERROR RECEIVED ");
         if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // Remove all requests from the request queue
             VolleyManager.getInstance(context).flushRequests(tag);
@@ -120,12 +122,12 @@ public abstract class RequestCoordinator {
         } else {
             // Remove any existing requests from the queue
             VolleyManager.getInstance(context).flushRequests(tag);
-            onFailure(json);
+            onFailure(errorMessage);
         }
     }
 
     protected abstract void onSuccess();
 
-    protected abstract void onFailure(JSONObject json);
+    protected abstract void onFailure(String errorMessage);
 
 }

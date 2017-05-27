@@ -1,9 +1,11 @@
 package com.paleskyline.navicash.network;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
@@ -27,6 +29,10 @@ public class RestMethods {
     public final static String TRANSACTION = "transaction";
     public final static String TRANSACTION_PARAM = "transaction?transactionid=";
 
+    private final static String TIMEOUT_ERROR = "The connection timed out";
+    private final static String CONNECTION_ERROR = "Connection error";
+    private final static String SERVER_ERROR = "An error occurred";
+
     private RestMethods() {}
 
     protected static RestRequest getToken(final RequestCoordinator coordinator) {
@@ -46,8 +52,8 @@ public class RestMethods {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                JSONObject json = parseVolleyException(error);
-                coordinator.onFailure(json);
+                String errorMessage = parseVolleyException(error);
+                coordinator.onFailure(errorMessage);
             }
         };
 
@@ -76,8 +82,8 @@ public class RestMethods {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                JSONObject json = parseVolleyException(error);
-                coordinator.onFailure(json);
+                String errorMessage = parseVolleyException(error);
+                coordinator.onFailure(errorMessage);
             }
         };
 
@@ -156,10 +162,12 @@ public class RestMethods {
     }
 
     // TODO: this method needs review - sometimes it causes null object references
-    private static JSONObject parseVolleyException(VolleyError error) {
+    private static JSONObject parseVolleyExceptionOld(VolleyError error) {
+        error.printStackTrace();
         JSONObject json = null;
         NetworkResponse response = error.networkResponse;
         if (error instanceof ServerError && response != null) {
+            System.out.println("INSTANCE OF SERVER ERROR WITH RESPONSE");
             try {
                 String responseString = new String(response.data,
                         HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
@@ -168,8 +176,22 @@ public class RestMethods {
                 // TODO: error handling
                 e.printStackTrace();
             }
+        } else if ((error instanceof TimeoutError) || (error instanceof NoConnectionError)) {
+
+        } else {
+
         }
         return json;
+    }
+
+    private static String parseVolleyException(VolleyError error) {
+        if (error instanceof TimeoutError) {
+            return TIMEOUT_ERROR;
+        } else if (error instanceof NoConnectionError) {
+            return CONNECTION_ERROR;
+        } else {
+            return SERVER_ERROR;
+        }
     }
 
     private static Response.Listener<JSONObject> createResponseListener(
@@ -188,8 +210,17 @@ public class RestMethods {
             @Override
             public void onErrorResponse(VolleyError error) {
                 int responseCode = getResponseCode(error);
-                JSONObject json = parseVolleyException(error);
-                coordinator.receiveError(responseCode, json);
+
+
+
+
+
+
+
+
+
+                String errorMessage = parseVolleyException(error);
+                coordinator.receiveError(responseCode, errorMessage);
             }
         };
         return errorListener;

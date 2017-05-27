@@ -150,9 +150,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onFailure(JSONObject json) {
-                if (json != null) {
-                    System.out.println("ERROR: " + json.toString());
+            protected void onFailure(String errorMessage) {
+                if (errorMessage != null) {
+                    System.out.println("ERROR: " + errorMessage);
                 } else {
                     System.out.println("COMMS ERROR");
                 }
@@ -199,7 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onFailure(JSONObject json) {
+            protected void onFailure(String errorMessage) {
                 System.out.println("GENERAL CATEGORY ERROR");
                 retryCount++;
                 if (retryCount > MAX_RETRIES) {
@@ -269,9 +269,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onFailure(JSONObject json) {
+            protected void onFailure(String errorMessage) {
                 System.out.println("SUB CATEGORY ERROR");
-                System.out.println(json.toString());
+                System.out.println(errorMessage);
                 retryCount++;
                 if (retryCount > MAX_RETRIES) {
                     // ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
@@ -300,6 +300,7 @@ public class RegisterActivity extends AppCompatActivity {
         for (SubCategory s : categories) {
             System.out.println(s.toString());
         }
+
 
         try {
             JSONArray jsonArray = new JSONArray();

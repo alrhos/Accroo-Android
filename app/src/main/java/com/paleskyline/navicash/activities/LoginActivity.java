@@ -75,9 +75,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        protected void onFailure(JSONObject json) {
+                        protected void onFailure(String errorMessage) {
                             System.out.println("AN ERROR OCCURRED!");
-                            System.out.println(json.toString());
+                            System.out.println(errorMessage);
                         }
                     };
 

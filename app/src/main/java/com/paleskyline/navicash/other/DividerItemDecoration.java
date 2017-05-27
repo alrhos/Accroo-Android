@@ -12,10 +12,10 @@ import com.paleskyline.navicash.R;
  * Created by oscar on 27/05/17.
  */
 
-public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
-    public SimpleDividerItemDecoration(Context context) {
+    public DividerItemDecoration(Context context) {
         mDivider = context.getResources().getDrawable(R.drawable.line_divider);
     }
 

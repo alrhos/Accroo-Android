@@ -57,7 +57,8 @@ public class SummaryListAdapter extends RecyclerView.Adapter<SummaryListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(SummaryListAdapter.ViewHolder holder, int position) {
+    // Was previously SummaryListAdapter.ViewHolder
+    public void onBindViewHolder(ViewHolder holder, int position) {
         /*
         if (position == 0) {
             holder.category.setText("Wages");
@@ -116,7 +117,8 @@ public class SummaryListAdapter extends RecyclerView.Adapter<SummaryListAdapter.
     }
 
     @Override
-    public SummaryListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    // Was previously SummaryListAdapter.ViewHolder
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.general_category_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
