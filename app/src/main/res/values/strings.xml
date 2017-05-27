@@ -15,4 +15,8 @@
         completions."
     </string>
     <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_add_transaction">AddTransactionActivity</string>
 </resources>

@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
@@ -28,7 +30,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.KeyDecryptionActivity"></activity>
+        <activity android:name=".activities.KeyDecryptionActivity" />
+        <activity
+            android:name=".activities.AddTransactionActivity"
+            android:label="@string/title_activity_add_transaction"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

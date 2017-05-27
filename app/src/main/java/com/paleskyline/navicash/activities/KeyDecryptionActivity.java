@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -43,7 +44,8 @@ public class KeyDecryptionActivity extends AppCompatActivity {
                     try {
                         CryptoManager.getInstance().decryptMasterKey(password, keyPackage);
                         CryptoManager.getInstance().saveMasterKey(getApplicationContext());
-                        System.out.println("LOGIN SUCCESSFUL");
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
                     } catch (Exception e) {
                         // TODO: error handling for incorrect password
                         e.printStackTrace();
