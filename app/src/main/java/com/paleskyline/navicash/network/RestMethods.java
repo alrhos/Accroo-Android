@@ -1,5 +1,7 @@
 package com.paleskyline.navicash.network;
 
+import android.content.Context;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -26,107 +28,74 @@ public class RestMethods {
     public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";
     public final static String SUB_CATEGORY = "category/sub";
     public final static String SUB_CATEGORY_BULK = "category/sub/bulk";
-    public final static String TRANSACTION = "transaction";
-    public final static String TRANSACTION_PARAM = "transaction?transactionid=";
+    public final static String TRANSACTION = "transaction?transactionid=";
 
     private final static String TIMEOUT_ERROR = "The connection timed out";
     private final static String CONNECTION_ERROR = "Connection error";
-    private final static String SERVER_ERROR = "An error occurred";
+    private final static String GENERAL_ERROR = "An error occurred";
 
     private RestMethods() {}
 
-    protected static RestRequest getToken(final RequestCoordinator coordinator) {
+    protected static RestRequest getToken(final RequestCoordinator coordinator, final Context context)
+        throws Exception {
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    coordinator.tokenRefresh(response.getString("token"));
-                    coordinator.retry();
-                } catch (JSONException e) {
-                    // TODO: error handling
-                    e.printStackTrace();
+                    coordinator.updateToken(response.getString("token"));
+                } catch (Exception e) {
+                    coordinator.abort(GENERAL_ERROR);
                 }
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String errorMessage = parseVolleyException(error);
-                coordinator.onFailure(errorMessage);
+                coordinator.abort(parseVolleyException(error));
             }
         };
 
         String url = baseURL + "user/token";
 
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.BASIC);
+                responseListener, errorListener, RestRequest.BASIC, context);
 
         return restRequest;
     }
 
-    public static RestRequest getKey(final RequestCoordinator coordinator, final int index) {
+    public static RestRequest getKey(final RequestCoordinator coordinator, final int index,
+                                     final Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    coordinator.tokenRefresh(response.getString("token"));
+                    coordinator.updateToken(response.getString("token"));
                     coordinator.done(index, response);
-                } catch (JSONException e) {
-                    // TODO: error handling
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    coordinator.abort(GENERAL_ERROR);
                 }
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String errorMessage = parseVolleyException(error);
-                coordinator.onFailure(errorMessage);
+                coordinator.abort(parseVolleyException(error));
             }
         };
 
         String url = baseURL + "user/key";
 
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.BASIC);
+                responseListener, errorListener, RestRequest.BASIC, context);
 
         return restRequest;
     }
-
-    /*
-
-    public static RestRequest getEncryptionKey(final int index, final RequestCoordinator coordinator) {
-
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                coordinator.done(index, response);
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                int responseCode = getResponseCode(error);
-                JSONObject json = parseVolleyException(error);
-                coordinator.receiveError(responseCode, json);
-            }
-        };
-
-        String url = baseURL + "key";
-
-        RestRequest restRequest = new RestRequest(Request.Method.GET, url, null,
-                responseListener, errorListener, RestRequest.TOKEN, coordinator.getTag());
-
-        return restRequest;
-
-    }
-
-    */
 
     public static RestRequest get(final int index, final String endpoint, String parameter,
-                                   final RequestCoordinator coordinator, String authType) {
+                                   final RequestCoordinator coordinator, String authType,
+                                   Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
@@ -135,20 +104,22 @@ public class RestMethods {
             url += parameter;
         }
         RestRequest restRequest = new RestRequest(Request.Method.GET, url, null, responseListener,
-                errorListener, authType);
+                errorListener, authType, context);
+
         return restRequest;
 
     }
 
     public static RestRequest post(final int index, final String endpoint,
                                    final RequestCoordinator coordinator,
-                                   JSONObject json, String authType) {
+                                   JSONObject json, String authType, Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
         String url = baseURL + endpoint;
         RestRequest restRequest = new RestRequest(Request.Method.POST, url, json, responseListener,
-                errorListener, authType);
+                errorListener, authType, context);
+
         return restRequest;
 
     }
@@ -190,7 +161,7 @@ public class RestMethods {
         } else if (error instanceof NoConnectionError) {
             return CONNECTION_ERROR;
         } else {
-            return SERVER_ERROR;
+            return GENERAL_ERROR;
         }
     }
 
@@ -210,15 +181,6 @@ public class RestMethods {
             @Override
             public void onErrorResponse(VolleyError error) {
                 int responseCode = getResponseCode(error);
-
-
-
-
-
-
-
-
-
                 String errorMessage = parseVolleyException(error);
                 coordinator.receiveError(responseCode, errorMessage);
             }

@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
 
-                        coordinator.addRequests(RestMethods.getKey(coordinator, 0));
+                        coordinator.addRequests(RestMethods.getKey(coordinator, 0, getApplicationContext()));
                         coordinator.start();
 
                     } catch (Exception e) {

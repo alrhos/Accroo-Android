@@ -1,6 +1,7 @@
 package com.paleskyline.navicash.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,17 +9,27 @@ import android.widget.Button;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
+import com.paleskyline.navicash.crypto.CryptoManager;
+import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
+import com.paleskyline.navicash.services.DataProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 public class LaunchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_launch_loading);
         autoLogin();
     }
 
@@ -27,7 +38,9 @@ public class LaunchActivity extends AppCompatActivity {
             // Check that credentials exist
             AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.USERNAME_KEY);
             AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.PASSWORD_KEY);
-            AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.ENCRYPTION_KEY);
+            // Init master key
+            CryptoManager.getInstance().initMasterKey(getApplicationContext());
+
             loadUserData();
         } catch (Exception e) {
             // TODO: exception handling
@@ -48,10 +61,8 @@ public class LaunchActivity extends AppCompatActivity {
                 System.out.println(dataReceiver[1].toString());
                 System.out.println(dataReceiver[2].toString());
 
-                // DECRYPT DATA
+                new DecryptData().execute(dataReceiver);
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
             }
 
             @Override
@@ -64,12 +75,18 @@ public class LaunchActivity extends AppCompatActivity {
 
         // TODO: get system date, lookup id in local db and add to transaction request.
 
-        coordinator.addRequests(
-                RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN),
-                RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN),
-                RestMethods.get(2, RestMethods.TRANSACTION_PARAM, "1", coordinator, RestRequest.TOKEN));
+        try {
 
-        coordinator.start();
+            coordinator.addRequests(
+                    RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RestMethods.get(2, RestMethods.TRANSACTION, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+
+            coordinator.start();
+        } catch (Exception e) {
+            // TODO: exception handling
+            e.printStackTrace();
+        }
     }
 
     private void initLayout() {
@@ -90,6 +107,47 @@ public class LaunchActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            if (success) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            } else {
+                // TODO: error handling
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(JSONObject[]... jsonObjects) {
+            try {
+                JSONArray generalCategories = jsonObjects[0][0].getJSONArray("categories");
+                for (int i = 0; i < generalCategories.length(); i++) {
+                    GeneralCategory generalCategory = new GeneralCategory(generalCategories.getJSONObject(i));
+                    DataProvider.getInstance().getGeneralCategories().add(generalCategory);
+                }
+                JSONArray subCategories = jsonObjects[0][1].getJSONArray("categories");
+                for (int j = 0; j < subCategories.length(); j++) {
+                    SubCategory subCategory = new SubCategory(subCategories.getJSONObject(j));
+                    DataProvider.getInstance().getSubCategories().add(subCategory);
+                }
+                JSONArray transactions = jsonObjects[0][2].getJSONArray("transactions");
+                for (int k = 0; k < transactions.length(); k++) {
+                    Transaction transaction = new Transaction(transactions.getJSONObject(k));
+                    DataProvider.getInstance().getTransactions().add(transaction);
+                }
+                return true;
+            } catch (JSONException | UnsupportedEncodingException e) {
+                // TODO: error handling
+                e.printStackTrace();
+                return false;
+            }
+        }
     }
 
 }

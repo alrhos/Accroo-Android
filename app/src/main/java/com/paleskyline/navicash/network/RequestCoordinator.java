@@ -1,7 +1,6 @@
 package com.paleskyline.navicash.network;
 
 import android.content.Context;
-import android.util.Base64;
 
 import com.paleskyline.navicash.crypto.AuthManager;
 
@@ -17,10 +16,12 @@ import java.util.ArrayList;
 public abstract class RequestCoordinator {
 
     private int doneCount = 0;
+    private boolean retryRequired = false;
     private Context context;
     private Object tag;
     private ArrayList<RestRequest> requests;
     private JSONObject[] dataReceiver;
+    private static final String ERROR = "An error occurred";
 
     private ArrayList<RestRequest> retryRequests;
 
@@ -32,45 +33,11 @@ public abstract class RequestCoordinator {
         retryRequests = new ArrayList<>();
     }
 
-    protected Object getTag() {
-        return tag;
-    }
-
-    public void addRequests(RestRequest... requests) {
+    public void addRequests(RestRequest... requests) throws Exception {
         for (RestRequest request : requests) {
-            try {
-                request.setTag(tag);
-                setAuthHeader(request);
-                this.requests.add(request);
-
-                // TODO: this needs to be changed. Cloning the request here will mean that the retry
-                // requests will have the same auth headers so they will fail if the token is expired
-                // because the token value will not be updated.
-
-                retryRequests.add((RestRequest) request.clone());
-            } catch (Exception e) {
-                // TODO: review exception handling here
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void setAuthHeader(RestRequest request) throws Exception {
-        switch(request.getAuthType()) {
-            case RestRequest.BASIC:
-                String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
-                // TODO: review password security
-                String password = AuthManager.getInstance(context).getEntry(AuthManager.PASSWORD_KEY);
-                String credentials = username + ":" + password;
-                request.setHeader(Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
-                break;
-            case RestRequest.TOKEN:
-                String token = AuthManager.getInstance(context).getEntry(AuthManager.TOKEN_KEY);
-                request.setHeader(token);
-                break;
-            case RestRequest.NONE:
-                // TODO: review how headers without auth are handled
-                request.setHeader(RestRequest.NONE);
+            request.setTag(tag);
+            this.requests.add(request);
+            retryRequests.add((RestRequest) request.clone());
         }
     }
 
@@ -90,39 +57,45 @@ public abstract class RequestCoordinator {
         }
     }
 
-    protected synchronized void tokenRefresh(String token) {
+    protected void updateToken(String token) {
         try {
             AuthManager.getInstance(context).saveEntry(AuthManager.TOKEN_KEY, token);
+            if (retryRequired) {
+                retry();
+            }
         } catch (Exception e) {
-            // TODO: error handling
-            e.printStackTrace();
+            abort(ERROR);
         }
     }
 
-    protected synchronized void retry() {
-        System.out.println("RETRYING...");
+    private synchronized void retry() {
         doneCount = 0;
-        // TODO: could iterate through the requestQueue, clone each request, set the authHeader then add it to the volley queue
-        // WE MIGHT NOT EVEN NEED THE RETRYREQUESTS ARRAY LIST IF WE'RE GRABBING EVERYTHING FROM THE ORIGINAL QUEUE
-        if (!retryRequests.isEmpty()) {
-            for (RestRequest request : retryRequests) {
+        for (RestRequest request : retryRequests) {
+            try {
+                request.setAuthHeader();
                 VolleyManager.getInstance(context).addRequest(request);
+            } catch (Exception e) {
+                abort(ERROR);
             }
         }
-        // TODO: consider an else statement to call onSuccess() if there are no retry requests.
+    }
+
+    protected void abort(String errorMessage) {
+        VolleyManager.getInstance(context).flushRequests(tag);
+        onFailure(errorMessage);
     }
 
     protected synchronized void receiveError(int responseCode, String errorMessage) {
-        System.out.println("ERROR RECEIVED ");
         if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            // Remove all requests from the request queue
+            retryRequired = true;
             VolleyManager.getInstance(context).flushRequests(tag);
-            // Create a request for a new token
-            VolleyManager.getInstance(context).addRequest(RestMethods.getToken(this));
+            try {
+                VolleyManager.getInstance(context).addRequest(RestMethods.getToken(this, context));
+            } catch (Exception e) {
+                abort(ERROR);
+            }
         } else {
-            // Remove any existing requests from the queue
-            VolleyManager.getInstance(context).flushRequests(tag);
-            onFailure(errorMessage);
+            abort(errorMessage);
         }
     }
 

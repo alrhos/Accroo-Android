@@ -164,9 +164,16 @@ public class RegisterActivity extends AppCompatActivity {
         System.out.println(user.toJSON());
         System.out.println("-----------------------------");
 
-        coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator,
-                user.toJSON(), RestRequest.NONE));
-        coordinator.start();
+        try {
+            coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator,
+                    user.toJSON(), RestRequest.NONE, getApplicationContext()));
+
+            coordinator.start();
+        } catch (Exception e) {
+            // TODO: exception handling
+            e.printStackTrace();
+        }
+
     }
 
     private void createGeneralCategories() {
@@ -228,10 +235,11 @@ public class RegisterActivity extends AppCompatActivity {
             System.out.println(jsonObject.toString());
 
             coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK,
-                    coordinator, jsonObject, RestRequest.TOKEN));
+                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
-        } catch (JSONException e) {
+
+        } catch (Exception e) {
             // TODO: error handling
             e.printStackTrace();
         }
@@ -314,11 +322,11 @@ public class RegisterActivity extends AppCompatActivity {
             System.out.println(jsonObject.toString());
 
             coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY_BULK,
-                    coordinator, jsonObject, RestRequest.TOKEN));
+                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             // TODO: error handling
             e.printStackTrace();
         }

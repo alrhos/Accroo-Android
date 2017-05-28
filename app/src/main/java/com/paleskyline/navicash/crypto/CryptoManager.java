@@ -161,6 +161,12 @@ public class CryptoManager {
         AuthManager.getInstance(context).saveEntry(AuthManager.ENCRYPTION_KEY, encode(masterKey));
     }
 
+    public void initMasterKey(Context context) throws Exception {
+        byte[] secretKeyBytes = decode(AuthManager.getInstance(context).getEntry(AuthManager.ENCRYPTION_KEY));
+        this.secretBox = new SecretBox(secretKeyBytes);
+        // TODO: review password security here and override secretKeyBytes
+    }
+
     public SecurePayload encrypt(String plainText) {
         byte[] nonce = generateNonce();
         byte[] cipherText = secretBox.encrypt(nonce, plainText.getBytes());
