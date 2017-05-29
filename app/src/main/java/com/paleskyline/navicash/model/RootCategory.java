@@ -27,6 +27,14 @@ public class RootCategory {
         return generalCategories;
     }
 
+    public double getTransactionTotal() {
+        double total = 0;
+        for (GeneralCategory gc : generalCategories) {
+            total += gc.getTransactionTotal();
+        }
+        return total;
+    }
+
     public void setGeneralCategories(ArrayList<GeneralCategory> generalCategories) {
         this.generalCategories = generalCategories;
     }

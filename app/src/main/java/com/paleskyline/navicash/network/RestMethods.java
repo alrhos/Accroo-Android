@@ -16,6 +16,9 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
+import static com.paleskyline.navicash.network.RestRequest.GENERAL_ERROR;
+
+
 /**
  * Created by oscar on 11/03/17.
  */
@@ -29,10 +32,6 @@ public class RestMethods {
     public final static String SUB_CATEGORY = "category/sub";
     public final static String SUB_CATEGORY_BULK = "category/sub/bulk";
     public final static String TRANSACTION = "transaction?transactionid=";
-
-    private final static String TIMEOUT_ERROR = "The connection timed out";
-    private final static String CONNECTION_ERROR = "Connection error";
-    private final static String GENERAL_ERROR = "An error occurred";
 
     private RestMethods() {}
 
@@ -157,9 +156,9 @@ public class RestMethods {
 
     private static String parseVolleyException(VolleyError error) {
         if (error instanceof TimeoutError) {
-            return TIMEOUT_ERROR;
+            return RestRequest.TIMEOUT_ERROR;
         } else if (error instanceof NoConnectionError) {
-            return CONNECTION_ERROR;
+            return RestRequest.CONNECTION_ERROR;
         } else {
             return GENERAL_ERROR;
         }

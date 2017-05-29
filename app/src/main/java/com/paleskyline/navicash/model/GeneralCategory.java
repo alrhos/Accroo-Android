@@ -65,6 +65,14 @@ public class GeneralCategory implements Securable {
         return subCategories;
     }
 
+    public double getTransactionTotal() {
+        double total = 0;
+        for (SubCategory sc : subCategories) {
+            total += sc.getTransactionTotal();
+        }
+        return total;
+    }
+
     public void setSubCategories(ArrayList<SubCategory> subCategories) {
         this.subCategories = subCategories;
     }
@@ -72,7 +80,7 @@ public class GeneralCategory implements Securable {
     @Override
     public JSONObject encrypt() throws JSONException {
         System.out.println("THE ID IS: " + getId());
-        // Need to add section here to handle IDs for POST and PUT
+        // TODO: Need to add section here to handle IDs for POST and PUT
         JSONObject categoryData = new JSONObject();
         categoryData.put("categoryName", categoryName);
         categoryData.put("rootCategory", rootCategory);

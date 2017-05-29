@@ -1,10 +1,6 @@
 package com.paleskyline.navicash.services;
 
-import com.paleskyline.navicash.model.GeneralCategory;
-import com.paleskyline.navicash.model.SubCategory;
-import com.paleskyline.navicash.model.Transaction;
-
-import java.util.ArrayList;
+import com.paleskyline.navicash.model.RootCategory;
 
 /**
  * Created by oscar on 27/05/17.
@@ -13,14 +9,12 @@ import java.util.ArrayList;
 public class DataProvider {
 
     private static DataProvider instance = null;
-    private ArrayList<GeneralCategory> generalCategories;
-    private ArrayList<SubCategory> subCategories;
-    private ArrayList<Transaction> transactions;
+    private RootCategory[] rootCategories;
 
     private DataProvider() {
-        generalCategories = new ArrayList<>();
-        subCategories = new ArrayList<>();
-        transactions = new ArrayList<>();
+        rootCategories = new RootCategory[2];
+        rootCategories[0] = new RootCategory("Income");
+        rootCategories[1] = new RootCategory("Expenses");
     }
 
     public static DataProvider getInstance() {
@@ -30,27 +24,12 @@ public class DataProvider {
         return instance;
     }
 
-    public ArrayList<GeneralCategory> getGeneralCategories() {
-        return generalCategories;
+    public RootCategory[] getRootCategories() {
+        return rootCategories;
     }
 
-    public void setGeneralCategories(ArrayList<GeneralCategory> generalCategories) {
-        this.generalCategories = generalCategories;
+    public void setRootCategories(RootCategory[] rootCategories) {
+        this.rootCategories = rootCategories;
     }
 
-    public ArrayList<SubCategory> getSubCategories() {
-        return subCategories;
-    }
-
-    public void setSubCategories(ArrayList<SubCategory> subCategories) {
-        this.subCategories = subCategories;
-    }
-
-    public ArrayList<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(ArrayList<Transaction> transactions) {
-        this.transactions = transactions;
-    }
 }

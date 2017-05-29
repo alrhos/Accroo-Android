@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
@@ -34,7 +34,10 @@
         <activity
             android:name=".activities.AddTransactionActivity"
             android:label="@string/title_activity_add_transaction"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TestLoginActivity"
+            android:label="@string/title_activity_test_login"></activity>
     </application>
 
 </manifest>

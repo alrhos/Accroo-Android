@@ -61,6 +61,14 @@ public class SubCategory implements Securable {
         return transactions;
     }
 
+    public double getTransactionTotal() {
+        double total = 0;
+        for (Transaction t : transactions) {
+            total += t.getAmount();
+        }
+        return total;
+    }
+
     public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
     }

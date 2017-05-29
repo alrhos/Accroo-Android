@@ -21,7 +21,6 @@ public abstract class RequestCoordinator {
     private Object tag;
     private ArrayList<RestRequest> requests;
     private JSONObject[] dataReceiver;
-    private static final String ERROR = "An error occurred";
 
     private ArrayList<RestRequest> retryRequests;
 
@@ -64,7 +63,7 @@ public abstract class RequestCoordinator {
                 retry();
             }
         } catch (Exception e) {
-            abort(ERROR);
+            abort(RestRequest.GENERAL_ERROR);
         }
     }
 
@@ -75,7 +74,7 @@ public abstract class RequestCoordinator {
                 request.setAuthHeader();
                 VolleyManager.getInstance(context).addRequest(request);
             } catch (Exception e) {
-                abort(ERROR);
+                abort(RestRequest.GENERAL_ERROR);
             }
         }
     }
@@ -92,7 +91,7 @@ public abstract class RequestCoordinator {
             try {
                 VolleyManager.getInstance(context).addRequest(RestMethods.getToken(this, context));
             } catch (Exception e) {
-                abort(ERROR);
+                abort(RestRequest.GENERAL_ERROR);
             }
         } else {
             abort(errorMessage);

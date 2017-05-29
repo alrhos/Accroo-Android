@@ -27,6 +27,10 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     private Map<String, String> headerMap;
     private Context context;
 
+    public final static String TIMEOUT_ERROR = "The connection timed out";
+    public final static String CONNECTION_ERROR = "Connection error";
+    public final static String GENERAL_ERROR = "An error occurred";
+
 //    public RestRequest(int method, String url, JSONObject json,
 //                          Response.Listener<JSONObject> listener,
 //                          Response.ErrorListener errorListener,

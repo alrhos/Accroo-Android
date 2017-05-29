@@ -10,6 +10,7 @@
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/launch_loader"
         android:layout_marginTop="50dp"
         style="?android:attr/progressBarStyleLarge"
         android:indeterminateTint="@color/colorPrimaryDark"
