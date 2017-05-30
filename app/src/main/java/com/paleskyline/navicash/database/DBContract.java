@@ -49,14 +49,26 @@ public final class DBContract {
             "('Entertainment', 'placeholder', 'Expenses'), " +
             "('Education', 'placeholder', 'Expenses'), " +
             "('Miscellaneous Expenses', 'placeholder', 'Expenses'), " +
-            "('Accommodation', 'placeholder', 'Expenses');";
+            "('Accommodation', 'placeholder', 'Expenses'), " +
+            "('Personal', 'placeholder', 'Expenses');";
 
 
     protected static final String POPULATE_SUB_CATEGORY =
             "INSERT INTO " + SubCategory.TABLE_NAME + "(" +
             SubCategory.COLUMN_CATEGORY_NAME + ", " +
             SubCategory.COLUMN_GENERAL_CATEGORY + ") VALUES " +
-            "('Salary', 'Wages'), ('Groceries', 'Food and Drink')," +
-            "('Takeaway', 'Food and Drink');";
+            "('Salary', 'Wages'), ('Groceries', 'Food and Drink'), " +
+            "('Takeaway', 'Food and Drink'), ('Textbooks', 'Education'), " +
+            "('Tuition fees', 'Education'), ('Concerts', 'Entertainment'), " +
+            "('Movies', 'Entertainment'), ('Going out', 'Entertainment'), " +
+            "('Dining out', 'Food and Drink'), ('Dentist', 'Health'), " +
+            "('GP appointments', 'Health'), ('Health insurance', 'Health'), " +
+            "('Medicine', 'Health'), ('Accommodation', 'Holidays'), " +
+            "('Transport', 'Holidays'), ('Travel insurance', 'Holidays'), " +
+            "('Bank account interest', 'Investments'), ('Shares', 'Investments'), " +
+            "('Clothing', 'Personal'), ('Living essentials', 'Personal'), " +
+            "('Personal grooming', 'Personal'), ('Subscriptions', 'Personal'), " +
+            "('Car insurance', 'Transport'), ('Petrol', 'Transport'), " +
+            "('Uber', 'Transport'), ('Vehicle maintenance', 'Transport');";
 
 }

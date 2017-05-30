@@ -59,13 +59,7 @@ public class LaunchActivity extends AppCompatActivity {
 
             @Override
             protected void onSuccess() {
-                System.out.println("LOAD DATA SUCCESS");
-                System.out.println(dataReceiver[0].toString());
-                System.out.println(dataReceiver[1].toString());
-                System.out.println(dataReceiver[2].toString());
-
                 new DecryptData().execute(dataReceiver);
-
             }
 
             @Override
@@ -91,6 +85,7 @@ public class LaunchActivity extends AppCompatActivity {
                     RestMethods.get(2, RestMethods.TRANSACTION, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
+
         } catch (Exception e) {
             // TODO: exception handling
             e.printStackTrace();
@@ -119,7 +114,7 @@ public class LaunchActivity extends AppCompatActivity {
 
     class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
-        // TODO: experiment with passing in activity name and use to when building the intent.
+        // TODO: experiment with passing in activity name and use when building the intent.
 
         public DecryptData() {}
 
@@ -148,15 +143,18 @@ public class LaunchActivity extends AppCompatActivity {
                 JSONArray generalCategories = jsonObjects[0][0].getJSONArray("categories");
                 for (int i = 0; i < generalCategories.length(); i++) {
                     GeneralCategory generalCategory = new GeneralCategory(generalCategories.getJSONObject(i));
-                    System.out.println(generalCategory.toString());
+                    //System.out.println(generalCategory.toString());
                     gc.add(generalCategory);
                 }
 
                 JSONArray subCategories = jsonObjects[0][1].getJSONArray("categories");
                 for (int j = 0; j < subCategories.length(); j++) {
                     SubCategory subCategory = new SubCategory(subCategories.getJSONObject(j));
+                    //System.out.println(subCategory.toString());
                     sc.add(subCategory);
                 }
+
+                // TODO: extra condition required here to only let in transactions for the specified date transaction
 
                 JSONArray transactions = jsonObjects[0][2].getJSONArray("transactions");
                 for (int k = 0; k < transactions.length(); k++) {
@@ -164,29 +162,58 @@ public class LaunchActivity extends AppCompatActivity {
                     t.add(transaction);
                 }
 
-                for (SubCategory s : sc) {
-                    for (Transaction tx : t) {
+                for (Transaction tx: t) {
+                    for (SubCategory s : sc) {
                         if (tx.getSubCategoryID() == s.getId()) {
                             s.getTransactions().add(tx);
+                            break;
+                        }
+                    }
+                }
+
+                for (SubCategory s : sc) {
+                    for (GeneralCategory g : gc) {
+                        if (s.getGeneralCategoryID() == g.getId()) {
+                            g.getSubCategories().add(s);
+                            break;
                         }
                     }
                 }
 
                 for (GeneralCategory g : gc) {
-                    for (SubCategory s : sc) {
-                        if (s.getGeneralCategoryID() == g.getId()) {
-                            g.getSubCategories().add(s);
+                    for (int c = 0; c < rc.length; c++) {
+                        if (g.getRootCategory().equals(rc[c].getCategoryName())) {
+                            rc[c].getGeneralCategories().add(g);
+                            break;
                         }
                     }
                 }
 
-                for (int c = 0; c < rc.length; c++) {
-                    for (GeneralCategory g : gc) {
-                        if (g.getRootCategory().equals(rc[c].getCategoryName())) {
-                            rc[c].getGeneralCategories().add(g);
-                        }
-                    }
-                }
+                // TODO: benchmark performance between both approaches using a counter variable.
+
+//                for (SubCategory s : sc) {
+//                    for (Transaction tx : t) {
+//                        if (tx.getSubCategoryID() == s.getId()) {
+//                            s.getTransactions().add(tx);
+//                        }
+//                    }
+//                }
+//
+//                for (GeneralCategory g : gc) {
+//                    for (SubCategory s : sc) {
+//                        if (s.getGeneralCategoryID() == g.getId()) {
+//                            g.getSubCategories().add(s);
+//                        }
+//                    }
+//                }
+//
+//                for (int c = 0; c < rc.length; c++) {
+//                    for (GeneralCategory g : gc) {
+//                        if (g.getRootCategory().equals(rc[c].getCategoryName())) {
+//                            rc[c].getGeneralCategories().add(g);
+//                        }
+//                    }
+//                }
 
                 DataProvider.getInstance().setRootCategories(rc);
 

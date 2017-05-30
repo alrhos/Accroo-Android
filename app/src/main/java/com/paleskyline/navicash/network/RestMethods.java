@@ -6,15 +6,11 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 
 import static com.paleskyline.navicash.network.RestRequest.GENERAL_ERROR;
 
@@ -132,36 +128,52 @@ public class RestMethods {
     }
 
     // TODO: this method needs review - sometimes it causes null object references
-    private static JSONObject parseVolleyExceptionOld(VolleyError error) {
-        error.printStackTrace();
-        JSONObject json = null;
-        NetworkResponse response = error.networkResponse;
-        if (error instanceof ServerError && response != null) {
-            System.out.println("INSTANCE OF SERVER ERROR WITH RESPONSE");
-            try {
-                String responseString = new String(response.data,
-                        HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
-                json = new JSONObject(responseString);
-            } catch (JSONException | UnsupportedEncodingException e) {
-                // TODO: error handling
-                e.printStackTrace();
-            }
-        } else if ((error instanceof TimeoutError) || (error instanceof NoConnectionError)) {
+//    private static JSONObject parseVolleyExceptionOld(VolleyError error) {
+//        JSONObject json = null;
+//        NetworkResponse response = error.networkResponse;
+//        if (error instanceof ServerError && response != null) {
+//            try {
+//                String responseString = new String(response.data,
+//                        HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
+//                json = new JSONObject(responseString);
+//            } catch (JSONException | UnsupportedEncodingException e) {
+//                // TODO: error handling
+//                e.printStackTrace();
+//            }
+//        } else if ((error instanceof TimeoutError) || (error instanceof NoConnectionError)) {
+//
+//        } else {
+//
+//        }
+//        return json;
+//    }
 
-        } else {
-
-        }
-        return json;
-    }
-
+    // TODO: see if code can be cleaned up
     private static String parseVolleyException(VolleyError error) {
-        if (error instanceof TimeoutError) {
-            return RestRequest.TIMEOUT_ERROR;
-        } else if (error instanceof NoConnectionError) {
+        try {
+            NetworkResponse networkResponse = error.networkResponse;
+            String serverMessage = new String(networkResponse.data);
+            if (!serverMessage.isEmpty()) {
+                String jsonString = new String(networkResponse.data);
+                try {
+                    JSONObject serverResponse = new JSONObject(jsonString);
+                    return serverResponse.getString("message");
+                } catch (JSONException e) {
+                    if (error instanceof TimeoutError) {
+                        return RestRequest.TIMEOUT_ERROR;
+                    } else if (error instanceof NoConnectionError) {
+                        return RestRequest.CONNECTION_ERROR;
+                    } else {
+                        return GENERAL_ERROR;
+                    }
+                }
+            } else {
+                return GENERAL_ERROR;
+            }
+        } catch (Exception e) {
             return RestRequest.CONNECTION_ERROR;
-        } else {
-            return GENERAL_ERROR;
         }
+
     }
 
     private static Response.Listener<JSONObject> createResponseListener(
