@@ -12,7 +12,18 @@ import android.view.ViewGroup;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.SummaryListAdapter;
+import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.Summary;
+import com.paleskyline.navicash.model.Transaction;
+import com.paleskyline.navicash.network.RequestCoordinator;
+import com.paleskyline.navicash.network.RestMethods;
+import com.paleskyline.navicash.network.RestRequest;
 import com.paleskyline.navicash.other.DividerItemDecoration;
+import com.paleskyline.navicash.services.DataProvider;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class SummaryFragment extends Fragment implements SummaryListAdapter.ClickListener {
 
@@ -35,13 +46,19 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
 
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         rv.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
         rv.setHasFixedSize(true);
-        SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getContext(), new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"});
+        ArrayList<Object> dataSource = new ArrayList<>();
+        dataSource.add(new Summary());
+        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+            dataSource.add(gc);
+        }
+        SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getContext(), dataSource);
         summaryListAdapter.setClickListener(this);
 
         rv.setAdapter(summaryListAdapter);
@@ -60,6 +77,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
                     @Override
                     public void onRefresh() {
                         System.out.println("REFRESHING!!");
+                        insertRandomTransactions();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -67,12 +85,71 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
 
         System.out.println("Fragment - onCreateView");
 
+
+
         return rootView;
     }
 
     @Override
     public void itemClicked(View view, int position) {
         System.out.println("CLICKED ITEM " + position);
+
+    }
+
+    private void insertRandomTransactions() {
+        final JSONObject[] dataReceiver = new JSONObject[1];
+        RequestCoordinator coordinator = new RequestCoordinator(getContext(), this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                System.out.println("TRANSACTIONS INSERTED");
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                System.out.println(errorMessage);
+            }
+        };
+
+        Transaction t = new Transaction(213, "01/02/2017", 9.70, "");
+        Transaction t2 = new Transaction(215, "01/03/2017", 20.00, "");
+        Transaction t3 = new Transaction(215, "07/03/2017", 19.50, "");
+        Transaction t4 = new Transaction(222, "15/02/2017", 100, "Test description");
+        Transaction t5 = new Transaction(229, "28/02/2017", 77.25, "");
+        Transaction t6 = new Transaction(236, "02/04/2017", 82.10, "");
+        Transaction t7 = new Transaction(233, "01/02/2017", 15.60, "");
+        Transaction t8 = new Transaction(219, "17/03/2017", 3.70, "");
+        Transaction t9 = new Transaction(220, "03/06/2017", 30.00, "");
+        Transaction t10 = new Transaction(238, "01/05/2017", 27.80, "");
+
+        try {
+//            JSONArray jsonArray = new JSONArray();
+//            jsonArray.put(t.encrypt());
+//            jsonArray.put(t2.encrypt());
+//            jsonArray.put(t3.encrypt());
+//            jsonArray.put(t4.encrypt());
+//            jsonArray.put(t5.encrypt());
+//            jsonArray.put(t6.encrypt());
+//            jsonArray.put(t7.encrypt());
+//            jsonArray.put(t8.encrypt());
+//            jsonArray.put(t9.encrypt());
+//            jsonArray.put(t10.encrypt());
+
+            JSONObject jsonObject = t10.encrypt();
+
+//            System.out.println(t2.encrypt().toString());
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("transactions", jsonArray);
+
+            coordinator.addRequests(RestMethods.post(0, RestMethods.TRANSACTION,
+                    coordinator, jsonObject, RestRequest.TOKEN, getContext()));
+
+            coordinator.start();
+
+        } catch (Exception e) {
+            // TODO: error handling
+            e.printStackTrace();
+        }
 
     }
 

@@ -9,36 +9,59 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.Summary;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Created by oscar on 27/05/17.
  */
 
-public class SummaryListAdapter extends RecyclerView.Adapter<SummaryListAdapter.ViewHolder> {
+public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private String[] mDataset;
+    private ArrayList<Object> items;
+
+    private final int SUMMARY = 0;
+    private final int GENERAL_CATEGORY = 1;
+
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     private Context context;
     private LayoutInflater inflater;
     private SummaryListAdapter.ClickListener clickListener;
 
-    public SummaryListAdapter(Context context, String[] mDataset) {
-        this.mDataset = mDataset;
+    public SummaryListAdapter(Context context, ArrayList<Object> items) {
+        this.items = items;
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class SummaryViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView income, expenses, savings;
+
+        public SummaryViewHolder(View view) {
+            super(view);
+            income = (TextView) view.findViewById(R.id.income_amount);
+            expenses = (TextView) view.findViewById(R.id.expenses_amount);
+            savings = (TextView) view.findViewById(R.id.savings_amount);
+        }
+
+    }
+
+    class GeneralCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView category, amount;
         private ImageView icon;
 
-        public ViewHolder(View view) {
+        public GeneralCategoryViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
             category = (TextView) view.findViewById(R.id.category_name);
             amount = (TextView) view.findViewById(R.id.category_amount);
             icon = (ImageView) view.findViewById(R.id.category_icon);
+            view.setOnClickListener(this);
         }
 
         @Override
@@ -53,78 +76,63 @@ public class SummaryListAdapter extends RecyclerView.Adapter<SummaryListAdapter.
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return items.size();
     }
 
     @Override
-    // Was previously SummaryListAdapter.ViewHolder
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        /*
-        if (position == 0) {
-            holder.category.setText("Wages");
-            holder.amount.setText("$3498.11");
-            holder.icon.setImageResource(R.drawable.wages);
-        } else if (position == 1) {
-            holder.category.setText("Transport");
-            holder.amount.setText("$82");
-            holder.icon.setImageResource(R.drawable.transport);
-        } else if (position == 2) {
-            holder.category.setText("Pets");
-            holder.amount.setText("$100");
-            holder.icon.setImageResource(R.drawable.pets);
-        } else if (position == 3) {
-            holder.category.setText("Food and Drink");
-            holder.amount.setText("$489.82");
-            holder.icon.setImageResource(R.drawable.foodanddrink);
-        } else if (position == 4) {
-            holder.category.setText("Health");
-            holder.amount.setText("$120");
-            holder.icon.setImageResource(R.drawable.health);
-        } else if (position == 5) {
-            holder.category.setText("Miscellaneous Income");
-            holder.amount.setText("$550");
-            holder.icon.setImageResource(R.drawable.miscellaneousincome);
-        } else if (position == 6) {
-            holder.category.setText("Sport");
-            holder.amount.setText("$72.50");
-            holder.icon.setImageResource(R.drawable.sport);
-        } else if (position == 7) {
-            holder.category.setText("Investments");
-            holder.amount.setText("$193");
-            holder.icon.setImageResource(R.drawable.investments);
-        } else if (position == 8) {
-            holder.category.setText("Holidays");
-            holder.amount.setText("$800");
-            holder.icon.setImageResource(R.drawable.holidays);
-        } else if (position == 9) {
-            holder.category.setText("Entertainment");
-            holder.amount.setText("$62.80");
-            holder.icon.setImageResource(R.drawable.entertainment);
-        } else if (position == 10) {
-            holder.category.setText("Education");
-            holder.amount.setText("$220");
-            holder.icon.setImageResource(R.drawable.education);
-        } else if (position == 11) {
-            holder.category.setText("Miscellaneous Expenses");
-            holder.amount.setText("$40");
-            holder.icon.setImageResource(R.drawable.miscellaneousexpenses);
-        } else if (position == 12) {
-            holder.category.setText("Accomodation");
-            holder.amount.setText("$1720");
-            holder.icon.setImageResource(R.drawable.accomodation);
+    public int getItemViewType(int position) {
+        if (items.get(position) instanceof Summary) {
+            return SUMMARY;
+        } else if (items.get(position) instanceof GeneralCategory) {
+            return GENERAL_CATEGORY;
+        } else {
+            return -1;
         }
-        */
     }
 
     @Override
-    // Was previously SummaryListAdapter.ViewHolder
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.general_category_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case SUMMARY:
+                SummaryViewHolder vh1 = (SummaryViewHolder) holder;
+                Summary summary = (Summary) items.get(position);
+                vh1.income.setText("$" + df.format(summary.getIncome()));
+                vh1.expenses.setText("$" + df.format(summary.getExpenses()));
+                vh1.savings.setText("$" + df.format(summary.getSavings()));
+                break;
+            case GENERAL_CATEGORY:
+                GeneralCategoryViewHolder vh2 = (GeneralCategoryViewHolder) holder;
+                GeneralCategory gc = (GeneralCategory) items.get(position);
+                vh2.category.setText(gc.getCategoryName());
+                vh2.amount.setText("$" + df.format(gc.getTransactionTotal()));
+                int iconId = context.getResources().getIdentifier("@drawable/" + gc.getIconFile(), null, context.getPackageName());
+                vh2.icon.setImageResource(iconId);
+                break;
+        }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+
+        RecyclerView.ViewHolder vh = null;
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+
+        switch (viewType) {
+            case SUMMARY:
+                View v1 = inflater.inflate(R.layout.summary_card, viewGroup, false);
+                vh = new SummaryViewHolder(v1);
+                break;
+            case GENERAL_CATEGORY:
+                View v2 = inflater.inflate(R.layout.general_category_list_item, viewGroup, false);
+                vh = new GeneralCategoryViewHolder(v2);
+                break;
+        }
+
+        return vh;
     }
 
     public void setClickListener(SummaryListAdapter.ClickListener clickListener) {
         this.clickListener = clickListener;
     }
+
 }
