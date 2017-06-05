@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.Summary;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -25,8 +25,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private final int SUMMARY = 0;
     private final int GENERAL_CATEGORY = 1;
-
-    private DecimalFormat df = new DecimalFormat("0.00");
 
     private Context context;
     private LayoutInflater inflater;
@@ -54,18 +52,23 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class GeneralCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView category, amount;
+        private LinearLayout details;
         private ImageView icon;
+
+        private boolean expanded = false;
 
         public GeneralCategoryViewHolder(View view) {
             super(view);
             category = (TextView) view.findViewById(R.id.category_name);
             amount = (TextView) view.findViewById(R.id.category_amount);
             icon = (ImageView) view.findViewById(R.id.category_icon);
+            details = (LinearLayout) view.findViewById(R.id.general_category_list_details);
             view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            System.out.println("CLICKY!");
             clickListener.itemClicked(view, getAdapterPosition());
         }
     }
@@ -91,22 +94,69 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case SUMMARY:
                 SummaryViewHolder vh1 = (SummaryViewHolder) holder;
                 Summary summary = (Summary) items.get(position);
-                vh1.income.setText("$" + df.format(summary.getIncome()));
-                vh1.expenses.setText("$" + df.format(summary.getExpenses()));
-                vh1.savings.setText("$" + df.format(summary.getSavings()));
+                vh1.income.setText(summary.getIncome());
+                vh1.expenses.setText(summary.getExpenses());
+                vh1.savings.setText(summary.getSavings());
                 break;
             case GENERAL_CATEGORY:
-                GeneralCategoryViewHolder vh2 = (GeneralCategoryViewHolder) holder;
+                final GeneralCategoryViewHolder vh2 = (GeneralCategoryViewHolder) holder;
                 GeneralCategory gc = (GeneralCategory) items.get(position);
                 vh2.category.setText(gc.getCategoryName());
-                vh2.amount.setText("$" + df.format(gc.getTransactionTotal()));
+                vh2.amount.setText(gc.getFormattedTransactionTotal());
                 int iconId = context.getResources().getIdentifier("@drawable/" + gc.getIconFile(), null, context.getPackageName());
                 vh2.icon.setImageResource(iconId);
+
+//                String detailsText = "";
+//                if (!gc.getSubCategories().isEmpty()) {
+//                    for (SubCategory sc : gc.getSubCategories()) {
+//                        detailsText += sc.getCategoryName() + "     " + sc.getFormattedTransactionTotal() + "\n";
+//                    }
+//                } else {
+//                    detailsText = "No sub categories exist";
+//                }
+//                vh2.details.setText(detailsText);
+
+                LinearLayout ll = (LinearLayout) holder.itemView.findViewById(R.id.general_category_list_details);
+
+                if (!gc.getSubCategories().isEmpty()) {
+
+                } else {
+                    RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    LinearLayout l = new LinearLayout(holder.itemView.getContext());
+
+
+
+                    TextView tv = new TextView(holder.itemView.getContext());
+
+
+                    tv.setLayoutParams(lp);
+                    tv.setText("No sub categories exist");
+                    ll.addView(tv);
+
+             //       LinearLayout l = (LinearLayout) vh2.itemView.findViewById(R.id.sub_category_summary);
+//                    TextView tv = (TextView) l.findViewById(R.id.sub_category_name);
+                    //tv.setText("No sub categories exist");
+                }
+
+//                TextView categoryName = (TextView) holder.itemView.findViewById(R.id.sub_category_name);
+
+                vh2.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (vh2.expanded) {
+                            vh2.details.setVisibility(View.GONE);
+                        } else {
+                            vh2.details.setVisibility(View.VISIBLE);
+                        }
+                        vh2.expanded = !vh2.expanded;
+                    }
+                });
+
                 break;
         }
     }

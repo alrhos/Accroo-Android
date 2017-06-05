@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +19,8 @@ public class GeneralCategory implements Securable {
     private int id;
     private String categoryName, rootCategory, iconFile;
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
+
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     public GeneralCategory(String categoryName, String rootCategory, String iconFile) {
         this.categoryName = categoryName;
@@ -71,6 +74,10 @@ public class GeneralCategory implements Securable {
             total += sc.getTransactionTotal();
         }
         return total;
+    }
+
+    public String getFormattedTransactionTotal() {
+        return "$" + df.format(getTransactionTotal());
     }
 
     public void setSubCategories(ArrayList<SubCategory> subCategories) {

@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.model;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -10,6 +11,8 @@ public class RootCategory {
 
     private String categoryName;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
+
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     public RootCategory(String categoryName) {
         this.categoryName = categoryName;
@@ -33,6 +36,10 @@ public class RootCategory {
             total += gc.getTransactionTotal();
         }
         return total;
+    }
+
+    public String getFormattedTransactionTotal() {
+        return "$" + df.format(getTransactionTotal());
     }
 
     public void setGeneralCategories(ArrayList<GeneralCategory> generalCategories) {
