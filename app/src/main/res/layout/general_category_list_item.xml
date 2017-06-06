@@ -42,10 +42,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:id="@+id/general_category_list_details"
         android:layout_below="@+id/general_category_list_summary"
-        android:visibility="gone"/>
+        android:visibility="gone">
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
 
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->

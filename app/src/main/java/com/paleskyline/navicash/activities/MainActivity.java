@@ -22,15 +22,14 @@ import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.SummaryFragment;
+import com.paleskyline.navicash.fragments.TransactionsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SummaryFragment summaryFragment;
+    private TransactionsFragment transactionsFragment;
+
     private FloatingActionButton fab;
-
-//    private ArrayList<GeneralCategory> generalCategories;
-//    private ArrayList<SubCategory> subCategories;
-//    private ArrayList<Transaction> transactions;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +44,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        PagerAdapter pagerAdapter =
-                new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
 
         // Give the TabLayout the ViewPager
@@ -102,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class PagerAdapter extends FragmentPagerAdapter {
+    public class PagerAdapter extends FragmentPagerAdapter {
 
-        String tabTitles[] = new String[] {"Summary", "Transactions", "Categories"};
+        String tabTitles[] = {"Summary", "Transactions", "Categories"};
         Context context;
 
         public PagerAdapter(FragmentManager fm, Context context) {
@@ -124,19 +122,16 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return new SummaryFragment();
                 case 1:
-                    return new SummaryFragment();
+                    return new Fragment();
                 case 2:
-                    return new SummaryFragment();
+                    return new Fragment();
             }
-
-
 
             return null;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            // Generate title based on item position
             return tabTitles[position];
         }
 
@@ -149,31 +144,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-//    private void loadData() {
-//        final JSONObject[] dataReceiver = new JSONObject[3];
-//        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-//                this, dataReceiver) {
-//            @Override
-//            protected void onSuccess() {
-//                System.out.println("LOAD DATA SUCCESS");
-//                System.out.println(dataReceiver[0].toString());
-//                System.out.println(dataReceiver[1].toString());
-//                System.out.println(dataReceiver[2].toString());
-//            }
-//
-//            @Override
-//            protected void onFailure(JSONObject json) {
-//                System.out.println("ERROR");
-//                System.out.println(json.toString());
-//            }
-//        };
-//
-//        coordinator.addRequests(
-//                RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN),
-//                RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN),
-//                RestMethods.get(2, RestMethods.TRANSACTION_PARAM, "1", coordinator, RestRequest.TOKEN));
-//
-//        coordinator.start();
-//    }
 }

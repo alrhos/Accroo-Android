@@ -27,6 +27,9 @@ import java.util.ArrayList;
 
 public class SummaryFragment extends Fragment implements SummaryListAdapter.ClickListener {
 
+    private ArrayList<Object> dataSource;
+    private SummaryListAdapter summaryListAdapter;
+
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public SummaryFragment() {}
@@ -34,6 +37,13 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dataSource = new ArrayList<>();
+        dataSource.add(new Summary());
+        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+            dataSource.add(gc);
+        }
+        summaryListAdapter = new SummaryListAdapter(getContext(), dataSource);
+        summaryListAdapter.setClickListener(this);
         System.out.println("Fragment - onCreated");
 
 
@@ -50,34 +60,32 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
 
-        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
+        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.summary_recycler_view);
         rv.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
         rv.setHasFixedSize(true);
-        ArrayList<Object> dataSource = new ArrayList<>();
-        dataSource.add(new Summary());
-        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
-            dataSource.add(gc);
-        }
-        SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getContext(), dataSource);
-        summaryListAdapter.setClickListener(this);
+//        ArrayList<Object> dataSource = new ArrayList<>();
+//        dataSource.add(new Summary());
+//        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+//            dataSource.add(gc);
+//        }
+//        SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getContext(), dataSource);
+//        summaryListAdapter.setClickListener(this);
 
         rv.setAdapter(summaryListAdapter);
-        //MyAdapter adapter = new MyAdapter(new String[]{"test one", "test two", "test three", "test four", "test five" , "test six" , "test seven", "test eight" , "test nine"});
-        //rv.setAdapter(adapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
 
 
 
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
                         System.out.println("REFRESHING!!");
-                        insertRandomTransactions();
+              //          insertRandomTransactions();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }

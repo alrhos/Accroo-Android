@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Summary;
 
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
+
             case SUMMARY:
                 SummaryViewHolder vh1 = (SummaryViewHolder) holder;
                 Summary summary = (Summary) items.get(position);
@@ -103,6 +105,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 vh1.expenses.setText(summary.getExpenses());
                 vh1.savings.setText(summary.getSavings());
                 break;
+
             case GENERAL_CATEGORY:
                 final GeneralCategoryViewHolder vh2 = (GeneralCategoryViewHolder) holder;
                 GeneralCategory gc = (GeneralCategory) items.get(position);
@@ -111,39 +114,28 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 int iconId = context.getResources().getIdentifier("@drawable/" + gc.getIconFile(), null, context.getPackageName());
                 vh2.icon.setImageResource(iconId);
 
-//                String detailsText = "";
-//                if (!gc.getSubCategories().isEmpty()) {
-//                    for (SubCategory sc : gc.getSubCategories()) {
-//                        detailsText += sc.getCategoryName() + "     " + sc.getFormattedTransactionTotal() + "\n";
-//                    }
-//                } else {
-//                    detailsText = "No sub categories exist";
-//                }
-//                vh2.details.setText(detailsText);
+                LinearLayout ll = (LinearLayout) vh2.itemView.findViewById(R.id.general_category_list_details);
+                ll.removeAllViews();
 
-                LinearLayout ll = (LinearLayout) holder.itemView.findViewById(R.id.general_category_list_details);
+                System.out.println("GENERAL CATEGORY: " + gc.getCategoryName());
+                System.out.println("-----------------------------------------");
 
                 if (!gc.getSubCategories().isEmpty()) {
-
+                    for (SubCategory sc : gc.getSubCategories()) {
+                        System.out.println(sc.toString());
+                        View v = inflater.inflate(R.layout.sub_category_summary_item, null, false);
+                        TextView tv1 = (TextView) v.findViewById(R.id.sub_category_name);
+                        tv1.setText(sc.getCategoryName());
+                        TextView tv2 = (TextView) v.findViewById(R.id.sub_category_amount);
+                        tv2.setText(sc.getFormattedTransactionTotal());
+                        ll.addView(v);
+                    }
                 } else {
-                    RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    LinearLayout l = new LinearLayout(holder.itemView.getContext());
-
-
-
-                    TextView tv = new TextView(holder.itemView.getContext());
-
-
-                    tv.setLayoutParams(lp);
+                    View a = inflater.inflate(R.layout.sub_category_summary_item, null, false);
+                    TextView tv = (TextView) a.findViewById(R.id.sub_category_name);
                     tv.setText("No sub categories exist");
-                    ll.addView(tv);
-
-             //       LinearLayout l = (LinearLayout) vh2.itemView.findViewById(R.id.sub_category_summary);
-//                    TextView tv = (TextView) l.findViewById(R.id.sub_category_name);
-                    //tv.setText("No sub categories exist");
+                    ll.addView(a);
                 }
-
-//                TextView categoryName = (TextView) holder.itemView.findViewById(R.id.sub_category_name);
 
                 vh2.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -165,7 +157,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         RecyclerView.ViewHolder vh = null;
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        inflater = LayoutInflater.from(viewGroup.getContext());
 
         switch (viewType) {
             case SUMMARY:
