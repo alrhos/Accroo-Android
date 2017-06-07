@@ -42,15 +42,9 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
         for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
             dataSource.add(gc);
         }
-        summaryListAdapter = new SummaryListAdapter(getContext(), dataSource);
+        summaryListAdapter = new SummaryListAdapter(getActivity(), dataSource);
         summaryListAdapter.setClickListener(this);
         System.out.println("Fragment - onCreated");
-
-
-
-      //  loadData();
-
-
     }
 
     @Override
@@ -58,34 +52,23 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_summary, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_summary, container, false);
 
-        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.summary_recycler_view);
-        rv.addItemDecoration(new DividerItemDecoration(rootView.getContext()));
+        RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.summary_recycler_view);
+        rv.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
         rv.setHasFixedSize(true);
-//        ArrayList<Object> dataSource = new ArrayList<>();
-//        dataSource.add(new Summary());
-//        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
-//            dataSource.add(gc);
-//        }
-//        SummaryListAdapter summaryListAdapter = new SummaryListAdapter(getContext(), dataSource);
-//        summaryListAdapter.setClickListener(this);
-
         rv.setAdapter(summaryListAdapter);
-
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
 
-
-
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.summary_swipe_refresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
                         System.out.println("REFRESHING!!");
-              //          insertRandomTransactions();
+                     //   insertRandomTransactions();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -93,9 +76,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
 
         System.out.println("Fragment - onCreateView");
 
-
-
-        return rootView;
+        return fragmentView;
     }
 
     @Override
@@ -127,7 +108,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
         Transaction t7 = new Transaction(233, "01/02/2017", 15.60, "");
         Transaction t8 = new Transaction(219, "17/03/2017", 3.70, "");
         Transaction t9 = new Transaction(220, "03/06/2017", 30.00, "");
-        Transaction t10 = new Transaction(238, "01/05/2017", 27.80, "");
+        Transaction t10 = new Transaction(237, "07/07/2017", 15, "Second");
 
         try {
 //            JSONArray jsonArray = new JSONArray();

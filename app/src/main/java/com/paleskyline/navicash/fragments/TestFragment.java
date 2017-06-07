@@ -1,40 +1,38 @@
 package com.paleskyline.navicash.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.adapters.TransactionAdapter;
-import com.paleskyline.navicash.model.Transaction;
-import com.paleskyline.navicash.services.DataProvider;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TransactionsFragment.OnFragmentInteractionListener} interface
+ * {@link TestFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TransactionsFragment#newInstance} factory method to
+ * Use the {@link TestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TransactionsFragment extends android.support.v4.app.Fragment {
+public class TestFragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    private ArrayList<Transaction> dataSource;
-    private TransactionAdapter transactionAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    public TransactionsFragment() {}
+    public TestFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -42,14 +40,14 @@ public class TransactionsFragment extends android.support.v4.app.Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TransactionsFragment.
+     * @return A new instance of fragment TestFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TransactionsFragment newInstance(String param1, String param2) {
-        TransactionsFragment fragment = new TransactionsFragment();
+    public static TestFragment newInstance(String param1, String param2) {
+        TestFragment fragment = new TestFragment();
         Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,16 +55,9 @@ public class TransactionsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataSource = new ArrayList<>();
-        for (Transaction t : DataProvider.getInstance().getTransactions()) {
-            dataSource.add(t);
-        }
-        System.out.println("DATA SOURCE SIZE: " + dataSource.size());
-        transactionAdapter = new TransactionAdapter(getActivity(), dataSource);
-
         if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -74,23 +65,7 @@ public class TransactionsFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(R.layout.fragment_transactions, container, false);
-        RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
-        rv.setHasFixedSize(true);
-        rv.setAdapter(transactionAdapter);
-
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
-
-        swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.transaction_swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        return fragmentView;
+        return inflater.inflate(R.layout.fragment_test, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

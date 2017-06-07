@@ -2,8 +2,12 @@ package com.paleskyline.navicash.services;
 
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.RootCategory;
+import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.Transaction;
+import com.paleskyline.navicash.model.TransactionComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by oscar on 27/05/17.
@@ -43,6 +47,21 @@ public class DataProvider {
             }
         }
         return categories;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        for (int i = 0; i < rootCategories.length; i++) {
+            for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {
+                for (SubCategory sc: gc.getSubCategories()) {
+                    for (Transaction t : sc.getTransactions()) {
+                        transactions.add(t);
+                    }
+                }
+            }
+        }
+        Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
+        return transactions;
     }
 
 }

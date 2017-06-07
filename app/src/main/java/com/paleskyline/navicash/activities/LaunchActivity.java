@@ -15,6 +15,7 @@ import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.RootCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
+import com.paleskyline.navicash.model.TransactionComparator;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -154,17 +156,28 @@ public class LaunchActivity extends AppCompatActivity {
                     sc.add(subCategory);
                 }
 
-                // TODO: extra condition required here to only let in transactions for the specified date transaction
-
                 JSONArray transactions = jsonObjects[0][2].getJSONArray("transactions");
                 for (int k = 0; k < transactions.length(); k++) {
                     Transaction transaction = new Transaction(transactions.getJSONObject(k));
+                    // TODO: extra condition required here to only let in transactions for the specified date transaction
                     t.add(transaction);
                 }
+
+
+                // TODO: consider sorting transactions here for future use
+
+                Collections.sort(t, Collections.reverseOrder(new TransactionComparator()));
 
                 for (Transaction tx: t) {
                     for (SubCategory s : sc) {
                         if (tx.getSubCategoryID() == s.getId()) {
+                            for (GeneralCategory g : gc) {
+                                if (g.getId() == s.getGeneralCategoryID()) {
+                                    tx.setCategoryIcon(g.getIconFile());
+                                    tx.setRootCategoryType(g.getRootCategory());
+                                }
+                            }
+                            tx.setSubCategoryName(s.getCategoryName());
                             s.getTransactions().add(tx);
                             break;
                         }

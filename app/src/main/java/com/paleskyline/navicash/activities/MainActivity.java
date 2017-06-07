@@ -2,6 +2,7 @@ package com.paleskyline.navicash.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -24,7 +25,7 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TransactionsFragment.OnFragmentInteractionListener {
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
@@ -122,7 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return new SummaryFragment();
                 case 1:
-                    return new Fragment();
+                   // return new Fragment();
+                    return new TransactionsFragment();
                 case 2:
                     return new Fragment();
             }
@@ -141,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
             tv.setText(tabTitles[position]);
             return tab;
         }
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 

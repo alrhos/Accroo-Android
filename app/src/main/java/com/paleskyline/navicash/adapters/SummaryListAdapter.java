@@ -117,12 +117,8 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 LinearLayout ll = (LinearLayout) vh2.itemView.findViewById(R.id.general_category_list_details);
                 ll.removeAllViews();
 
-                System.out.println("GENERAL CATEGORY: " + gc.getCategoryName());
-                System.out.println("-----------------------------------------");
-
                 if (!gc.getSubCategories().isEmpty()) {
                     for (SubCategory sc : gc.getSubCategories()) {
-                        System.out.println(sc.toString());
                         View v = inflater.inflate(R.layout.sub_category_summary_item, null, false);
                         TextView tv1 = (TextView) v.findViewById(R.id.sub_category_name);
                         tv1.setText(sc.getCategoryName());

@@ -12,8 +12,8 @@
         android:id="@+id/general_category_list_summary">
 
         <ImageView
-            android:layout_width="68dp"
-            android:layout_height="68dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:id="@+id/category_icon"
             android:layout_marginStart="15dp"
             android:layout_alignTop="@+id/category_name"
