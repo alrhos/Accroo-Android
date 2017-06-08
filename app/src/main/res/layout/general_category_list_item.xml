@@ -46,7 +46,6 @@
         android:id="@+id/general_category_list_details"
         android:layout_below="@+id/general_category_list_summary"
         android:visibility="gone">
-
     </LinearLayout>
 
 
