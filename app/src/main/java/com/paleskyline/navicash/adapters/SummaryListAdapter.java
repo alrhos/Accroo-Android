@@ -32,6 +32,9 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SummaryListAdapter.ClickListener clickListener;
 
     public SummaryListAdapter(Context context, ArrayList<Object> items) {
+
+        // TODO: data source can probably be initialised from within
+
         this.items = items;
         this.context = context;
         inflater = LayoutInflater.from(context);

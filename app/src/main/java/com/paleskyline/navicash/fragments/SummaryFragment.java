@@ -1,8 +1,8 @@
 package com.paleskyline.navicash.fragments;
 
+import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +37,9 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // TODO: review data source handling - can probably be pushed to the adapter
+
         dataSource = new ArrayList<>();
         dataSource.add(new Summary());
         for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
@@ -68,7 +71,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
                     @Override
                     public void onRefresh() {
                         System.out.println("REFRESHING!!");
-                     //   insertRandomTransactions();
+               //         insertRandomTransactions();
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -99,16 +102,16 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
             }
         };
 
-        Transaction t = new Transaction(213, "01/02/2017", 9.70, "");
-        Transaction t2 = new Transaction(215, "01/03/2017", 20.00, "");
-        Transaction t3 = new Transaction(215, "07/03/2017", 19.50, "");
-        Transaction t4 = new Transaction(222, "15/02/2017", 100, "Test description");
-        Transaction t5 = new Transaction(229, "28/02/2017", 77.25, "");
-        Transaction t6 = new Transaction(236, "02/04/2017", 82.10, "");
-        Transaction t7 = new Transaction(233, "01/02/2017", 15.60, "");
-        Transaction t8 = new Transaction(219, "17/03/2017", 3.70, "");
-        Transaction t9 = new Transaction(220, "03/06/2017", 30.00, "");
-        Transaction t10 = new Transaction(237, "07/07/2017", 15, "Second");
+        Transaction t = new Transaction(239, "01/02/2017", 9.70, "");
+        Transaction t2 = new Transaction(242, "01/03/2017", 20.00, "");
+        Transaction t3 = new Transaction(244, "07/03/2017", 19.50, "");
+        Transaction t4 = new Transaction(251, "15/02/2017", 100, "Test description");
+        Transaction t5 = new Transaction(252, "28/02/2017", 77.25, "");
+        Transaction t6 = new Transaction(250, "02/04/2017", 2.95, "");
+        Transaction t7 = new Transaction(259, "01/02/2017", 15.60, "");
+        Transaction t8 = new Transaction(264, "17/03/2017", 3.70, "");
+        Transaction t9 = new Transaction(263, "03/06/2017", 30.00, "");
+        Transaction t10 = new Transaction(243, "07/07/2017", 2.50, "");
 
         try {
 //            JSONArray jsonArray = new JSONArray();
@@ -123,7 +126,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Clic
 //            jsonArray.put(t9.encrypt());
 //            jsonArray.put(t10.encrypt());
 
-            JSONObject jsonObject = t10.encrypt();
+            JSONObject jsonObject = t6.encrypt();
 
 //            System.out.println(t2.encrypt().toString());
 //

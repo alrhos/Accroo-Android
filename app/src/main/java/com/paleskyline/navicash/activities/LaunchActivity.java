@@ -187,6 +187,7 @@ public class LaunchActivity extends AppCompatActivity {
                 for (SubCategory s : sc) {
                     for (GeneralCategory g : gc) {
                         if (s.getGeneralCategoryID() == g.getId()) {
+                            s.setCategoryIcon(g.getIconFile());
                             g.getSubCategories().add(s);
                             break;
                         }

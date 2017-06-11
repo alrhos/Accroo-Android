@@ -1,6 +1,6 @@
 package com.paleskyline.navicash.fragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link TransactionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TransactionsFragment extends android.support.v4.app.Fragment {
+public class TransactionsFragment extends Fragment {
 
     private ArrayList<Transaction> dataSource;
     private TransactionAdapter transactionAdapter;
@@ -57,6 +57,9 @@ public class TransactionsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // TODO: review data source handling - can probably be pushed to the adapter
+
         dataSource = new ArrayList<>();
         for (Transaction t : DataProvider.getInstance().getTransactions()) {
             dataSource.add(t);
@@ -90,6 +93,8 @@ public class TransactionsFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        //swipeRefreshLayout.setEnabled(false);
+
         return fragmentView;
     }
 
@@ -103,12 +108,12 @@ public class TransactionsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override

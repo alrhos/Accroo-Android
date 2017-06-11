@@ -31,6 +31,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
 
     public TransactionAdapter(Context context, ArrayList<Transaction> items) {
+
+        // TODO: data source can probably be initialised from within
+
         this.transactions = items;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -49,6 +52,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
+    @Override
     public int getItemCount() {
         return groupedTransactions.keySet().size();
     }

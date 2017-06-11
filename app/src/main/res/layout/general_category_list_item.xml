@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="3dp"
-    android:paddingBottom="3dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
     android:background="?android:attr/selectableItemBackground">
 
     <RelativeLayout
@@ -12,8 +12,8 @@
         android:id="@+id/general_category_list_summary">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:id="@+id/category_icon"
             android:layout_marginStart="15dp"
             android:layout_alignTop="@+id/category_name"

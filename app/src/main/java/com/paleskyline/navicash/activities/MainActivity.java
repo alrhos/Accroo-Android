@@ -2,14 +2,14 @@ package com.paleskyline.navicash.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+
+
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,15 +17,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
+
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
 import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
+import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
 
-public class MainActivity extends AppCompatActivity implements TransactionsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements CategoryOverviewFragment.OnFragmentInteractionListener {
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
@@ -37,10 +39,12 @@ public class MainActivity extends AppCompatActivity implements TransactionsFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        // TODO: review if this code is needed
+
+//        Window window = this.getWindow();
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+      //  window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements TransactionsFragm
                    // return new Fragment();
                     return new TransactionsFragment();
                 case 2:
-                    return new Fragment();
+                    return new CategoryOverviewFragment();
             }
 
             return null;
@@ -147,8 +151,13 @@ public class MainActivity extends AppCompatActivity implements TransactionsFragm
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
+        System.out.println(generalCategory.toString());
+    }
 
+    @Override
+    public void onSubCategoryClicked(SubCategory subCategory) {
+        System.out.println(subCategory.toString());
     }
 
 }

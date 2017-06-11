@@ -1,5 +1,8 @@
 package com.paleskyline.navicash.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.crypto.SecurePayload;
 
@@ -14,10 +17,10 @@ import java.util.ArrayList;
  * Created by oscar on 24/03/17.
  */
 
-public class SubCategory implements Securable {
+public class SubCategory implements Securable, Parcelable {
 
     private int id, generalCategoryID;
-    private String categoryName, generalCategoryName;
+    private String categoryName, generalCategoryName, categoryIcon;
     private ArrayList<Transaction> transactions = new ArrayList<>();
 
     private DecimalFormat df = new DecimalFormat("0.00");
@@ -58,6 +61,14 @@ public class SubCategory implements Securable {
 
     public String getGeneralCategoryName() {
         return generalCategoryName;
+    }
+
+    public String getCategoryIcon() {
+        return categoryIcon;
+    }
+
+    public void setCategoryIcon(String categoryIcon) {
+        this.categoryIcon = categoryIcon;
     }
 
     public ArrayList<Transaction> getTransactions() {
@@ -108,7 +119,45 @@ public class SubCategory implements Securable {
                 "id=" + id +
                 ", generalCategoryID=" + generalCategoryID +
                 ", categoryName='" + categoryName + '\'' +
+                ", generalCategoryName='" + generalCategoryName + '\'' +
+                ", categoryIcon='" + categoryIcon + '\'' +
+                ", transactions=" + transactions +
+                ", df=" + df +
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.generalCategoryID);
+        dest.writeString(this.categoryName);
+        dest.writeString(this.generalCategoryName);
+        dest.writeString(this.categoryIcon);
+    }
+
+    protected SubCategory(Parcel in) {
+        this.id = in.readInt();
+        this.generalCategoryID = in.readInt();
+        this.categoryName = in.readString();
+        this.generalCategoryName = in.readString();
+        this.categoryIcon = in.readString();
+    }
+
+    public static final Creator<SubCategory> CREATOR = new Creator<SubCategory>() {
+        @Override
+        public SubCategory createFromParcel(Parcel source) {
+            return new SubCategory(source);
+        }
+
+        @Override
+        public SubCategory[] newArray(int size) {
+            return new SubCategory[size];
+        }
+    };
 }

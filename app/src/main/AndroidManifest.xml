@@ -33,7 +33,19 @@
         <activity
             android:name=".activities.AddTransactionActivity"
             android:label="Add Transaction" />
-        <activity android:name=".activities.Test"></activity>
+        <activity android:name=".activities.Test" />
+        <activity
+            android:name=".activities.CategoryOverviewActivity"
+            android:label="@string/title_activity_category_overview"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SelectCategoryActivity"
+            android:label="Select Sub Category">
+        </activity>
     </application>
 
 </manifest>

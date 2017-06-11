@@ -17,33 +17,6 @@
 
                 </android.support.v7.widget.RecyclerView>
 
-                <!--<RelativeLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent">-->
-
-                        <!--<include-->
-                            <!--layout="@layout/summary_card"-->
-                            <!--android:id="@+id/summary_card_item">-->
-                        <!--</include>-->
-
-                        <!--<RelativeLayout-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_below="@+id/summary_card_item">-->
-
-                                <!--<android.support.v7.widget.RecyclerView-->
-                                    <!--android:id="@+id/rv_recycler_view"-->
-                                    <!--android:layout_width="match_parent"-->
-                                    <!--android:layout_height="match_parent">-->
-
-                                <!--</android.support.v7.widget.RecyclerView>-->
-
-                        <!--</RelativeLayout>-->
-
-
-
-                <!--</RelativeLayout>-->
-
         </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

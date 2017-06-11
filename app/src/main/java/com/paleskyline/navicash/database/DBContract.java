@@ -37,20 +37,20 @@ public final class DBContract {
             GeneralCategory.COLUMN_CATEGORY_NAME + ", " +
             GeneralCategory.COLUMN_CATEGORY_ICON + ", " +
             GeneralCategory.COLUMN_ROOT_CATEGORY + ") VALUES " +
-            "('Wages', 'wages', 'Income'), " +
-            "('Food and Drink', 'food_and_drink', 'Expenses'), " +
-            "('Transport', 'transport', 'Expenses'), " +
-            "('Pets', 'pets', 'Expenses'), " +
-            "('Health', 'health', 'Expenses'), " +
-            "('Miscellaneous Income', 'miscellaneous_income', 'Income'), " +
-            "('Sport', 'sport', 'Expenses'), " +
-            "('Investments', 'investments', 'Income'), " +
-            "('Holidays', 'holidays', 'Expenses'), " +
-            "('Entertainment', 'entertainment', 'Expenses'), " +
-            "('Education', 'education', 'Expenses'), " +
-            "('Miscellaneous Expenses', 'miscellaneous_expenses', 'Expenses'), " +
-            "('Accommodation', 'accommodation', 'Expenses'), " +
-            "('Personal', 'personal', 'Expenses');";
+            "('Wages', 'moneybag', 'Income'), " +
+            "('Food and Drink', 'burger', 'Expenses'), " +
+            "('Transport', 'car', 'Expenses'), " +
+            "('Pets', 'dog', 'Expenses'), " +
+            "('Health', 'medical_report', 'Expenses'), " +
+            "('Miscellaneous Income', 'cash_in_hand', 'Income'), " +
+            "('Sport', 'weightlifting', 'Expenses'), " +
+            "('Investments', 'stocks', 'Income'), " +
+            "('Holidays', 'plane_takeoff', 'Expenses'), " +
+            "('Entertainment', 'ticket', 'Expenses'), " +
+            "('Education', 'open_book', 'Expenses'), " +
+            "('Miscellaneous Expenses', 'card_in_hand', 'Expenses'), " +
+            "('Accommodation', 'house1', 'Expenses'), " +
+            "('Personal', 'man_and_woman', 'Expenses');";
 
 
     protected static final String POPULATE_SUB_CATEGORY =
