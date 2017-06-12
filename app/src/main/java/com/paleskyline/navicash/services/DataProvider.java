@@ -1,8 +1,10 @@
 package com.paleskyline.navicash.services;
 
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.GeneralCategoryComparator;
 import com.paleskyline.navicash.model.RootCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.SubCategoryComparator;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.model.TransactionComparator;
 
@@ -43,9 +45,11 @@ public class DataProvider {
         ArrayList<GeneralCategory> categories = new ArrayList<>();
         for (int i = 0; i < rootCategories.length; i++) {
             for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {
+                Collections.sort(gc.getSubCategories(), new SubCategoryComparator());
                 categories.add(gc);
             }
         }
+        Collections.sort(categories, new GeneralCategoryComparator());
         return categories;
     }
 
@@ -62,6 +66,22 @@ public class DataProvider {
         }
         Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
         return transactions;
+    }
+
+    public void addTransaction(Transaction transaction) {
+        for (int i = 0; i < rootCategories.length; i++) {
+            for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {
+                for (SubCategory sc : gc.getSubCategories()) {
+                    if (transaction.getSubCategoryID() == sc.getId()) {
+                        transaction.setSubCategoryName(sc.getCategoryName());
+                        transaction.setCategoryIcon(gc.getIconFile());
+                        transaction.setRootCategoryType(gc.getRootCategory());
+                        sc.getTransactions().add(transaction);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
 }

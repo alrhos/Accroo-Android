@@ -13,6 +13,7 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Summary;
+import com.paleskyline.navicash.services.DataProvider;
 
 import java.util.ArrayList;
 
@@ -29,15 +30,17 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private Context context;
     private LayoutInflater inflater;
-    private SummaryListAdapter.ClickListener clickListener;
+  //  private SummaryListAdapter.ClickListener clickListener;
 
-    public SummaryListAdapter(Context context, ArrayList<Object> items) {
-
-        // TODO: data source can probably be initialised from within
-
-        this.items = items;
+    public SummaryListAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+        items = new ArrayList<>();
+        items.add(new Summary());
+        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+            items.add(gc);
+        }
+
     }
 
     class SummaryViewHolder extends RecyclerView.ViewHolder {
@@ -53,7 +56,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
-    class GeneralCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class GeneralCategoryViewHolder extends RecyclerView.ViewHolder {
 
         private TextView category, amount;
         private LinearLayout details;
@@ -67,19 +70,19 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             amount = (TextView) view.findViewById(R.id.category_amount);
             icon = (ImageView) view.findViewById(R.id.category_icon);
             details = (LinearLayout) view.findViewById(R.id.general_category_list_details);
-            view.setOnClickListener(this);
+       //     view.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
-            System.out.println("CLICKY!");
-            clickListener.itemClicked(view, getAdapterPosition());
-        }
+//        @Override
+//        public void onClick(View view) {
+//            clickListener.itemClicked(view, getAdapterPosition());
+//        }
+
     }
 
-    public interface ClickListener {
-        void itemClicked(View v, int position);
-    }
+//    public interface ClickListener {
+//        void itemClicked(View v, int position);
+//    }
 
     @Override
     public int getItemCount() {
@@ -172,8 +175,17 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return vh;
     }
 
-    public void setClickListener(SummaryListAdapter.ClickListener clickListener) {
-        this.clickListener = clickListener;
+//    public void setClickListener(SummaryListAdapter.ClickListener clickListener) {
+//        this.clickListener = clickListener;
+//    }
+
+    public void refreshDataSource() {
+        items.clear();
+        items.add(new Summary());
+        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+            items.add(gc);
+        }
+        notifyDataSetChanged();
     }
 
 }

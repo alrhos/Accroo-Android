@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-
-
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
@@ -31,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
+    private CategoryOverviewFragment categoryOverviewFragment;
 
     private FloatingActionButton fab;
 
@@ -58,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
+
+        // TODO: review if this is even needed
+
         // Iterate over all tabs and set the custom view
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -69,22 +70,25 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchTransactionActivity();
+                Intent intent = new Intent(getApplicationContext(), AddTransactionActivity.class);
+                startActivity(intent);
             }
         });
 
     }
 
-    private void launchTransactionActivity() {
-        Intent intent = new Intent(this, AddTransactionActivity.class);
-        startActivity(intent);
-    }
-
-
     @Override
     public void onResume() {
         super.onResume();
     }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        summaryFragment.refreshAdapter();
+        transactionsFragment.refreshAdapter();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -125,15 +129,18 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
 
             switch (position) {
                 case 0:
-                    return new SummaryFragment();
+                    //return new SummaryFragment();
+                    return summaryFragment = new SummaryFragment();
                 case 1:
                    // return new Fragment();
-                    return new TransactionsFragment();
+                    //return new TransactionsFragment();
+                    return transactionsFragment = new TransactionsFragment();
                 case 2:
                     return new CategoryOverviewFragment();
             }
 
             return null;
+
         }
 
         @Override

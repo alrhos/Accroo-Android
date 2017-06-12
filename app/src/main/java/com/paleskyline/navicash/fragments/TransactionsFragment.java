@@ -1,9 +1,9 @@
 package com.paleskyline.navicash.fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.TransactionAdapter;
 import com.paleskyline.navicash.model.Transaction;
-import com.paleskyline.navicash.services.DataProvider;
 
 import java.util.ArrayList;
 
@@ -60,12 +59,12 @@ public class TransactionsFragment extends Fragment {
 
         // TODO: review data source handling - can probably be pushed to the adapter
 
-        dataSource = new ArrayList<>();
-        for (Transaction t : DataProvider.getInstance().getTransactions()) {
-            dataSource.add(t);
-        }
-        System.out.println("DATA SOURCE SIZE: " + dataSource.size());
-        transactionAdapter = new TransactionAdapter(getActivity(), dataSource);
+//        dataSource = new ArrayList<>();
+//        for (Transaction t : DataProvider.getInstance().getTransactions()) {
+//            dataSource.add(t);
+//        }
+//        System.out.println("DATA SOURCE SIZE: " + dataSource.size());
+        transactionAdapter = new TransactionAdapter(getActivity());
 
         if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
@@ -136,4 +135,9 @@ public class TransactionsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public void refreshAdapter() {
+        transactionAdapter.refreshDataSource();
+    }
+
 }

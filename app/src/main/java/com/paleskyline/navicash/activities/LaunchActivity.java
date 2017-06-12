@@ -15,7 +15,6 @@ import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.RootCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
-import com.paleskyline.navicash.model.TransactionComparator;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
@@ -27,7 +26,6 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class LaunchActivity extends AppCompatActivity {
 
@@ -166,7 +164,9 @@ public class LaunchActivity extends AppCompatActivity {
 
                 // TODO: consider sorting transactions here for future use
 
-                Collections.sort(t, Collections.reverseOrder(new TransactionComparator()));
+//                Collections.sort(t, Collections.reverseOrder(new TransactionComparator()));
+//                Collections.sort(sc, new SubCategoryComparator());
+//                Collections.sort(gc, new GeneralCategoryComparator());
 
                 for (Transaction tx: t) {
                     for (SubCategory s : sc) {

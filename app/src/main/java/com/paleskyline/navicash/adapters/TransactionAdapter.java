@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.Transaction;
+import com.paleskyline.navicash.services.DataProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,11 +31,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private LayoutInflater inflater;
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
 
-    public TransactionAdapter(Context context, ArrayList<Transaction> items) {
+    public TransactionAdapter(Context context) {
 
         // TODO: data source can probably be initialised from within
 
-        this.transactions = items;
         this.context = context;
         inflater = LayoutInflater.from(context);
         groupedTransactions = new LinkedHashMap<>();
@@ -103,11 +103,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void groupTransactions() {
+
+        transactions = DataProvider.getInstance().getTransactions();
+        groupedTransactions.clear();
+
         for (Transaction t : transactions) {
             if (!groupedTransactions.containsKey(t.getDate())) {
                 groupedTransactions.put(t.getDate(), null);
             }
         }
+
         for (Date key : groupedTransactions.keySet()) {
             ArrayList<Transaction> matches = new ArrayList<>();
             for (Transaction t : transactions) {
@@ -116,6 +121,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
             groupedTransactions.put(key, matches);
+        }
+    }
+
+    public void refreshDataSource() {
+        int currentSize = DataProvider.getInstance().getTransactions().size();
+        if (currentSize > transactions.size() || currentSize < transactions.size()) {
+            groupTransactions();
+            notifyDataSetChanged();
         }
     }
 
