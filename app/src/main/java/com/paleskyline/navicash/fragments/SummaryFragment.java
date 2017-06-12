@@ -62,4 +62,8 @@ public class SummaryFragment extends Fragment {
         summaryListAdapter.refreshDataSource();
     }
 
+    public void setRefreshStatus(boolean status) {
+        swipeRefreshLayout.setRefreshing(status);
+    }
+
 }

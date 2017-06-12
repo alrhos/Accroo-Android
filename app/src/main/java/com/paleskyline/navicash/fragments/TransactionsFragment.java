@@ -1,7 +1,6 @@
 package com.paleskyline.navicash.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,9 +12,6 @@ import android.view.ViewGroup;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.TransactionAdapter;
-import com.paleskyline.navicash.model.Transaction;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,11 +23,9 @@ import java.util.ArrayList;
  */
 public class TransactionsFragment extends Fragment {
 
-    private ArrayList<Transaction> dataSource;
     private TransactionAdapter transactionAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener fragmentListener;
 
     public TransactionsFragment() {}
 
@@ -78,7 +72,7 @@ public class TransactionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_transactions, container, false);
         RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
-        rv.setHasFixedSize(true);
+        rv.setHasFixedSize(false);
         rv.setAdapter(transactionAdapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -86,9 +80,11 @@ public class TransactionsFragment extends Fragment {
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.transaction_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
+                //swipeRefreshLayout.setRefreshing(false);
+                fragmentListener.onTransactionSwipeRefresh();
             }
         });
 
@@ -97,28 +93,21 @@ public class TransactionsFragment extends Fragment {
         return fragmentView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof OnFragmentInteractionListener) {
+            fragmentListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        fragmentListener = null;
     }
 
     /**
@@ -132,12 +121,15 @@ public class TransactionsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onTransactionSwipeRefresh();
     }
 
     public void refreshAdapter() {
         transactionAdapter.refreshDataSource();
+    }
+
+    public void setRefreshStatus(boolean status) {
+        swipeRefreshLayout.setRefreshing(status);
     }
 
 }

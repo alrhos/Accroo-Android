@@ -129,6 +129,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
     public interface OnFragmentInteractionListener {
         void onGeneralCategoryClicked(GeneralCategory generalCategory);
         void onSubCategoryClicked(SubCategory subCategory);
+        void onCategorySwipeRefresh();
     }
 
     @Override
@@ -139,6 +140,10 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
     @Override
     public void onSubCategoryClicked(SubCategory subCategory) {
         fragmentListener.onSubCategoryClicked(subCategory);
+    }
+
+    public void setRefreshStatus(boolean status) {
+        swipeRefreshLayout.setRefreshing(status);
     }
 
 }

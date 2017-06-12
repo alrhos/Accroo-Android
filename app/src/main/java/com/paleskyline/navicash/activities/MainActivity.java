@@ -23,8 +23,15 @@ import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.network.RequestCoordinator;
+import com.paleskyline.navicash.network.RestMethods;
+import com.paleskyline.navicash.network.RestRequest;
+import com.paleskyline.navicash.services.DecryptData;
 
-public class MainActivity extends AppCompatActivity implements CategoryOverviewFragment.OnFragmentInteractionListener {
+import org.json.JSONObject;
+
+public class MainActivity extends AppCompatActivity implements CategoryOverviewFragment.OnFragmentInteractionListener,
+    TransactionsFragment.OnFragmentInteractionListener, DecryptData.OnDecryptionComplete {
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
@@ -35,16 +42,11 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-        // TODO: review if this code is needed
-
-//        Window window = this.getWindow();
-//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-      //  window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
@@ -55,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-
 
         // TODO: review if this is even needed
 
@@ -74,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
                     //return new TransactionsFragment();
                     return transactionsFragment = new TransactionsFragment();
                 case 2:
-                    return new CategoryOverviewFragment();
+                    return categoryOverviewFragment = new CategoryOverviewFragment();
             }
 
             return null;
@@ -157,6 +157,13 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
 
     }
 
+
+    @Override
+    public void onTransactionSwipeRefresh() {
+        transactionsFragment.setRefreshStatus(true);
+        loadUserData();
+    }
+
     @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
         System.out.println(generalCategory.toString());
@@ -165,6 +172,57 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
     @Override
     public void onSubCategoryClicked(SubCategory subCategory) {
         System.out.println(subCategory.toString());
+    }
+
+    @Override
+    public void onCategorySwipeRefresh() {
+        // TODO
+    }
+
+    @Override
+    public void onSuccessfulDecryption() {
+        transactionsFragment.setRefreshStatus(false);
+        transactionsFragment.refreshAdapter();
+    }
+
+    @Override
+    public void onUnsuccessfulDecryption() {
+        transactionsFragment.setRefreshStatus(false);
+    }
+
+    private void loadUserData() {
+
+        final JSONObject[] dataReceiver = new JSONObject[3];
+        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+                this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                new DecryptData(MainActivity.this).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                System.out.println(errorMessage);
+                // TODO - exception handling
+            }
+        };
+
+        // TODO: get system date, lookup id in local db and add to transaction request.
+
+        try {
+
+            coordinator.addRequests(
+                    RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RestMethods.get(2, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+
+            coordinator.start();
+
+        } catch (Exception e) {
+            // TODO: exception handling
+            e.printStackTrace();
+        }
     }
 
 }

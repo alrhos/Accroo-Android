@@ -27,7 +27,8 @@ public class RestMethods {
     public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";
     public final static String SUB_CATEGORY = "category/sub";
     public final static String SUB_CATEGORY_BULK = "category/sub/bulk";
-    public final static String TRANSACTION = "transaction?transactionid=";
+    public final static String TRANSACTION = "transaction";
+    public final static String TRANSACTION_GET = "transaction?transactionid=";
 
     private RestMethods() {}
 

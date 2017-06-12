@@ -52,5 +52,4 @@
             app:srcCompat="@drawable/ic_add_black_24dp"
             android:tint="#FFFFFF" />
 
-
 </android.support.design.widget.CoordinatorLayout>

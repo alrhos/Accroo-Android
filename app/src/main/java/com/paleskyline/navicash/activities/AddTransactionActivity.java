@@ -23,6 +23,7 @@ import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
 import com.paleskyline.navicash.services.DataProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -122,7 +123,16 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                         // TODO: add condition to only add the transaction if its date is within the currently selected date range
 
-                        DataProvider.getInstance().addTransaction(transaction);
+                        System.out.println(dataReceiver[0].toString());
+
+                        try {
+                            int transactionID = dataReceiver[0].getInt("transactionID");
+                            transaction.setId(transactionID);
+                            DataProvider.getInstance().addTransaction(transaction);
+                        } catch (JSONException e) {
+                            // TODO: error handling
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override

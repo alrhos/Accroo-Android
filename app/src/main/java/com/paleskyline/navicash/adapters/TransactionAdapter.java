@@ -37,6 +37,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         this.context = context;
         inflater = LayoutInflater.from(context);
+        transactions = new ArrayList<>();
         groupedTransactions = new LinkedHashMap<>();
         groupTransactions();
     }
@@ -104,8 +105,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void groupTransactions() {
 
-        transactions = DataProvider.getInstance().getTransactions();
         groupedTransactions.clear();
+        transactions = DataProvider.getInstance().getTransactions();
 
         for (Transaction t : transactions) {
             if (!groupedTransactions.containsKey(t.getDate())) {
@@ -125,11 +126,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void refreshDataSource() {
-        int currentSize = DataProvider.getInstance().getTransactions().size();
-        if (currentSize > transactions.size() || currentSize < transactions.size()) {
-            groupTransactions();
-            notifyDataSetChanged();
-        }
+        groupTransactions();
+        notifyDataSetChanged();
     }
 
 }

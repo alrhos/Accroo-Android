@@ -28,10 +28,17 @@ public class SelectCategoryActivity extends AppCompatActivity implements Categor
 
     }
 
+    @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
         // Not needed
     }
 
+    @Override
+    public void onCategorySwipeRefresh() {
+        // Not needed
+    }
+
+    @Override
     public void onSubCategoryClicked(SubCategory subCategory) {
         Intent data = new Intent();
         data.putExtra("subCategory", subCategory);
