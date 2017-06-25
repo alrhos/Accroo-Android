@@ -93,13 +93,22 @@ public class SubCategory implements Securable, Parcelable {
 
     @Override
     public JSONObject encrypt() throws JSONException {
+
         JSONObject categoryData = new JSONObject();
+
         categoryData.put("categoryName", categoryName);
+
         SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
+
         JSONObject json = new JSONObject();
-        json.put("generalCategoryID", generalCategoryID);
+
+        if (generalCategoryID != 0) {
+            json.put("generalCategoryID", generalCategoryID);
+        }
+
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
+
         return json;
     }
 

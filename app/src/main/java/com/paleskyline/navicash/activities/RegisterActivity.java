@@ -133,7 +133,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                     CryptoManager.getInstance().saveMasterKey(getApplicationContext());
 
-                    createGeneralCategories();
+                    createCategories();
+
+                 //   createGeneralCategories();
 
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), CRITICAL_ERROR, Toast.LENGTH_LONG).show();
@@ -161,6 +163,71 @@ public class RegisterActivity extends AppCompatActivity {
             // TODO: exception handling
             e.printStackTrace();
         }
+
+    }
+
+    private void createCategories() {
+        final JSONObject[] dataReceiver = new JSONObject[1];
+        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+                this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                System.out.println("SUCCESSFULLY CREATED CATEGORIES");
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                System.out.println("ERROR CREATING CATEGORIES");
+            }
+        };
+
+        ArrayList<GeneralCategory> generalCategories = DataAccess.getInstance(getApplicationContext()).getGeneralCategories();
+        ArrayList<SubCategory> subCategories = DataAccess.getInstance(getApplicationContext()).getSubCategories();
+
+        for (SubCategory subCategory : subCategories) {
+            for (GeneralCategory generalCategory : generalCategories) {
+                if (subCategory.getGeneralCategoryName().equals(generalCategory.getCategoryName())) {
+                    generalCategory.getSubCategories().add(subCategory);
+                    break;
+                }
+            }
+        }
+
+        Collections.shuffle(generalCategories);
+
+        try {
+
+            JSONArray generalCategoriesArray = new JSONArray();
+
+            for (GeneralCategory generalCategory : generalCategories) {
+
+                JSONArray subCategoriesArray = new JSONArray();
+
+                for (SubCategory subCategory : generalCategory.getSubCategories()) {
+                    subCategoriesArray.put(subCategory.encrypt());
+                }
+
+                JSONObject category = generalCategory.encrypt();
+                category.put("subCategories", subCategoriesArray);
+
+                generalCategoriesArray.put(category);
+            }
+
+            JSONObject categories = new JSONObject();
+            categories.put("categories", generalCategoriesArray);
+
+            coordinator.addRequests(RestMethods.post(0, RestMethods.CATEGORY, coordinator, categories,
+                    RestRequest.TOKEN, getApplicationContext()));
+
+            coordinator.start();
+
+        } catch (Exception e) {
+            // TODO: exception handling
+            e.printStackTrace();
+        }
+
+
+
 
     }
 
@@ -347,6 +414,7 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User(emailAddress.getText().toString(), loginPwd, keyPackage);
 
                 registerUser(user);
+              //  createCategories();
             }
         });
     }

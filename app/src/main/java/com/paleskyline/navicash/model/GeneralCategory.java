@@ -89,6 +89,11 @@ public class GeneralCategory implements Securable {
         System.out.println("THE ID IS: " + getId());
         // TODO: Need to add section here to handle IDs for POST and PUT
         JSONObject categoryData = new JSONObject();
+
+        if (id != 0) {
+            categoryData.put("id", id);
+        }
+
         categoryData.put("categoryName", categoryName);
         categoryData.put("rootCategory", rootCategory);
         categoryData.put("iconFile", iconFile);

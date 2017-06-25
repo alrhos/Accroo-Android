@@ -23,6 +23,7 @@ public class RestMethods {
 
     private final static String baseURL = "http://192.168.1.15:5000/";
     public final static String REGISTER = "user/register";
+    public final static String CATEGORY = "category";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String GENERAL_CATEGORY_BULK = "category/general/bulk";
     public final static String SUB_CATEGORY = "category/sub";
