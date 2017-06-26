@@ -30,8 +30,9 @@ import com.paleskyline.navicash.services.DecryptData;
 
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements CategoryOverviewFragment.OnFragmentInteractionListener,
-    TransactionsFragment.OnFragmentInteractionListener, DecryptData.OnDecryptionComplete {
+public class MainActivity extends AppCompatActivity implements SummaryFragment.OnFragmentInteractionListener,
+        TransactionsFragment.OnFragmentInteractionListener, CategoryOverviewFragment.OnFragmentInteractionListener,
+     DecryptData.OnDecryptionComplete {
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
@@ -157,11 +158,26 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
 
     }
 
+    private void refresh() {
+        transactionsFragment.setRefreshStatus(true);
+        summaryFragment.setRefreshStatus(true);
+        categoryOverviewFragment.setRefreshStatus(true);
+        loadUserData();
+    }
+
+    @Override
+    public void onSummarySwipeRefresh() {
+        refresh();
+    }
 
     @Override
     public void onTransactionSwipeRefresh() {
-        transactionsFragment.setRefreshStatus(true);
-        loadUserData();
+        refresh();
+    }
+
+    @Override
+    public void onCategorySwipeRefresh() {
+        refresh();
     }
 
     @Override
@@ -175,14 +191,13 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
     }
 
     @Override
-    public void onCategorySwipeRefresh() {
-        // TODO
-    }
-
-    @Override
     public void onSuccessfulDecryption() {
-        transactionsFragment.setRefreshStatus(false);
+        summaryFragment.refreshAdapter();
         transactionsFragment.refreshAdapter();
+        categoryOverviewFragment.refreshAdapter();
+        summaryFragment.setRefreshStatus(false);
+        transactionsFragment.setRefreshStatus(false);
+        categoryOverviewFragment.setRefreshStatus(false);
     }
 
     @Override
@@ -192,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
 
     private void loadUserData() {
 
-        final JSONObject[] dataReceiver = new JSONObject[3];
+        final JSONObject[] dataReceiver = new JSONObject[2];
         RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
                 this, dataReceiver) {
 
@@ -213,9 +228,8 @@ public class MainActivity extends AppCompatActivity implements CategoryOverviewF
         try {
 
             coordinator.addRequests(
-                    RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RestMethods.get(2, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+                    RestMethods.get(0, RestMethods.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RestMethods.get(1, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
 

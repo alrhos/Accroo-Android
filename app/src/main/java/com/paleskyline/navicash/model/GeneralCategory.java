@@ -101,6 +101,7 @@ public class GeneralCategory implements Securable {
         JSONObject json = new JSONObject();
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
+
         return json;
     }
 

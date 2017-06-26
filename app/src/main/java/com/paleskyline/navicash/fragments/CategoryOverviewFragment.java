@@ -28,8 +28,6 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
 
     private CategoryOverviewAdapter categoryOverviewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-
     private OnFragmentInteractionListener fragmentListener;
 
     public CategoryOverviewFragment() {}
@@ -83,7 +81,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
+                fragmentListener.onCategorySwipeRefresh();
             }
         });
 
@@ -140,6 +138,10 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
     @Override
     public void onSubCategoryClicked(SubCategory subCategory) {
         fragmentListener.onSubCategoryClicked(subCategory);
+    }
+
+    public void refreshAdapter() {
+        categoryOverviewAdapter.refreshDataSource();
     }
 
     public void setRefreshStatus(boolean status) {

@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ public class SummaryFragment extends Fragment {
 
     private SummaryListAdapter summaryListAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private OnFragmentInteractionListener fragmentListener;
 
     public SummaryFragment() {}
 
@@ -48,7 +50,7 @@ public class SummaryFragment extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        swipeRefreshLayout.setRefreshing(false);
+                        fragmentListener.onSummarySwipeRefresh();
                     }
                 }
         );
@@ -56,7 +58,27 @@ public class SummaryFragment extends Fragment {
         return fragmentView;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            fragmentListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentListener = null;
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onSummarySwipeRefresh();
+    }
 
     public void refreshAdapter() {
         summaryListAdapter.refreshDataSource();

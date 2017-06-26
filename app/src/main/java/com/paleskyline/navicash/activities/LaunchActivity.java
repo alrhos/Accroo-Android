@@ -45,7 +45,7 @@ public class LaunchActivity extends AppCompatActivity implements DecryptData.OnD
     }
 
     private void loadUserData() {
-        final JSONObject[] dataReceiver = new JSONObject[3];
+        final JSONObject[] dataReceiver = new JSONObject[2];
         RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
                 this, dataReceiver) {
 
@@ -72,9 +72,8 @@ public class LaunchActivity extends AppCompatActivity implements DecryptData.OnD
         try {
 
             coordinator.addRequests(
-                    RestMethods.get(0, RestMethods.GENERAL_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RestMethods.get(1, RestMethods.SUB_CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RestMethods.get(2, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+                    RestMethods.get(0, RestMethods.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RestMethods.get(1, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
 

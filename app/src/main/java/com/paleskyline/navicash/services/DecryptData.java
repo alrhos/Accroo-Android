@@ -42,36 +42,51 @@ public class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
     @Override
     protected Boolean doInBackground(JSONObject[]... jsonObjects) {
 
-        RootCategory[] rc = {new RootCategory("Income"), new RootCategory("Expenses")};
-        ArrayList<GeneralCategory> gc = new ArrayList<>();
-        ArrayList<SubCategory> sc = new ArrayList<>();
-        ArrayList<Transaction> t = new ArrayList<>();
+        RootCategory[] rootCategories = {new RootCategory("Income"), new RootCategory("Expenses")};
+        ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
+        ArrayList<SubCategory> subCategories = new ArrayList<>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         try {
 
-            JSONArray generalCategories = jsonObjects[0][0].getJSONArray("categories");
-            for (int i = 0; i < generalCategories.length(); i++) {
-                GeneralCategory generalCategory = new GeneralCategory(generalCategories.getJSONObject(i));
-                gc.add(generalCategory);
+            JSONArray generalCategoriesArray = jsonObjects[0][0].getJSONArray("categories");
+
+            for (int i = 0; i < generalCategoriesArray.length(); i++) {
+
+                JSONObject gc = generalCategoriesArray.getJSONObject(i);
+                GeneralCategory generalCategory = new GeneralCategory(gc);
+
+                JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
+
+                for (int j = 0; j < linkedSubCategories.length(); j++) {
+                    SubCategory subCategory = new SubCategory(linkedSubCategories.getJSONObject(j));
+                    subCategories.add(subCategory);
+                    //subCategory.setCategoryIcon(generalCategory.getIconFile());
+                    //generalCategory.getSubCategories().add(subCategory);
+                }
+
+                //GeneralCategory generalCategory = new GeneralCategory(generalCategoriesArray.getJSONObject(i));
+                generalCategories.add(generalCategory);
             }
 
-            JSONArray subCategories = jsonObjects[0][1].getJSONArray("categories");
-            for (int j = 0; j < subCategories.length(); j++) {
-                SubCategory subCategory = new SubCategory(subCategories.getJSONObject(j));
-                sc.add(subCategory);
-            }
+//            JSONArray subCategories = jsonObjects[0][1].getJSONArray("categories");
+//            for (int j = 0; j < subCategories.length(); j++) {
+//                SubCategory subCategory = new SubCategory(subCategories.getJSONObject(j));
+//                subCategories.add(subCategory);
+//            }
 
-            JSONArray transactions = jsonObjects[0][2].getJSONArray("transactions");
-            for (int k = 0; k < transactions.length(); k++) {
-                Transaction transaction = new Transaction(transactions.getJSONObject(k));
+            JSONArray transactionsArray = jsonObjects[0][1].getJSONArray("transactions");
+
+            for (int k = 0; k < transactionsArray.length(); k++) {
+                Transaction transaction = new Transaction(transactionsArray.getJSONObject(k));
                 // TODO: extra condition required here to only let in transactions for the specified date transaction
-                t.add(transaction);
+                transactions.add(transaction);
             }
 
-            for (Transaction tx: t) {
-                for (SubCategory s : sc) {
+            for (Transaction tx: transactions) {
+                for (SubCategory s : subCategories) {
                     if (tx.getSubCategoryID() == s.getId()) {
-                        for (GeneralCategory g : gc) {
+                        for (GeneralCategory g : generalCategories) {
                             if (g.getId() == s.getGeneralCategoryID()) {
                                 tx.setCategoryIcon(g.getIconFile());
                                 tx.setRootCategoryType(g.getRootCategory());
@@ -84,8 +99,8 @@ public class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
                 }
             }
 
-            for (SubCategory s : sc) {
-                for (GeneralCategory g : gc) {
+            for (SubCategory s : subCategories) {
+                for (GeneralCategory g : generalCategories) {
                     if (s.getGeneralCategoryID() == g.getId()) {
                         s.setCategoryIcon(g.getIconFile());
                         g.getSubCategories().add(s);
@@ -94,16 +109,16 @@ public class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
                 }
             }
 
-            for (GeneralCategory g : gc) {
-                for (int c = 0; c < rc.length; c++) {
-                    if (g.getRootCategory().equals(rc[c].getCategoryName())) {
-                        rc[c].getGeneralCategories().add(g);
+            for (GeneralCategory g : generalCategories) {
+                for (int c = 0; c < rootCategories.length; c++) {
+                    if (g.getRootCategory().equals(rootCategories[c].getCategoryName())) {
+                        rootCategories[c].getGeneralCategories().add(g);
                         break;
                     }
                 }
             }
 
-            DataProvider.getInstance().setRootCategories(rc);
+            DataProvider.getInstance().setRootCategories(rootCategories);
 
             return true;
 

@@ -99,4 +99,9 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return new CategoryOverviewViewHolder(view);
     }
 
+    public void refreshDataSource() {
+        this.generalCategories = DataProvider.getInstance().getGeneralCategories();
+        notifyDataSetChanged();
+    }
+
 }

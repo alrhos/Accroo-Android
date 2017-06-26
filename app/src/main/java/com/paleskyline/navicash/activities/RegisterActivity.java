@@ -21,10 +21,8 @@ import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,8 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
     private char[] loginPwd, dataPwd;
     private ArrayList<GeneralCategory> generalCategories;
     private ArrayList<SubCategory> subCategories;
-    private int retryCount = 0;
-    private static final int MAX_RETRIES = 3;
+ //   private int retryCount = 0;
+  //  private static final int MAX_RETRIES = 3;
 
     private static final String INVALID_EMAIL = "Invalid email address";
     private static final String PASSWORD_MISMATCH = "passwords do not match";
@@ -170,9 +168,12 @@ public class RegisterActivity extends AppCompatActivity {
         final JSONObject[] dataReceiver = new JSONObject[1];
         RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
                 this, dataReceiver) {
+
             @Override
             protected void onSuccess() {
-                System.out.println("SUCCESSFULLY CREATED CATEGORIES");
+                // TODO: need to decrypt and sort the returned data before initalising the application data variable.
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -192,6 +193,24 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         }
+
+//        // TODO: consider setting application category data values here
+//
+//        RootCategory rootCategories[] = {new RootCategory("Income"), new RootCategory("Expenses")};
+//
+//        for (int i = 0; i < rootCategories.length; i++) {
+//            for (GeneralCategory generalCategory : generalCategories) {
+//                if (generalCategory.getRootCategory().equals(rootCategories[i])) {
+//                    rootCategories[i].getGeneralCategories().add(generalCategory);
+//                }
+//            }
+//        }
+//
+//        DataProvider.getInstance().setRootCategories(rootCategories);
+
+
+        // Shuffle items so that each user's categories are inserted in a different order making
+        // for sysadmins to guess a certain category given the ciphertext length.
 
         Collections.shuffle(generalCategories);
 
@@ -231,149 +250,149 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void createGeneralCategories() {
-        final JSONObject[] dataReceiver = new JSONObject[1];
-        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-                this, dataReceiver) {
-
-            @Override
-            protected void onSuccess() {
-                // Process the returned general categories
-
-                generalCategories = new ArrayList<>();
-
-                try {
-                    JSONArray categories = dataReceiver[0].getJSONArray("categories");
-                    for (int i = 0; i < categories.length(); i++) {
-                        GeneralCategory gc = new GeneralCategory(categories.getJSONObject(i));
-                        generalCategories.add(gc);
-                    }
-
-                    createSubCategories();
-
-                } catch (JSONException | UnsupportedEncodingException e) {
-                    // TODO: error handling
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            protected void onFailure(String errorMessage) {
-                retryCount++;
-                if (retryCount > MAX_RETRIES) {
-                    // ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
-                    return;
-                } else {
-                    createGeneralCategories();
-                }
-            }
-        };
-
-        ArrayList<GeneralCategory> categories = DataAccess.getInstance(getApplicationContext()).getGeneralCategories();
-
-        // TODO: shuffle categories to make more anonymous
-
-        Collections.shuffle(categories);
-
-        try {
-            JSONArray jsonArray = new JSONArray();
-            for (GeneralCategory category : categories) {
-                jsonArray.put(category.encrypt());
-            }
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("categories", jsonArray);
-
-            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK,
-                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
-
-            coordinator.start();
-
-        } catch (Exception e) {
-            // TODO: error handling
-            e.printStackTrace();
-        }
-
-    }
-
-    private void createSubCategories() {
-
-        final JSONObject[] dataReceiver = new JSONObject[1];
-        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-                this, dataReceiver) {
-
-            @Override
-            protected void onSuccess() {
-
-                // TODO: review logic for transitioning to launch activity. It's not necessary to execute main loadData routine as we already have all the category data we need.
-
-                Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-                startActivity(intent);
-
+//    private void createGeneralCategories() {
+//        final JSONObject[] dataReceiver = new JSONObject[1];
+//        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+//                this, dataReceiver) {
+//
+//            @Override
+//            protected void onSuccess() {
 //                // Process the returned general categories
 //
-//                subCategories = new ArrayList<>();
+//                generalCategories = new ArrayList<>();
 //
 //                try {
 //                    JSONArray categories = dataReceiver[0].getJSONArray("categories");
 //                    for (int i = 0; i < categories.length(); i++) {
-//                        SubCategory sc = new SubCategory((JSONObject) categories.get(i));
-//                        subCategories.add(sc);
+//                        GeneralCategory gc = new GeneralCategory(categories.getJSONObject(i));
+//                        generalCategories.add(gc);
 //                    }
 //
-//                    // SUCCESS! - Continue to main activity
-//
+//                    createSubCategories();
 //
 //                } catch (JSONException | UnsupportedEncodingException e) {
 //                    // TODO: error handling
 //                    e.printStackTrace();
 //                }
-            }
-
-            @Override
-            protected void onFailure(String errorMessage) {
-                retryCount++;
-                if (retryCount > MAX_RETRIES) {
-                    // TODO - ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
-                    return;
-                } else {
-                    createGeneralCategories();
-                }
-            }
-        };
-
-        ArrayList<SubCategory> categories = DataAccess.getInstance(getApplicationContext()).getSubCategories();
-
-        for (SubCategory sc: categories) {
-            for (GeneralCategory gc: generalCategories) {
-                if (sc.getGeneralCategoryName().equals(gc.getCategoryName())) {
-                    sc.setGeneralCategoryID(gc.getId());
-                    break;
-                }
-            }
-        }
-
-        try {
-
-            JSONArray jsonArray = new JSONArray();
-            for (SubCategory category : categories) {
-                jsonArray.put(category.encrypt());
-            }
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("categories", jsonArray);
-
-            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY_BULK,
-                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
-
-            coordinator.start();
-
-        } catch (Exception e) {
-            // TODO: error handling
-            e.printStackTrace();
-        }
-
-    }
+//            }
+//
+//            @Override
+//            protected void onFailure(String errorMessage) {
+//                retryCount++;
+//                if (retryCount > MAX_RETRIES) {
+//                    // ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
+//                    return;
+//                } else {
+//                    createGeneralCategories();
+//                }
+//            }
+//        };
+//
+//        ArrayList<GeneralCategory> categories = DataAccess.getInstance(getApplicationContext()).getGeneralCategories();
+//
+//        // TODO: shuffle categories to make more anonymous
+//
+//        Collections.shuffle(categories);
+//
+//        try {
+//            JSONArray jsonArray = new JSONArray();
+//            for (GeneralCategory category : categories) {
+//                jsonArray.put(category.encrypt());
+//            }
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("categories", jsonArray);
+//
+//            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK,
+//                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
+//
+//            coordinator.start();
+//
+//        } catch (Exception e) {
+//            // TODO: error handling
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    private void createSubCategories() {
+//
+//        final JSONObject[] dataReceiver = new JSONObject[1];
+//        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
+//                this, dataReceiver) {
+//
+//            @Override
+//            protected void onSuccess() {
+//
+//                // TODO: review logic for transitioning to launch activity. It's not necessary to execute main loadData routine as we already have all the category data we need.
+//
+//                Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+//                startActivity(intent);
+//
+////                // Process the returned general categories
+////
+////                subCategories = new ArrayList<>();
+////
+////                try {
+////                    JSONArray categories = dataReceiver[0].getJSONArray("categories");
+////                    for (int i = 0; i < categories.length(); i++) {
+////                        SubCategory sc = new SubCategory((JSONObject) categories.get(i));
+////                        subCategories.add(sc);
+////                    }
+////
+////                    // SUCCESS! - Continue to main activity
+////
+////
+////                } catch (JSONException | UnsupportedEncodingException e) {
+////                    // TODO: error handling
+////                    e.printStackTrace();
+////                }
+//            }
+//
+//            @Override
+//            protected void onFailure(String errorMessage) {
+//                retryCount++;
+//                if (retryCount > MAX_RETRIES) {
+//                    // TODO - ABORT AND PROCEED TO MAIN APP SCREEN WITHOUT ANY DEFAULT CATEGORIES
+//                    return;
+//                } else {
+//                    createGeneralCategories();
+//                }
+//            }
+//        };
+//
+//        ArrayList<SubCategory> categories = DataAccess.getInstance(getApplicationContext()).getSubCategories();
+//
+//        for (SubCategory sc: categories) {
+//            for (GeneralCategory gc: generalCategories) {
+//                if (sc.getGeneralCategoryName().equals(gc.getCategoryName())) {
+//                    sc.setGeneralCategoryID(gc.getId());
+//                    break;
+//                }
+//            }
+//        }
+//
+//        try {
+//
+//            JSONArray jsonArray = new JSONArray();
+//            for (SubCategory category : categories) {
+//                jsonArray.put(category.encrypt());
+//            }
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("categories", jsonArray);
+//
+//            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY_BULK,
+//                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
+//
+//            coordinator.start();
+//
+//        } catch (Exception e) {
+//            // TODO: error handling
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
 
