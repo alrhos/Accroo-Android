@@ -23,8 +23,8 @@ import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
 import com.paleskyline.navicash.services.DecryptData;
 
@@ -158,26 +158,22 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
 
     }
 
-    private void refresh() {
-        transactionsFragment.setRefreshStatus(true);
+    @Override
+    public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
-        categoryOverviewFragment.setRefreshStatus(true);
         loadUserData();
     }
 
     @Override
-    public void onSummarySwipeRefresh() {
-        refresh();
-    }
-
-    @Override
     public void onTransactionSwipeRefresh() {
-        refresh();
+        transactionsFragment.setRefreshStatus(true);
+        loadUserData();
     }
 
     @Override
     public void onCategorySwipeRefresh() {
-        refresh();
+        categoryOverviewFragment.setRefreshStatus(true);
+        loadUserData();
     }
 
     @Override
@@ -192,12 +188,18 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
 
     @Override
     public void onSuccessfulDecryption() {
-        summaryFragment.refreshAdapter();
-        transactionsFragment.refreshAdapter();
-        categoryOverviewFragment.refreshAdapter();
-        summaryFragment.setRefreshStatus(false);
-        transactionsFragment.setRefreshStatus(false);
-        categoryOverviewFragment.setRefreshStatus(false);
+        if (summaryFragment != null) {
+            summaryFragment.refreshAdapter();
+            summaryFragment.setRefreshStatus(false);
+        }
+        if (transactionsFragment != null) {
+            transactionsFragment.refreshAdapter();
+            transactionsFragment.setRefreshStatus(false);
+        }
+        if (categoryOverviewFragment != null) {
+            categoryOverviewFragment.refreshAdapter();
+            categoryOverviewFragment.setRefreshStatus(false);
+        }
     }
 
     @Override
@@ -228,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
         try {
 
             coordinator.addRequests(
-                    RestMethods.get(0, RestMethods.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RestMethods.get(1, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+                    RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()),
+                    RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()));
 
             coordinator.start();
 

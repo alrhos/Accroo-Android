@@ -1,6 +1,7 @@
 package com.paleskyline.navicash.network;
 
 import android.content.Context;
+import android.util.Base64;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
@@ -8,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.paleskyline.navicash.crypto.AuthManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +21,7 @@ import static com.paleskyline.navicash.network.RestRequest.GENERAL_ERROR;
  * Created by oscar on 11/03/17.
  */
 
-public class RestMethods {
+public class RequestBuilder {
 
     private final static String baseURL = "http://192.168.1.15:5000/";
     public final static String REGISTER = "user/register";
@@ -31,7 +33,67 @@ public class RestMethods {
     public final static String TRANSACTION = "transaction";
     public final static String TRANSACTION_GET = "transaction?transactionid=";
 
-    private RestMethods() {}
+    private RequestBuilder() {}
+
+    protected void updateRequestHeader(RestRequest restRequest) {
+        if (restRequest.getAuthType().equals(RestRequest.ACCESS_TOKEN)) {
+            // Update header here
+        }
+    }
+
+    public static RestRequest basicAuth(int method, String url, String username,
+                                           char[] password, final RequestCoordinator coordinator,
+                                           int index, Context context) {
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createAbortingErrorListener(coordinator);
+
+        String credentials = username + ":" + String.copyValueOf(password);
+        String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+
+        // TODO: password security
+
+        return new RestRequest(method, url, null, responseListener, errorListener,
+                RestRequest.BASIC, authValue, context);
+    }
+
+    protected static RestRequest getAccessToken(final RequestCoordinator coordinator,
+                                                final Context context) {
+
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String accessToken = response.getString("accessToken");
+                    AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+                    coordinator.retry();
+                } catch (Exception e) {
+                    coordinator.abort(GENERAL_ERROR);
+                }
+            }
+        };
+
+        Response.ErrorListener errorListener = createAbortingErrorListener(coordinator);
+
+        return null;
+    }
+
+    protected static RestRequest tokenAuthGet() {
+        return null;
+    }
+
+    protected static RestRequest tokenAuthPost() {
+        return null;
+    }
+
+    protected static RestRequest tokenAuthPut() {
+        return null;
+    }
+
+    protected static RestRequest tokenAuthDelete() {
+        return null;
+    }
+
 
     protected static RestRequest getToken(final RequestCoordinator coordinator, final Context context)
         throws Exception {
@@ -176,6 +238,16 @@ public class RestMethods {
             return RestRequest.CONNECTION_ERROR;
         }
 
+    }
+
+    private static Response.ErrorListener createAbortingErrorListener(final RequestCoordinator coordinator) {
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                coordinator.abort(parseVolleyException(error));
+            }
+        };
+        return errorListener;
     }
 
     private static Response.Listener<JSONObject> createResponseListener(

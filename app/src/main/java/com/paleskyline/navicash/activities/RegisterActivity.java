@@ -16,8 +16,8 @@ import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.User;
+import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONArray;
@@ -118,16 +118,20 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // TODO: review password security here
 
-                    String token = dataReceiver[0].get("token").toString();
+                    String refreshToken = dataReceiver[0].get("refreshToken").toString();
+                    String accessToken = dataReceiver[0].get("accessToken").toString();
 
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
-                            AuthManager.TOKEN_KEY, token);
+                            AuthManager.REFRESH_TOKEN_KEY, refreshToken);
 
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
-                            AuthManager.USERNAME_KEY, user.getEmailAddress());
+                            AuthManager.ACCESS_TOKEN_KEY, accessToken);
 
-                    AuthManager.getInstance(getApplicationContext()).saveEntry(
-                            AuthManager.PASSWORD_KEY, String.copyValueOf(user.getPassword()));
+//                    AuthManager.getInstance(getApplicationContext()).saveEntry(
+//                            AuthManager.USERNAME_KEY, user.getEmailAddress());
+//
+//                    AuthManager.getInstance(getApplicationContext()).saveEntry(
+//                            AuthManager.PASSWORD_KEY, String.copyValueOf(user.getPassword()));
 
                     CryptoManager.getInstance().saveMasterKey(getApplicationContext());
 
@@ -153,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         try {
-            coordinator.addRequests(RestMethods.post(0, RestMethods.REGISTER, coordinator,
+            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.REGISTER, coordinator,
                     user.toJSON(), RestRequest.NONE, getApplicationContext()));
 
             coordinator.start();
@@ -235,7 +239,7 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject categories = new JSONObject();
             categories.put("categories", generalCategoriesArray);
 
-            coordinator.addRequests(RestMethods.post(0, RestMethods.CATEGORY, coordinator, categories,
+            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.CATEGORY, coordinator, categories,
                     RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
@@ -303,7 +307,7 @@ public class RegisterActivity extends AppCompatActivity {
 //            JSONObject jsonObject = new JSONObject();
 //            jsonObject.put("categories", jsonArray);
 //
-//            coordinator.addRequests(RestMethods.post(0, RestMethods.GENERAL_CATEGORY_BULK,
+//            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.GENERAL_CATEGORY_BULK,
 //                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
 //
 //            coordinator.start();
@@ -382,7 +386,7 @@ public class RegisterActivity extends AppCompatActivity {
 //            JSONObject jsonObject = new JSONObject();
 //            jsonObject.put("categories", jsonArray);
 //
-//            coordinator.addRequests(RestMethods.post(0, RestMethods.SUB_CATEGORY_BULK,
+//            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.SUB_CATEGORY_BULK,
 //                    coordinator, jsonObject, RestRequest.TOKEN, getApplicationContext()));
 //
 //            coordinator.start();

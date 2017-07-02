@@ -43,7 +43,7 @@ public abstract class RequestCoordinator {
     public void start() {
         if (!requests.isEmpty()) {
             for (RestRequest request : requests) {
-                VolleyManager.getInstance(context).addRequest(request);
+                RequestDispatcher.getInstance(context).addRequest(request);
             }
         }
     }
@@ -56,9 +56,11 @@ public abstract class RequestCoordinator {
         }
     }
 
+    // TODO: modify this method to not use AuthManager to save tokens
+
     protected void updateToken(String token) {
         try {
-            AuthManager.getInstance(context).saveEntry(AuthManager.TOKEN_KEY, token);
+            AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, token);
             if (retryRequired) {
                 retry();
             }
@@ -67,29 +69,35 @@ public abstract class RequestCoordinator {
         }
     }
 
-    private synchronized void retry() {
-        doneCount = 0;
-        for (RestRequest request : retryRequests) {
-            try {
-                request.setAuthHeader();
-                VolleyManager.getInstance(context).addRequest(request);
-            } catch (Exception e) {
-                abort(RestRequest.GENERAL_ERROR);
+    // TODO: modify to call updateAuthHeader for all requests.
+
+    protected synchronized void retry() {
+        if (retryRequired) {
+            doneCount = 0;
+            for (RestRequest request : retryRequests) {
+                try {
+                    request.setAuthHeader();
+                    RequestDispatcher.getInstance(context).addRequest(request);
+                } catch (Exception e) {
+                    abort(RestRequest.GENERAL_ERROR);
+                }
             }
         }
     }
 
     protected void abort(String errorMessage) {
-        VolleyManager.getInstance(context).flushRequests(tag);
+        RequestDispatcher.getInstance(context).flushRequests(tag);
         onFailure(errorMessage);
     }
+
+    // TODO: review if the retryRequired variable is needed
 
     protected synchronized void receiveError(int responseCode, String errorMessage) {
         if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
             retryRequired = true;
-            VolleyManager.getInstance(context).flushRequests(tag);
+            RequestDispatcher.getInstance(context).flushRequests(tag);
             try {
-                VolleyManager.getInstance(context).addRequest(RestMethods.getToken(this, context));
+                RequestDispatcher.getInstance(context).addRequest(RequestBuilder.getToken(this, context));
             } catch (Exception e) {
                 abort(RestRequest.GENERAL_ERROR);
             }

@@ -22,7 +22,8 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     private String authType;
     public static final String BASIC = "Basic";
-    public static final String TOKEN = "Token";
+    public static final String REFRESH_TOKEN = "Refresh Token";
+    public static final String ACCESS_TOKEN = "Access Token";
     public static final String NONE = "None";
     private Map<String, String> headerMap;
     private Context context;
@@ -31,20 +32,6 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     public final static String CONNECTION_ERROR = "Connection error";
     public final static String GENERAL_ERROR = "An error occurred";
 
-//    public RestRequest(int method, String url, JSONObject json,
-//                          Response.Listener<JSONObject> listener,
-//                          Response.ErrorListener errorListener,
-//                          String authType) {
-//
-//        super(method, url, json, listener, errorListener);
-//        this.authType = authType;
-//
-//        // DefaultRetryPolicy.DEFAULT_TIMEOUT_MS
-//
-//        DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(5000,
-//                0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-//        this.setRetryPolicy(retryPolicy);
-//    }
 
     protected RestRequest(int method, String url, JSONObject json,
                        Response.Listener<JSONObject> listener,
@@ -54,28 +41,27 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         super(method, url, json, listener, errorListener);
         this.authType = authType;
         this.context = context;
-
-
+        //this.setAuthHeader();
         this.setRetryPolicy(new DefaultRetryPolicy(5000,
                 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        this.setAuthHeader();
     }
 
-//    public String getAuthType() {
-//        return authType;
-//    }
+    protected RestRequest(int method, String url, JSONObject json, Response.Listener<JSONObject>
+                          responseListener, Response.ErrorListener errorListener, String authType,
+                          String authValue, Context context) {
+
+        super(method, url, json, responseListener, errorListener);
+        this.authType = authType;
+        this.context = context;
+        setAuthHeader(authValue);
+        setRetryPolicy(new DefaultRetryPolicy(5000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         return headerMap;
     }
-
-//    public void setHeader(String headerValue) {
-//        headerMap = new HashMap<>();
-//        System.out.println("HEADER VALUE IS: " + headerValue);
-//        headerMap.put("Authorization", authType + " " + headerValue);
-//    }
 
     protected void setAuthHeader() throws Exception {
         String headerValue;
@@ -87,8 +73,11 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
                 String credentials = username + ":" + password;
                 headerValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 break;
-            case TOKEN:
-                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.TOKEN_KEY);
+            case REFRESH_TOKEN:
+                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+                break;
+            case ACCESS_TOKEN:
+                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.ACCESS_TOKEN_KEY);
                 break;
             default:
                 headerValue = NONE;
@@ -96,6 +85,15 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         }
         headerMap = new HashMap<>();
         headerMap.put("Authorization", authType + " " + headerValue);
+    }
+
+    protected String getAuthType() {
+        return authType;
+    }
+
+    protected void setAuthHeader(String authValue) {
+        headerMap = new HashMap<>();
+        headerMap.put("Authorization", authType + " " + authValue);
     }
 
     protected Object clone() throws CloneNotSupportedException {

@@ -10,8 +10,8 @@ import android.widget.Toast;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
+import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestMethods;
 import com.paleskyline.navicash.network.RestRequest;
 import com.paleskyline.navicash.services.DecryptData;
 
@@ -72,8 +72,8 @@ public class LaunchActivity extends AppCompatActivity implements DecryptData.OnD
         try {
 
             coordinator.addRequests(
-                    RestMethods.get(0, RestMethods.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RestMethods.get(1, RestMethods.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+                    RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                    RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
 

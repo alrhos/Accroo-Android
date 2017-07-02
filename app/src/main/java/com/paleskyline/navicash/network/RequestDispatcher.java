@@ -9,18 +9,18 @@ import com.android.volley.toolbox.Volley;
  * Created by oscar on 11/03/17.
  */
 
-public class VolleyManager {
+public class RequestDispatcher {
 
     private RequestQueue requestQueue;
-    private static VolleyManager instance = null;
+    private static RequestDispatcher instance = null;
 
-    private VolleyManager(Context context) {
+    private RequestDispatcher(Context context) {
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public static synchronized VolleyManager getInstance(Context context) {
+    public static synchronized RequestDispatcher getInstance(Context context) {
         if (instance == null) {
-            instance = new VolleyManager(context);
+            instance = new RequestDispatcher(context);
         }
         return instance;
     }

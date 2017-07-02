@@ -11,7 +11,7 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestMethods;
+import com.paleskyline.navicash.network.RequestBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
 
-                        coordinator.addRequests(RestMethods.getKey(coordinator, 0, getApplicationContext()));
+                        coordinator.addRequests(RequestBuilder.getKey(coordinator, 0, getApplicationContext()));
                         coordinator.start();
 
                     } catch (Exception e) {

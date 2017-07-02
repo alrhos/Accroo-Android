@@ -31,7 +31,8 @@ public class AuthManager {
     public static final String USERNAME_KEY = "usernameKey";
     public static final String PASSWORD_KEY = "passwordKey";
     public static final String ENCRYPTION_KEY = "encryptionKey";
-    public static final String TOKEN_KEY = "tokenKey";
+    public static final String REFRESH_TOKEN_KEY = "refreshTokenKey";
+    public static final String ACCESS_TOKEN_KEY = "accessTokenKey";
 
 
     private AuthManager() throws KeyStoreException, NoSuchAlgorithmException,
