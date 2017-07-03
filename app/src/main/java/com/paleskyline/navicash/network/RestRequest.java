@@ -1,13 +1,11 @@
 package com.paleskyline.navicash.network;
 
 import android.content.Context;
-import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.paleskyline.navicash.crypto.AuthManager;
 
 import org.json.JSONObject;
 
@@ -22,8 +20,8 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     private String authType;
     public static final String BASIC = "Basic";
-    public static final String REFRESH_TOKEN = "Refresh Token";
-    public static final String ACCESS_TOKEN = "Access Token";
+    public static final String REFRESH_TOKEN = "Bearer";
+    public static final String ACCESS_TOKEN = "Bearer";
     public static final String NONE = "None";
     private Map<String, String> headerMap;
     private Context context;
@@ -63,29 +61,29 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         return headerMap;
     }
 
-    protected void setAuthHeader() throws Exception {
-        String headerValue;
-        switch (authType) {
-            case BASIC:
-                String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
-                // TODO: review password security
-                String password = AuthManager.getInstance(context).getEntry(AuthManager.PASSWORD_KEY);
-                String credentials = username + ":" + password;
-                headerValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                break;
-            case REFRESH_TOKEN:
-                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
-                break;
-            case ACCESS_TOKEN:
-                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.ACCESS_TOKEN_KEY);
-                break;
-            default:
-                headerValue = NONE;
-                break;
-        }
-        headerMap = new HashMap<>();
-        headerMap.put("Authorization", authType + " " + headerValue);
-    }
+//    protected void setAuthHeader() throws Exception {
+//        String headerValue;
+//        switch (authType) {
+//            case BASIC:
+//                String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+//                // TODO: review password security
+//                String password = AuthManager.getInstance(context).getEntry(AuthManager.PASSWORD_KEY);
+//                String credentials = username + ":" + password;
+//                headerValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+//                break;
+//            case REFRESH_TOKEN:
+//                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+//                break;
+//            case ACCESS_TOKEN:
+//                headerValue = AuthManager.getInstance(context).getEntry(AuthManager.ACCESS_TOKEN_KEY);
+//                break;
+//            default:
+//                headerValue = NONE;
+//                break;
+//        }
+//        headerMap = new HashMap<>();
+//        headerMap.put("Authorization", authType + " " + headerValue);
+//    }
 
     protected String getAuthType() {
         return authType;

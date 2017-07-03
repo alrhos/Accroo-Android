@@ -7,11 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Request;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.KeyPackage;
-import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RequestBuilder;
+import com.paleskyline.navicash.network.RequestCoordinator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,10 +84,20 @@ public class LoginActivity extends AppCompatActivity {
 
                     try {
 
+                        // TODO: review password security
+
+                        int passwordLength = password.getText().length();
+                        char[] enteredPassword = new char[passwordLength];
+                        password.getText().getChars(0, passwordLength, enteredPassword, 0);
+
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
 
-                        coordinator.addRequests(RequestBuilder.getKey(coordinator, 0, getApplicationContext()));
+                        coordinator.addRequests(RequestBuilder.basicAuth(0, coordinator,
+                                Request.Method.GET, RequestBuilder.REFRESH_TOKEN, username.toString(),
+                                enteredPassword, getApplicationContext()));
+
+                    //    coordinator.addRequests(RequestBuilder.getKey(coordinator, 0, getApplicationContext()));
                         coordinator.start();
 
                     } catch (Exception e) {

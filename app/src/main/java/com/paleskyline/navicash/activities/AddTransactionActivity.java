@@ -18,9 +18,7 @@ import android.widget.Toast;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
-import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestRequest;
 import com.paleskyline.navicash.services.DataProvider;
 
 import org.json.JSONException;
@@ -152,8 +150,8 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                     JSONObject json = transaction.encrypt();
 
-                    coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.TRANSACTION, coordinator,
-                            json, RestRequest.ACCESS_TOKEN, getApplicationContext()));
+//                    coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.TRANSACTION, coordinator,
+//                            json, RestRequest.ACCESS_TOKEN, getApplicationContext()));
 
                     progressDialog.show();
                     coordinator.start();

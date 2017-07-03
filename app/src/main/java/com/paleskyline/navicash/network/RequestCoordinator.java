@@ -69,6 +69,15 @@ public abstract class RequestCoordinator {
         }
     }
 
+    protected void receiveAccessToken(String accessToken) {
+        try {
+            AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+            retry();
+        } catch (Exception e) {
+            abort(RestRequest.GENERAL_ERROR);
+        }
+    }
+
     // TODO: modify to call updateAuthHeader for all requests.
 
     protected synchronized void retry() {
@@ -76,7 +85,7 @@ public abstract class RequestCoordinator {
             doneCount = 0;
             for (RestRequest request : retryRequests) {
                 try {
-                    request.setAuthHeader();
+                    //request.setAuthHeader();
                     RequestDispatcher.getInstance(context).addRequest(request);
                 } catch (Exception e) {
                     abort(RestRequest.GENERAL_ERROR);
@@ -97,7 +106,7 @@ public abstract class RequestCoordinator {
             retryRequired = true;
             RequestDispatcher.getInstance(context).flushRequests(tag);
             try {
-                RequestDispatcher.getInstance(context).addRequest(RequestBuilder.getToken(this, context));
+                RequestDispatcher.getInstance(context).addRequest(RequestBuilder.getAccessToken(this, context));
             } catch (Exception e) {
                 abort(RestRequest.GENERAL_ERROR);
             }

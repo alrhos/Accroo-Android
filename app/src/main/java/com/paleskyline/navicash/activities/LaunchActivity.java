@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
@@ -30,13 +31,19 @@ public class LaunchActivity extends AppCompatActivity implements DecryptData.OnD
 
     private void autoLogin() {
         try {
-            // Check that credentials exist
-            AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.USERNAME_KEY);
-            AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.PASSWORD_KEY);
+            // Check if refresh token exists
+
+            AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+
             // Init master key
+
             CryptoManager.getInstance().initMasterKey(getApplicationContext());
 
             loadUserData();
+
+            //AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.USERNAME_KEY);
+            //AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.PASSWORD_KEY);
+
         } catch (Exception e) {
             // TODO: exception handling
             e.printStackTrace();
@@ -72,8 +79,15 @@ public class LaunchActivity extends AppCompatActivity implements DecryptData.OnD
         try {
 
             coordinator.addRequests(
-                    RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
-                    RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
+                    RequestBuilder.tokenAuth(0, coordinator, Request.Method.GET, RequestBuilder.CATEGORY,
+                            null, null, getApplicationContext()),
+
+                    RequestBuilder.tokenAuth(1, coordinator, Request.Method.GET, RequestBuilder.TRANSACTION,
+                            "?transactionid=1", null, getApplicationContext()));
+
+
+                  //  RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.TOKEN, getApplicationContext()),
+                   // RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
 

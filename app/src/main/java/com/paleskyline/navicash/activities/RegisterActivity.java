@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
@@ -18,7 +19,6 @@ import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -121,6 +121,9 @@ public class RegisterActivity extends AppCompatActivity {
                     String refreshToken = dataReceiver[0].get("refreshToken").toString();
                     String accessToken = dataReceiver[0].get("accessToken").toString();
 
+                    System.out.println(refreshToken);
+                    System.out.println(accessToken);
+
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
                             AuthManager.REFRESH_TOKEN_KEY, refreshToken);
 
@@ -157,8 +160,10 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         try {
-            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.REGISTER, coordinator,
-                    user.toJSON(), RestRequest.NONE, getApplicationContext()));
+//            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.REGISTER, coordinator,
+//                    user.toJSON(), RestRequest.NONE, getApplicationContext()));
+            coordinator.addRequests(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
+                    RequestBuilder.REGISTER, user.toJSON(), getApplicationContext()));
 
             coordinator.start();
         } catch (Exception e) {
@@ -239,8 +244,11 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject categories = new JSONObject();
             categories.put("categories", generalCategoriesArray);
 
-            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.CATEGORY, coordinator, categories,
-                    RestRequest.TOKEN, getApplicationContext()));
+            coordinator.addRequests(RequestBuilder.tokenAuth(0, coordinator, Request.Method.POST,
+                    RequestBuilder.CATEGORY, null, categories, getApplicationContext()));
+
+//            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.CATEGORY, coordinator, categories,
+//                    RestRequest.TOKEN, getApplicationContext()));
 
             coordinator.start();
 

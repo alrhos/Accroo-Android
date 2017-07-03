@@ -23,9 +23,7 @@ import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
-import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
-import com.paleskyline.navicash.network.RestRequest;
 import com.paleskyline.navicash.services.DecryptData;
 
 import org.json.JSONObject;
@@ -229,9 +227,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
 
         try {
 
-            coordinator.addRequests(
-                    RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()),
-                    RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()));
+//            coordinator.addRequests(
+//                    RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()),
+//                    RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()));
 
             coordinator.start();
 
