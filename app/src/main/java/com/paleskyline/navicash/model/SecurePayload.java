@@ -1,4 +1,4 @@
-package com.paleskyline.navicash.crypto;
+package com.paleskyline.navicash.model;
 
 /**
  * Created by oscar on 4/03/17.

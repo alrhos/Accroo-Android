@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.paleskyline.navicash.crypto.CryptoManager;
-import com.paleskyline.navicash.crypto.SecurePayload;
 
 import org.json.JSONException;
 import org.json.JSONObject;

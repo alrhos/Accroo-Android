@@ -20,12 +20,19 @@ import java.util.ArrayList;
 
 public class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
+    private OnRequestFailure requestListener;
     private OnDecryptionComplete decryptionListener;
+    private int startTransactionID;
 
     // TODO: experiment with passing in activity name and use when building the intent.
 
-    public DecryptData(OnDecryptionComplete decryptionListener) {
+    public DecryptData(OnRequestFailure requestListener, OnDecryptionComplete decryptionListener,
+                       int startTransactionId) {
+
+        this.requestListener = requestListener;
         this.decryptionListener = decryptionListener;
+        this.startTransactionID = startTransactionId;
+
     }
 
     @Override
@@ -41,6 +48,8 @@ public class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
     @Override
     protected Boolean doInBackground(JSONObject[]... jsonObjects) {
+
+        // TODO: review hardcoded string variables
 
         RootCategory[] rootCategories = {new RootCategory("Income"), new RootCategory("Expenses")};
         ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
@@ -127,6 +136,10 @@ public class DecryptData extends AsyncTask<JSONObject[], Boolean, Boolean> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public interface OnRequestFailure {
+        void onRequestFailure();
     }
 
     public interface OnDecryptionComplete {

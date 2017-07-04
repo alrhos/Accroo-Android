@@ -12,13 +12,14 @@ import com.android.volley.Request;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
-import com.paleskyline.navicash.crypto.KeyPackage;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
+import com.paleskyline.navicash.services.DataServices;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,13 +28,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements DataServices.RequestOutcome {
 
     private EditText emailAddress, loginPassword, confirmLoginPassword, dataPassword, confirmDataPassword;
     private Button register;
     private char[] loginPwd, dataPwd;
     private ArrayList<GeneralCategory> generalCategories;
     private ArrayList<SubCategory> subCategories;
+
+    private DataServices dataServices;
+
  //   private int retryCount = 0;
   //  private static final int MAX_RETRIES = 3;
 
@@ -53,6 +57,8 @@ public class RegisterActivity extends AppCompatActivity {
         dataPassword = (EditText) findViewById(R.id.dataPassword);
         confirmDataPassword = (EditText) findViewById(R.id.dataPasswordConfirm);
         register = (Button) findViewById(R.id.register_button);
+
+        dataServices = new DataServices(this, getApplicationContext());
 
         addListeners();
     }
@@ -121,9 +127,6 @@ public class RegisterActivity extends AppCompatActivity {
                     String refreshToken = dataReceiver[0].get("refreshToken").toString();
                     String accessToken = dataReceiver[0].get("accessToken").toString();
 
-                    System.out.println(refreshToken);
-                    System.out.println(accessToken);
-
                     AuthManager.getInstance(getApplicationContext()).saveEntry(
                             AuthManager.REFRESH_TOKEN_KEY, refreshToken);
 
@@ -160,10 +163,10 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         try {
-//            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.REGISTER, coordinator,
+//            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.USER, coordinator,
 //                    user.toJSON(), RestRequest.NONE, getApplicationContext()));
             coordinator.addRequests(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                    RequestBuilder.REGISTER, user.toJSON(), getApplicationContext()));
+                    RequestBuilder.USER, user.toJSON(), getApplicationContext()));
 
             coordinator.start();
         } catch (Exception e) {
@@ -244,7 +247,7 @@ public class RegisterActivity extends AppCompatActivity {
             JSONObject categories = new JSONObject();
             categories.put("categories", generalCategoriesArray);
 
-            coordinator.addRequests(RequestBuilder.tokenAuth(0, coordinator, Request.Method.POST,
+            coordinator.addRequests(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
                     RequestBuilder.CATEGORY, null, categories, getApplicationContext()));
 
 //            coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.CATEGORY, coordinator, categories,
@@ -444,10 +447,36 @@ public class RegisterActivity extends AppCompatActivity {
                 KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPwd);
                 User user = new User(emailAddress.getText().toString(), loginPwd, keyPackage);
 
-                registerUser(user);
+                dataServices.createUser(user);
+
+                //registerUser(user);
               //  createCategories();
             }
         });
+    }
+
+    @Override
+    public void onSuccess(int requestType) {
+        if (requestType == DataServices.CREATE_USER) {
+            dataServices.createDefaultCategories();
+        } else if (requestType == DataServices.CREATE_DEFAULT_CATEGORIES) {
+            // Proceed to login
+        }
+    }
+
+    @Override
+    public void onUnsuccessfulRequest(String errorMessage) {
+        System.out.println(errorMessage);
+    }
+
+    @Override
+    public void onUnsuccessfulDecryption() {
+        System.out.println("DECRYPTION ERROR");
+    }
+
+    @Override
+    public void onGeneralError() {
+        System.out.println("GENERAL ERROR");
     }
 
 }

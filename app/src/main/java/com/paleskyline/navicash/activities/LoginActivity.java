@@ -10,11 +10,10 @@ import android.widget.EditText;
 import com.android.volley.Request;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
-import com.paleskyline.navicash.crypto.KeyPackage;
+import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -56,7 +55,15 @@ public class LoginActivity extends AppCompatActivity {
                         protected void onSuccess() {
                             try {
 
+                                String accessToken = dataReceiver[0].getString("accessToken");
+                                String refreshToken = dataReceiver[0].getString("refreshToken");
+
+                                AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+                                AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
+
+
                                 JSONObject keyData = dataReceiver[0].getJSONObject("key");
+
                                 String key = keyData.getString("dataKey");
                                 String nonce = keyData.getString("nonce");
                                 String salt = keyData.getString("salt");
@@ -69,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("keyPackage", keyPackage);
                                 startActivity(intent);
 
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 // TODO: exception handling
                                 e.printStackTrace();
                             }
@@ -94,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                         AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
 
                         coordinator.addRequests(RequestBuilder.basicAuth(0, coordinator,
-                                Request.Method.GET, RequestBuilder.REFRESH_TOKEN, username.toString(),
+                                Request.Method.GET, RequestBuilder.REFRESH_TOKEN, username.getText().toString(),
                                 enteredPassword, getApplicationContext()));
 
                     //    coordinator.addRequests(RequestBuilder.getKey(coordinator, 0, getApplicationContext()));

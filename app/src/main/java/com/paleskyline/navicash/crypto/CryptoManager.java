@@ -3,6 +3,9 @@ package com.paleskyline.navicash.crypto;
 import android.content.Context;
 import android.util.Base64;
 
+import com.paleskyline.navicash.model.KeyPackage;
+import com.paleskyline.navicash.model.SecurePayload;
+
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
 import org.libsodium.jni.SodiumConstants;

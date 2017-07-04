@@ -40,12 +40,20 @@ public abstract class RequestCoordinator {
         }
     }
 
+    // TODO: add functionality to check token expiry and request a new access token if necessary
+
     public void start() {
         if (!requests.isEmpty()) {
             for (RestRequest request : requests) {
                 RequestDispatcher.getInstance(context).addRequest(request);
             }
         }
+    }
+
+    // TODO: this will contain the contents of start
+
+    private void dispatchRequests() {
+
     }
 
     protected synchronized void done(int index, JSONObject data) {
@@ -81,28 +89,23 @@ public abstract class RequestCoordinator {
     // TODO: modify to call updateAuthHeader for all requests.
 
     protected synchronized void retry() {
-        if (retryRequired) {
-            doneCount = 0;
-            for (RestRequest request : retryRequests) {
-                try {
-                    //request.setAuthHeader();
-                    RequestDispatcher.getInstance(context).addRequest(request);
-                } catch (Exception e) {
-                    abort(RestRequest.GENERAL_ERROR);
-                }
+        doneCount = 0;
+        for (RestRequest request : retryRequests) {
+            try {
+                RequestBuilder.updateRequestAccessToken(request, context);
+                RequestDispatcher.getInstance(context).addRequest(request);
+            } catch (Exception e) {
+                abort(RestRequest.GENERAL_ERROR);
             }
         }
     }
 
-    protected void abort(String errorMessage) {
-        RequestDispatcher.getInstance(context).flushRequests(tag);
-        onFailure(errorMessage);
-    }
-
     // TODO: review if the retryRequired variable is needed
 
-    protected synchronized void receiveError(int responseCode, String errorMessage) {
-        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+    // TODO: review error message handling here - looks like the RequestBuilder already parses the message so should be fine to just take what is passed back here.
+
+    protected synchronized void receiveError(int authType, int responseCode, String errorMessage) {
+        if (authType == RequestBuilder.ACCESS_TOKEN_AUTH && responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
             retryRequired = true;
             RequestDispatcher.getInstance(context).flushRequests(tag);
             try {
@@ -111,8 +114,26 @@ public abstract class RequestCoordinator {
                 abort(RestRequest.GENERAL_ERROR);
             }
         } else {
-            abort(errorMessage);
+            abort(RestRequest.GENERAL_ERROR);
         }
+    }
+
+
+//        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+//            retryRequired = true;
+//            RequestDispatcher.getInstance(context).flushRequests(tag);
+//            try {
+//                RequestDispatcher.getInstance(context).addRequest(RequestBuilder.getAccessToken(this, context));
+//            } catch (Exception e) {
+//                abort(RestRequest.GENERAL_ERROR);
+//            }
+//        } else {
+//            abort(errorMessage);
+//        }
+
+    protected void abort(String errorMessage) {
+        RequestDispatcher.getInstance(context).flushRequests(tag);
+        onFailure(errorMessage);
     }
 
     protected abstract void onSuccess();

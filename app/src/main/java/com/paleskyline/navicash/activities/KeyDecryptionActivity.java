@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.CryptoManager;
-import com.paleskyline.navicash.crypto.KeyPackage;
+import com.paleskyline.navicash.model.KeyPackage;
 
 public class KeyDecryptionActivity extends AppCompatActivity {
 

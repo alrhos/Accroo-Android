@@ -20,29 +20,30 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     private String authType;
     public static final String BASIC = "Basic";
-    public static final String REFRESH_TOKEN = "Bearer";
-    public static final String ACCESS_TOKEN = "Bearer";
+    public static final String TOKEN = "Bearer";
     public static final String NONE = "None";
     private Map<String, String> headerMap;
     private Context context;
+
+    // TODO: these string variables should be moved to resources file
 
     public final static String TIMEOUT_ERROR = "The connection timed out";
     public final static String CONNECTION_ERROR = "Connection error";
     public final static String GENERAL_ERROR = "An error occurred";
 
 
-    protected RestRequest(int method, String url, JSONObject json,
-                       Response.Listener<JSONObject> listener,
-                       Response.ErrorListener errorListener,
-                       String authType, Context context) throws Exception {
-
-        super(method, url, json, listener, errorListener);
-        this.authType = authType;
-        this.context = context;
-        //this.setAuthHeader();
-        this.setRetryPolicy(new DefaultRetryPolicy(5000,
-                0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-    }
+//    protected RestRequest(int method, String url, JSONObject json,
+//                       Response.Listener<JSONObject> listener,
+//                       Response.ErrorListener errorListener,
+//                       String authType, Context context) throws Exception {
+//
+//        super(method, url, json, listener, errorListener);
+//        this.authType = authType;
+//        this.context = context;
+//        //this.setAuthHeader();
+//        this.setRetryPolicy(new DefaultRetryPolicy(5000,
+//                0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//    }
 
     protected RestRequest(int method, String url, JSONObject json, Response.Listener<JSONObject>
                           responseListener, Response.ErrorListener errorListener, String authType,
@@ -90,6 +91,9 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     }
 
     protected void setAuthHeader(String authValue) {
+
+        // TODO: don't set auth header for requests that don't require authorization
+
         headerMap = new HashMap<>();
         headerMap.put("Authorization", authType + " " + authValue);
     }

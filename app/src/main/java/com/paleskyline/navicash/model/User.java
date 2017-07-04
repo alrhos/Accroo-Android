@@ -1,7 +1,5 @@
 package com.paleskyline.navicash.model;
 
-import com.paleskyline.navicash.crypto.KeyPackage;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

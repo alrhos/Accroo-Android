@@ -6,6 +6,8 @@ package com.paleskyline.navicash.database;
 
 public final class DBContract {
 
+    // TODO: review hardcoded string variables
+
     private DBContract() {}
 
     protected abstract class GeneralCategory {

@@ -1,4 +1,4 @@
-package com.paleskyline.navicash.crypto;
+package com.paleskyline.navicash.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
