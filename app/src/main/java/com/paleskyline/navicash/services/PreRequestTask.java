@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestBuilder;
 import com.paleskyline.navicash.network.RequestCoordinator;
@@ -35,6 +36,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private Object dataObject;
 
+    private String username;
+    private char[] password;
+
     // TODO: also needs to take in model object to encrypt
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -44,6 +48,19 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.preRequestOutcome = preRequestOutcome;
         this.context = context;
         this.coordinator = coordinator;
+        requests = new ArrayList<>();
+
+    }
+
+    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+                          RequestCoordinator coordinator, String username, char[] password) {
+
+        this.requestType = requestType;
+        this.preRequestOutcome = preRequestOutcome;
+        this.context = context;
+        this.coordinator = coordinator;
+        this.username = username;
+        this.password = password;
         requests = new ArrayList<>();
 
     }
@@ -69,14 +86,23 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     protected Boolean doInBackground(Void... params) {
         try {
             switch (requestType) {
+
+                case DataServices.GET_REFRESH_TOKEN:
+
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.GET,
+                            RequestBuilder.REFRESH_TOKEN, username, password, context));
+
+                    return true;
+
                 case DataServices.GET_DEFAULT_DATA:
 
-                    // Look up transaction id for date
+                    // TODO - Look up transaction id for date
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.GET,
                             RequestBuilder.CATEGORY, null, null, context));
                     requests.add(RequestBuilder.accessTokenAuth(1, coordinator, Request.Method.GET,
                             RequestBuilder.TRANSACTION, "?transactionid=1", null, context));
+
                     return true;
 
                 case DataServices.CREATE_USER:
@@ -85,6 +111,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.USER, user.toJSON(), context));
+
                     return true;
 
                 case DataServices.CREATE_DEFAULT_CATEGORIES:
@@ -101,8 +128,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                         }
                     }
 
-                    // Shuffle items so that each user's categories are inserted in a different order
-                    // making it difficult for sysadmins to guess a certain category given the ciphertext length.
+                    // Shuffle items so that each user's categories are inserted in a different
+                    // order making it difficult for sysadmins to guess a certain category given
+                    // the cipher text length.
 
                     Collections.shuffle(generalCategories);
 
@@ -127,6 +155,16 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.CATEGORY, null, categories, context));
+
+                    return true;
+
+                case DataServices.CREATE_TRANSACTION:
+
+                    Transaction transaction = (Transaction) dataObject;
+                    JSONObject json = transaction.encrypt();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.TRANSACTION, null, json, context));
 
                     return true;
 

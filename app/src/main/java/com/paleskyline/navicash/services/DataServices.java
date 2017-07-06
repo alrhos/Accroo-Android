@@ -2,6 +2,9 @@ package com.paleskyline.navicash.services;
 
 import android.content.Context;
 
+import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestRequest;
@@ -17,6 +20,10 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
     public final static int GET_DEFAULT_DATA = 0;
     public final static int CREATE_USER = 1;
     public final static int CREATE_DEFAULT_CATEGORIES = 2;
+    public final static int CREATE_TRANSACTION = 3;
+    public final static int UPDATE_TRANSACTION = 4;
+    public final static int DELETE_TRANSACTION = 5;
+    public final static int GET_REFRESH_TOKEN = 6;
 
 
     private RequestOutcome requestOutcome;
@@ -33,7 +40,27 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         void onUnsuccessfulRequest(String errorMessage);
         void onUnsuccessfulDecryption();
         void onGeneralError();
-        void onSuccess(int requestType);
+        void onSuccess(int requestType, Object returnData);
+    }
+
+    public void getRefreshToken(String username, char[] password) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+
+            }
+        };
+
+        new PreRequestTask(GET_REFRESH_TOKEN, this, context, coordinator, username, password).execute();
+
     }
 
     public void getDefaultData(String startDate) {
@@ -83,19 +110,72 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
             @Override
             protected void onSuccess() {
-                // TODO - Should process the created categories here one the endpoint is modified.
-                requestOutcome.onSuccess(CREATE_DEFAULT_CATEGORIES);
+                new PostRequestTask(CREATE_DEFAULT_CATEGORIES, DataServices.this, context).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(String errorMessage) {
-
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
             }
         };
 
         new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this, context, coordinator).execute();
 
     }
+
+    public void createTransaction(final Transaction transaction) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(CREATE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
+            }
+        };
+
+        new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, transaction).execute();
+
+    }
+
+    public void updateTransaction(Transaction transaction) {
+
+    }
+
+    public void deleteTransaction(Transaction transaction) {
+
+    }
+
+    public void createGeneralCategory(GeneralCategory generalCategory) {
+
+    }
+
+    public void updateGeneralCategory(GeneralCategory generalCategory) {
+
+    }
+
+    public void deleteGeneralCategory(GeneralCategory generalCategory) {
+
+    }
+
+    public void createSubCategory(SubCategory subCategory) {
+
+    }
+
+    public void updateSubCategory(SubCategory subCategory) {
+
+    }
+
+    public void deleteSubCategory(SubCategory subCategory) {
+
+    }
+
+
 
 
     // TODO: add data service methods
@@ -121,8 +201,8 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
     }
 
     @Override
-    public void onPostRequestTaskSuccess(int requestType) {
-        requestOutcome.onSuccess(requestType);
+    public void onPostRequestTaskSuccess(int requestType, Object returnData) {
+        requestOutcome.onSuccess(requestType, returnData);
     }
 
     @Override

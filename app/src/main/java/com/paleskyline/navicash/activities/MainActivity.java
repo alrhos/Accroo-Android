@@ -23,15 +23,17 @@ import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
-import com.paleskyline.navicash.services.DecryptData;
+import com.paleskyline.navicash.services.DataServices;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.OnFragmentInteractionListener,
         TransactionsFragment.OnFragmentInteractionListener, CategoryOverviewFragment.OnFragmentInteractionListener,
-     DecryptData.OnDecryptionComplete {
+     DataServices.RequestOutcome {
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
+
+    private DataServices dataServices;
 
     private FloatingActionButton fab;
 
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
                 startActivity(intent);
             }
         });
+
+        dataServices = new DataServices(this, getApplicationContext());
 
     }
 
@@ -157,19 +161,19 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
-       // loadUserData();
+        dataServices.getDefaultData("");
     }
 
     @Override
     public void onTransactionSwipeRefresh() {
         transactionsFragment.setRefreshStatus(true);
-       // loadUserData();
+        dataServices.getDefaultData("");
     }
 
     @Override
     public void onCategorySwipeRefresh() {
         categoryOverviewFragment.setRefreshStatus(true);
-       // loadUserData();
+        dataServices.getDefaultData("");
     }
 
     @Override
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     }
 
     @Override
-    public void onSuccessfulDecryption() {
+    public void onSuccess(int requestType, Object returnData) {
         if (summaryFragment != null) {
             summaryFragment.refreshAdapter();
             summaryFragment.setRefreshStatus(false);
@@ -199,9 +203,40 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        transactionsFragment.setRefreshStatus(false);
+    public void onUnsuccessfulRequest(String errorMessage) {
+        System.out.println(errorMessage);
     }
+
+    @Override
+    public void onUnsuccessfulDecryption() {
+        System.out.println("DECRYPTION ERROR");
+    }
+
+    @Override
+    public void onGeneralError() {
+        System.out.println("GENERAL ERROR");
+    }
+
+//    @Override
+//    public void onSuccessfulDecryption() {
+//        if (summaryFragment != null) {
+//            summaryFragment.refreshAdapter();
+//            summaryFragment.setRefreshStatus(false);
+//        }
+//        if (transactionsFragment != null) {
+//            transactionsFragment.refreshAdapter();
+//            transactionsFragment.setRefreshStatus(false);
+//        }
+//        if (categoryOverviewFragment != null) {
+//            categoryOverviewFragment.refreshAdapter();
+//            categoryOverviewFragment.setRefreshStatus(false);
+//        }
+//    }
+//
+//    @Override
+//    public void onUnsuccessfulDecryption() {
+//        transactionsFragment.setRefreshStatus(false);
+//    }
 
 //    private void loadUserData() {
 //

@@ -17,25 +17,30 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.LaunchActivity">
+            android:name=".activities.LaunchActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.KeyDecryptionActivity" />
+        <activity android:name=".activities.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.KeyDecryptionActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.AddTransactionActivity"
-            android:label="Add Transaction" />
+            android:label="Add Transaction"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activities.Test" />
         <activity
             android:name=".activities.CategoryOverviewActivity"
@@ -47,7 +52,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SelectCategoryActivity"
-            android:label="Select Sub Category">
+            android:label="Select Sub Category"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

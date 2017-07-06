@@ -2,6 +2,7 @@ package com.paleskyline.navicash.services;
 
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.GeneralCategoryComparator;
+import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.model.RootCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.SubCategoryComparator;
@@ -19,6 +20,7 @@ public class DataProvider {
 
     private static DataProvider instance = null;
     private RootCategory[] rootCategories;
+    private KeyPackage keyPackage;
 
     private DataProvider() {
         rootCategories = new RootCategory[2];
@@ -31,6 +33,14 @@ public class DataProvider {
             instance = new DataProvider();
         }
         return instance;
+    }
+
+    public void setKeyPackage(KeyPackage keyPackage) {
+        this.keyPackage = keyPackage;
+    }
+
+    public KeyPackage getKeyPackage() {
+        return keyPackage;
     }
 
     public RootCategory[] getRootCategories() {
@@ -49,6 +59,7 @@ public class DataProvider {
                 categories.add(gc);
             }
         }
+
         Collections.sort(categories, new GeneralCategoryComparator());
         return categories;
     }
@@ -64,6 +75,7 @@ public class DataProvider {
                 }
             }
         }
+
         Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
         return transactions;
     }
