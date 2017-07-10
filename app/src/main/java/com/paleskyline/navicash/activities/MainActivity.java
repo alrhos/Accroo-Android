@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     }
 
     @Override
-    public void onSuccess(int requestType, Object returnData) {
+    public void onSuccess(int requestType) {
         if (summaryFragment != null) {
             summaryFragment.refreshAdapter();
             summaryFragment.setRefreshStatus(false);

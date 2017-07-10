@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,7 +15,7 @@ import com.paleskyline.navicash.services.DataServices;
  */
 public class LoginActivity extends AppCompatActivity implements DataServices.RequestOutcome {
 
-    private EditText username, password;
+    private EditText usernameField, passwordField;
     private Button loginButton;
     private DataServices dataServices;
 
@@ -23,8 +24,8 @@ public class LoginActivity extends AppCompatActivity implements DataServices.Req
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        usernameField = (EditText) findViewById(R.id.username);
+        passwordField = (EditText) findViewById(R.id.password);
         loginButton = (Button) findViewById(R.id.login_button);
 
         dataServices = new DataServices(this, getApplicationContext());
@@ -42,6 +43,12 @@ public class LoginActivity extends AppCompatActivity implements DataServices.Req
             public void onClick(View view) {
                 if (isValidInput()) {
 
+                    String username = usernameField.getText().toString();
+                    int passwordLength = passwordField.getText().length();
+                    char[] password = new char[passwordLength];
+                    passwordField.getText().getChars(0, passwordLength, password, 0);
+
+                    dataServices.getRefreshToken(username, password);
                 }
             }
         });
@@ -122,7 +129,8 @@ public class LoginActivity extends AppCompatActivity implements DataServices.Req
 
     @Override
     public void onSuccess(int requestType) {
-
+        Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
+        startActivity(intent);
     }
 
     @Override

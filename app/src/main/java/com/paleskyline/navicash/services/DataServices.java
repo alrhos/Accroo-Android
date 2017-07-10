@@ -40,7 +40,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         void onUnsuccessfulRequest(String errorMessage);
         void onUnsuccessfulDecryption();
         void onGeneralError();
-        void onSuccess(int requestType, Object returnData);
+        void onSuccess(int requestType);
     }
 
     public void getRefreshToken(String username, char[] password) {
@@ -50,12 +50,12 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
             @Override
             protected void onSuccess() {
-
+                new PostRequestTask(GET_REFRESH_TOKEN, DataServices.this, context).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(String errorMessage) {
-
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
             }
         };
 
@@ -201,8 +201,8 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
     }
 
     @Override
-    public void onPostRequestTaskSuccess(int requestType, Object returnData) {
-        requestOutcome.onSuccess(requestType, returnData);
+    public void onPostRequestTaskSuccess(int requestType) {
+        requestOutcome.onSuccess(requestType);
     }
 
     @Override

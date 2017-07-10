@@ -28,7 +28,6 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private String startDate;
     private String endDate;
     private Object dataObject;
-    private Object returnData = null;
 
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
@@ -54,7 +53,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
     public interface PostRequestOutcome {
         void onPostRequestTaskFailure();
-        void onPostRequestTaskSuccess(int requestType, Object returnData);
+        void onPostRequestTaskSuccess(int requestType);
     }
 
     @Override
@@ -78,7 +77,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     int memlimit = keyData.getInt("memLimit");
                     int opslimit = keyData.getInt("opsLimit");
 
-                    returnData = new KeyPackage(key, nonce, salt, opslimit, memlimit);
+                    KeyPackage keyPackage = new KeyPackage(key, nonce, salt, opslimit, memlimit);
+
+                    DataProvider.getInstance().setKeyPackage(keyPackage);
 
                     return true;
 
@@ -96,8 +97,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case DataServices.CREATE_DEFAULT_CATEGORIES:
 
-                    processCategories(dataReceiver[0]);
-                    sortData();
+                    //processCategories(dataReceiver[0]);
+                    //sortData();
 
                     return true;
 
@@ -130,7 +131,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         if (success) {
-            postRequestOutcome.onPostRequestTaskSuccess(requestType, returnData);
+            postRequestOutcome.onPostRequestTaskSuccess(requestType);
         } else {
             postRequestOutcome.onPostRequestTaskFailure();
         }

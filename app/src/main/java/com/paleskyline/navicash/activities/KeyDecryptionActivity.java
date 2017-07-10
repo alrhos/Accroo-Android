@@ -10,12 +10,13 @@ import android.widget.EditText;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.model.KeyPackage;
+import com.paleskyline.navicash.services.DataProvider;
 
 public class KeyDecryptionActivity extends AppCompatActivity {
 
     private EditText keyPassword;
     private Button unlockButton;
-    private KeyPackage keyPackage;
+  //  private KeyPackage keyPackage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +25,9 @@ public class KeyDecryptionActivity extends AppCompatActivity {
         keyPassword = (EditText) findViewById(R.id.key_password);
         unlockButton = (Button) findViewById(R.id.unlock_button);
 
-        System.out.println("------------KEY DECRYPTION ACTIVITY-------------");
-        keyPackage = getIntent().getParcelableExtra("keyPackage");
-        System.out.println(keyPackage.toString());
+//        System.out.println("------------KEY DECRYPTION ACTIVITY-------------");
+//        keyPackage = getIntent().getParcelableExtra("keyPackage");
+//        System.out.println(keyPackage.toString());
 
         addListeners();
     }
@@ -41,10 +42,15 @@ public class KeyDecryptionActivity extends AppCompatActivity {
                     int passwordLength = keyPassword.length();
                     char[] password = new char[passwordLength];
                     keyPassword.getText().getChars(0, passwordLength, password, 0);
+
                     try {
+
+                        KeyPackage keyPackage = DataProvider.getInstance().getKeyPackage();
+
                         CryptoManager.getInstance().decryptMasterKey(password, keyPackage);
                         CryptoManager.getInstance().saveMasterKey(getApplicationContext());
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+                        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
                         startActivity(intent);
                     } catch (Exception e) {
                         // TODO: error handling for incorrect password

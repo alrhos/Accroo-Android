@@ -217,7 +217,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DataSer
     }
 
     @Override
-    public void onSuccess(int requestType, Object returnData) {
+    public void onSuccess(int requestType) {
         progressDialog.dismiss();
         amountField.getText().clear();
         descriptionField.getText().clear();
