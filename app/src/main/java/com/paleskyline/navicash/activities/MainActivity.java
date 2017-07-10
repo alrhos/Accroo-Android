@@ -23,6 +23,7 @@ import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.services.DataServices;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.OnFragmentInteractionListener,
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
 
         setSupportActionBar(toolbar);
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddTransactionActivity.class);
+                Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
                 startActivity(intent);
             }
         });
@@ -168,6 +169,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     public void onTransactionSwipeRefresh() {
         transactionsFragment.setRefreshStatus(true);
         dataServices.getDefaultData("");
+    }
+
+    @Override
+    public void onTransactionSelected(Transaction transaction) {
+        Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
+        intent.putExtra("transaction", transaction);
+        startActivity(intent);
     }
 
     @Override

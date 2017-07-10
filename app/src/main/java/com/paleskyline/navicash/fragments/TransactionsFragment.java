@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.TransactionAdapter;
+import com.paleskyline.navicash.model.Transaction;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,7 +22,7 @@ import com.paleskyline.navicash.adapters.TransactionAdapter;
  * Use the {@link TransactionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TransactionsFragment extends Fragment {
+public class TransactionsFragment extends Fragment implements TransactionAdapter.AdapterInteractionListener {
 
     private TransactionAdapter transactionAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -58,7 +59,7 @@ public class TransactionsFragment extends Fragment {
 //            dataSource.add(t);
 //        }
 //        System.out.println("DATA SOURCE SIZE: " + dataSource.size());
-        transactionAdapter = new TransactionAdapter(getActivity());
+        transactionAdapter = new TransactionAdapter(getActivity(), this);
 
         if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
@@ -69,6 +70,7 @@ public class TransactionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_transactions, container, false);
         RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
@@ -122,6 +124,7 @@ public class TransactionsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onTransactionSwipeRefresh();
+        void onTransactionSelected(Transaction transaction);
     }
 
     public void refreshAdapter() {
@@ -130,6 +133,12 @@ public class TransactionsFragment extends Fragment {
 
     public void setRefreshStatus(boolean status) {
         swipeRefreshLayout.setRefreshing(status);
+    }
+
+
+    @Override
+    public void onTransactionSelected(Transaction transaction) {
+        fragmentListener.onTransactionSelected(transaction);
     }
 
 }

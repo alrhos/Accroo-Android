@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -24,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddTransactionActivity extends AppCompatActivity implements DataServices.RequestOutcome {
+public class TransactionActivity extends AppCompatActivity implements DataServices.RequestOutcome {
 
     private EditText amountField, descriptionField;
     private TextView categoryField, dateField;
@@ -32,16 +34,20 @@ public class AddTransactionActivity extends AppCompatActivity implements DataSer
     private Button submitButton;
     private DatePickerDialog.OnDateSetListener date;
     private Calendar calendar;
-    private Transaction transaction;
+    private Transaction newTransaction, existingTransaction;
     private SubCategory selectedSubCategory;
     private ProgressDialog progressDialog;
     private final int SUB_CATEGORY_REQUEST = 1;
+    private boolean editing = false;
     private DataServices dataServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_transaction);
+        setContentView(R.layout.activity_transaction);
+
+    //    Toolbar toolbar = (Toolbar) findViewById(R.id.transaction_toolbar);
+    //    setSupportActionBar(toolbar);
 
         amountField = (EditText) findViewById(R.id.add_transaction_amount);
         descriptionField = (EditText) findViewById(R.id.add_transaction_description);
@@ -50,11 +56,32 @@ public class AddTransactionActivity extends AppCompatActivity implements DataSer
         categoryIcon = (ImageView) findViewById(R.id.add_transaction_category_icon);
         submitButton = (Button) findViewById(R.id.submit_transaction_button);
 
-        progressDialog = new ProgressDialog(AddTransactionActivity.this);
+        progressDialog = new ProgressDialog(TransactionActivity.this);
         progressDialog.setMessage("Submitting...");
 
         dataServices = new DataServices(this, getApplicationContext());
         calendar = Calendar.getInstance();
+
+        existingTransaction = getIntent().getParcelableExtra("transaction");
+
+        if (existingTransaction != null) {
+
+            editing = true;
+
+            amountField.setText(existingTransaction.getFormattedAmount());
+            dateField.setText(existingTransaction.getDateString());
+            descriptionField.setText(existingTransaction.getDescription());
+
+            int iconId = getApplicationContext().getResources().getIdentifier(
+                    "@drawable/" + existingTransaction.getCategoryIcon(), null,
+                    getApplicationContext().getPackageName());
+
+            categoryIcon.setImageResource(iconId);
+            categoryField.setText(existingTransaction.getSubCategoryName());
+
+        } else {
+            updateDate();
+        }
 
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -66,12 +93,10 @@ public class AddTransactionActivity extends AppCompatActivity implements DataSer
             }
         };
 
-        updateDate();
-
         dateField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(AddTransactionActivity.this, date, calendar.get(Calendar.YEAR),
+                new DatePickerDialog(TransactionActivity.this, date, calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
 
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -104,77 +129,38 @@ public class AddTransactionActivity extends AppCompatActivity implements DataSer
 
             progressDialog.show();
 
-            transaction = new Transaction(selectedSubCategory.getId(),
+            newTransaction = new Transaction(selectedSubCategory.getId(),
             dateField.getText().toString(),
             Double.parseDouble(amountField.getText().toString()),
             descriptionField.getText().toString());
 
-            dataServices.createTransaction(transaction);
-
-
-//                final JSONObject[] dataReceiver = new JSONObject[1];
-//                RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-//                        this, dataReceiver) {
-//
-//                    // TODO: review onSuccess and onFailure logic and UX
-//
-//                    @Override
-//                    protected void onSuccess() {
-//                        progressDialog.dismiss();
-//                        amountField.getText().clear();
-//                        descriptionField.getText().clear();
-//                        amountField.requestFocus();
-//
-//                        Toast.makeText(getApplicationContext(), "Transaction submitted",
-//                                Toast.LENGTH_SHORT).show();
-//
-//                        // TODO: add condition to only add the transaction if its date is within the currently selected date range
-//
-//                        System.out.println(dataReceiver[0].toString());
-//
-//                        try {
-//                            int transactionID = dataReceiver[0].getInt("transactionID");
-//                            transaction.setId(transactionID);
-//                            DataProvider.getInstance().addTransaction(transaction);
-//                        } catch (JSONException e) {
-//                            // TODO: error handling
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    @Override
-//                    protected void onFailure(String errorMessage) {
-//                        progressDialog.dismiss();
-//                        Toast.makeText(getApplicationContext(), errorMessage,
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                };
-//
-//                try {
-//
-//                    transaction = new Transaction(selectedSubCategory.getId(),
-//                            dateField.getText().toString(),
-//                            Double.parseDouble(amountField.getText().toString()),
-//                            descriptionField.getText().toString());
-//
-//                    JSONObject json = transaction.encrypt();
-//
-////                    coordinator.addRequests(RequestBuilder.post(0, RequestBuilder.TRANSACTION, coordinator,
-////                            json, RestRequest.ACCESS_TOKEN, getApplicationContext()));
-//
-//                    progressDialog.show();
-//                    coordinator.start();
-//
-//                } catch (Exception e) {
-//                    // TODO: exception handling
-//                    e.printStackTrace();
-//                }
-
-
+            dataServices.createTransaction(newTransaction);
 
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (editing) {
+            getMenuInflater().inflate(R.menu.edit_menu, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_resource:
+                System.out.println("EDIT");
+                return true;
+            case R.id.delete_resource:
+                System.out.println("DELETE");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -196,6 +182,15 @@ public class AddTransactionActivity extends AppCompatActivity implements DataSer
         String dateFormat = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(dateFormat, Locale.US);
         dateField.setText(df.format(calendar.getTime()));
+    }
+
+    private void editTransaction() {
+
+    }
+
+    private void deleteTransaction() {
+        // TODO: add confirmation dialog before deleting
+
     }
 
     // TODO: implement amount regex and toast

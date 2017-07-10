@@ -26,16 +26,18 @@ import java.util.LinkedHashMap;
 public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
+    private AdapterInteractionListener adapterInteractionListener;
     private ArrayList<Transaction> transactions;
     private LinkedHashMap<Date, ArrayList<Transaction>> groupedTransactions;
     private LayoutInflater inflater;
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
 
-    public TransactionAdapter(Context context) {
+    public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
 
         // TODO: data source can probably be initialised from within
 
         this.context = context;
+        this.adapterInteractionListener = adapterInteractionListener;
         inflater = LayoutInflater.from(context);
         transactions = new ArrayList<>();
         groupedTransactions = new LinkedHashMap<>();
@@ -50,7 +52,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(view);
             dateHeader = (TextView) view.findViewById(R.id.date_header_value);
         }
+    }
 
+    public interface AdapterInteractionListener {
+        void onTransactionSelected(Transaction transaction);
     }
 
     @Override
@@ -69,27 +74,31 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LinearLayout ll = (LinearLayout) vh.itemView.findViewById(R.id.transaction_list_layout);
         ll.removeAllViews();
 
-        for (final Transaction t : groupedTransactions.get(date)) {
+        for (final Transaction transaction : groupedTransactions.get(date)) {
 
             View v = inflater.inflate(R.layout.transaction_list_details, null, false);
 
             ImageView iv = (ImageView) v.findViewById(R.id.transaction_icon);
-            int iconId = context.getResources().getIdentifier("@drawable/" + t.getCategoryIcon(), null, context.getPackageName());
+            int iconId = context.getResources().getIdentifier("@drawable/" + transaction.getCategoryIcon(), null, context.getPackageName());
             iv.setImageResource(iconId);
 
             TextView category = (TextView) v.findViewById(R.id.transaction_category_name);
-            category.setText(t.getSubCategoryName());
+            category.setText(transaction.getSubCategoryName());
 
             TextView description = (TextView) v.findViewById(R.id.transaction_category_description);
-            description.setText(t.getDescription());
+            description.setText(transaction.getDescription());
 
             TextView amount = (TextView) v.findViewById(R.id.transaction_category_amount);
-            amount.setText(t.getFormattedAmount());
+            amount.setText(transaction.getFormattedAmount());
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println(t.toString());
+                    System.out.println(transaction.toString());
+                    adapterInteractionListener.onTransactionSelected(transaction);
+                    //Intent intent = new Intent(context, TransactionActivity.class);
+                    //intent.putExtra("transaction", transaction);
+
                 }
             });
 

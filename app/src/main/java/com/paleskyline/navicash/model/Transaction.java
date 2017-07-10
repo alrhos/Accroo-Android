@@ -1,5 +1,8 @@
 package com.paleskyline.navicash.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.paleskyline.navicash.crypto.CryptoManager;
 
 import org.json.JSONException;
@@ -15,7 +18,7 @@ import java.util.Date;
  * Created by oscar on 25/03/17.
  */
 
-public class Transaction implements Securable{
+public class Transaction implements Securable, Parcelable {
 
     private int id;
     private int subCategoryID;
@@ -158,4 +161,48 @@ public class Transaction implements Securable{
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.subCategoryID);
+        dest.writeString(this.subCategoryName);
+        dest.writeString(this.categoryIcon);
+        dest.writeString(this.rootCategoryType);
+        dest.writeString(this.dateString);
+        dest.writeDouble(this.amount);
+        dest.writeString(this.description);
+        dest.writeSerializable(this.decimalFormat);
+        dest.writeSerializable(this.dateFormat);
+    }
+
+    protected Transaction(Parcel in) {
+        this.id = in.readInt();
+        this.subCategoryID = in.readInt();
+        this.subCategoryName = in.readString();
+        this.categoryIcon = in.readString();
+        this.rootCategoryType = in.readString();
+        this.dateString = in.readString();
+        this.amount = in.readDouble();
+        this.description = in.readString();
+        this.decimalFormat = (DecimalFormat) in.readSerializable();
+        this.dateFormat = (SimpleDateFormat) in.readSerializable();
+    }
+
+    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+        @Override
+        public Transaction createFromParcel(Parcel source) {
+            return new Transaction(source);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
 }

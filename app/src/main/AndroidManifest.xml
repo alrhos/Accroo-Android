@@ -35,10 +35,12 @@
         </activity>
         <activity android:name=".activities.RegisterActivity"
             android:screenOrientation="portrait"/>
+
         <activity android:name=".activities.KeyDecryptionActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.AddTransactionActivity"
+            android:name=".activities.TransactionActivity"
+
             android:label="Add Transaction"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.Test" />
