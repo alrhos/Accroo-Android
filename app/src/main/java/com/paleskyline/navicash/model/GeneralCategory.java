@@ -1,5 +1,8 @@
 package com.paleskyline.navicash.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.paleskyline.navicash.crypto.CryptoManager;
 
 import org.json.JSONException;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
  * Created by oscar on 4/03/17.
  */
 
-public class GeneralCategory implements Securable {
+public class GeneralCategory implements Securable, Parcelable {
 
     private int id;
     private String categoryName, rootCategory, iconFile;
@@ -125,4 +128,40 @@ public class GeneralCategory implements Securable {
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.categoryName);
+        dest.writeString(this.rootCategory);
+        dest.writeString(this.iconFile);
+        dest.writeTypedList(this.subCategories);
+        dest.writeSerializable(this.df);
+    }
+
+    protected GeneralCategory(Parcel in) {
+        this.id = in.readInt();
+        this.categoryName = in.readString();
+        this.rootCategory = in.readString();
+        this.iconFile = in.readString();
+        this.subCategories = in.createTypedArrayList(SubCategory.CREATOR);
+        this.df = (DecimalFormat) in.readSerializable();
+    }
+
+    public static final Parcelable.Creator<GeneralCategory> CREATOR = new Parcelable.Creator<GeneralCategory>() {
+        @Override
+        public GeneralCategory createFromParcel(Parcel source) {
+            return new GeneralCategory(source);
+        }
+
+        @Override
+        public GeneralCategory[] newArray(int size) {
+            return new GeneralCategory[size];
+        }
+    };
 }

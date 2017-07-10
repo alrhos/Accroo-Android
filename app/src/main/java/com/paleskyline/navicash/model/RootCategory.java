@@ -1,5 +1,8 @@
 package com.paleskyline.navicash.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -7,7 +10,7 @@ import java.util.ArrayList;
  * Created by oscar on 25/03/17.
  */
 
-public class RootCategory {
+public class RootCategory implements Parcelable {
 
     private String categoryName;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
@@ -45,4 +48,36 @@ public class RootCategory {
     public void setGeneralCategories(ArrayList<GeneralCategory> generalCategories) {
         this.generalCategories = generalCategories;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.categoryName);
+        dest.writeList(this.generalCategories);
+        dest.writeSerializable(this.df);
+    }
+
+    protected RootCategory(Parcel in) {
+        this.categoryName = in.readString();
+        this.generalCategories = new ArrayList<>();
+        in.readList(this.generalCategories, GeneralCategory.class.getClassLoader());
+        this.df = (DecimalFormat) in.readSerializable();
+    }
+
+    public static final Parcelable.Creator<RootCategory> CREATOR = new Parcelable.Creator<RootCategory>() {
+        @Override
+        public RootCategory createFromParcel(Parcel source) {
+            return new RootCategory(source);
+        }
+
+        @Override
+        public RootCategory[] newArray(int size) {
+            return new RootCategory[size];
+        }
+    };
 }

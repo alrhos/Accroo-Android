@@ -96,4 +96,19 @@ public class DataProvider {
         }
     }
 
+    public void deleteTransaction(Transaction transaction) {
+        for (int i = 0; i < rootCategories.length; i++) {
+            for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {
+                for (SubCategory sc : gc.getSubCategories()) {
+                    for (Transaction t : sc.getTransactions()) {
+                        if (transaction.getId() == t.getId()) {
+                            sc.getTransactions().remove(t);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -3,6 +3,7 @@ package com.paleskyline.navicash.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,8 +23,10 @@ import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
 import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.RootCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
+import com.paleskyline.navicash.services.DataProvider;
 import com.paleskyline.navicash.services.DataServices;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.OnFragmentInteractionListener,
@@ -77,11 +80,35 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
 
         dataServices = new DataServices(this, getApplicationContext());
 
+        System.out.println("ON CREATE CALLED");
+
+//        RootCategory[] data = DataProvider.getInstance().getRootCategories();
+//
+//        for (int i = 0; i < data.length; i++) {
+//            for (GeneralCategory gc : data[i].getGeneralCategories()) {
+//                System.out.println(gc.toString());
+//                System.out.println(gc.getFormattedTransactionTotal());
+//                for (SubCategory sc : gc.getSubCategories()) {
+//                    System.out.println(sc.toString());
+//                    for (Transaction t : sc.getTransactions()) {
+//                        System.out.println(t.toString());
+//                    }
+//                }
+//            }
+//        }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        System.out.println("ON MAIN ACTIVITY RESUME");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        System.out.println("MAIN ACTIVITY STOPPED");
     }
 
     @Override
@@ -89,6 +116,53 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
         super.onRestart();
         summaryFragment.refreshAdapter();
         transactionsFragment.refreshAdapter();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        System.out.println("MAIN ACTIVITY - on restore instance state");
+//        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+//        startActivity(intent);
+        Parcelable[] savedData = savedInstanceState.getParcelableArray("workingData");
+        RootCategory[] data = new RootCategory[savedData.length];
+        System.arraycopy(savedData, 0, data, 0, savedData.length);
+        DataProvider.getInstance().setRootCategories(data);
+
+        for (int i = 0; i < data.length; i++) {
+            for (GeneralCategory gc : data[i].getGeneralCategories()) {
+                System.out.println(gc.toString());
+                System.out.println(gc.getFormattedTransactionTotal());
+                for (SubCategory sc : gc.getSubCategories()) {
+                    System.out.println(sc.toString());
+                    for (Transaction t : sc.getTransactions()) {
+                        System.out.println(t.toString());
+                    }
+                }
+            }
+        }
+
+        summaryFragment = (SummaryFragment) getSupportFragmentManager().getFragment(savedInstanceState, "summaryFragment");
+        transactionsFragment = (TransactionsFragment) getSupportFragmentManager().getFragment(savedInstanceState, "transactionFragment");
+        categoryOverviewFragment = (CategoryOverviewFragment) getSupportFragmentManager().getFragment(savedInstanceState, "categoryFragment");
+
+        //summaryFragment.refreshAdapter();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArray("workingData", DataProvider.getInstance().getRootCategories());
+        if (summaryFragment != null) {
+            getSupportFragmentManager().putFragment(savedInstanceState, "summaryFragment", summaryFragment);
+        }
+        if (transactionsFragment != null) {
+            getSupportFragmentManager().putFragment(savedInstanceState, "transactionFragment", transactionsFragment);
+        }
+        if (categoryOverviewFragment != null) {
+            getSupportFragmentManager().putFragment(savedInstanceState, "categoryFragment", categoryOverviewFragment);
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override

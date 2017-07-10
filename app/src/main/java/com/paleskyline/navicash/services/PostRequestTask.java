@@ -28,6 +28,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private String startDate;
     private String endDate;
     private Object dataObject;
+    private Transaction transaction;
+    private int transactionID;
 
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
@@ -112,11 +114,19 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case DataServices.CREATE_TRANSACTION:
 
-                    Transaction transaction = (Transaction) dataObject;
-                    int transactionID = dataReceiver[0][0].getInt("transactionID");
+                    transactionID = dataReceiver[0][0].getInt("transactionID");
+                    transaction = (Transaction) dataObject;
                     transaction.setId(transactionID);
 
                     DataProvider.getInstance().addTransaction(transaction);
+
+                    return true;
+
+                case DataServices.DELETE_TRANSACTION:
+
+                    transaction = (Transaction) dataObject;
+
+                    DataProvider.getInstance().deleteTransaction(transaction);
 
                     return true;
 
@@ -168,6 +178,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         }
 
     }
+
+    /* TODO - this logic should be moved to the data provider */
 
     private void sortData() {
 

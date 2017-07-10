@@ -459,7 +459,9 @@ public class RegisterActivity extends AppCompatActivity implements DataServices.
     public void onSuccess(int requestType) {
         System.out.println("THE REQUEST TYPE IS: " + requestType);
         if (requestType == DataServices.CREATE_USER) {
-            dataServices.createDefaultCategories();
+            //dataServices.createDefaultCategories();
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            startActivity(intent);
         } else if (requestType == DataServices.CREATE_DEFAULT_CATEGORIES) {
             Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
             startActivity(intent);

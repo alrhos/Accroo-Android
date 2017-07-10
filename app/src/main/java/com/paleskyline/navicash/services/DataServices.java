@@ -145,9 +145,41 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
     public void updateTransaction(Transaction transaction) {
 
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+
+            }
+        };
+
+
+
     }
 
-    public void deleteTransaction(Transaction transaction) {
+    public void deleteTransaction(final Transaction transaction) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(DELETE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
+            }
+        };
+
+        new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, transaction).execute();
 
     }
 

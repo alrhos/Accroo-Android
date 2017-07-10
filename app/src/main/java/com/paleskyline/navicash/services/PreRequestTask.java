@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
+import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
@@ -28,7 +29,10 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private ArrayList<RestRequest> requests;
     private String startDate;
     private String endDate;
+    private String uri;
     private int requestType;
+    private JSONObject json;
+    private Transaction transaction;
 
     private PreRequestOutcome preRequestOutcome;
     private Context context;
@@ -50,6 +54,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.coordinator = coordinator;
         requests = new ArrayList<>();
 
+        try {
+            CryptoManager.getInstance().initMasterKey(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -63,6 +74,12 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.password = password;
         requests = new ArrayList<>();
 
+        try {
+            CryptoManager.getInstance().initMasterKey(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -74,6 +91,12 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.coordinator = coordinator;
         this.dataObject = dataObject;
         requests = new ArrayList<>();
+
+        try {
+            CryptoManager.getInstance().initMasterKey(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -160,11 +183,32 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case DataServices.CREATE_TRANSACTION:
 
-                    Transaction transaction = (Transaction) dataObject;
-                    JSONObject json = transaction.encrypt();
+                    json = ((Transaction) dataObject).encrypt();
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.TRANSACTION, null, json, context));
+
+                    return true;
+
+                case DataServices.UPDATE_TRANSACTION:
+
+                    transaction = (Transaction) dataObject;
+
+                    json = transaction.encrypt();
+
+                    uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
+                            uri, null, json, context));
+
+                case DataServices.DELETE_TRANSACTION:
+
+                    transaction = (Transaction) dataObject;
+
+                    uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
+                            uri, null, null, context));
 
                     return true;
 

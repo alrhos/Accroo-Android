@@ -35,10 +35,11 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     private DatePickerDialog.OnDateSetListener date;
     private Calendar calendar;
     private Transaction newTransaction, existingTransaction;
-    private SubCategory selectedSubCategory;
+    private int selectedSubCategoryID;
     private ProgressDialog progressDialog;
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
+    private boolean editable = true;
     private DataServices dataServices;
 
     @Override
@@ -68,7 +69,7 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
 
             editing = true;
 
-            amountField.setText(existingTransaction.getFormattedAmount());
+            amountField.setText(String.valueOf(existingTransaction.getAmount()));
             dateField.setText(existingTransaction.getDateString());
             descriptionField.setText(existingTransaction.getDescription());
 
@@ -78,6 +79,11 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
 
             categoryIcon.setImageResource(iconId);
             categoryField.setText(existingTransaction.getSubCategoryName());
+
+            this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
+
+            submitButton.setText("SAVE");
+            toggleEditing();
 
         } else {
             updateDate();
@@ -127,15 +133,20 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
                     return;
                 }
 
-            progressDialog.show();
+                progressDialog.show();
 
-            newTransaction = new Transaction(selectedSubCategory.getId(),
-            dateField.getText().toString(),
-            Double.parseDouble(amountField.getText().toString()),
-            descriptionField.getText().toString());
-
-            dataServices.createTransaction(newTransaction);
-
+                if (editing) {
+                    existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
+                    existingTransaction.setDateString(dateField.getText().toString());
+                    existingTransaction.setDescription(descriptionField.getText().toString());
+                    dataServices.updateTransaction(existingTransaction);
+                } else {
+                    newTransaction = new Transaction(selectedSubCategoryID,
+                            dateField.getText().toString(),
+                            Double.parseDouble(amountField.getText().toString()),
+                            descriptionField.getText().toString());
+                    dataServices.createTransaction(newTransaction);
+                }
             }
         });
 
@@ -153,10 +164,10 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_resource:
-                System.out.println("EDIT");
+                toggleEditing();
                 return true;
             case R.id.delete_resource:
-                System.out.println("DELETE");
+                deleteTransaction();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -167,12 +178,12 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
-                SubCategory sc = data.getParcelableExtra("subCategory");
-                this.selectedSubCategory = sc;
+                SubCategory subCategory = data.getParcelableExtra("subCategory");
+                this.selectedSubCategoryID = subCategory.getId();
                 int iconId = getApplicationContext().getResources().getIdentifier(
-                        "@drawable/" + sc.getCategoryIcon(), null, getApplicationContext().getPackageName());
+                        "@drawable/" + subCategory.getCategoryIcon(), null, getApplicationContext().getPackageName());
                 categoryIcon.setImageResource(iconId);
-                categoryField.setText(sc.getCategoryName());
+                categoryField.setText(subCategory.getCategoryName());
 
             }
         }
@@ -184,13 +195,19 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
         dateField.setText(df.format(calendar.getTime()));
     }
 
-    private void editTransaction() {
-
+    private void toggleEditing() {
+        editable = !editable;
+        amountField.setEnabled(editable);
+        categoryField.setEnabled(editable);
+        dateField.setEnabled(editable);
+        descriptionField.setEnabled(editable);
+        submitButton.setEnabled(editable);
     }
 
     private void deleteTransaction() {
         // TODO: add confirmation dialog before deleting
-
+        progressDialog.show();
+        dataServices.deleteTransaction(existingTransaction);
     }
 
     // TODO: implement amount regex and toast
@@ -214,9 +231,17 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        amountField.getText().clear();
-        descriptionField.getText().clear();
-        amountField.requestFocus();
+        if (requestType == DataServices.CREATE_TRANSACTION) {
+            amountField.getText().clear();
+            descriptionField.getText().clear();
+            amountField.requestFocus();
+        } else if (requestType == DataServices.UPDATE_TRANSACTION) {
+
+        } else if (requestType == DataServices.DELETE_TRANSACTION) {
+            // TODO: return to main activity
+            Toast.makeText(getApplicationContext(), "Transaction deleted", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override

@@ -96,5 +96,9 @@ public class AuthManager {
         }
     }
 
+    public void deleteEntry(String key) {
+        // TODO - when logging out
+    }
+
 
 }

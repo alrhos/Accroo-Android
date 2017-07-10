@@ -114,6 +114,21 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         fragmentListener = null;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        System.out.println("CATEGORY FRAG - ON ACTIVITY CREATED");
+        if (savedInstanceState != null) {
+
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        System.out.println("CATEGORY FRAG - saving instance");
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

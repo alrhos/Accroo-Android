@@ -112,6 +112,21 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         fragmentListener = null;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        System.out.println("TRANSACTION FRAG - ON ACTIVITY CREATED");
+        if (savedInstanceState != null) {
+
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        System.out.println("TRANSACTION FRAG - saving instance");
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
