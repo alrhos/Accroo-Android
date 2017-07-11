@@ -89,7 +89,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             description.setText(transaction.getDescription());
 
             TextView amount = (TextView) v.findViewById(R.id.transaction_category_amount);
-            amount.setText(transaction.getFormattedAmount());
+            amount.setText(transaction.getFullyFormattedAmount());
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override

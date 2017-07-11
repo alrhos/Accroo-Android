@@ -122,6 +122,14 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     return true;
 
+                case DataServices.UPDATE_TRANSACTION:
+
+                    transaction = (Transaction) dataObject;
+
+                    DataProvider.getInstance().updateTransaction(transaction);
+
+                    return true;
+
                 case DataServices.DELETE_TRANSACTION:
 
                     transaction = (Transaction) dataObject;
@@ -132,6 +140,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
 

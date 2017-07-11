@@ -76,6 +76,10 @@ public class Transaction implements Securable, Parcelable {
     }
 
     public String getFormattedAmount() {
+        return decimalFormat.format(amount);
+    }
+
+    public String getFullyFormattedAmount() {
         return "$" + decimalFormat.format(amount);
     }
 
@@ -126,23 +130,35 @@ public class Transaction implements Securable, Parcelable {
 
     @Override
     public JSONObject encrypt() throws JSONException {
+
         JSONObject transactionData = new JSONObject();
+
         transactionData.put("date", dateString);
         transactionData.put("amount", amount);
         transactionData.put("description", description);
+
         SecurePayload payload = CryptoManager.getInstance().encrypt(transactionData.toString());
         JSONObject json = new JSONObject();
+
+        if (id != 0) {
+            json.put("id", id);
+        }
+
         json.put("subCategoryID", subCategoryID);
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
+
         return json;
     }
 
     @Override
     public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
+
         SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
+
         String transactionString = CryptoManager.getInstance().decrypt(payload);
         JSONObject transactionData = new JSONObject(transactionString);
+
         this.id = json.getInt("id");
         this.subCategoryID = json.getInt("subCategoryID");
         this.dateString = transactionData.getString("date");

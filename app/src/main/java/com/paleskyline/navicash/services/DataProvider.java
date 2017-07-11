@@ -96,6 +96,45 @@ public class DataProvider {
         }
     }
 
+    public void updateTransaction(Transaction transaction) {
+        deleteTransaction(transaction);
+        addTransaction(transaction);
+    }
+
+//    public void updateTransaction(Transaction transaction) {
+//        for (int i = 0; i < rootCategories.length; i++) {
+//            for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {
+//                for (SubCategory sc : gc.getSubCategories()) {
+//                    for (Transaction t : sc.getTransactions()) {
+//                        if (transaction.getId() == t.getId()) {
+//                            t.setAmount(transaction.getAmount());
+//                            t.setDateString(transaction.getDateString());
+//                            t.setDescription(transaction.getDescription());
+//                            if (transaction.getSubCategoryID() != t.getSubCategoryID()) {
+//
+//                            } else {
+//                                return;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//        for (Transaction t : sc.getTransactions()) {
+//            if (transaction.getId() == t.getId()) {
+//                t.setAmount(transaction.getAmount());
+//                t.setSubCategoryID(transaction.getSubCategoryID());
+//                t.setSubCategoryName(transaction.getSubCategoryName());
+//                t.setCategoryIcon(transaction.getCategoryIcon());
+//                t.setRootCategoryType(transaction.getRootCategoryType());
+//                t.setDateString(transaction.getDateString());
+//                t.setDescription(transaction.getDescription());
+//                return;
+//            }
+//        }
+//    }
+
     public void deleteTransaction(Transaction transaction) {
         for (int i = 0; i < rootCategories.length; i++) {
             for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {

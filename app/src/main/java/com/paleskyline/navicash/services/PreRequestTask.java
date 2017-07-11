@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
-import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
@@ -54,11 +53,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.coordinator = coordinator;
         requests = new ArrayList<>();
 
-        try {
-            CryptoManager.getInstance().initMasterKey(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            CryptoManager.getInstance().initMasterKey(context);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
     }
@@ -74,11 +73,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.password = password;
         requests = new ArrayList<>();
 
-        try {
-            CryptoManager.getInstance().initMasterKey(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            CryptoManager.getInstance().initMasterKey(context);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -92,11 +91,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.dataObject = dataObject;
         requests = new ArrayList<>();
 
-        try {
-            CryptoManager.getInstance().initMasterKey(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            CryptoManager.getInstance().initMasterKey(context);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -196,10 +195,14 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     json = transaction.encrypt();
 
+                    System.out.println(json.toString());
+
                     uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
                             uri, null, json, context));
+
+                    return true;
 
                 case DataServices.DELETE_TRANSACTION:
 
@@ -215,6 +218,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return false;

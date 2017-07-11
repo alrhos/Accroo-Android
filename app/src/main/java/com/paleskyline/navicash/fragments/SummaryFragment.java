@@ -3,7 +3,6 @@ package com.paleskyline.navicash.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +21,7 @@ public class SummaryFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private OnFragmentInteractionListener fragmentListener;
     private LinearLayoutManager layoutManager;
-    private Parcelable layoutManagerState;
+  //  private Parcelable layoutManagerState;
 
     public SummaryFragment() {}
 
@@ -82,25 +81,25 @@ public class SummaryFragment extends Fragment {
         fragmentListener = null;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        System.out.println("SUMMARY FRAG - ON ACTIVITY CREATED");
-        if (savedInstanceState != null) {
-            layoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
-            //layoutManager.onRestoreInstanceState(layoutManagerState);
-            System.out.println("SUMMARY FRAG - there's some saved instance state");
-
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        layoutManagerState = layoutManager.onSaveInstanceState();
-        savedInstanceState.putParcelable("layoutManagerState", layoutManager.onSaveInstanceState());
-        System.out.println("SUMMARY FRAG - saving instance");
-    }
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        System.out.println("SUMMARY FRAG - ON ACTIVITY CREATED");
+//        if (savedInstanceState != null) {
+//            layoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
+//            //layoutManager.onRestoreInstanceState(layoutManagerState);
+//            System.out.println("SUMMARY FRAG - there's some saved instance state");
+//
+//        }
+//    }
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        super.onSaveInstanceState(savedInstanceState);
+//        layoutManagerState = layoutManager.onSaveInstanceState();
+//        savedInstanceState.putParcelable("layoutManagerState", layoutManager.onSaveInstanceState());
+//        System.out.println("SUMMARY FRAG - saving instance");
+//    }
 
     public interface OnFragmentInteractionListener {
         void onSummarySwipeRefresh();

@@ -69,7 +69,7 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
 
             editing = true;
 
-            amountField.setText(String.valueOf(existingTransaction.getAmount()));
+            amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
             dateField.setText(existingTransaction.getDateString());
             descriptionField.setText(existingTransaction.getDescription());
 
@@ -137,6 +137,7 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
 
                 if (editing) {
                     existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
+                    existingTransaction.setSubCategoryID(selectedSubCategoryID);
                     existingTransaction.setDateString(dateField.getText().toString());
                     existingTransaction.setDescription(descriptionField.getText().toString());
                     dataServices.updateTransaction(existingTransaction);
@@ -236,7 +237,8 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
             descriptionField.getText().clear();
             amountField.requestFocus();
         } else if (requestType == DataServices.UPDATE_TRANSACTION) {
-
+            Toast.makeText(getApplicationContext(), "Transaction updated", Toast.LENGTH_LONG).show();
+            finish();
         } else if (requestType == DataServices.DELETE_TRANSACTION) {
             // TODO: return to main activity
             Toast.makeText(getApplicationContext(), "Transaction deleted", Toast.LENGTH_LONG).show();
