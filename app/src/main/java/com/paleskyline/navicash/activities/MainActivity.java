@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -50,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.main_viewpager);
         viewPager.setAdapter(pagerAdapter);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
         // TODO: review if this is even needed
@@ -70,8 +69,14 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
-                startActivity(intent);
+                int selectedTab = tabLayout.getSelectedTabPosition();
+                if (selectedTab == 0 || selectedTab == 1) {
+                    Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
+                    startActivity(intent);
+                } else if (selectedTab == 2) {
+                    Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -189,12 +194,12 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
         return super.onOptionsItemSelected(item);
     }
 
-    public class PagerAdapter extends FragmentPagerAdapter {
+     class PagerAdapter extends FragmentPagerAdapter {
 
         String tabTitles[] = {"Summary", "Transactions", "Categories"};
         Context context;
 
-        public PagerAdapter(FragmentManager fm, Context context) {
+        private PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
         }
@@ -302,66 +307,5 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
     public void onGeneralError() {
         System.out.println("GENERAL ERROR");
     }
-
-//    @Override
-//    public void onSuccessfulDecryption() {
-//        if (summaryFragment != null) {
-//            summaryFragment.refreshAdapter();
-//            summaryFragment.setRefreshStatus(false);
-//        }
-//        if (transactionsFragment != null) {
-//            transactionsFragment.refreshAdapter();
-//            transactionsFragment.setRefreshStatus(false);
-//        }
-//        if (categoryOverviewFragment != null) {
-//            categoryOverviewFragment.refreshAdapter();
-//            categoryOverviewFragment.setRefreshStatus(false);
-//        }
-//    }
-//
-//    @Override
-//    public void onUnsuccessfulDecryption() {
-//        transactionsFragment.setRefreshStatus(false);
-//    }
-
-//    private void loadUserData() {
-//
-//        final JSONObject[] dataReceiver = new JSONObject[2];
-//        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-//                this, dataReceiver) {
-//
-//            @Override
-//            protected void onSuccess() {
-//                new DecryptData(MainActivity.this).execute(dataReceiver);
-//            }
-//
-//            @Override
-//            protected void onFailure(String errorMessage) {
-//                System.out.println(errorMessage);
-//                // TODO - exception handling
-//            }
-//        };
-//
-//        // TODO: get system date, lookup id in local db and add to transaction request.
-//
-//        try {
-//
-//            coordinator.addRequests(
-//                    RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.GET,
-//                            RequestBuilder.CATEGORY, null, null, getApplicationContext()),
-//                    RequestBuilder.accessTokenAuth(1, coordinator, Request.Method.GET,
-//                            RequestBuilder.TRANSACTION, "?transactionid=1", null, getApplicationContext()));
-//
-////            coordinator.addRequests(
-////                    RequestBuilder.get(0, RequestBuilder.CATEGORY, null, coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()),
-////                    RequestBuilder.get(1, RequestBuilder.TRANSACTION_GET, "1", coordinator, RestRequest.ACCESS_TOKEN, getApplicationContext()));
-//
-//            coordinator.start();
-//
-//        } catch (Exception e) {
-//            // TODO: exception handling
-//            e.printStackTrace();
-//        }
-//    }
 
 }

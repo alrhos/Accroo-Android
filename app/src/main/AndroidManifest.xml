@@ -17,13 +17,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LaunchActivity"
             android:screenOrientation="portrait">
@@ -33,29 +33,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RegisterActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.KeyDecryptionActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.KeyDecryptionActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TransactionActivity"
-
             android:label="Add Transaction"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.Test" />
-        <activity
-            android:name=".activities.CategoryOverviewActivity"
-            android:label="@string/title_activity_category_overview"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.Main2Activity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SelectCategoryActivity"
             android:label="Select Sub Category"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.CategoryActivity"
+            android:screenOrientation="portrait"
+            android:label="Add Category"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

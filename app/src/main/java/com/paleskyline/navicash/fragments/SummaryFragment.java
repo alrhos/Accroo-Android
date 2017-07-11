@@ -21,7 +21,6 @@ public class SummaryFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private OnFragmentInteractionListener fragmentListener;
     private LinearLayoutManager layoutManager;
-  //  private Parcelable layoutManagerState;
 
     public SummaryFragment() {}
 
