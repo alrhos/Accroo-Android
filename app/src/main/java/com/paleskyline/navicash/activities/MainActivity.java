@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.adapters.SelectIconAdapter;
 import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
 import com.paleskyline.navicash.fragments.SummaryFragment;
 import com.paleskyline.navicash.fragments.TransactionsFragment;
@@ -27,8 +26,8 @@ import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.services.DataServices;
 
-public class MainActivity extends AppCompatActivity implements SummaryFragment.OnFragmentInteractionListener,
-        TransactionsFragment.OnFragmentInteractionListener, CategoryOverviewFragment.OnFragmentInteractionListener,
+public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
+        TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,
      DataServices.RequestOutcome {
 
     private SummaryFragment summaryFragment;
@@ -75,15 +74,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.O
                     Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
                     startActivity(intent);
                 } else if (selectedTab == 2) {
-                    Intent intent = new Intent(getApplicationContext(), SelectIconActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
                     startActivity(intent);
                 }
             }
         });
 
         dataServices = new DataServices(this, getApplicationContext());
-
-        SelectIconAdapter u = new SelectIconAdapter(getApplicationContext());
 
         System.out.println("ON CREATE CALLED");
 

@@ -107,7 +107,7 @@
         android:id="@+id/add_transaction_category_icon"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:srcCompat="@drawable/unknown"
+        app:srcCompat="@drawable/i0"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"

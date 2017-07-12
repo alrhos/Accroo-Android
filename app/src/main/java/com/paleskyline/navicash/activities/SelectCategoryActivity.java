@@ -9,7 +9,7 @@ import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 
-public class SelectCategoryActivity extends AppCompatActivity implements CategoryOverviewFragment.OnFragmentInteractionListener {
+public class SelectCategoryActivity extends AppCompatActivity implements CategoryOverviewFragment.FragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

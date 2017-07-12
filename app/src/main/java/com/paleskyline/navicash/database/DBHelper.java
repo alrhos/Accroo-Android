@@ -23,13 +23,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DBContract.CREATE_GENERAL_CATEGORIES);
         sqLiteDatabase.execSQL(DBContract.CREATE_SUB_CATEGORIES);
+        sqLiteDatabase.execSQL(DBContract.CREATE_ICONS);
         sqLiteDatabase.execSQL(DBContract.POPULATE_GENERAL_CATEGORY);
         sqLiteDatabase.execSQL(DBContract.POPULATE_SUB_CATEGORY);
+        sqLiteDatabase.execSQL(DBContract.POPULATE_ICON);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        // TODO - review what needs to happen on upgrade
     }
 
     @Override

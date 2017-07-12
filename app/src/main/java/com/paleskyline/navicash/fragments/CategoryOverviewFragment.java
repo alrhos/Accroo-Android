@@ -19,16 +19,16 @@ import com.paleskyline.navicash.other.DividerItemDecoration;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CategoryOverviewFragment.OnFragmentInteractionListener} interface
+ * {@link FragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link CategoryOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoryOverviewFragment extends Fragment implements CategoryOverviewAdapter.OnItemClickListener {
+public class CategoryOverviewFragment extends Fragment implements CategoryOverviewAdapter.FragmentInteractionListener {
 
     private CategoryOverviewAdapter categoryOverviewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OnFragmentInteractionListener fragmentListener;
+    private FragmentInteractionListener fragmentListener;
 
     public CategoryOverviewFragment() {}
 
@@ -100,11 +100,11 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            fragmentListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentInteractionListener) {
+            fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement FragmentInteractionListener");
         }
     }
 
@@ -139,7 +139,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface FragmentInteractionListener {
         void onGeneralCategoryClicked(GeneralCategory generalCategory);
         void onSubCategoryClicked(SubCategory subCategory);
         void onCategorySwipeRefresh();

@@ -19,7 +19,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/house1" />
+        app:srcCompat="@drawable/i0" />
 
     <TextView
         android:id="@+id/category_overview_general_category"

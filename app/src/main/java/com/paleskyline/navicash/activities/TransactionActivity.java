@@ -182,7 +182,8 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
                 this.selectedSubCategoryID = subCategory.getId();
                 int iconId = getApplicationContext().getResources().getIdentifier(
-                        "@drawable/" + subCategory.getCategoryIcon(), null, getApplicationContext().getPackageName());
+                        "@drawable/" + subCategory.getCategoryIcon(), null,
+                        getApplicationContext().getPackageName());
                 categoryIcon.setImageResource(iconId);
                 categoryField.setText(subCategory.getCategoryName());
 

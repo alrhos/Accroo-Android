@@ -19,7 +19,7 @@ public class SummaryFragment extends Fragment {
 
     private SummaryListAdapter summaryListAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OnFragmentInteractionListener fragmentListener;
+    private FragmentInteractionListener fragmentListener;
     private LinearLayoutManager layoutManager;
 
     public SummaryFragment() {}
@@ -66,11 +66,11 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            fragmentListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentInteractionListener) {
+            fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement FragmentInteractionListener");
         }
     }
 
@@ -100,7 +100,7 @@ public class SummaryFragment extends Fragment {
 //        System.out.println("SUMMARY FRAG - saving instance");
 //    }
 
-    public interface OnFragmentInteractionListener {
+    public interface FragmentInteractionListener {
         void onSummarySwipeRefresh();
     }
 

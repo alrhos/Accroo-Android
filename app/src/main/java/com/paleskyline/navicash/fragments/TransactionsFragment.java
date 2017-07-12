@@ -17,7 +17,7 @@ import com.paleskyline.navicash.model.Transaction;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TransactionsFragment.OnFragmentInteractionListener} interface
+ * {@link FragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link TransactionsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -26,7 +26,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
     private TransactionAdapter transactionAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OnFragmentInteractionListener fragmentListener;
+    private FragmentInteractionListener fragmentListener;
 
     public TransactionsFragment() {}
 
@@ -98,11 +98,11 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            fragmentListener = (OnFragmentInteractionListener) context;
+        if (context instanceof FragmentInteractionListener) {
+            fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement FragmentInteractionListener");
         }
     }
 
@@ -137,7 +137,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface FragmentInteractionListener {
         void onTransactionSwipeRefresh();
         void onTransactionSelected(Transaction transaction);
     }

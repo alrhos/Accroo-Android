@@ -100,4 +100,33 @@ public class DataAccess {
         return categories;
     }
 
+    public ArrayList<String> getIcons() {
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {
+                DBContract.Icon.COLUMN_ICON_NAME
+        };
+
+        cursor = db.query(
+                DBContract.Icon.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        ArrayList<String> icons = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            icons.add(cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Icon.COLUMN_ICON_NAME)));
+        }
+
+        cursor.close();
+        dbHelper.close();
+        db.close();
+
+        return icons;
+    }
+
 }

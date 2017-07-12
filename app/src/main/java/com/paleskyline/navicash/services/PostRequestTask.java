@@ -158,16 +158,21 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
     private void processCategories(JSONObject[] dataReceiver) throws Exception {
 
+        System.out.println("PROCESSING CATEGORIES");
+        System.out.println(dataReceiver[0].toString());
+
         JSONArray generalCategoriesArray = dataReceiver[0].getJSONArray("categories");
 
         for (int i = 0; i < generalCategoriesArray.length(); i++) {
             JSONObject gc = generalCategoriesArray.getJSONObject(i);
             GeneralCategory generalCategory = new GeneralCategory(gc);
+            System.out.println(generalCategory.toString());
             JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
 
             for (int j = 0; j < linkedSubCategories.length(); j++) {
                 JSONObject sc = linkedSubCategories.getJSONObject(j);
                 SubCategory subCategory = new SubCategory(sc);
+                System.out.println(subCategory.toString());
                 subCategories.add(subCategory);
             }
 

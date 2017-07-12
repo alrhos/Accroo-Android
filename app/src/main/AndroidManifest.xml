@@ -50,8 +50,13 @@
             android:name=".activities.CategoryActivity"
             android:label="Add Category"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activities.SelectIconActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activities.SelectIconActivity"
+            android:label="Select Icon"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
