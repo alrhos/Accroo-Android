@@ -96,9 +96,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     System.out.println(transaction.toString());
                     adapterInteractionListener.onTransactionSelected(transaction);
-                    //Intent intent = new Intent(context, TransactionActivity.class);
-                    //intent.putExtra("transaction", transaction);
-
                 }
             });
 

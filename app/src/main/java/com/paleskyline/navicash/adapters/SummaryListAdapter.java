@@ -70,19 +70,9 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             amount = (TextView) view.findViewById(R.id.category_amount);
             icon = (ImageView) view.findViewById(R.id.category_icon);
             details = (LinearLayout) view.findViewById(R.id.general_category_list_details);
-       //     view.setOnClickListener(this);
         }
 
-//        @Override
-//        public void onClick(View view) {
-//            clickListener.itemClicked(view, getAdapterPosition());
-//        }
-
     }
-
-//    public interface ClickListener {
-//        void itemClicked(View v, int position);
-//    }
 
     @Override
     public int getItemCount() {
@@ -174,10 +164,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         return vh;
     }
-
-//    public void setClickListener(SummaryListAdapter.ClickListener clickListener) {
-//        this.clickListener = clickListener;
-//    }
 
     public void refreshDataSource() {
         items.clear();

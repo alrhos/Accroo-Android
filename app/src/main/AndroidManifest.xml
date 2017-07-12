@@ -18,8 +18,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -46,13 +45,13 @@
         <activity
             android:name=".activities.SelectCategoryActivity"
             android:label="Select Sub Category"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CategoryActivity"
-            android:screenOrientation="portrait"
             android:label="Add Category"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activities.SelectIconActivity"></activity>
     </application>
 
 </manifest>
