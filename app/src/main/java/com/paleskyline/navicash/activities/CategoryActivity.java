@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,12 +18,14 @@ import android.widget.TextView;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.GeneralCategoryFragment;
 import com.paleskyline.navicash.fragments.SubCategoryFragment;
+import com.paleskyline.navicash.model.GeneralCategory;
 
 
 public class CategoryActivity extends AppCompatActivity implements GeneralCategoryFragment.FragmentInteractionListener {
 
     private GeneralCategoryFragment generalCategoryFragment;
     private SubCategoryFragment subCategoryFragment;
+    private ProgressDialog progressDialog;
 
     private final int ICON_REQUEST = 1;
 
@@ -32,8 +35,10 @@ public class CategoryActivity extends AppCompatActivity implements GeneralCatego
         setContentView(R.layout.activity_category);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.category_toolbar);
-
         setSupportActionBar(toolbar);
+
+        progressDialog = new ProgressDialog(CategoryActivity.this);
+        progressDialog.setMessage("Loading...");
 
         CategoryActivity.PagerAdapter pagerAdapter = new CategoryActivity.PagerAdapter(getSupportFragmentManager(), CategoryActivity.this);
 
@@ -97,19 +102,43 @@ public class CategoryActivity extends AppCompatActivity implements GeneralCatego
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ICON_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                int iconID = data.getIntExtra("iconID", 0);
+                String iconName = data.getStringExtra("iconName");
+                generalCategoryFragment.updateIcon(iconID, iconName);
+            }
+        }
+    }
+
+    public void setProgressDialog(boolean visible) {
+        if (visible) {
+            progressDialog.show();
+        } else {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
     public void onIconClicked() {
         Intent intent = new Intent(getApplicationContext(), SelectIconActivity.class);
         startActivityForResult(intent, ICON_REQUEST);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ICON_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                int iconID = data.getIntExtra("iconID", 0);
-                String iconName = data.getStringExtra("iconName");
-            }
-        }
+    public void createGeneralCategory(GeneralCategory generalCategory) {
+
+    }
+
+    @Override
+    public void updateGeneralCategory(GeneralCategory generalCategory) {
+
+    }
+
+    @Override
+    public void deleteGeneralCategory(GeneralCategory generalCategory) {
+
     }
 
 }
