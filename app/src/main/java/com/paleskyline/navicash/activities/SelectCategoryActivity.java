@@ -35,7 +35,7 @@ public class SelectCategoryActivity extends AppCompatActivity implements Categor
 
     @Override
     public void onCategorySwipeRefresh() {
-        // Not needed
+        // TODO: call get all categories data or consider disable swipe to refresh here
     }
 
     @Override

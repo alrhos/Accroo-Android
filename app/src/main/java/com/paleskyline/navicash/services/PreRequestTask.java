@@ -32,6 +32,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private int requestType;
     private JSONObject json;
     private Transaction transaction;
+    private GeneralCategory generalCategory;
 
     private PreRequestOutcome preRequestOutcome;
     private Context context;
@@ -212,6 +213,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
+
+                    return true;
+
+                case DataServices.CREATE_GENERAL_CATEGORY:
+
+                    json = ((GeneralCategory) dataObject).encrypt();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.GENERAL_CATEGORY, null, json, context));
 
                     return true;
 

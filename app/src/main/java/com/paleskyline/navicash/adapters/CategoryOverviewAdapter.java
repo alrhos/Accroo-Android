@@ -23,18 +23,18 @@ import java.util.ArrayList;
 public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private FragmentInteractionListener clickListener;
+    private AdapterInteractionListener clickListener;
     private ArrayList<GeneralCategory> generalCategories;
     private LayoutInflater inflater;
 
-    public CategoryOverviewAdapter(Context context, FragmentInteractionListener clickListener) {
+    public CategoryOverviewAdapter(Context context, AdapterInteractionListener clickListener) {
         this.context = context;
         this.clickListener = clickListener;
         this.generalCategories = DataProvider.getInstance().getGeneralCategories();
         inflater = LayoutInflater.from(context);
     }
 
-    public interface FragmentInteractionListener {
+    public interface AdapterInteractionListener {
         void onGeneralCategoryClicked(GeneralCategory generalCategory);
         void onSubCategoryClicked(SubCategory subCategory);
     }

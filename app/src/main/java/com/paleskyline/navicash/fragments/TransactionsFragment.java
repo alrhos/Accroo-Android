@@ -102,7 +102,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
             fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement FragmentInteractionListener");
+                    + " must implement AdapterInteractionListener");
         }
     }
 

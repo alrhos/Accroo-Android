@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.paleskyline.navicash.activities.EditGeneralCategory">
 
     <fragment
-        android:name="com.paleskyline.navicash.fragments.CategoryOverviewFragment"
-        android:id="@+id/select_category_fragment"
+        android:name="com.paleskyline.navicash.fragments.GeneralCategoryFragment"
+        android:id="@+id/edit_general_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_category_overview">
+        tools:layout="@layout/fragment_general_category">
     </fragment>
 
 </android.support.design.widget.CoordinatorLayout>

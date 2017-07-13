@@ -116,8 +116,15 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onRestart() {
         super.onRestart();
-        summaryFragment.refreshAdapter();
-        transactionsFragment.refreshAdapter();
+        if (summaryFragment != null) {
+            summaryFragment.refreshAdapter();
+        }
+        if (transactionsFragment != null) {
+            transactionsFragment.refreshAdapter();
+        }
+        if (categoryOverviewFragment != null) {
+            categoryOverviewFragment.refreshAdapter();
+        }
     }
 
     @Override
@@ -269,7 +276,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
-        System.out.println(generalCategory.toString());
+        Intent intent = new Intent(getApplicationContext(), EditGeneralCategory.class);
+        startActivity(intent);
     }
 
     @Override

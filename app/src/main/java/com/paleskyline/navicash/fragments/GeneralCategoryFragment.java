@@ -59,7 +59,7 @@ public class GeneralCategoryFragment extends Fragment {
         expenseRadioButton.setChecked(true);
 
 
-        existingCategory = getActivity().getIntent().getParcelableExtra("category");
+        existingCategory = getActivity().getIntent().getParcelableExtra("generalCategory");
 
         if (existingCategory != null) {
 
@@ -105,7 +105,7 @@ public class GeneralCategoryFragment extends Fragment {
                 if (radioButtonIndex == 0) {
                     rootCategory = "Income";
                 } else if (radioButtonIndex == 1) {
-                    rootCategory = "Expense";
+                    rootCategory = "Expenses";
                 }
 
                 if (editing) {
@@ -133,7 +133,7 @@ public class GeneralCategoryFragment extends Fragment {
             fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement FragmentInteractionListener");
+                    + " must implement AdapterInteractionListener");
         }
     }
 
@@ -147,11 +147,13 @@ public class GeneralCategoryFragment extends Fragment {
         this.iconName = iconName;
     }
 
-    private void toggleEditing() {
+    public void toggleEditing() {
         editable = !editable;
         icon.setEnabled(editable);
         categoryName.setEnabled(editable);
         radioGroup.setEnabled(editable);
+        incomeRadioButton.setEnabled(editable);
+        expenseRadioButton.setEnabled(editable);
     }
 
     private boolean isValidCategoryName() {
@@ -164,7 +166,7 @@ public class GeneralCategoryFragment extends Fragment {
         void onIconClicked();
         void createGeneralCategory(GeneralCategory generalCategory);
         void updateGeneralCategory(GeneralCategory generalCategory);
-        void deleteGeneralCategory(GeneralCategory generalCategory);
+     //   void deleteGeneralCategory(GeneralCategory generalCategory);
     }
 
 }

@@ -29,6 +29,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private String endDate;
     private Object dataObject;
     private Transaction transaction;
+    private GeneralCategory generalCategory;
     private int transactionID;
 
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
@@ -135,6 +136,14 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     transaction = (Transaction) dataObject;
 
                     DataProvider.getInstance().deleteTransaction(transaction);
+
+                    return true;
+
+                case DataServices.CREATE_GENERAL_CATEGORY:
+
+                    generalCategory = (GeneralCategory) dataObject;
+
+                    DataProvider.getInstance().addGeneralCategory(generalCategory);
 
                     return true;
 

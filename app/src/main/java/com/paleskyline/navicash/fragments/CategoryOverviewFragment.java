@@ -24,7 +24,7 @@ import com.paleskyline.navicash.other.DividerItemDecoration;
  * Use the {@link CategoryOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoryOverviewFragment extends Fragment implements CategoryOverviewAdapter.FragmentInteractionListener {
+public class CategoryOverviewFragment extends Fragment implements CategoryOverviewAdapter.AdapterInteractionListener {
 
     private CategoryOverviewAdapter categoryOverviewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -104,7 +104,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
             fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement FragmentInteractionListener");
+                    + " must implement AdapterInteractionListener");
         }
     }
 

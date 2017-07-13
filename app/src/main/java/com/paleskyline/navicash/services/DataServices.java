@@ -24,6 +24,9 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
     public final static int UPDATE_TRANSACTION = 4;
     public final static int DELETE_TRANSACTION = 5;
     public final static int GET_REFRESH_TOKEN = 6;
+    public final static int CREATE_GENERAL_CATEGORY = 7;
+    public final static int UPDATE_GENERAL_CATEGORY = 8;
+    public final static int DELETE_GENERAL_CATEGORY = 9;
 
 
     private RequestOutcome requestOutcome;
@@ -183,7 +186,23 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
     }
 
-    public void createGeneralCategory(GeneralCategory generalCategory) {
+    public void createGeneralCategory(final GeneralCategory generalCategory) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(CREATE_GENERAL_CATEGORY, DataServices.this, context, generalCategory).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+
+            }
+        };
+
+        new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
 
     }
 

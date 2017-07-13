@@ -14,18 +14,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.GeneralCategoryFragment;
 import com.paleskyline.navicash.fragments.SubCategoryFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.services.DataServices;
 
 
-public class CategoryActivity extends AppCompatActivity implements GeneralCategoryFragment.FragmentInteractionListener {
+public class CategoryActivity extends AppCompatActivity implements DataServices.RequestOutcome,
+        GeneralCategoryFragment.FragmentInteractionListener {
 
     private GeneralCategoryFragment generalCategoryFragment;
     private SubCategoryFragment subCategoryFragment;
     private ProgressDialog progressDialog;
+
+    private DataServices dataServices;
 
     private final int ICON_REQUEST = 1;
 
@@ -39,6 +44,8 @@ public class CategoryActivity extends AppCompatActivity implements GeneralCatego
 
         progressDialog = new ProgressDialog(CategoryActivity.this);
         progressDialog.setMessage("Loading...");
+
+        dataServices = new DataServices(this, getApplicationContext());
 
         CategoryActivity.PagerAdapter pagerAdapter = new CategoryActivity.PagerAdapter(getSupportFragmentManager(), CategoryActivity.this);
 
@@ -112,12 +119,33 @@ public class CategoryActivity extends AppCompatActivity implements GeneralCatego
         }
     }
 
-    public void setProgressDialog(boolean visible) {
-        if (visible) {
-            progressDialog.show();
-        } else {
-            progressDialog.dismiss();
+    @Override
+    public void onSuccess(int requestType) {
+        progressDialog.dismiss();
+        if (requestType == DataServices.CREATE_GENERAL_CATEGORY) {
+            Toast.makeText(getApplicationContext(), "Category created", Toast.LENGTH_SHORT).show();
+        } else if (requestType == DataServices.UPDATE_GENERAL_CATEGORY) {
+
+        } else if (requestType == DataServices.DELETE_GENERAL_CATEGORY) {
+
         }
+    }
+
+    @Override
+    public void onUnsuccessfulRequest(String errorMessage) {
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), errorMessage,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUnsuccessfulDecryption() {
+        System.out.println("DECRYPTION ERROR");
+    }
+
+    @Override
+    public void onGeneralError() {
+        System.out.println("GENERAL ERROR");
     }
 
     @Override
@@ -128,17 +156,13 @@ public class CategoryActivity extends AppCompatActivity implements GeneralCatego
 
     @Override
     public void createGeneralCategory(GeneralCategory generalCategory) {
-
+        dataServices.createGeneralCategory(generalCategory);
+        progressDialog.show();
     }
 
     @Override
     public void updateGeneralCategory(GeneralCategory generalCategory) {
-
-    }
-
-    @Override
-    public void deleteGeneralCategory(GeneralCategory generalCategory) {
-
+        progressDialog.show();
     }
 
 }

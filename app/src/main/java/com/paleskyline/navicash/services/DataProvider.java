@@ -150,4 +150,13 @@ public class DataProvider {
         }
     }
 
+    public void addGeneralCategory(GeneralCategory generalCategory) {
+        for (int i = 0; i < rootCategories.length; i++) {
+            if (rootCategories[i].getCategoryName().equals(generalCategory.getRootCategory())) {
+                rootCategories[i].getGeneralCategories().add(generalCategory);
+                return;
+            }
+        }
+    }
+
 }

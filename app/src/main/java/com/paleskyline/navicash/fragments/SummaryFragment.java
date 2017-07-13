@@ -70,7 +70,7 @@ public class SummaryFragment extends Fragment {
             fragmentListener = (FragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement FragmentInteractionListener");
+                    + " must implement AdapterInteractionListener");
         }
     }
 

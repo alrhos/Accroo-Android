@@ -78,11 +78,11 @@ public class TestFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof FragmentInteractionListener) {
-//            mListener = (FragmentInteractionListener) context;
+//        if (context instanceof AdapterInteractionListener) {
+//            mListener = (AdapterInteractionListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement FragmentInteractionListener");
+//                    + " must implement AdapterInteractionListener");
 //        }
     }
 
