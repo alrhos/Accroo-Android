@@ -23,13 +23,13 @@ import java.util.ArrayList;
 public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private AdapterInteractionListener clickListener;
+    private AdapterInteractionListener adapterInteractionListener;
     private ArrayList<GeneralCategory> generalCategories;
     private LayoutInflater inflater;
 
-    public CategoryOverviewAdapter(Context context, AdapterInteractionListener clickListener) {
+    public CategoryOverviewAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
-        this.clickListener = clickListener;
+        this.adapterInteractionListener = adapterInteractionListener;
         this.generalCategories = DataProvider.getInstance().getGeneralCategories();
         inflater = LayoutInflater.from(context);
     }
@@ -76,7 +76,7 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    clickListener.onSubCategoryClicked(sc);
+                    adapterInteractionListener.onSubCategoryClicked(sc);
                 }
             });
 
@@ -87,7 +87,7 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListener.onGeneralCategoryClicked(gc);
+                adapterInteractionListener.onGeneralCategoryClicked(gc);
             }
         });
 

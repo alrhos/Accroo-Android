@@ -21,6 +21,7 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.services.DataServices;
+import com.paleskyline.navicash.services.InputServices;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -135,17 +136,19 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
 
                 progressDialog.show();
 
+                String formattedDescription = InputServices.capitaliseAndTrim(descriptionField.getText().toString());
+
                 if (editing) {
                     existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
                     existingTransaction.setSubCategoryID(selectedSubCategoryID);
                     existingTransaction.setDateString(dateField.getText().toString());
-                    existingTransaction.setDescription(descriptionField.getText().toString());
+                    existingTransaction.setDescription(formattedDescription);
                     dataServices.updateTransaction(existingTransaction);
                 } else {
                     newTransaction = new Transaction(selectedSubCategoryID,
                             dateField.getText().toString(),
                             Double.parseDouble(amountField.getText().toString()),
-                            descriptionField.getText().toString());
+                            formattedDescription);
                     dataServices.createTransaction(newTransaction);
                 }
             }

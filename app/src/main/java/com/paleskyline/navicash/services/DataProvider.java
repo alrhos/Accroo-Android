@@ -64,6 +64,20 @@ public class DataProvider {
         return categories;
     }
 
+    public boolean checkDuplicateGeneralCategory(String categoryName) {
+        ArrayList<String> generalCategories = new ArrayList<>();
+        for (int i = 0; i < rootCategories.length; i++) {
+            for (GeneralCategory gc : rootCategories[i].getGeneralCategories()) {
+                generalCategories.add(gc.getCategoryName());
+            }
+        }
+        if (generalCategories.contains(categoryName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> transactions = new ArrayList<>();
         for (int i = 0; i < rootCategories.length; i++) {

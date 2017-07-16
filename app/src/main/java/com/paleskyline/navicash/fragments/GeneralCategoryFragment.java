@@ -11,9 +11,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.services.DataProvider;
+import com.paleskyline.navicash.services.InputServices;
 
 
 public class GeneralCategoryFragment extends Fragment {
@@ -58,7 +61,6 @@ public class GeneralCategoryFragment extends Fragment {
 
         expenseRadioButton.setChecked(true);
 
-
         existingCategory = getActivity().getIntent().getParcelableExtra("generalCategory");
 
         if (existingCategory != null) {
@@ -77,13 +79,12 @@ public class GeneralCategoryFragment extends Fragment {
             }
 
             submit.setText("SAVE");
-            toggleEditing();
+            //toggleEditing();
         }
 
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("ICON CLICKED");
                 fragmentListener.onIconClicked();
             }
         });
@@ -108,14 +109,16 @@ public class GeneralCategoryFragment extends Fragment {
                     rootCategory = "Expenses";
                 }
 
+                String formattedName = InputServices.capitaliseAndTrim(categoryName.getText().toString());
+
                 if (editing) {
                     existingCategory.setIconFile(iconName);
-                    existingCategory.setCategoryName(categoryName.getText().toString());
+                    existingCategory.setCategoryName(formattedName);
                     existingCategory.setRootCategory(rootCategory);
                     fragmentListener.updateGeneralCategory(existingCategory);
                 } else {
-                    GeneralCategory generalCategory = new GeneralCategory(
-                            categoryName.getText().toString(), rootCategory, iconName);
+                    GeneralCategory generalCategory = new GeneralCategory(formattedName,
+                            rootCategory, iconName);
                     fragmentListener.createGeneralCategory(generalCategory);
                 }
 
@@ -157,16 +160,19 @@ public class GeneralCategoryFragment extends Fragment {
     }
 
     private boolean isValidCategoryName() {
-        // TODO: check that there isn't an existing category with the same name
-        // Raise toast if fails
-        return true;
+        String category = InputServices.capitaliseAndTrim(categoryName.getText().toString());
+        if (DataProvider.getInstance().checkDuplicateGeneralCategory(category)) {
+            Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public interface FragmentInteractionListener {
         void onIconClicked();
         void createGeneralCategory(GeneralCategory generalCategory);
         void updateGeneralCategory(GeneralCategory generalCategory);
-     //   void deleteGeneralCategory(GeneralCategory generalCategory);
     }
 
 }
