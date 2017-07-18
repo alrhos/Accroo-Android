@@ -216,7 +216,22 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void deleteGeneralCategory(GeneralCategory generalCategory) {
+    public void deleteGeneralCategory(final GeneralCategory generalCategory) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(DELETE_GENERAL_CATEGORY, ApiService.this, context, generalCategory).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
+            }
+        };
+
+        new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
 
     }
 

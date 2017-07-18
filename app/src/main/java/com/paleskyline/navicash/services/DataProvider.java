@@ -11,6 +11,7 @@ import com.paleskyline.navicash.model.TransactionComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * Created by oscar on 27/05/17.
@@ -183,11 +184,37 @@ public class DataProvider {
         }
 
         sortData();
-
     }
 
-    public static void deleteGeneralCategory(GeneralCategory generalCategory) {
+    public static void deleteGeneralCategory(GeneralCategory categoryToDelete) {
 
+        Iterator<GeneralCategory> generalCategoryIterator = generalCategories.listIterator();
+
+        while (generalCategoryIterator.hasNext()) {
+            int generalCategoryID = generalCategoryIterator.next().getId();
+            if (generalCategoryID == categoryToDelete.getId()) {
+                Iterator<SubCategory> subCategoryIterator = subCategories.listIterator();
+
+                while (subCategoryIterator.hasNext()) {
+                    SubCategory subCategory = subCategoryIterator.next();
+                    if (((GeneralCategory) subCategory.getParent()).getId() == generalCategoryID) {
+                        Iterator<Transaction> transactionIterator = transactions.listIterator();
+
+                        while (transactionIterator.hasNext()) {
+                            Transaction transaction = transactionIterator.next();
+                            if (((SubCategory) transaction.getParent()).getId() == subCategory.getId()) {
+                                transactionIterator.remove();
+                            }
+                        }
+                        subCategoryIterator.remove();
+                    }
+                }
+                generalCategoryIterator.remove();
+                break;
+            }
+        }
+
+        sortData();
     }
 
     public static void addSubCategory(SubCategory subCategory) {

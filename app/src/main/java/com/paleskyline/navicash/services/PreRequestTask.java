@@ -54,13 +54,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.coordinator = coordinator;
         requests = new ArrayList<>();
 
-//        try {
-//            CryptoManager.getInstance().initMasterKey(context);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -74,12 +67,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.password = password;
         requests = new ArrayList<>();
 
-//        try {
-//            CryptoManager.getInstance().initMasterKey(context);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -91,12 +78,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.coordinator = coordinator;
         this.dataObject = dataObject;
         requests = new ArrayList<>();
-
-//        try {
-//            CryptoManager.getInstance().initMasterKey(context);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
     }
 
@@ -235,6 +216,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
                             uri, null, json, context));
+
+                    return true;
+
+                case ApiService.DELETE_GENERAL_CATEGORY:
+
+                    generalCategory = (GeneralCategory) dataObject;
+
+                    uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
+                            uri, null, null, context));
 
                     return true;
 
