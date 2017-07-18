@@ -22,13 +22,13 @@ public class Transaction implements Securable, Relationship, Parcelable {
 
     private int id;
     private int subCategoryID;
-    private String subCategoryName;
-    private String categoryIcon;
-    private String rootCategoryType;
+//    private String subCategoryName;
+//    private String categoryIcon;
+//    private String rootCategoryType;
     private String dateString;
     private double amount;
-    private String description;
-    private Object parent;
+    private String description = "";
+    private SubCategory parent;
 
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -37,9 +37,7 @@ public class Transaction implements Securable, Relationship, Parcelable {
         this.subCategoryID = subCategoryID;
         this.dateString = dateString;
         this.amount = amount;
-        if (description == null) {
-            this.description = "";
-        } else {
+        if (description != null) {
             this.description = description;
         }
     }
@@ -96,29 +94,29 @@ public class Transaction implements Securable, Relationship, Parcelable {
         this.description = description;
     }
 
-    public String getSubCategoryName() {
-        return subCategoryName;
-    }
+//    public String getSubCategoryName() {
+//        return subCategoryName;
+//    }
+//
+//    public void setSubCategoryName(String subCategoryName) {
+//        this.subCategoryName = subCategoryName;
+//    }
 
-    public void setSubCategoryName(String subCategoryName) {
-        this.subCategoryName = subCategoryName;
-    }
-
-    public String getCategoryIcon() {
-        return categoryIcon;
-    }
-
-    public void setCategoryIcon(String categoryIcon) {
-        this.categoryIcon = categoryIcon;
-    }
-
-    public String getRootCategoryType() {
-        return rootCategoryType;
-    }
-
-    public void setRootCategoryType(String rootCategoryType) {
-        this.rootCategoryType = rootCategoryType;
-    }
+//    public String getCategoryIcon() {
+//        return categoryIcon;
+//    }
+//
+//    public void setCategoryIcon(String categoryIcon) {
+//        this.categoryIcon = categoryIcon;
+//    }
+//
+//    public String getRootCategoryType() {
+//        return rootCategoryType;
+//    }
+//
+//    public void setRootCategoryType(String rootCategoryType) {
+//        this.rootCategoryType = rootCategoryType;
+//    }
 
     public Date getDate() {
         try {
@@ -182,9 +180,12 @@ public class Transaction implements Securable, Relationship, Parcelable {
         return "Transaction{" +
                 "id=" + id +
                 ", subCategoryID=" + subCategoryID +
-                ", date='" + dateString + '\'' +
+                ", dateString='" + dateString + '\'' +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
+                ", parent=" + parent +
+                ", decimalFormat=" + decimalFormat +
+                ", dateFormat=" + dateFormat +
                 '}';
     }
 
@@ -198,12 +199,10 @@ public class Transaction implements Securable, Relationship, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeInt(this.subCategoryID);
-        dest.writeString(this.subCategoryName);
-        dest.writeString(this.categoryIcon);
-        dest.writeString(this.rootCategoryType);
         dest.writeString(this.dateString);
         dest.writeDouble(this.amount);
         dest.writeString(this.description);
+        dest.writeParcelable(this.parent, flags);
         dest.writeSerializable(this.decimalFormat);
         dest.writeSerializable(this.dateFormat);
     }
@@ -211,17 +210,15 @@ public class Transaction implements Securable, Relationship, Parcelable {
     protected Transaction(Parcel in) {
         this.id = in.readInt();
         this.subCategoryID = in.readInt();
-        this.subCategoryName = in.readString();
-        this.categoryIcon = in.readString();
-        this.rootCategoryType = in.readString();
         this.dateString = in.readString();
         this.amount = in.readDouble();
         this.description = in.readString();
+        this.parent = in.readParcelable(SubCategory.class.getClassLoader());
         this.decimalFormat = (DecimalFormat) in.readSerializable();
         this.dateFormat = (SimpleDateFormat) in.readSerializable();
     }
 
-    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+    public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
         @Override
         public Transaction createFromParcel(Parcel source) {
             return new Transaction(source);

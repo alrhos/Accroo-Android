@@ -55,7 +55,7 @@
             android:name=".activities.SelectIconActivity"
             android:label="Select Icon"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.EditGeneralCategory"></activity>
+        <activity android:name=".activities.EditGeneralCategoryActivity"></activity>
     </application>
 
 </manifest>

@@ -15,7 +15,7 @@ import org.json.JSONObject;
  * Created by oscar on 4/07/17.
  */
 
-public class DataServices implements PreRequestTask.PreRequestOutcome, PostRequestTask.PostRequestOutcome {
+public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequestTask.PostRequestOutcome {
 
     public final static int GET_DEFAULT_DATA = 0;
     public final static int CREATE_USER = 1;
@@ -28,13 +28,12 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
     public final static int UPDATE_GENERAL_CATEGORY = 8;
     public final static int DELETE_GENERAL_CATEGORY = 9;
 
-
     private RequestOutcome requestOutcome;
     private Context context;
     private RequestCoordinator coordinator;
     private JSONObject[] dataReceiver;
 
-    public DataServices(RequestOutcome requestOutcome, Context context) {
+    public ApiService(RequestOutcome requestOutcome, Context context) {
         this.requestOutcome = requestOutcome;
         this.context = context;
     }
@@ -52,7 +51,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_REFRESH_TOKEN, DataServices.this, context).execute(dataReceiver);
+                new PostRequestTask(GET_REFRESH_TOKEN, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
@@ -71,7 +70,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_DEFAULT_DATA, DataServices.this, context).execute(dataReceiver);
+                new PostRequestTask(GET_DEFAULT_DATA, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
@@ -90,7 +89,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_USER, DataServices.this, context).execute(dataReceiver);
+                new PostRequestTask(CREATE_USER, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
@@ -109,7 +108,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_DEFAULT_CATEGORIES, DataServices.this, context).execute(dataReceiver);
+                new PostRequestTask(CREATE_DEFAULT_CATEGORIES, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
@@ -128,7 +127,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
+                new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context, transaction).execute(dataReceiver);
             }
 
             @Override
@@ -147,7 +146,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
+                new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context, transaction).execute(dataReceiver);
             }
 
             @Override
@@ -166,7 +165,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(DELETE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
+                new PostRequestTask(DELETE_TRANSACTION, ApiService.this, context, transaction).execute(dataReceiver);
             }
 
             @Override
@@ -185,12 +184,12 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_GENERAL_CATEGORY, DataServices.this, context, generalCategory).execute(dataReceiver);
+                new PostRequestTask(CREATE_GENERAL_CATEGORY, ApiService.this, context, generalCategory).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(String errorMessage) {
-
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
             }
         };
 
@@ -204,12 +203,12 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_GENERAL_CATEGORY, DataServices.this, context, generalCategory).execute(dataReceiver);
+                new PostRequestTask(UPDATE_GENERAL_CATEGORY, ApiService.this, context, generalCategory).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(String errorMessage) {
-
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
             }
         };
 
@@ -250,6 +249,7 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
         } catch (Exception e) {
             // TODO: review error handling
             requestOutcome.onGeneralError();
+            System.out.println("ERROR STARTING COORDINATOR");
         }
     }
 

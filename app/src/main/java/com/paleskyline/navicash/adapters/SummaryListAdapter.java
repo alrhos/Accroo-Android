@@ -170,18 +170,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return vh;
     }
 
-//    public void refreshDataSource() {
-//        items.clear();
-//     //   items.add(new Summary());
-//        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
-//            items.add(gc);
-//        }
-//        notifyDataSetChanged();
-//    }
-
     public void refreshDataSource() {
-
-        System.out.println("HERE");
 
         dataSource.clear();
         dataSource.add(new Summary(DataProvider.getRootCategories()));
@@ -191,59 +180,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         for (GeneralCategory generalCategory : generalCategories) {
             dataSource.add(generalCategory);
         }
-
-//        ArrayList<GeneralCategory> generalCategories = DataProvider.getInstance().getGeneralCategories();
-//        ArrayList<SubCategory> subCategories = DataProvider.getInstance().getSubCategories();
-//        ArrayList<Transaction> transactions = DataProvider.getInstance().getTransactions();
-//
-//        System.out.println(generalCategories == DataProvider.getInstance().getGeneralCategories());
-//        System.out.println(DataProvider.getInstance().getGeneralCategories().toString());
-//
-//        for (GeneralCategory g : DataProvider.getInstance().getGeneralCategories()) {
-//            System.out.println(g.toString());
-//        }
-//
-//        RootCategory[] x = DataProvider.getInstance().getRootCategories();
-//
-//        RootCategory[] rootCategories = Arrays.copyOf(x, x.length);
-//
-//      //  RootCategory[] rootCategories = {new RootCategory("Income"), new RootCategory("Expenses")};
-//
-//        for (Transaction transaction : transactions) {
-//            for (SubCategory subCategory : subCategories) {
-//                if (transaction.getSubCategoryID() == subCategory.getId()) {
-//                    subCategory.getTransactions().add(transaction);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for (SubCategory subCategory : subCategories) {
-//            for (GeneralCategory generalCategory : generalCategories) {
-//                if (subCategory.getGeneralCategoryID() == generalCategory.getId()) {
-//                    generalCategory.getSubCategories().add(subCategory);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for (GeneralCategory generalCategory : generalCategories) {
-//            Collections.sort(generalCategory.getSubCategories(), new SubCategoryComparator());
-//            for (int i = 0; i < rootCategories.length; i++) {
-//                if (generalCategory.getRootCategory().equals(rootCategories[i].getCategoryName())) {
-//                    rootCategories[i].getGeneralCategories().add(generalCategory);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        Collections.sort(generalCategories, new GeneralCategoryComparator());
-//
-//        dataSource.add(new Summary(rootCategories));
-//
-//        for (GeneralCategory generalCategory : generalCategories) {
-//            dataSource.add(generalCategory);
-//        }
 
         notifyDataSetChanged();
 

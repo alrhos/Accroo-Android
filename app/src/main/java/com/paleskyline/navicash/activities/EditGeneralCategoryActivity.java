@@ -10,13 +10,13 @@ import android.view.MenuItem;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.GeneralCategoryFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
-import com.paleskyline.navicash.services.DataServices;
+import com.paleskyline.navicash.services.ApiService;
 
-public class EditGeneralCategory extends AppCompatActivity implements DataServices.RequestOutcome,
+public class EditGeneralCategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
         GeneralCategoryFragment.FragmentInteractionListener {
 
     private ProgressDialog progressDialog;
-    private DataServices dataServices;
+    private ApiService apiService;
 
     private GeneralCategoryFragment generalCategoryFragment;
 
@@ -28,9 +28,12 @@ public class EditGeneralCategory extends AppCompatActivity implements DataServic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_general_category);
+        apiService = new ApiService(this, getApplicationContext());
         generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
         generalCategoryFragment.toggleEditing();
         generalCategory = getIntent().getParcelableExtra("generalCategory");
+        progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
+        progressDialog.setMessage("Saving...");
     }
 
     @Override
@@ -66,21 +69,23 @@ public class EditGeneralCategory extends AppCompatActivity implements DataServic
 
     @Override
     public void onSuccess(int requestType) {
-
+        progressDialog.dismiss();
     }
 
     @Override
     public void onUnsuccessfulRequest(String errorMessage) {
-
+        progressDialog.dismiss();
     }
 
     @Override
     public void onUnsuccessfulDecryption() {
+        progressDialog.dismiss();
         System.out.println("DECRYPTION ERROR");
     }
 
     @Override
     public void onGeneralError() {
+        progressDialog.dismiss();
         System.out.println("GENERAL ERROR");
     }
 
@@ -98,6 +103,8 @@ public class EditGeneralCategory extends AppCompatActivity implements DataServic
     @Override
     public void updateGeneralCategory(GeneralCategory generalCategory) {
         progressDialog.show();
+        System.out.println(generalCategory.toString());
+        apiService.updateGeneralCategory(generalCategory);
     }
 
     private void deleteGeneralCategory() {

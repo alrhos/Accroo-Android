@@ -43,7 +43,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         inflater = LayoutInflater.from(context);
         transactions = new ArrayList<>();
         groupedTransactions = new LinkedHashMap<>();
-        groupTransactions();
+        refreshDataSource();
     }
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
@@ -101,7 +101,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println(transaction.toString());
+                    System.out.println(((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile());
                     adapterInteractionListener.onTransactionSelected(transaction);
                 }
             });
@@ -116,31 +116,29 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return new TransactionViewHolder(view);
     }
 
-    private void groupTransactions() {
+    public void refreshDataSource() {
 
         groupedTransactions.clear();
         transactions = DataProvider.getTransactions();
 
-        for (Transaction t : transactions) {
-            if (!groupedTransactions.containsKey(t.getDate())) {
-                groupedTransactions.put(t.getDate(), null);
+        for (Transaction transaction : transactions) {
+            if (!groupedTransactions.containsKey(transaction.getDate())) {
+                groupedTransactions.put(transaction.getDate(), null);
             }
         }
 
         for (Date key : groupedTransactions.keySet()) {
             ArrayList<Transaction> matches = new ArrayList<>();
-            for (Transaction t : transactions) {
-                if (key.equals(t.getDate())) {
-                    matches.add(t);
+            for (Transaction transaction : transactions) {
+                if (key.equals(transaction.getDate())) {
+                    matches.add(transaction);
                 }
             }
             groupedTransactions.put(key, matches);
         }
-    }
 
-    public void refreshDataSource() {
-        groupTransactions();
         notifyDataSetChanged();
+
     }
 
 }

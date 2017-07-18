@@ -11,10 +11,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
-import com.paleskyline.navicash.services.InputServices;
+import com.paleskyline.navicash.services.DataProvider;
+import com.paleskyline.navicash.services.InputService;
 
 
 public class GeneralCategoryFragment extends Fragment {
@@ -72,7 +74,7 @@ public class GeneralCategoryFragment extends Fragment {
 
             if (existingCategory.getRootCategory().equals("Income")) {
                 incomeRadioButton.setChecked(true);
-            } else if (existingCategory.getRootCategory().equals("Expenses")) {
+            } else if (existingCategory.getRootCategory().equals("Expense")) {
                 expenseRadioButton.setChecked(true);
             }
 
@@ -103,10 +105,10 @@ public class GeneralCategoryFragment extends Fragment {
                 if (radioButtonIndex == 0) {
                     rootCategory = "Income";
                 } else if (radioButtonIndex == 1) {
-                    rootCategory = "Expenses";
+                    rootCategory = "Expense";
                 }
 
-                String formattedName = InputServices.capitaliseAndTrim(categoryName.getText().toString());
+                String formattedName = InputService.capitaliseAndTrim(categoryName.getText().toString());
 
                 if (editing) {
                     existingCategory.setIconFile(iconName);
@@ -157,15 +159,15 @@ public class GeneralCategoryFragment extends Fragment {
     }
 
     private boolean isValidCategoryName() {
-//        if (!editing) {
-//            String category = InputServices.capitaliseAndTrim(categoryName.getText().toString());
-//            if (DataProvider.getInstance().checkDuplicateGeneralCategory(category)) {
-//                Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
-//                return false;
-//            } else {
-//                return true;
-//            }
-//        }
+        if (!editing) {
+            String category = InputService.capitaliseAndTrim(categoryName.getText().toString());
+            if (DataProvider.checkDuplicateGeneralCategory(category)) {
+                Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                return true;
+            }
+        }
         return true;
     }
 

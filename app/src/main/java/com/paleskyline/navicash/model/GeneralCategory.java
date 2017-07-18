@@ -92,15 +92,17 @@ public class GeneralCategory implements Securable, Parcelable {
         // TODO: Need to add section here to handle IDs for POST and PUT
         JSONObject categoryData = new JSONObject();
 
-        if (id != 0) {
-            categoryData.put("id", id);
-        }
-
         categoryData.put("categoryName", categoryName);
         categoryData.put("rootCategory", rootCategory);
         categoryData.put("iconFile", iconFile);
         SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
+
         JSONObject json = new JSONObject();
+
+        if (id != 0) {
+            json.put("id", id);
+        }
+
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
 
@@ -140,7 +142,6 @@ public class GeneralCategory implements Securable, Parcelable {
         dest.writeString(this.categoryName);
         dest.writeString(this.rootCategory);
         dest.writeString(this.iconFile);
-        dest.writeTypedList(this.subCategories);
         dest.writeSerializable(this.df);
     }
 
@@ -149,11 +150,10 @@ public class GeneralCategory implements Securable, Parcelable {
         this.categoryName = in.readString();
         this.rootCategory = in.readString();
         this.iconFile = in.readString();
-        this.subCategories = in.createTypedArrayList(SubCategory.CREATOR);
         this.df = (DecimalFormat) in.readSerializable();
     }
 
-    public static final Parcelable.Creator<GeneralCategory> CREATOR = new Parcelable.Creator<GeneralCategory>() {
+    public static final Creator<GeneralCategory> CREATOR = new Creator<GeneralCategory>() {
         @Override
         public GeneralCategory createFromParcel(Parcel source) {
             return new GeneralCategory(source);
@@ -164,4 +164,5 @@ public class GeneralCategory implements Securable, Parcelable {
             return new GeneralCategory[size];
         }
     };
+
 }

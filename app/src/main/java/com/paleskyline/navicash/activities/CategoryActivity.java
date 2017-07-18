@@ -20,17 +20,17 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.GeneralCategoryFragment;
 import com.paleskyline.navicash.fragments.SubCategoryFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
-import com.paleskyline.navicash.services.DataServices;
+import com.paleskyline.navicash.services.ApiService;
 
 
-public class CategoryActivity extends AppCompatActivity implements DataServices.RequestOutcome,
+public class CategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
         GeneralCategoryFragment.FragmentInteractionListener {
 
     private GeneralCategoryFragment generalCategoryFragment;
     private SubCategoryFragment subCategoryFragment;
     private ProgressDialog progressDialog;
 
-    private DataServices dataServices;
+    private ApiService apiService;
 
     private final int ICON_REQUEST = 1;
 
@@ -45,7 +45,7 @@ public class CategoryActivity extends AppCompatActivity implements DataServices.
         progressDialog = new ProgressDialog(CategoryActivity.this);
         progressDialog.setMessage("Loading...");
 
-        dataServices = new DataServices(this, getApplicationContext());
+        apiService = new ApiService(this, getApplicationContext());
 
         CategoryActivity.PagerAdapter pagerAdapter = new CategoryActivity.PagerAdapter(getSupportFragmentManager(), CategoryActivity.this);
 
@@ -122,11 +122,11 @@ public class CategoryActivity extends AppCompatActivity implements DataServices.
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        if (requestType == DataServices.CREATE_GENERAL_CATEGORY) {
+        if (requestType == ApiService.CREATE_GENERAL_CATEGORY) {
             Toast.makeText(getApplicationContext(), "Category created", Toast.LENGTH_SHORT).show();
-        } else if (requestType == DataServices.UPDATE_GENERAL_CATEGORY) {
+        } else if (requestType == ApiService.UPDATE_GENERAL_CATEGORY) {
 
-        } else if (requestType == DataServices.DELETE_GENERAL_CATEGORY) {
+        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY) {
 
         }
     }
@@ -156,7 +156,7 @@ public class CategoryActivity extends AppCompatActivity implements DataServices.
 
     @Override
     public void createGeneralCategory(GeneralCategory generalCategory) {
-        dataServices.createGeneralCategory(generalCategory);
+        apiService.createGeneralCategory(generalCategory);
         progressDialog.show();
     }
 

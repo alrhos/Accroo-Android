@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class SubCategory implements Securable, Relationship, Parcelable {
 
     private int id, generalCategoryID;
-    private String categoryName, generalCategoryName, categoryIcon;
+    private String categoryName, generalCategoryName;//, categoryIcon;
     private GeneralCategory parent;
     private ArrayList<Transaction> transactions = new ArrayList<>();
 
@@ -62,14 +62,14 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     public String getGeneralCategoryName() {
         return generalCategoryName;
     }
-
-    public String getCategoryIcon() {
-        return categoryIcon;
-    }
-
-    public void setCategoryIcon(String categoryIcon) {
-        this.categoryIcon = categoryIcon;
-    }
+//
+//    public String getCategoryIcon() {
+//        return categoryIcon;
+//    }
+//
+//    public void setCategoryIcon(String categoryIcon) {
+//        this.categoryIcon = categoryIcon;
+//    }
 
     public ArrayList<Transaction> getTransactions() {
         return transactions;
@@ -139,12 +139,11 @@ public class SubCategory implements Securable, Relationship, Parcelable {
                 ", generalCategoryID=" + generalCategoryID +
                 ", categoryName='" + categoryName + '\'' +
                 ", generalCategoryName='" + generalCategoryName + '\'' +
-                ", categoryIcon='" + categoryIcon + '\'' +
+                ", parent=" + parent +
                 ", transactions=" + transactions +
                 ", df=" + df +
                 '}';
     }
-
 
     @Override
     public int describeContents() {
@@ -156,16 +155,16 @@ public class SubCategory implements Securable, Relationship, Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.generalCategoryID);
         dest.writeString(this.categoryName);
-        dest.writeString(this.generalCategoryName);
-        dest.writeString(this.categoryIcon);
+        dest.writeParcelable(this.parent, flags);
+        dest.writeSerializable(this.df);
     }
 
     protected SubCategory(Parcel in) {
         this.id = in.readInt();
         this.generalCategoryID = in.readInt();
         this.categoryName = in.readString();
-        this.generalCategoryName = in.readString();
-        this.categoryIcon = in.readString();
+        this.parent = in.readParcelable(GeneralCategory.class.getClassLoader());
+        this.df = (DecimalFormat) in.readSerializable();
     }
 
     public static final Creator<SubCategory> CREATOR = new Creator<SubCategory>() {
@@ -179,4 +178,5 @@ public class SubCategory implements Securable, Relationship, Parcelable {
             return new SubCategory[size];
         }
     };
+
 }

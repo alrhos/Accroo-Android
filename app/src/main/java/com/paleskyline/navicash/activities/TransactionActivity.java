@@ -18,16 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
-import com.paleskyline.navicash.services.DataServices;
-import com.paleskyline.navicash.services.InputServices;
+import com.paleskyline.navicash.services.ApiService;
+import com.paleskyline.navicash.services.InputService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class TransactionActivity extends AppCompatActivity implements DataServices.RequestOutcome {
+public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText amountField, descriptionField;
     private TextView categoryField, dateField;
@@ -41,7 +42,7 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
     private boolean editable = true;
-    private DataServices dataServices;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
         progressDialog = new ProgressDialog(TransactionActivity.this);
         progressDialog.setMessage("Submitting...");
 
-        dataServices = new DataServices(this, getApplicationContext());
+        apiService = new ApiService(this, getApplicationContext());
         calendar = Calendar.getInstance();
 
         existingTransaction = getIntent().getParcelableExtra("transaction");
@@ -74,12 +75,16 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
             dateField.setText(existingTransaction.getDateString());
             descriptionField.setText(existingTransaction.getDescription());
 
+            System.out.println(((SubCategory) existingTransaction.getParent()).getParent().toString());
+
+            String icon = ((GeneralCategory) ((SubCategory) existingTransaction.getParent()).getParent()).getIconFile();
             int iconId = getApplicationContext().getResources().getIdentifier(
-                    "@drawable/" + existingTransaction.getCategoryIcon(), null,
+                    "@drawable/" + icon, null,
                     getApplicationContext().getPackageName());
 
             categoryIcon.setImageResource(iconId);
-            categoryField.setText(existingTransaction.getSubCategoryName());
+            String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
+            categoryField.setText(subCategoryName);
 
             this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
 
@@ -136,20 +141,20 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
 
                 progressDialog.show();
 
-                String formattedDescription = InputServices.capitaliseAndTrim(descriptionField.getText().toString());
+                String formattedDescription = InputService.capitaliseAndTrim(descriptionField.getText().toString());
 
                 if (editing) {
                     existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
                     existingTransaction.setSubCategoryID(selectedSubCategoryID);
                     existingTransaction.setDateString(dateField.getText().toString());
                     existingTransaction.setDescription(formattedDescription);
-                    dataServices.updateTransaction(existingTransaction);
+                    apiService.updateTransaction(existingTransaction);
                 } else {
                     newTransaction = new Transaction(selectedSubCategoryID,
                             dateField.getText().toString(),
                             Double.parseDouble(amountField.getText().toString()),
                             formattedDescription);
-                    dataServices.createTransaction(newTransaction);
+                    apiService.createTransaction(newTransaction);
                 }
             }
         });
@@ -184,9 +189,9 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
                 this.selectedSubCategoryID = subCategory.getId();
+                String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
                 int iconId = getApplicationContext().getResources().getIdentifier(
-                        "@drawable/" + subCategory.getCategoryIcon(), null,
-                        getApplicationContext().getPackageName());
+                        "@drawable/" + icon, null, getApplicationContext().getPackageName());
                 categoryIcon.setImageResource(iconId);
                 categoryField.setText(subCategory.getCategoryName());
 
@@ -212,7 +217,7 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     private void deleteTransaction() {
         // TODO: add confirmation dialog before deleting
         progressDialog.show();
-        dataServices.deleteTransaction(existingTransaction);
+        apiService.deleteTransaction(existingTransaction);
     }
 
     // TODO: implement amount regex and toast
@@ -236,14 +241,14 @@ public class TransactionActivity extends AppCompatActivity implements DataServic
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        if (requestType == DataServices.CREATE_TRANSACTION) {
+        if (requestType == ApiService.CREATE_TRANSACTION) {
             amountField.getText().clear();
             descriptionField.getText().clear();
             amountField.requestFocus();
-        } else if (requestType == DataServices.UPDATE_TRANSACTION) {
+        } else if (requestType == ApiService.UPDATE_TRANSACTION) {
             Toast.makeText(getApplicationContext(), "Transaction updated", Toast.LENGTH_LONG).show();
             finish();
-        } else if (requestType == DataServices.DELETE_TRANSACTION) {
+        } else if (requestType == ApiService.DELETE_TRANSACTION) {
             // TODO: return to main activity
             Toast.makeText(getApplicationContext(), "Transaction deleted", Toast.LENGTH_LONG).show();
             finish();

@@ -12,7 +12,7 @@ public class Summary {
     private double expenses = 0;
     private RootCategory[] rootCategories;
     public static final String INCOME = "Income";
-    public static final String EXPENSES = "Expenses";
+    public static final String EXPENSES = "Expense";
     private DecimalFormat df = new DecimalFormat("0.00");
 
     public Summary(RootCategory[] rootCategories) {
@@ -26,7 +26,7 @@ public class Summary {
                 return "$" + df.format(total);
             }
         }
-        return null;
+        return "$" + df.format(0);
     }
 
     public String getSavings() {

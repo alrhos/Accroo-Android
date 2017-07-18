@@ -4,7 +4,7 @@ package com.paleskyline.navicash.services;
  * Created by oscar on 16/07/17.
  */
 
-public class InputServices {
+public class InputService {
 
     public static String capitaliseAndTrim(String input) {
         if (input.length() > 0) {

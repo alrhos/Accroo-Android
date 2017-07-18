@@ -60,10 +60,11 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
     @Override
     protected Boolean doInBackground(JSONObject[]... dataReceiver) {
+
         try {
             switch (requestType) {
 
-                case DataServices.GET_REFRESH_TOKEN:
+                case ApiService.GET_REFRESH_TOKEN:
 
                     accessToken = dataReceiver[0][0].getString("accessToken");
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
@@ -85,7 +86,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.CREATE_USER:
+                case ApiService.CREATE_USER:
 
                     refreshToken = dataReceiver[0][0].get("refreshToken").toString();
                     accessToken = dataReceiver[0][0].get("accessToken").toString();
@@ -97,64 +98,72 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.CREATE_DEFAULT_CATEGORIES:
-
-                    //processCategories(dataReceiver[0]);
-                    //sortData();
+                case ApiService.CREATE_DEFAULT_CATEGORIES:
 
                     return true;
 
-                case DataServices.GET_DEFAULT_DATA:
+                case ApiService.GET_DEFAULT_DATA:
 
-                    // TODO: move contents of these methods here
+                    JSONArray generalCategoriesArray = dataReceiver[0][0].getJSONArray("categories");
 
-                    processCategories(dataReceiver[0]);
-                   // processTransactions(dataReceiver[0]);
-                    //sortData();
+                    for (int i = 0; i < generalCategoriesArray.length(); i++) {
+                        JSONObject gc = generalCategoriesArray.getJSONObject(i);
+                        GeneralCategory generalCategory = new GeneralCategory(gc);
+                        JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
 
-                   // DataProvider.getInstance().setTransactions(t);
+                        for (int j = 0; j < linkedSubCategories.length(); j++) {
+                            JSONObject sc = linkedSubCategories.getJSONObject(j);
+                            SubCategory subCategory = new SubCategory(sc);
+                            subCategories.add(subCategory);
+                        }
+
+                        generalCategories.add(generalCategory);
+                    }
+
+                    JSONArray transactionsArray = dataReceiver[0][1].getJSONArray("transactions");
+
+                    for (int k = 0; k < transactionsArray.length(); k++) {
+                        JSONObject t = transactionsArray.getJSONObject(k);
+                        Transaction transaction = new Transaction(t);
+                        // TODO: extra condition required here to only let in transactions for the specified date transaction
+                        transactions.add(transaction);
+                    }
+
+                    DataProvider.loadData(generalCategories, subCategories, transactions);
 
                     return true;
 
-                case DataServices.CREATE_TRANSACTION:
+                case ApiService.CREATE_TRANSACTION:
 
                     transactionID = dataReceiver[0][0].getInt("transactionID");
                     transaction = (Transaction) dataObject;
                     transaction.setId(transactionID);
-
                     DataProvider.addTransaction(transaction);
-
                     return true;
 
-                case DataServices.UPDATE_TRANSACTION:
+                case ApiService.UPDATE_TRANSACTION:
 
                     transaction = (Transaction) dataObject;
-
                     DataProvider.updateTransaction(transaction);
-
                     return true;
 
-                case DataServices.DELETE_TRANSACTION:
+                case ApiService.DELETE_TRANSACTION:
 
                     transaction = (Transaction) dataObject;
-
                     DataProvider.deleteTransaction(transaction);
-
                     return true;
 
-                case DataServices.CREATE_GENERAL_CATEGORY:
+                case ApiService.CREATE_GENERAL_CATEGORY:
 
                     generalCategory = (GeneralCategory) dataObject;
-
                     DataProvider.addGeneralCategory(generalCategory);
-
                     return true;
 
-                case DataServices.UPDATE_GENERAL_CATEGORY:
+                case ApiService.UPDATE_GENERAL_CATEGORY:
 
                     generalCategory = (GeneralCategory) dataObject;
-
-
+                    DataProvider.updateGeneralCategory(generalCategory);
+                    return true;
 
             }
         } catch (Exception e) {
@@ -173,105 +182,5 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
             postRequestOutcome.onPostRequestTaskFailure();
         }
     }
-
-    private void processCategories(JSONObject[] dataReceiver) throws Exception {
-
-        JSONArray generalCategoriesArray = dataReceiver[0].getJSONArray("categories");
-
-        for (int i = 0; i < generalCategoriesArray.length(); i++) {
-            JSONObject gc = generalCategoriesArray.getJSONObject(i);
-            GeneralCategory generalCategory = new GeneralCategory(gc);
-            JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
-
-            for (int j = 0; j < linkedSubCategories.length(); j++) {
-                JSONObject sc = linkedSubCategories.getJSONObject(j);
-                SubCategory subCategory = new SubCategory(sc);
-                subCategories.add(subCategory);
-            }
-
-            generalCategories.add(generalCategory);
-        }
-
-        JSONArray transactionsArray = dataReceiver[1].getJSONArray("transactions");
-
-        for (int k = 0; k < transactionsArray.length(); k++) {
-            JSONObject t = transactionsArray.getJSONObject(k);
-            Transaction transaction = new Transaction(t);
-            // TODO: extra condition required here to only let in transactions for the specified date transaction
-            transactions.add(transaction);
-        }
-
-        DataProvider.loadData(generalCategories, subCategories, transactions);
-
-//        for (GeneralCategory g : generalCategories) {
-//            System.out.println(g.toString());
-//        }
-//        for (SubCategory s : subCategories) {
-//            System.out.println(s.toString());
-//        }
-
-     //   DataProvider.getInstance().setGeneralCategories(generalCategories);
-     //   DataProvider.getInstance().setSubCategories(subCategories);
-
-    }
-
-    private void processTransactions(JSONObject[] dataReceiver) throws Exception {
-
-        JSONArray transactionsArray = dataReceiver[1].getJSONArray("transactions");
-
-        for (int k = 0; k < transactionsArray.length(); k++) {
-            JSONObject t = transactionsArray.getJSONObject(k);
-            Transaction transaction = new Transaction(t);
-            // TODO: extra condition required here to only let in transactions for the specified date transaction
-            transactions.add(transaction);
-        }
-
-       // DataProvider.getInstance().setTransactions(transactions);
-
-    }
-
-    /* TODO - this logic should be moved to the data provider */
-
-//    private void sortData() {
-//
-//        RootCategory[] rootCategories = {new RootCategory("Income"), new RootCategory("Expenses")};
-//
-//        for (Transaction tx: transactions) {
-//            for (SubCategory s : subCategories) {
-//                if (tx.getSubCategoryID() == s.getId()) {
-//                    for (GeneralCategory g : generalCategories) {
-//                        if (g.getId() == s.getGeneralCategoryID()) {
-//                            tx.setCategoryIcon(g.getIconFile());
-//                            tx.setRootCategoryType(g.getRootCategory());
-//                        }
-//                    }
-//                    tx.setSubCategoryName(s.getCategoryName());
-//                    s.getTransactions().add(tx);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for (SubCategory sc : subCategories) {
-//            for (GeneralCategory g : generalCategories) {
-//                if (sc.getGeneralCategoryID() == g.getId()) {
-//                    sc.setCategoryIcon(g.getIconFile());
-//                    g.getSubCategories().add(sc);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for (GeneralCategory gc : generalCategories) {
-//            for (int c = 0; c < rootCategories.length; c++) {
-//                if (gc.getRootCategory().equals(rootCategories[c].getCategoryName())) {
-//                    rootCategories[c].getGeneralCategories().add(gc);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        DataProvider.getInstance().setRootCategories(rootCategories);
-//    }
 
 }

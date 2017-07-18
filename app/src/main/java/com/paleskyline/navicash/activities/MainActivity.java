@@ -24,17 +24,17 @@ import com.paleskyline.navicash.fragments.TransactionsFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
-import com.paleskyline.navicash.services.DataServices;
+import com.paleskyline.navicash.services.ApiService;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
         TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,
-     DataServices.RequestOutcome {
+     ApiService.RequestOutcome {
 
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
 
-    private DataServices dataServices;
+    private ApiService apiService;
 
     private FloatingActionButton fab;
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             }
         });
 
-        dataServices = new DataServices(this, getApplicationContext());
+        apiService = new ApiService(this, getApplicationContext());
 
         System.out.println("ON CREATE CALLED");
 
@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
         if (categoryOverviewFragment != null) {
             categoryOverviewFragment.refreshAdapter();
+            System.out.println("CATEGORY OVERVIEW ADAPTER REFRESHED");
         }
     }
 
@@ -260,13 +261,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
-        dataServices.getDefaultData("");
+        apiService.getDefaultData("");
     }
 
     @Override
     public void onTransactionSwipeRefresh() {
         transactionsFragment.setRefreshStatus(true);
-        dataServices.getDefaultData("");
+        apiService.getDefaultData("");
     }
 
     @Override
@@ -279,12 +280,12 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onCategorySwipeRefresh() {
         categoryOverviewFragment.setRefreshStatus(true);
-        dataServices.getDefaultData("");
+        apiService.getDefaultData("");
     }
 
     @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
-        Intent intent = new Intent(getApplicationContext(), EditGeneralCategory.class);
+        Intent intent = new Intent(getApplicationContext(), EditGeneralCategoryActivity.class);
         intent.putExtra("generalCategory", generalCategory);
         startActivity(intent);
     }

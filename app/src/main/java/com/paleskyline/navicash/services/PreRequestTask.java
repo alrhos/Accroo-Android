@@ -110,14 +110,14 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         try {
             switch (requestType) {
 
-                case DataServices.GET_REFRESH_TOKEN:
+                case ApiService.GET_REFRESH_TOKEN:
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.GET,
                             RequestBuilder.REFRESH_TOKEN, username, password, context));
 
                     return true;
 
-                case DataServices.GET_DEFAULT_DATA:
+                case ApiService.GET_DEFAULT_DATA:
 
                     // TODO - Look up transaction id for date
 
@@ -128,7 +128,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.CREATE_USER:
+                case ApiService.CREATE_USER:
 
                     User user = (User) dataObject;
 
@@ -137,7 +137,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.CREATE_DEFAULT_CATEGORIES:
+                case ApiService.CREATE_DEFAULT_CATEGORIES:
 
                     ArrayList<GeneralCategory> generalCategories = DataAccess.getInstance(context).getGeneralCategories();
                     ArrayList<SubCategory> subCategories = DataAccess.getInstance(context).getSubCategories();
@@ -181,7 +181,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.CREATE_TRANSACTION:
+                case ApiService.CREATE_TRANSACTION:
 
                     json = ((Transaction) dataObject).encrypt();
 
@@ -190,7 +190,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.UPDATE_TRANSACTION:
+                case ApiService.UPDATE_TRANSACTION:
 
                     transaction = (Transaction) dataObject;
 
@@ -203,7 +203,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.DELETE_TRANSACTION:
+                case ApiService.DELETE_TRANSACTION:
 
                     transaction = (Transaction) dataObject;
 
@@ -214,7 +214,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.CREATE_GENERAL_CATEGORY:
+                case ApiService.CREATE_GENERAL_CATEGORY:
 
                     json = ((GeneralCategory) dataObject).encrypt();
 
@@ -223,11 +223,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case DataServices.UPDATE_GENERAL_CATEGORY:
+                case ApiService.UPDATE_GENERAL_CATEGORY:
 
                     generalCategory = (GeneralCategory) dataObject;
 
                     json = generalCategory.encrypt();
+
+                    System.out.println(json);
 
                     uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
 
@@ -252,6 +254,5 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         } else {
             preRequestOutcome.onPreRequestTaskFailure();
         }
-        // Pass the built requests to onPreRequestTaskSuccess();
     }
 }

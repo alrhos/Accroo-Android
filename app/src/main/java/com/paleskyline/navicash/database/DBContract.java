@@ -49,19 +49,19 @@ public final class DBContract {
             GeneralCategory.COLUMN_CATEGORY_ICON + ", " +
             GeneralCategory.COLUMN_ROOT_CATEGORY + ") VALUES " +
             "('Wages', 'i30', 'Income'), " +
-            "('Food and Drink', 'i4', 'Expenses'), " +
-            "('Transport', 'i6', 'Expenses'), " +
-            "('Pets', 'i18', 'Expenses'), " +
-            "('Health', 'i29', 'Expenses'), " +
+            "('Food and Drink', 'i4', 'Expense'), " +
+            "('Transport', 'i6', 'Expense'), " +
+            "('Pets', 'i18', 'Expense'), " +
+            "('Health', 'i29', 'Expense'), " +
             "('Miscellaneous Income', 'i9', 'Income'), " +
-            "('Sport', 'i56', 'Expenses'), " +
+            "('Sport', 'i56', 'Expense'), " +
             "('Investments', 'i49', 'Income'), " +
-            "('Holidays', 'i41', 'Expenses'), " +
-            "('Entertainment', 'i51', 'Expenses'), " +
-            "('Education', 'i34', 'Expenses'), " +
-            "('Miscellaneous Expenses', 'i7', 'Expenses'), " +
-            "('Accommodation', 'i21', 'Expenses'), " +
-            "('Personal', 'i27', 'Expenses');";
+            "('Holidays', 'i41', 'Expense'), " +
+            "('Entertainment', 'i51', 'Expense'), " +
+            "('Education', 'i34', 'Expense'), " +
+            "('Miscellaneous Expenses', 'i7', 'Expense'), " +
+            "('Accommodation', 'i21', 'Expense'), " +
+            "('Personal', 'i27', 'Expense');";
 
 
     protected static final String POPULATE_SUB_CATEGORY =

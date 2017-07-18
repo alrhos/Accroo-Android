@@ -9,9 +9,9 @@ import android.widget.Button;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
-import com.paleskyline.navicash.services.DataServices;
+import com.paleskyline.navicash.services.ApiService;
 
-public class LaunchActivity extends AppCompatActivity implements DataServices.RequestOutcome {
+public class LaunchActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +34,8 @@ public class LaunchActivity extends AppCompatActivity implements DataServices.Re
 
             //loadUserData();
 
-            DataServices dataServices = new DataServices(this, getApplicationContext());
-            dataServices.getDefaultData("");
+            ApiService apiService = new ApiService(this, getApplicationContext());
+            apiService.getDefaultData("");
 
             //AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.USERNAME_KEY);
             //AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.PASSWORD_KEY);

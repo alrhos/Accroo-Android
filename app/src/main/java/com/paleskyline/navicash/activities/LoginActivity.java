@@ -8,16 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.services.DataServices;
+import com.paleskyline.navicash.services.ApiService;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements DataServices.RequestOutcome {
+public class LoginActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText usernameField, passwordField;
     private Button loginButton;
-    private DataServices dataServices;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity implements DataServices.Req
         passwordField = (EditText) findViewById(R.id.password);
         loginButton = (Button) findViewById(R.id.login_button);
 
-        dataServices = new DataServices(this, getApplicationContext());
+        apiService = new ApiService(this, getApplicationContext());
         addListeners();
     }
 
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements DataServices.Req
                     char[] password = new char[passwordLength];
                     passwordField.getText().getChars(0, passwordLength, password, 0);
 
-                    dataServices.getRefreshToken(username, password);
+                    apiService.getRefreshToken(username, password);
                 }
             }
         });
