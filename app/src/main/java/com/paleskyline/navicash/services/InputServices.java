@@ -7,8 +7,11 @@ package com.paleskyline.navicash.services;
 public class InputServices {
 
     public static String capitaliseAndTrim(String input) {
-        String result = input.substring(0, 1).toUpperCase() + input.substring(1);
-        return result.trim();
+        if (input.length() > 0) {
+            String result = input.substring(0, 1).toUpperCase() + input.substring(1);
+            return result.trim();
+        }
+        return input;
     }
 
 }

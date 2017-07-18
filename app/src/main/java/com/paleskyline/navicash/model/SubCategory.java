@@ -16,10 +16,11 @@ import java.util.ArrayList;
  * Created by oscar on 24/03/17.
  */
 
-public class SubCategory implements Securable, Parcelable {
+public class SubCategory implements Securable, Relationship, Parcelable {
 
     private int id, generalCategoryID;
     private String categoryName, generalCategoryName, categoryIcon;
+    private GeneralCategory parent;
     private ArrayList<Transaction> transactions = new ArrayList<>();
 
     private DecimalFormat df = new DecimalFormat("0.00");
@@ -88,6 +89,16 @@ public class SubCategory implements Securable, Parcelable {
 
     public void setTransactions(ArrayList<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.parent = (GeneralCategory) parent;
+    }
+
+    @Override
+    public Object getParent() {
+        return parent;
     }
 
     @Override

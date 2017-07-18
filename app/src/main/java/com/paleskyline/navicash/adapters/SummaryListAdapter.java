@@ -23,23 +23,28 @@ import java.util.ArrayList;
 
 public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<Object> items;
+    private ArrayList<Object> dataSource;
+   // private ArrayList<Object> items;
 
     private final int SUMMARY = 0;
     private final int GENERAL_CATEGORY = 1;
 
     private Context context;
     private LayoutInflater inflater;
-  //  private SummaryListAdapter.ClickListener clickListener;
 
     public SummaryListAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        items = new ArrayList<>();
-        items.add(new Summary());
-        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
-            items.add(gc);
-        }
+        dataSource = new ArrayList<>();
+      //  items = new ArrayList<>();
+        refreshDataSource();
+   //     items.add(new Summary());
+//        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+//            items.add(gc);
+////            for (SubCategory s : gc.getSubCategories()) {
+////                System.out.println(s.toString());
+////            }
+//        }
 
     }
 
@@ -76,14 +81,14 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return dataSource.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof Summary) {
+        if (dataSource.get(position) instanceof Summary) {
             return SUMMARY;
-        } else if (items.get(position) instanceof GeneralCategory) {
+        } else if (dataSource.get(position) instanceof GeneralCategory) {
             return GENERAL_CATEGORY;
         } else {
             return -1;
@@ -96,15 +101,15 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             case SUMMARY:
                 SummaryViewHolder vh1 = (SummaryViewHolder) holder;
-                Summary summary = (Summary) items.get(position);
-                vh1.income.setText(summary.getIncome());
-                vh1.expenses.setText(summary.getExpenses());
+                Summary summary = (Summary) dataSource.get(position);
+                vh1.income.setText(summary.getTotal(Summary.INCOME));
+                vh1.expenses.setText(summary.getTotal(Summary.EXPENSES));
                 vh1.savings.setText(summary.getSavings());
                 break;
 
             case GENERAL_CATEGORY:
                 final GeneralCategoryViewHolder vh2 = (GeneralCategoryViewHolder) holder;
-                GeneralCategory gc = (GeneralCategory) items.get(position);
+                GeneralCategory gc = (GeneralCategory) dataSource.get(position);
                 vh2.category.setText(gc.getCategoryName());
                 vh2.amount.setText(gc.getFormattedTransactionTotal());
                 int iconId = context.getResources().getIdentifier("@drawable/" + gc.getIconFile(), null, context.getPackageName());
@@ -165,13 +170,83 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return vh;
     }
 
+//    public void refreshDataSource() {
+//        items.clear();
+//     //   items.add(new Summary());
+//        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
+//            items.add(gc);
+//        }
+//        notifyDataSetChanged();
+//    }
+
     public void refreshDataSource() {
-        items.clear();
-        items.add(new Summary());
-        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
-            items.add(gc);
+
+        System.out.println("HERE");
+
+        dataSource.clear();
+        dataSource.add(new Summary(DataProvider.getRootCategories()));
+
+        ArrayList<GeneralCategory> generalCategories = DataProvider.getGeneralCategories();
+
+        for (GeneralCategory generalCategory : generalCategories) {
+            dataSource.add(generalCategory);
         }
+
+//        ArrayList<GeneralCategory> generalCategories = DataProvider.getInstance().getGeneralCategories();
+//        ArrayList<SubCategory> subCategories = DataProvider.getInstance().getSubCategories();
+//        ArrayList<Transaction> transactions = DataProvider.getInstance().getTransactions();
+//
+//        System.out.println(generalCategories == DataProvider.getInstance().getGeneralCategories());
+//        System.out.println(DataProvider.getInstance().getGeneralCategories().toString());
+//
+//        for (GeneralCategory g : DataProvider.getInstance().getGeneralCategories()) {
+//            System.out.println(g.toString());
+//        }
+//
+//        RootCategory[] x = DataProvider.getInstance().getRootCategories();
+//
+//        RootCategory[] rootCategories = Arrays.copyOf(x, x.length);
+//
+//      //  RootCategory[] rootCategories = {new RootCategory("Income"), new RootCategory("Expenses")};
+//
+//        for (Transaction transaction : transactions) {
+//            for (SubCategory subCategory : subCategories) {
+//                if (transaction.getSubCategoryID() == subCategory.getId()) {
+//                    subCategory.getTransactions().add(transaction);
+//                    break;
+//                }
+//            }
+//        }
+//
+//        for (SubCategory subCategory : subCategories) {
+//            for (GeneralCategory generalCategory : generalCategories) {
+//                if (subCategory.getGeneralCategoryID() == generalCategory.getId()) {
+//                    generalCategory.getSubCategories().add(subCategory);
+//                    break;
+//                }
+//            }
+//        }
+//
+//        for (GeneralCategory generalCategory : generalCategories) {
+//            Collections.sort(generalCategory.getSubCategories(), new SubCategoryComparator());
+//            for (int i = 0; i < rootCategories.length; i++) {
+//                if (generalCategory.getRootCategory().equals(rootCategories[i].getCategoryName())) {
+//                    rootCategories[i].getGeneralCategories().add(generalCategory);
+//                    break;
+//                }
+//            }
+//        }
+//
+//        Collections.sort(generalCategories, new GeneralCategoryComparator());
+//
+//        dataSource.add(new Summary(rootCategories));
+//
+//        for (GeneralCategory generalCategory : generalCategories) {
+//            dataSource.add(generalCategory);
+//        }
+
         notifyDataSetChanged();
+
     }
 
 }

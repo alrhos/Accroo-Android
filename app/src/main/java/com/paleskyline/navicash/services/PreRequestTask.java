@@ -196,8 +196,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     json = transaction.encrypt();
 
-                    System.out.println(json.toString());
-
                     uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
@@ -222,6 +220,19 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.GENERAL_CATEGORY, null, json, context));
+
+                    return true;
+
+                case DataServices.UPDATE_GENERAL_CATEGORY:
+
+                    generalCategory = (GeneralCategory) dataObject;
+
+                    json = generalCategory.encrypt();
+
+                    uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
+                            uri, null, json, context));
 
                     return true;
 

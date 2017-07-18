@@ -1,7 +1,5 @@
 package com.paleskyline.navicash.model;
 
-import com.paleskyline.navicash.services.DataProvider;
-
 import java.text.DecimalFormat;
 
 /**
@@ -10,25 +8,60 @@ import java.text.DecimalFormat;
 
 public class Summary {
 
+    private double income = 0;
+    private double expenses = 0;
+    private RootCategory[] rootCategories;
+    public static final String INCOME = "Income";
+    public static final String EXPENSES = "Expenses";
     private DecimalFormat df = new DecimalFormat("0.00");
 
-    public Summary() {}
-
-    public String getIncome() {
-        double income = DataProvider.getInstance().getRootCategories()[0].getTransactionTotal();
-        return "$" + df.format(income);
+    public Summary(RootCategory[] rootCategories) {
+        this.rootCategories = rootCategories;
     }
 
-    public String getExpenses() {
-        double expenses = DataProvider.getInstance().getRootCategories()[1].getTransactionTotal();
-        return "$" + df.format(expenses);
+    public String getTotal(String type) {
+        for (int i = 0; i < rootCategories.length; i++) {
+            if (rootCategories[i].getCategoryName().equals(type)) {
+                double total = rootCategories[i].getTransactionTotal();
+                return "$" + df.format(total);
+            }
+        }
+        return null;
     }
 
     public String getSavings() {
-        double income = DataProvider.getInstance().getRootCategories()[0].getTransactionTotal();
-        double expenses = DataProvider.getInstance().getRootCategories()[1].getTransactionTotal();
+        double income = 0;
+        double expenses = 0;
+        for (int i = 0; i < rootCategories.length; i++) {
+            if (rootCategories[i].getCategoryName().equals(INCOME)) {
+                income = rootCategories[i].getTransactionTotal();
+            } else if (rootCategories[i].getCategoryName().equals(EXPENSES)) {
+                expenses = rootCategories[i].getTransactionTotal();
+            }
+        }
         return "$" + df.format(income - expenses);
     }
+
+//    public Summary(double income, double expenses) {
+//        this.income = income;
+//        this.expenses = expenses;
+//    }
+
+//    public String getIncome() {
+////        double income = DataProvider.getInstance().getRootCategories()[0].getTransactionTotal();
+//        return "$" + df.format(income);
+//    }
+//
+//    public String getExpenses() {
+//     //   double expenses = DataProvider.getInstance().getRootCategories()[1].getTransactionTotal();
+//        return "$" + df.format(expenses);
+//    }
+//
+//    public String getSavings() {
+//     //   double income = DataProvider.getInstance().getRootCategories()[0].getTransactionTotal();
+//     //   double expenses = DataProvider.getInstance().getRootCategories()[1].getTransactionTotal();
+//        return "$" + df.format(income - expenses);
+//    }
 
     @Override
     public String toString() {

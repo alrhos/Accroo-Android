@@ -50,7 +50,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(GET_REFRESH_TOKEN, DataServices.this, context).execute(dataReceiver);
@@ -70,7 +69,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[2];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(GET_DEFAULT_DATA, DataServices.this, context).execute(dataReceiver);
@@ -90,7 +88,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(CREATE_USER, DataServices.this, context).execute(dataReceiver);
@@ -110,7 +107,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(CREATE_DEFAULT_CATEGORIES, DataServices.this, context).execute(dataReceiver);
@@ -130,7 +126,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(CREATE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
@@ -150,7 +145,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(UPDATE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
@@ -170,7 +164,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(DELETE_TRANSACTION, DataServices.this, context, transaction).execute(dataReceiver);
@@ -190,7 +183,6 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
-
             @Override
             protected void onSuccess() {
                 new PostRequestTask(CREATE_GENERAL_CATEGORY, DataServices.this, context, generalCategory).execute(dataReceiver);
@@ -206,7 +198,22 @@ public class DataServices implements PreRequestTask.PreRequestOutcome, PostReque
 
     }
 
-    public void updateGeneralCategory(GeneralCategory generalCategory) {
+    public void updateGeneralCategory(final GeneralCategory generalCategory) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(UPDATE_GENERAL_CATEGORY, DataServices.this, context, generalCategory).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+
+            }
+        };
+
+        new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
 
     }
 

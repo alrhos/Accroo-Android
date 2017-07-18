@@ -54,6 +54,17 @@ public class EditGeneralCategory extends AppCompatActivity implements DataServic
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ICON_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                int iconID = data.getIntExtra("iconID", 0);
+                String iconName = data.getStringExtra("iconName");
+                generalCategoryFragment.updateIcon(iconID, iconName);
+            }
+        }
+    }
+
+    @Override
     public void onSuccess(int requestType) {
 
     }
@@ -92,11 +103,5 @@ public class EditGeneralCategory extends AppCompatActivity implements DataServic
     private void deleteGeneralCategory() {
         System.out.println("DELETE CATEGORY");
     }
-
-
-//    @Override
-//    public void deleteGeneralCategory(GeneralCategory generalCategory) {
-//        progressDialog.show();
-//    }
 
 }

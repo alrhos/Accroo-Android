@@ -45,7 +45,7 @@ public class KeyDecryptionActivity extends AppCompatActivity {
 
                     try {
 
-                        KeyPackage keyPackage = DataProvider.getInstance().getKeyPackage();
+                        KeyPackage keyPackage = DataProvider.getKeyPackage();
 
                         CryptoManager.getInstance().decryptMasterKey(password, keyPackage);
                         CryptoManager.getInstance().saveMasterKey(getApplicationContext());

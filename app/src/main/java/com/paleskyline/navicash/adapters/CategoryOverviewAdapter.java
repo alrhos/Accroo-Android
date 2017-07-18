@@ -16,6 +16,8 @@ import com.paleskyline.navicash.services.DataProvider;
 
 import java.util.ArrayList;
 
+import static com.paleskyline.navicash.services.DataProvider.getGeneralCategories;
+
 /**
  * Created by oscar on 11/06/17.
  */
@@ -30,7 +32,7 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public CategoryOverviewAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
         this.adapterInteractionListener = adapterInteractionListener;
-        this.generalCategories = DataProvider.getInstance().getGeneralCategories();
+        this.generalCategories = getGeneralCategories();
         inflater = LayoutInflater.from(context);
     }
 
@@ -100,7 +102,7 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void refreshDataSource() {
-        this.generalCategories = DataProvider.getInstance().getGeneralCategories();
+        this.generalCategories = DataProvider.getGeneralCategories();
         notifyDataSetChanged();
     }
 

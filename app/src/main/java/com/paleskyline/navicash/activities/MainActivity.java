@@ -285,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
         Intent intent = new Intent(getApplicationContext(), EditGeneralCategory.class);
+        intent.putExtra("generalCategory", generalCategory);
         startActivity(intent);
     }
 

@@ -18,7 +18,7 @@ import java.util.Date;
  * Created by oscar on 25/03/17.
  */
 
-public class Transaction implements Securable, Parcelable {
+public class Transaction implements Securable, Relationship, Parcelable {
 
     private int id;
     private int subCategoryID;
@@ -28,6 +28,7 @@ public class Transaction implements Securable, Parcelable {
     private String dateString;
     private double amount;
     private String description;
+    private Object parent;
 
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -126,6 +127,16 @@ public class Transaction implements Securable, Parcelable {
             return null;
         }
 
+    }
+
+    @Override
+    public void setParent(Object parent) {
+        this.parent = (SubCategory) parent;
+    }
+
+    @Override
+    public Object getParent() {
+        return parent;
     }
 
     @Override

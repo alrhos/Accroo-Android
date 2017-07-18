@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.services.DataProvider;
 
@@ -79,11 +81,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             View v = inflater.inflate(R.layout.transaction_list_details, null, false);
 
             ImageView iv = (ImageView) v.findViewById(R.id.transaction_icon);
-            int iconId = context.getResources().getIdentifier("@drawable/" + transaction.getCategoryIcon(), null, context.getPackageName());
+
+            ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile();
+
+            String icon = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile();
+            int iconId = context.getResources().getIdentifier("@drawable/" + icon, null, context.getPackageName());
             iv.setImageResource(iconId);
 
             TextView category = (TextView) v.findViewById(R.id.transaction_category_name);
-            category.setText(transaction.getSubCategoryName());
+            String subCategoryName = ((SubCategory) transaction.getParent()).getCategoryName();
+            category.setText(subCategoryName);
 
             TextView description = (TextView) v.findViewById(R.id.transaction_category_description);
             description.setText(transaction.getDescription());
@@ -112,7 +119,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private void groupTransactions() {
 
         groupedTransactions.clear();
-        transactions = DataProvider.getInstance().getTransactions();
+        transactions = DataProvider.getTransactions();
 
         for (Transaction t : transactions) {
             if (!groupedTransactions.containsKey(t.getDate())) {

@@ -11,11 +11,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
-import com.paleskyline.navicash.services.DataProvider;
 import com.paleskyline.navicash.services.InputServices;
 
 
@@ -73,13 +71,12 @@ public class GeneralCategoryFragment extends Fragment {
             iconName = existingCategory.getIconFile();
 
             if (existingCategory.getRootCategory().equals("Income")) {
-                incomeRadioButton.setSelected(true);
-            } else if (existingCategory.getRootCategory().equals("Expense")) {
-                expenseRadioButton.setSelected(true);
+                incomeRadioButton.setChecked(true);
+            } else if (existingCategory.getRootCategory().equals("Expenses")) {
+                expenseRadioButton.setChecked(true);
             }
 
             submit.setText("SAVE");
-            //toggleEditing();
         }
 
         icon.setOnClickListener(new View.OnClickListener() {
@@ -160,13 +157,16 @@ public class GeneralCategoryFragment extends Fragment {
     }
 
     private boolean isValidCategoryName() {
-        String category = InputServices.capitaliseAndTrim(categoryName.getText().toString());
-        if (DataProvider.getInstance().checkDuplicateGeneralCategory(category)) {
-            Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
-            return false;
-        } else {
-            return true;
-        }
+//        if (!editing) {
+//            String category = InputServices.capitaliseAndTrim(categoryName.getText().toString());
+//            if (DataProvider.getInstance().checkDuplicateGeneralCategory(category)) {
+//                Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+//                return false;
+//            } else {
+//                return true;
+//            }
+//        }
+        return true;
     }
 
     public interface FragmentInteractionListener {
