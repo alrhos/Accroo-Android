@@ -133,6 +133,8 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
         } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY) {
 
+        } else if (requestType == ApiService.CREATE_SUB_CATEGORY) {
+            Toast.makeText(getApplicationContext(), "Category created", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -172,7 +174,8 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void createSubCategory(SubCategory subCategory) {
-
+        progressDialog.show();
+        apiService.createSubCategory(subCategory);
     }
 
     @Override

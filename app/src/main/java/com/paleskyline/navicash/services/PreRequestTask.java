@@ -33,6 +33,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private JSONObject json;
     private Transaction transaction;
     private GeneralCategory generalCategory;
+    private SubCategory subCategory;
 
     private PreRequestOutcome preRequestOutcome;
     private Context context;
@@ -227,6 +228,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
+
+                    return true;
+
+                case ApiService.CREATE_SUB_CATEGORY:
+
+                    json = ((SubCategory) dataObject).encrypt();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.SUB_CATEGORY, null, json, context));
 
                     return true;
 

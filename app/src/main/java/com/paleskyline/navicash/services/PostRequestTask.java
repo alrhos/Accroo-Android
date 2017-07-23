@@ -29,6 +29,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private Object dataObject;
     private Transaction transaction;
     private GeneralCategory generalCategory;
+    private SubCategory subCategory;
     private int id;
 
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
@@ -171,6 +172,14 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     generalCategory = (GeneralCategory) dataObject;
                     DataProvider.deleteGeneralCategory(generalCategory);
+                    return true;
+
+                case ApiService.CREATE_SUB_CATEGORY:
+
+                    id = dataReceiver[0][0].getInt("subCategoryID");
+                    subCategory = (SubCategory) dataObject;
+                    subCategory.setId(id);
+                    DataProvider.addSubCategory(subCategory);
                     return true;
 
             }

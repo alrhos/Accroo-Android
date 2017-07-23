@@ -161,6 +161,7 @@ public class GeneralCategoryFragment extends Fragment {
     }
 
     private boolean isValidCategoryName() {
+        // TODO: might need another check to ensure name isn't null
         if (!editing) {
             String category = InputService.capitaliseAndTrim(categoryName.getText().toString());
             if (DataProvider.checkDuplicateGeneralCategory(category)) {

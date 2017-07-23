@@ -27,6 +27,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_GENERAL_CATEGORY = 7;
     public final static int UPDATE_GENERAL_CATEGORY = 8;
     public final static int DELETE_GENERAL_CATEGORY = 9;
+    public final static int CREATE_SUB_CATEGORY = 10;
+    public final static int UPDATE_SUB_CATEGORY = 11;
+    public final static int DELETE_SUB_CATEGORY = 12;
 
     private RequestOutcome requestOutcome;
     private Context context;
@@ -235,7 +238,22 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void createSubCategory(SubCategory subCategory) {
+    public void createSubCategory(final SubCategory subCategory) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context, subCategory).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
+            }
+        };
+
+        new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
 
     }
 

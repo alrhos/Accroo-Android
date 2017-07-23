@@ -124,6 +124,22 @@ public class DataProvider {
 
     }
 
+    public static boolean checkDuplicateSubCategory(String categoryName) {
+
+        ArrayList<String> categoryNames = new ArrayList<>();
+
+        for (SubCategory subCategory : subCategories) {
+            categoryNames.add(subCategory.getCategoryName());
+        }
+
+        if (categoryNames.contains(categoryName)) {
+            return true;
+        }
+
+        return false;
+
+    }
+
     public static void addTransaction(Transaction transaction) {
         transactions.add(transaction);
         for (SubCategory subCategory : subCategories) {
@@ -218,7 +234,8 @@ public class DataProvider {
     }
 
     public static void addSubCategory(SubCategory subCategory) {
-
+        subCategories.add(subCategory);
+        sortData();
     }
 
     public static void updateSubCategory(SubCategory subCategory) {

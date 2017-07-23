@@ -10,10 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
+import com.paleskyline.navicash.services.DataProvider;
+import com.paleskyline.navicash.services.InputService;
 
 public class SubCategoryFragment extends Fragment {
 
@@ -55,8 +58,18 @@ public class SubCategoryFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: add validation check
-                fragmentListener.createSubCategory(null);
+
+                if (!isValidGeneralCategory()) {
+                    return;
+                }
+
+                if (!isValidSubCategory()) {
+                    return;
+                }
+
+                String formattedName = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
+                SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
+                fragmentListener.createSubCategory(subCategory);
             }
         });
 
@@ -93,4 +106,30 @@ public class SubCategoryFragment extends Fragment {
         void createSubCategory(SubCategory subCategory);
         void selectGeneralCategory();
     }
+
+    private boolean isValidGeneralCategory() {
+        if (generalCategory != null) {
+            return true;
+        }
+        Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private boolean isValidSubCategory() {
+
+        if (subCategoryName.getText().toString().length() == 0) {
+            Toast.makeText(getActivity(), "Enter a sub category name", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String category = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
+
+        if (DataProvider.checkDuplicateSubCategory(category)) {
+            Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
 }

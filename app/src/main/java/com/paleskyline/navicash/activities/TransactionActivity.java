@@ -194,7 +194,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         "@drawable/" + icon, null, getApplicationContext().getPackageName());
                 categoryIcon.setImageResource(iconId);
                 categoryField.setText(subCategory.getCategoryName());
-
             }
         }
     }
