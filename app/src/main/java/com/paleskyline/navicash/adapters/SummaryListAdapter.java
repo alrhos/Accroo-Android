@@ -66,7 +66,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView category, amount;
         private LinearLayout details;
         private ImageView icon;
-
         private boolean expanded = false;
 
         public GeneralCategoryViewHolder(View view) {

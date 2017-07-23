@@ -9,12 +9,12 @@ import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 
-public class SelectCategoryActivity extends AppCompatActivity implements CategoryOverviewFragment.FragmentInteractionListener {
+public class SelectSubCategoryActivity extends AppCompatActivity implements CategoryOverviewFragment.FragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_category);
+        setContentView(R.layout.activity_select_sub_category);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);

@@ -19,6 +19,7 @@ public class SummaryFragment extends Fragment {
 
     private SummaryListAdapter summaryListAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
     private FragmentInteractionListener fragmentListener;
     private LinearLayoutManager layoutManager;
 
@@ -42,12 +43,12 @@ public class SummaryFragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_summary, container, false);
 
-        RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.summary_recycler_view);
-        rv.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
-        rv.setHasFixedSize(true);
-        rv.setAdapter(summaryListAdapter);
+        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.summary_recycler_view);
+        recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(summaryListAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE);

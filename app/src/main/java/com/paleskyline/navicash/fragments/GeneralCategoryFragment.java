@@ -93,6 +93,8 @@ public class GeneralCategoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                // TODO: add check to make sure icon has been selected
+
                 if (!isValidCategoryName()) {
                     return;
                 }

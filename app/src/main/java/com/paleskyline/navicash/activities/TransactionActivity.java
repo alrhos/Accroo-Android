@@ -120,7 +120,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         categoryField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SelectCategoryActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
                 startActivityForResult(intent, SUB_CATEGORY_REQUEST);
             }
         });

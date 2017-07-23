@@ -20,11 +20,12 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.GeneralCategoryFragment;
 import com.paleskyline.navicash.fragments.SubCategoryFragment;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.services.ApiService;
 
 
 public class CategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
-        GeneralCategoryFragment.FragmentInteractionListener {
+        GeneralCategoryFragment.FragmentInteractionListener, SubCategoryFragment.FragmentInteractionListener {
 
     private GeneralCategoryFragment generalCategoryFragment;
     private SubCategoryFragment subCategoryFragment;
@@ -33,6 +34,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     private ApiService apiService;
 
     private final int ICON_REQUEST = 1;
+    private final int GENERAL_CATEGORY_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +118,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
                 String iconName = data.getStringExtra("iconName");
                 generalCategoryFragment.updateIcon(iconID, iconName);
             }
+        } else if (requestCode == GENERAL_CATEGORY_REQUEST) {
+            GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
+            subCategoryFragment.setGeneralCategory(generalCategory);
         }
     }
 
@@ -156,13 +161,24 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void createGeneralCategory(GeneralCategory generalCategory) {
-        apiService.createGeneralCategory(generalCategory);
         progressDialog.show();
+        apiService.createGeneralCategory(generalCategory);
     }
 
     @Override
     public void updateGeneralCategory(GeneralCategory generalCategory) {
         progressDialog.show();
+    }
+
+    @Override
+    public void createSubCategory(SubCategory subCategory) {
+
+    }
+
+    @Override
+    public void selectGeneralCategory() {
+        Intent intent = new Intent(getApplicationContext(), SelectGeneralCategoryActivity.class);
+        startActivityForResult(intent, GENERAL_CATEGORY_REQUEST);
     }
 
 }

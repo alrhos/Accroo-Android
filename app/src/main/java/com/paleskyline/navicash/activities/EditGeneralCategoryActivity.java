@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.GeneralCategoryFragment;
@@ -70,11 +71,18 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
+        if (requestType == ApiService.UPDATE_GENERAL_CATEGORY) {
+            Toast.makeText(getApplicationContext(), "Category updated", Toast.LENGTH_LONG).show();
+        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY) {
+            Toast.makeText(getApplicationContext(), "Category deleted", Toast.LENGTH_LONG).show();
+        }
+        finish();
     }
 
     @Override
     public void onUnsuccessfulRequest(String errorMessage) {
         progressDialog.dismiss();
+        System.out.println(errorMessage);
     }
 
     @Override
