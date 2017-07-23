@@ -69,6 +69,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
         if (existingTransaction != null) {
 
+            // TODO: change tool bar header to edit transaction
+
             editing = true;
 
             amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));

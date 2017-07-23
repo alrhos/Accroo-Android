@@ -119,8 +119,10 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
                 generalCategoryFragment.updateIcon(iconID, iconName);
             }
         } else if (requestCode == GENERAL_CATEGORY_REQUEST) {
-            GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
-            subCategoryFragment.setGeneralCategory(generalCategory);
+            if (resultCode == RESULT_OK) {
+                GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
+                subCategoryFragment.setGeneralCategory(generalCategory);
+            }
         }
     }
 

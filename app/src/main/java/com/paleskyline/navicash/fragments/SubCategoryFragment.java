@@ -111,11 +111,13 @@ public class SubCategoryFragment extends Fragment {
         if (generalCategory != null) {
             return true;
         }
-        Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Select a general category", Toast.LENGTH_SHORT).show();
         return false;
     }
 
     private boolean isValidSubCategory() {
+
+        System.out.println(subCategoryName.getText().toString().length());
 
         if (subCategoryName.getText().toString().length() == 0) {
             Toast.makeText(getActivity(), "Enter a sub category name", Toast.LENGTH_SHORT).show();

@@ -55,11 +55,14 @@
             android:name=".activities.SelectIconActivity"
             android:label="Select Icon"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.EditGeneralCategoryActivity" />
+        <activity
+            android:name=".activities.EditGeneralCategoryActivity"
+            android:label="Edit General Category"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SelectGeneralCategoryActivity"
             android:label="Select General Category"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
