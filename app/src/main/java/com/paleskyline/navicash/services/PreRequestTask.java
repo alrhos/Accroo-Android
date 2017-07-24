@@ -251,6 +251,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
+                case ApiService.DELETE_SUB_CATEGORY:
+
+                    subCategory = (SubCategory) dataObject;
+
+                    uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
+
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
+                            uri, null, null, context));
+
+                    return true;
+
             }
 
         } catch (Exception e) {

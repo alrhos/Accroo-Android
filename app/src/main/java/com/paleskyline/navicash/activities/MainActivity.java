@@ -313,18 +313,32 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
     }
 
+    private void hideRefreshing() {
+        if (summaryFragment != null) {
+            summaryFragment.setRefreshStatus(false);
+        }
+        if (transactionsFragment != null) {
+            transactionsFragment.setRefreshStatus(false);
+        }
+        if (categoryOverviewFragment != null) {
+            categoryOverviewFragment.setRefreshStatus(false);
+        }
+    }
+
     @Override
     public void onUnsuccessfulRequest(String errorMessage) {
-        System.out.println(errorMessage);
+        hideRefreshing();
     }
 
     @Override
     public void onUnsuccessfulDecryption() {
+        hideRefreshing();
         System.out.println("DECRYPTION ERROR");
     }
 
     @Override
     public void onGeneralError() {
+        hideRefreshing();
         System.out.println("GENERAL ERROR");
     }
 

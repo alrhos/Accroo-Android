@@ -27,7 +27,7 @@ public class SubCategory implements Securable, Relationship, Parcelable {
 
     public SubCategory(String categoryName, int generalCategoryID) {
         this.categoryName = categoryName;
-       // this.generalCategoryID = generalCategoryID;
+        this.generalCategoryID = generalCategoryID;
     }
 
     public SubCategory(String categoryName, String generalCategoryName) {
@@ -66,14 +66,6 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     public String getGeneralCategoryName() {
         return generalCategoryName;
     }
-//
-//    public String getCategoryIcon() {
-//        return categoryIcon;
-//    }
-//
-//    public void setCategoryIcon(String categoryIcon) {
-//        this.categoryIcon = categoryIcon;
-//    }
 
     public ArrayList<Transaction> getTransactions() {
         return transactions;

@@ -209,11 +209,13 @@ public class DataProvider {
         while (generalCategoryIterator.hasNext()) {
             int generalCategoryID = generalCategoryIterator.next().getId();
             if (generalCategoryID == categoryToDelete.getId()) {
+
                 Iterator<SubCategory> subCategoryIterator = subCategories.listIterator();
 
                 while (subCategoryIterator.hasNext()) {
                     SubCategory subCategory = subCategoryIterator.next();
                     if (((GeneralCategory) subCategory.getParent()).getId() == generalCategoryID) {
+
                         Iterator<Transaction> transactionIterator = transactions.listIterator();
 
                         while (transactionIterator.hasNext()) {
@@ -249,8 +251,26 @@ public class DataProvider {
         sortData();
     }
 
-    public static void deleteSubCategory(SubCategory subCategory) {
+    public static void deleteSubCategory(SubCategory categoryToDelete) {
 
+        Iterator<SubCategory> subCategoryIterator = subCategories.listIterator();
+
+        while (subCategoryIterator.hasNext()) {
+            int subCategoryID = subCategoryIterator.next().getId();
+            if (subCategoryID == categoryToDelete.getId()) {
+                Iterator<Transaction> transactionIterator = transactions.listIterator();
+                while (transactionIterator.hasNext()) {
+                    Transaction transaction = transactionIterator.next();
+                    if (((SubCategory) transaction.getParent()).getId() == subCategoryID) {
+                        transactionIterator.remove();
+                    }
+                }
+                subCategoryIterator.remove();
+                break;
+            }
+        }
+
+        sortData();
     }
 
 }

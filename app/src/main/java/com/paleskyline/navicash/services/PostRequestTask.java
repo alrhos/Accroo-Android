@@ -188,6 +188,12 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     DataProvider.updateSubCategory(subCategory);
                     return true;
 
+                case ApiService.DELETE_SUB_CATEGORY:
+
+                    subCategory = (SubCategory) dataObject;
+                    DataProvider.deleteSubCategory(subCategory);
+                    return true;
+
             }
         } catch (Exception e) {
             e.printStackTrace();

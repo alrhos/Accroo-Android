@@ -20,6 +20,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     private SubCategoryFragment subCategoryFragment;
     private ApiService apiService;
     private ProgressDialog progressDialog;
+    private SubCategory subCategory;
 
     private final int GENERAL_CATEGORY_REQUEST = 0;
 
@@ -30,6 +31,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
         apiService = new ApiService(this, getApplicationContext());
         subCategoryFragment = (SubCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_sub_category);
         subCategoryFragment.toggleEditing();
+        subCategory = getIntent().getParcelableExtra("subCategory");
         progressDialog = new ProgressDialog(EditSubCategoryActivity.this);
         progressDialog.setMessage("Saving...");
     }
@@ -72,7 +74,9 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     }
 
     private void deleteSubCategory() {
-
+        // TODO: add confirm dialog
+        progressDialog.show();
+        apiService.deleteSubCategory(subCategory);
     }
 
     @Override

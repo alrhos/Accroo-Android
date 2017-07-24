@@ -119,7 +119,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         // TODO: add confirm dialog
         progressDialog.show();
         apiService.deleteGeneralCategory(generalCategory);
-        System.out.println("DELETE CATEGORY");
     }
 
 }

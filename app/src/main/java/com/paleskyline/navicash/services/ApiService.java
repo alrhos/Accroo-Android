@@ -276,7 +276,22 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void deleteSubCategory(SubCategory subCategory) {
+    public void deleteSubCategory(final SubCategory subCategory) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(DELETE_SUB_CATEGORY, ApiService.this, context, subCategory).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(errorMessage);
+            }
+        };
+
+        new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
 
     }
 
