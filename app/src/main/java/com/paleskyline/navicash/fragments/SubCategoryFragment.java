@@ -26,7 +26,10 @@ public class SubCategoryFragment extends Fragment {
     private TextView generalCategoryName;
     private EditText subCategoryName;
     private Button submit;
+    private SubCategory existingCategory;
     private GeneralCategory generalCategory;
+    private boolean editing = false;
+    private boolean editable = true;
 
     public SubCategoryFragment() {}
 
@@ -45,8 +48,24 @@ public class SubCategoryFragment extends Fragment {
 
         icon = (ImageView) fragmentView.findViewById(R.id.general_category_icon);
         subCategoryName = (EditText) fragmentView.findViewById(R.id.sub_category_name);
-
         generalCategoryName = (TextView) fragmentView.findViewById(R.id.general_category_name);
+        submit = (Button) fragmentView.findViewById(R.id.submit_sub_category_button);
+
+        existingCategory = getActivity().getIntent().getParcelableExtra("subCategory");
+
+        if (existingCategory != null) {
+
+            editing = true;
+            generalCategory = ((GeneralCategory) existingCategory.getParent());
+            int iconID = getActivity().getResources().getIdentifier("@drawable/" +
+                            generalCategory.getIconFile(), null, getActivity().getPackageName());
+            icon.setImageResource(iconID);
+            generalCategoryName.setText(generalCategory.getCategoryName());
+            subCategoryName.setText(existingCategory.getCategoryName());
+            submit.setText("SAVE");
+
+        }
+
         generalCategoryName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +73,7 @@ public class SubCategoryFragment extends Fragment {
             }
         });
 
-        submit = (Button) fragmentView.findViewById(R.id.submit_sub_category_button);
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,8 +87,16 @@ public class SubCategoryFragment extends Fragment {
                 }
 
                 String formattedName = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
-                SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
-                fragmentListener.createSubCategory(subCategory);
+
+                if (editing) {
+                    existingCategory.setCategoryName(formattedName);
+                    existingCategory.setGeneralCategoryID(generalCategory.getId());
+                    fragmentListener.updateSubCategory(existingCategory);
+                } else {
+                    SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
+                    fragmentListener.createSubCategory(subCategory);
+                }
+
             }
         });
 
@@ -104,6 +131,7 @@ public class SubCategoryFragment extends Fragment {
 
     public interface FragmentInteractionListener {
         void createSubCategory(SubCategory subCategory);
+        void updateSubCategory(SubCategory subCategory);
         void selectGeneralCategory();
     }
 
@@ -117,8 +145,6 @@ public class SubCategoryFragment extends Fragment {
 
     private boolean isValidSubCategory() {
 
-        System.out.println(subCategoryName.getText().toString().length());
-
         if (subCategoryName.getText().toString().length() == 0) {
             Toast.makeText(getActivity(), "Enter a sub category name", Toast.LENGTH_SHORT).show();
             return false;
@@ -126,12 +152,22 @@ public class SubCategoryFragment extends Fragment {
 
         String category = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
 
-        if (DataProvider.checkDuplicateSubCategory(category)) {
-            Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
-            return false;
+        if (!editing) {
+            if (DataProvider.checkDuplicateSubCategory(category)) {
+                Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
 
         return true;
+    }
+
+    public void toggleEditing() {
+        editable = !editable;
+        icon.setEnabled(editable);
+        subCategoryName.setEnabled(editable);
+        generalCategoryName.setEnabled(editable);
+        submit.setEnabled(editable);
     }
 
 }

@@ -183,7 +183,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
                 ", dateString='" + dateString + '\'' +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
-                ", parent=" + parent +
                 ", decimalFormat=" + decimalFormat +
                 ", dateFormat=" + dateFormat +
                 '}';

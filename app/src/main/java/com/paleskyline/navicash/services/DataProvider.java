@@ -239,7 +239,14 @@ public class DataProvider {
     }
 
     public static void updateSubCategory(SubCategory subCategory) {
+        for (int i = 0; i < subCategories.size(); i++) {
+            if (subCategories.get(i).getId() == subCategory.getId()) {
+                subCategories.set(i, subCategory);
+                break;
+            }
+        }
 
+        sortData();
     }
 
     public static void deleteSubCategory(SubCategory subCategory) {

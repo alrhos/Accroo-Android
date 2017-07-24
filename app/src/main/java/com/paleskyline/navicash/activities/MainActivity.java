@@ -292,7 +292,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public void onSubCategoryClicked(SubCategory subCategory) {
-        System.out.println(subCategory.toString());
+        Intent intent = new Intent(getApplicationContext(), EditSubCategoryActivity.class);
+        intent.putExtra("subCategory", subCategory);
+        startActivity(intent);
     }
 
     @Override

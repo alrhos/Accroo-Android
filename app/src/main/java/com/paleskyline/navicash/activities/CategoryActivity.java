@@ -171,13 +171,18 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void updateGeneralCategory(GeneralCategory generalCategory) {
-        progressDialog.show();
+        // Not invoked
     }
 
     @Override
     public void createSubCategory(SubCategory subCategory) {
         progressDialog.show();
         apiService.createSubCategory(subCategory);
+    }
+
+    @Override
+    public void updateSubCategory(SubCategory subCategory) {
+        // Not invoked
     }
 
     @Override

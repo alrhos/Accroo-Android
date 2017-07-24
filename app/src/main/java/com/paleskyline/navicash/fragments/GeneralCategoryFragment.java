@@ -37,7 +37,6 @@ public class GeneralCategoryFragment extends Fragment {
 
     public GeneralCategoryFragment() {}
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +87,7 @@ public class GeneralCategoryFragment extends Fragment {
             }
         });
 
-        submit = (Button) fragmentView.findViewById(R.id.submit_general_category_button);
+       // submit = (Button) fragmentView.findViewById(R.id.submit_general_category_button);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

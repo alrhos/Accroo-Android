@@ -27,7 +27,7 @@ public class SubCategory implements Securable, Relationship, Parcelable {
 
     public SubCategory(String categoryName, int generalCategoryID) {
         this.categoryName = categoryName;
-        this.generalCategoryID = generalCategoryID;
+       // this.generalCategoryID = generalCategoryID;
     }
 
     public SubCategory(String categoryName, String generalCategoryName) {
@@ -57,6 +57,10 @@ public class SubCategory implements Securable, Relationship, Parcelable {
 
     public String getCategoryName() {
         return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getGeneralCategoryName() {
@@ -112,10 +116,11 @@ public class SubCategory implements Securable, Relationship, Parcelable {
 
         JSONObject json = new JSONObject();
 
-        if (generalCategoryID != 0) {
-            json.put("generalCategoryID", generalCategoryID);
+        if (id != 0) {
+            json.put("id", id);
         }
 
+        json.put("generalCategoryID", generalCategoryID);
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
 
@@ -139,8 +144,6 @@ public class SubCategory implements Securable, Relationship, Parcelable {
                 ", generalCategoryID=" + generalCategoryID +
                 ", categoryName='" + categoryName + '\'' +
                 ", generalCategoryName='" + generalCategoryName + '\'' +
-                ", parent=" + parent +
-                ", transactions=" + transactions +
                 ", df=" + df +
                 '}';
     }

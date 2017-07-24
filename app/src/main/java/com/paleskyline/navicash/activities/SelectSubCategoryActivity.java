@@ -3,6 +3,7 @@ package com.paleskyline.navicash.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
@@ -30,7 +31,7 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
 
     @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
-        // Not needed
+        Toast.makeText(getApplicationContext(), "Select a sub category", Toast.LENGTH_SHORT).show();
     }
 
     @Override
