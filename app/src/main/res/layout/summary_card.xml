@@ -29,7 +29,7 @@
                     android:id="@+id/income_label"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Income"/>
+                    android:text="@string/income"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     android:id="@+id/expenses_label"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Expenses"/>
+                    android:text="@string/expenses"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                     android:id="@+id/savings_label"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Savings"/>
+                    android:text="@string/savings"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -91,32 +91,6 @@
             </LinearLayout>
 
         </RelativeLayout>
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:orientation="vertical"-->
-                <!--android:id="@+id/summary_card_amounts">-->
-
-                <!--<include-->
-                    <!--layout="@layout/summary_record_item"-->
-                    <!--android:id="@+id/summary_card_income">-->
-                <!--</include>-->
-
-                <!--<include-->
-                    <!--layout="@layout/summary_record_item"-->
-                    <!--android:id="@+id/summary_card_expenses">-->
-                <!--</include>-->
-
-                <!--<include-->
-                    <!--layout="@layout/summary_record_item"-->
-                    <!--android:id="@+id/summary_card_savings">-->
-                <!--</include>-->
-
-
-
-            <!--</LinearLayout>-->
-
 
     </android.support.v7.widget.CardView>
 

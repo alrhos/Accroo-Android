@@ -25,6 +25,10 @@
     <string name="title_activity_select_category">SelectCategoryActivity</string>
     <string name="title_activity_select_general_category">SelectGeneralCategoryActivity</string>
 
+    <string name="income">Income</string>
+    <string name="expenses">Expenses</string>
+    <string name="savings">Savings</string>
+
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">A connection could not be established</string>
     <string name="general_error">An error occurred</string>
