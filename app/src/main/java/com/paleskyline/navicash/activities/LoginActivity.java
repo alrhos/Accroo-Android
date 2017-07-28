@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
     }
 
     @Override
-    public void onUnsuccessfulRequest(String errorMessage) {
+    public void onUnsuccessfulRequest(int errorCode) {
 
     }
 

@@ -2,6 +2,7 @@ package com.paleskyline.navicash.services;
 
 import android.content.Context;
 
+import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
@@ -31,6 +32,17 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_SUB_CATEGORY = 11;
     public final static int DELETE_SUB_CATEGORY = 12;
 
+    public final static int GENERAL_ERROR = 100;
+    public final static int TIMEOUT_ERROR = 101;
+    public final static int CONNECTION_ERROR = 102;
+    public final static int DECRYPTION_ERROR = 103;
+    public final static int INVALID_INPUT = 104;
+    public final static int EMAIL_IN_USE = 105;
+    public final static int NO_TRANSACTION = 106;
+    public final static int NO_CATEGORY = 107;
+    public final static int DATABASE_ERROR = 108;
+    public final static int UNAUTHORIZED = 109;
+
     private RequestOutcome requestOutcome;
     private Context context;
     private RequestCoordinator coordinator;
@@ -42,7 +54,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public interface RequestOutcome {
-        void onUnsuccessfulRequest(String errorMessage);
+        void onUnsuccessfulRequest(int errorCode);
         void onUnsuccessfulDecryption();
         void onGeneralError();
         void onSuccess(int requestType);
@@ -59,7 +71,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -78,7 +90,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -97,7 +109,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -116,7 +128,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -135,7 +147,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -154,7 +166,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -173,7 +185,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -192,7 +204,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -211,7 +223,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -230,7 +242,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -249,7 +261,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -268,7 +280,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -287,7 +299,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
             }
         };
 
@@ -313,6 +325,42 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             // TODO: review error handling
             requestOutcome.onGeneralError();
             System.out.println("ERROR STARTING COORDINATOR");
+        }
+    }
+
+    private int mapErrorMessage(String errorMessage) {
+        switch (errorMessage) {
+            case RestRequest.UNAUTHORIZED:
+                clearSavedCredentials();
+                return UNAUTHORIZED;
+            case RestRequest.CONNECTION_ERROR:
+                return CONNECTION_ERROR;
+            case RestRequest.TIMEOUT_ERROR:
+                return TIMEOUT_ERROR;
+            case RestRequest.GENERAL_ERROR:
+                return GENERAL_ERROR;
+            case RestRequest.DATABASE_UNAVAILABLE:
+                return GENERAL_ERROR;
+            case RestRequest.INVALID_INPUT:
+                return INVALID_INPUT;
+            case RestRequest.EMAIL_IN_USE:
+                return EMAIL_IN_USE;
+            case RestRequest.NO_CATEGORY:
+                return NO_CATEGORY;
+            case RestRequest.NO_TRANSACTION:
+                return NO_TRANSACTION;
+        }
+        return GENERAL_ERROR;
+    }
+
+    private void clearSavedCredentials() {
+        try {
+            AuthManager.getInstance(context).deleteEntry(AuthManager.USERNAME_KEY);
+            AuthManager.getInstance(context).deleteEntry(AuthManager.ENCRYPTION_KEY);
+            AuthManager.getInstance(context).deleteEntry(AuthManager.REFRESH_TOKEN_KEY);
+            AuthManager.getInstance(context).deleteEntry(AuthManager.ACCESS_TOKEN_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

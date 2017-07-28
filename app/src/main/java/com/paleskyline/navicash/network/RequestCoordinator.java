@@ -115,7 +115,7 @@ public abstract class RequestCoordinator {
             }
         } else {
             System.out.println("ABORTING!!");
-            abort(RestRequest.GENERAL_ERROR);
+            abort(errorMessage);
         }
     }
 

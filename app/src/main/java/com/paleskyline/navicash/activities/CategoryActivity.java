@@ -141,10 +141,10 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     }
 
     @Override
-    public void onUnsuccessfulRequest(String errorMessage) {
+    public void onUnsuccessfulRequest(int errorCode) {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), errorMessage,
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), errorMessage,
+//                Toast.LENGTH_SHORT).show();
     }
 
     @Override

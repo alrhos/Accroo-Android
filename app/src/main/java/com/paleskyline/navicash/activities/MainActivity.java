@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.fragments.CategoryOverviewFragment;
@@ -326,8 +327,26 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
-    public void onUnsuccessfulRequest(String errorMessage) {
+    public void onUnsuccessfulRequest(int errorCode) {
         hideRefreshing();
+        if (errorCode == ApiService.UNAUTHORIZED) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

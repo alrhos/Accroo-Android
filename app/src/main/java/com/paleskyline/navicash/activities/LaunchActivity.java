@@ -116,8 +116,14 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     }
 
     @Override
-    public void onUnsuccessfulRequest(String errorMessage) {
-        System.out.println(errorMessage);
+    public void onUnsuccessfulRequest(int errorCode) {
+        if (errorCode == ApiService.UNAUTHORIZED) {
+            initLayout();
+        } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR) {
+            setContentView(R.layout.activity_no_connection);
+        } else if (errorCode == ApiService.GENERAL_ERROR) {
+            // TODO: need to handle this
+        }
     }
 
     @Override

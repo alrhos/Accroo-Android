@@ -3,6 +3,7 @@ package com.paleskyline.navicash.network;
 import android.content.Context;
 import android.util.Base64;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -13,8 +14,6 @@ import com.paleskyline.navicash.crypto.AuthManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.paleskyline.navicash.network.RestRequest.GENERAL_ERROR;
 
 
 /**
@@ -72,7 +71,7 @@ public class RequestBuilder {
                     String accessToken = response.getString("accessToken");
                     coordinator.receiveAccessToken(accessToken);
                 } catch (Exception e) {
-                    coordinator.abort(GENERAL_ERROR);
+                    coordinator.abort(RestRequest.GENERAL_ERROR);
                 }
             }
         };
@@ -80,6 +79,8 @@ public class RequestBuilder {
         Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
 
         String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+
+   //     authValue = "hi";
 
         String url = baseURL + ACCESS_TOKEN;
 
@@ -133,32 +134,33 @@ public class RequestBuilder {
 
     // TODO: see if code can be cleaned up
     private static String parseVolleyException(VolleyError error) {
-        try {
-            NetworkResponse networkResponse = error.networkResponse;
-            String serverMessage = new String(networkResponse.data);
-            if (!serverMessage.isEmpty()) {
-                String jsonString = new String(networkResponse.data);
-                try {
-                    JSONObject serverResponse = new JSONObject(jsonString);
-                    return serverResponse.getString("message");
-                } catch (JSONException e) {
-                    if (error instanceof TimeoutError) {
-                        return RestRequest.TIMEOUT_ERROR;
-                    } else if (error instanceof NoConnectionError) {
-                        return RestRequest.CONNECTION_ERROR;
-                    } else {
-                        return GENERAL_ERROR;
-                    }
-                }
-            } else {
-                return GENERAL_ERROR;
-            }
-        } catch (Exception e) {
+        error.printStackTrace();
+        if (error instanceof AuthFailureError) {
+            return RestRequest.UNAUTHORIZED;
+        } else if (error instanceof TimeoutError) {
+            return RestRequest.TIMEOUT_ERROR;
+        } else if (error instanceof NoConnectionError) {
             return RestRequest.CONNECTION_ERROR;
+        } else {
+            try {
+                NetworkResponse networkResponse = error.networkResponse;
+                String serverMessage = new String(networkResponse.data);
+                if (!serverMessage.isEmpty()) {
+                    String jsonString = new String(networkResponse.data);
+                    try {
+                        JSONObject serverResponse = new JSONObject(jsonString);
+                        return serverResponse.getString("message");
+                    } catch (JSONException e) {
+                        return RestRequest.GENERAL_ERROR;
+                    }
+                } else {
+                    return RestRequest.GENERAL_ERROR;
+                }
+            } catch (Exception e) {
+                return RestRequest.GENERAL_ERROR;
+            }
         }
-
     }
-
 
     private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator,
                                                               final int authType) {
@@ -173,16 +175,6 @@ public class RequestBuilder {
         return errorListener;
     }
 
-//    private static Response.ErrorListener createBasicAuthErrorListener(final RequestCoordinator coordinator) {
-//        Response.ErrorListener errorListener = new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                coordinator.abort(parseVolleyException(error));
-//            }
-//        };
-//        return errorListener;
-//    }
-
     private static Response.Listener<JSONObject> createResponseListener(
             final int index, final RequestCoordinator coordinator) {
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
@@ -193,19 +185,6 @@ public class RequestBuilder {
         };
         return responseListener;
     }
-
-//    private static Response.ErrorListener createAccessTokenErrorListener(final RequestCoordinator coordinator) {
-//        Response.ErrorListener errorListener = new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                System.out.println(error.toString());
-//                int responseCode = getResponseCode(error);
-//                String errorMessage = parseVolleyException(error);
-//                coordinator.receiveError(RestRequest.ACCESS_TOKEN, responseCode, errorMessage);
-//            }
-//        };
-//        return errorListener;
-//    }
 
 }
 

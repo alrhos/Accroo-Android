@@ -24,4 +24,13 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_select_category">SelectCategoryActivity</string>
     <string name="title_activity_select_general_category">SelectGeneralCategoryActivity</string>
+
+    <string name="timeout_error">The connection timed out</string>
+    <string name="connection_error">A connection could not be established</string>
+    <string name="general_error">An error occurred</string>
+    <string name="invalid_input">Invalid input provided</string>
+    <string name="email_in_use">This email address is already being used</string>
+    <string name="no_category">This category does not exist</string>
+    <string name="no_transaction">This transaction does not exist</string>
+
 </resources>

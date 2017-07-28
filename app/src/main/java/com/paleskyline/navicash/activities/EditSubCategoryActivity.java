@@ -101,9 +101,9 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     }
 
     @Override
-    public void onUnsuccessfulRequest(String errorMessage) {
+    public void onUnsuccessfulRequest(int errorCode) {
         progressDialog.dismiss();
-        System.out.println(errorMessage);
+        //System.out.println(errorMessage);
     }
 
     @Override

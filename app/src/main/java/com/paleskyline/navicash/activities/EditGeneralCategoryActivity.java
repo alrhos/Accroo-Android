@@ -80,9 +80,9 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     }
 
     @Override
-    public void onUnsuccessfulRequest(String errorMessage) {
+    public void onUnsuccessfulRequest(int errorCode) {
         progressDialog.dismiss();
-        System.out.println(errorMessage);
+        System.out.println(errorCode);
     }
 
     @Override
