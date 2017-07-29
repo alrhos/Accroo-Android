@@ -45,6 +45,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int NO_CATEGORY = 107;
     public final static int DATABASE_ERROR = 108;
     public final static int UNAUTHORIZED = 109;
+    public final static int INVALID_DATE_RANGE = 110;
 
     private RequestOutcome requestOutcome;
     private Context context;
@@ -82,22 +83,27 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void getDefaultData(@NonNull Date startDate, @NonNull Date endDate) {
+    public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
 
-        dataReceiver = new JSONObject[2];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                new PostRequestTask(GET_DEFAULT_DATA, ApiService.this, context).execute(dataReceiver);
-            }
+        if (startDate.before(endDate)) {
+            dataReceiver = new JSONObject[2];
+            coordinator = new RequestCoordinator(context, this, dataReceiver) {
+                @Override
+                protected void onSuccess() {
+                    new PostRequestTask(GET_DEFAULT_DATA, ApiService.this, context, startDate, endDate).execute(dataReceiver);
+                }
 
-            @Override
-            protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
-            }
-        };
+                @Override
+                protected void onFailure(String errorMessage) {
+                    requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                }
+            };
 
-        new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator).execute();
+            new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator).execute();
+        } else {
+            requestOutcome.onUnsuccessfulRequest(INVALID_DATE_RANGE);
+        }
+
 
     }
 

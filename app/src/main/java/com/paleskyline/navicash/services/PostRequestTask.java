@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by oscar on 4/07/17.
@@ -24,8 +25,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private int requestType;
     private PostRequestOutcome postRequestOutcome;
     private Context context;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private Object dataObject;
     private Transaction transaction;
     private GeneralCategory generalCategory;
@@ -43,6 +44,15 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         this.requestType = requestType;
         this.postRequestOutcome = postRequestOutcome;
         this.context = context;
+    }
+
+    public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome, Context context,
+                           Date startDate, Date endDate) {
+        this.requestType = requestType;
+        this.postRequestOutcome = postRequestOutcome;
+        this.context = context;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome,
@@ -126,8 +136,13 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     for (int k = 0; k < transactionsArray.length(); k++) {
                         JSONObject t = transactionsArray.getJSONObject(k);
                         Transaction transaction = new Transaction(t);
-                        // TODO: extra condition required here to only let in transactions for the specified date transaction
-                        transactions.add(transaction);
+
+                        if (transaction.getDate().after(startDate) && transaction.getDate().before(endDate)) {
+                            transactions.add(transaction);
+                        } else if (transaction.getDate().equals(startDate) || transaction.getDate().equals(endDate)) {
+                            transactions.add(transaction);
+                        }
+
                     }
 
                     DataProvider.loadData(generalCategories, subCategories, transactions);

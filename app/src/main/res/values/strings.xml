@@ -36,5 +36,6 @@
     <string name="email_in_use">This email address is already being used</string>
     <string name="no_category">This category does not exist</string>
     <string name="no_transaction">This transaction does not exist</string>
+    <string name="invalid_date_range">Invalid date range</string>
 
 </resources>

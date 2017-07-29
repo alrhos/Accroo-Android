@@ -272,11 +272,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onStartDateUpdated(Date date) {
         startDate = date;
+        onSummarySwipeRefresh();
     }
 
     @Override
     public void onEndDateUpdated(Date date) {
         endDate = date;
+        onSummarySwipeRefresh();
     }
 
     @Override
@@ -355,6 +357,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                     break;
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
+                    break;
+                case ApiService.INVALID_DATE_RANGE:
+                    message = getResources().getString(R.string.invalid_date_range);
                     break;
                 default:
                     message = getResources().getString(R.string.general_error);
