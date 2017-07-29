@@ -158,6 +158,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         switch (viewType) {
             case SUMMARY:
                 View v1 = inflater.inflate(R.layout.summary_card, viewGroup, false);
+              //  View v1 = inflater.inflate(R.layout.summary_card, viewGroup, false);
                 vh = new SummaryViewHolder(v1);
                 break;
             case GENERAL_CATEGORY:
