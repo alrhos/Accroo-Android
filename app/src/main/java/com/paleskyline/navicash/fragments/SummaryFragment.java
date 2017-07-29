@@ -2,12 +2,15 @@ package com.paleskyline.navicash.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.ChangeBounds;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +75,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         recyclerView.setLayoutManager(layoutManager);
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.summary_swipe_refresh);
-        swipeRefreshLayout.setColorSchemeColors(Color.BLUE);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -172,6 +175,13 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         calendar.setTime(endDate);
         new DatePickerDialog(getActivity(), endDatePicker, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    @Override
+    public void onGeneralCategoryClicked() {
+        Transition transition = new ChangeBounds();
+        transition.setDuration(200);
+        TransitionManager.beginDelayedTransition(recyclerView, transition);
     }
 
 }

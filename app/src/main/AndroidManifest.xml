@@ -41,7 +41,8 @@
         <activity
             android:name=".activities.TransactionActivity"
             android:label="Add Transaction"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activities.SelectSubCategoryActivity"
             android:label="Select Sub Category"

@@ -1,8 +1,9 @@
 package com.paleskyline.navicash.fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,6 +79,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         rv.setLayoutManager(llm);
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.category_overview_swipe_refresh);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

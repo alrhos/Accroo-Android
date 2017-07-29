@@ -7,5 +7,6 @@
     <color name="colorAccentLight">#FFCDD2</color>
     <color name="lightGrey">#AAAAAA</color>
     <color name="paleGrey">#F5F5F5</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>

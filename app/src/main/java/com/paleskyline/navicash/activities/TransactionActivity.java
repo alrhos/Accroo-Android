@@ -4,7 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,8 +52,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
 
-    //    Toolbar toolbar = (Toolbar) findViewById(R.id.transaction_toolbar);
-    //    setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.transaction_toolbar);
+//        setSupportActionBar(toolbar);
 
         amountField = (EditText) findViewById(R.id.add_transaction_amount);
         descriptionField = (EditText) findViewById(R.id.add_transaction_description);
@@ -167,6 +170,14 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     public boolean onCreateOptionsMenu(Menu menu) {
         if (editing) {
             getMenuInflater().inflate(R.menu.edit_menu, menu);
+            for (int i = 0; i < menu.size(); i++) {
+                Drawable drawable = menu.getItem(i).getIcon();
+                if (drawable != null) {
+                    drawable.mutate();
+                    // amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
+            }
         }
         return true;
     }

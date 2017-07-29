@@ -1,6 +1,7 @@
 package com.paleskyline.navicash.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,10 +83,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             ImageView iv = (ImageView) v.findViewById(R.id.transaction_icon);
 
-            ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile();
+            GeneralCategory generalCategory = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent());
 
-            String icon = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile();
-            int iconId = context.getResources().getIdentifier("@drawable/" + icon, null, context.getPackageName());
+          //  String icon = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile();
+            int iconId = context.getResources().getIdentifier("@drawable/" + generalCategory.getIconFile(), null, context.getPackageName());
             iv.setImageResource(iconId);
 
             TextView category = (TextView) v.findViewById(R.id.transaction_category_name);
@@ -97,6 +98,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             TextView amount = (TextView) v.findViewById(R.id.transaction_category_amount);
             amount.setText(transaction.getFullyFormattedAmount());
+
+            if (generalCategory.getRootCategory().equals("Income")) {
+                amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            } else {
+                amount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+            }
+
+            //
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override

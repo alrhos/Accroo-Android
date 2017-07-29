@@ -3,6 +3,7 @@ package com.paleskyline.navicash.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,6 +82,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         rv.setLayoutManager(llm);
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.transaction_swipe_refresh);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override

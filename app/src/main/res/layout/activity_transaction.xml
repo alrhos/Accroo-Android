@@ -47,6 +47,15 @@
         <!--app:layout_constraintVertical_bias="0.0">-->
     <!--</include>-->
 
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:theme="@style/AppTheme"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent">-->
+
+    <!--</android.support.v7.widget.Toolbar>-->
+
     <EditText
         android:id="@+id/add_transaction_date"
         android:layout_width="0dp"

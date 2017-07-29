@@ -55,6 +55,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public interface AdapterInteractionListener {
         void onStartDateClicked();
         void onEndDateClicked();
+        void onGeneralCategoryClicked();
     }
 
     class SummaryViewHolder extends RecyclerView.ViewHolder {
@@ -172,6 +173,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         } else {
                             vh2.details.setVisibility(View.VISIBLE);
                         }
+                        adapterInteractionListener.onGeneralCategoryClicked();
                         vh2.expanded = !vh2.expanded;
                     }
                 });
@@ -189,7 +191,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         switch (viewType) {
             case SUMMARY:
                 View v1 = inflater.inflate(R.layout.summary_card, viewGroup, false);
-              //  View v1 = inflater.inflate(R.layout.summary_card, viewGroup, false);
                 vh = new SummaryViewHolder(v1);
                 break;
             case GENERAL_CATEGORY:
