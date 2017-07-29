@@ -270,6 +270,16 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
+    public void onStartDateUpdated(Date date) {
+        startDate = date;
+    }
+
+    @Override
+    public void onEndDateUpdated(Date date) {
+        endDate = date;
+    }
+
+    @Override
     public void onTransactionSwipeRefresh() {
         transactionsFragment.setRefreshStatus(true);
         apiService.getDefaultData(startDate, endDate);

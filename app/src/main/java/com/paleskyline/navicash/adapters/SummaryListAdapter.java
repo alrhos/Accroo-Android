@@ -35,29 +35,39 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private LayoutInflater inflater;
 
+    private SummaryViewHolder summaryViewHolder;
+
+    private AdapterInteractionListener adapterInteractionListener;
+
     private Date startDate, endDate;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
-    public SummaryListAdapter(Context context, Date startDate, Date endDate) {
+    public SummaryListAdapter(Context context, Date startDate, Date endDate, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.adapterInteractionListener = adapterInteractionListener;
         inflater = LayoutInflater.from(context);
         dataSource = new ArrayList<>();
         refreshDataSource();
     }
 
+    public interface AdapterInteractionListener {
+        void onStartDateClicked();
+        void onEndDateClicked();
+    }
+
     class SummaryViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView income, expenses, savings, startDateString, endDateString;
+        private TextView income, expenses, savings, startDateView, endDateView;
 
         public SummaryViewHolder(View view) {
             super(view);
             income = (TextView) view.findViewById(R.id.income_amount);
             expenses = (TextView) view.findViewById(R.id.expenses_amount);
             savings = (TextView) view.findViewById(R.id.savings_amount);
-            startDateString = (TextView) view.findViewById(R.id.start_date);
-            endDateString = (TextView) view.findViewById(R.id.end_date);
+            startDateView = (TextView) view.findViewById(R.id.start_date);
+            endDateView = (TextView) view.findViewById(R.id.end_date);
         }
 
     }
@@ -100,13 +110,31 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         switch (holder.getItemViewType()) {
 
             case SUMMARY:
-                SummaryViewHolder vh1 = (SummaryViewHolder) holder;
+
+                summaryViewHolder = (SummaryViewHolder) holder;
                 Summary summary = (Summary) dataSource.get(position);
-                vh1.income.setText(summary.getTotal(Summary.INCOME));
-                vh1.expenses.setText(summary.getTotal(Summary.EXPENSES));
-                vh1.savings.setText(summary.getSavings());
-                vh1.startDateString.setText(dateFormat.format(startDate.getTime()));
-                vh1.endDateString.setText(dateFormat.format(endDate.getTime()));
+
+                summaryViewHolder.income.setText(summary.getTotal(Summary.INCOME));
+                summaryViewHolder.expenses.setText(summary.getTotal(Summary.EXPENSES));
+                summaryViewHolder.savings.setText(summary.getSavings());
+                summaryViewHolder.startDateView.setText(dateFormat.format(startDate.getTime()));
+                summaryViewHolder.endDateView.setText(dateFormat.format(endDate.getTime()));
+
+                summaryViewHolder.startDateView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        adapterInteractionListener.onStartDateClicked();
+                    }
+                });
+
+                summaryViewHolder.endDateView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        adapterInteractionListener.onEndDateClicked();
+                    }
+                });
+
+
                 break;
 
             case GENERAL_CATEGORY:
@@ -186,6 +214,16 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         notifyDataSetChanged();
 
+    }
+
+    public void updateStartDate(Date date) {
+        startDate = date;
+        summaryViewHolder.startDateView.setText(dateFormat.format(date.getTime()));
+    }
+
+    public void updateEndDate(Date date) {
+        endDate = date;
+        summaryViewHolder.endDateView.setText(dateFormat.format(date.getTime()));
     }
 
 }
