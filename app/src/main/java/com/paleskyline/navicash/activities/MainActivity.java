@@ -27,6 +27,8 @@ import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.services.ApiService;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
         TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,
      ApiService.RequestOutcome {
@@ -37,12 +39,17 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     private ApiService apiService;
 
+    private Date startDate, endDate;
+
     private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startDate = new Date(getIntent().getLongExtra("startDate", -1));
+        endDate = new Date (getIntent().getLongExtra("endDate", -1));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
 
@@ -231,11 +238,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
             switch (position) {
                 case 0:
-                    //return new SummaryFragment();
-                    return summaryFragment = new SummaryFragment();
+                    return summaryFragment = SummaryFragment.newInstance(startDate.getTime(), endDate.getTime());
                 case 1:
-                   // return new Fragment();
-                    //return new TransactionsFragment();
                     return transactionsFragment = new TransactionsFragment();
                 case 2:
                     return categoryOverviewFragment = new CategoryOverviewFragment();
@@ -262,13 +266,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
-        apiService.getDefaultData("");
+        apiService.getDefaultData(startDate, endDate);
     }
 
     @Override
     public void onTransactionSwipeRefresh() {
         transactionsFragment.setRefreshStatus(true);
-        apiService.getDefaultData("");
+        apiService.getDefaultData(startDate, endDate);
     }
 
     @Override
@@ -281,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onCategorySwipeRefresh() {
         categoryOverviewFragment.setRefreshStatus(true);
-        apiService.getDefaultData("");
+        apiService.getDefaultData(startDate, endDate);
     }
 
     @Override

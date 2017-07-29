@@ -11,7 +11,13 @@ import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.services.ApiService;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class LaunchActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+
+    private Calendar calendar;
+    private Date startDate, endDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     private void autoLogin() {
         try {
+
             // Check if refresh token exists
 
             AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.REFRESH_TOKEN_KEY);
@@ -32,13 +39,23 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
             CryptoManager.getInstance().initMasterKey(getApplicationContext());
 
-            //loadUserData();
-
             ApiService apiService = new ApiService(this, getApplicationContext());
-            apiService.getDefaultData("");
 
-            //AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.USERNAME_KEY);
-            //AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.PASSWORD_KEY);
+            calendar = Calendar.getInstance();
+
+            endDate = calendar.getTime();
+
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            startDate = calendar.getTime();
+
+            System.out.println(startDate.getTime());
+
+            apiService.getDefaultData(startDate, endDate);
 
         } catch (Exception e) {
             // TODO: exception handling
@@ -46,48 +63,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             initLayout();
         }
     }
-
-//    private void loadUserData() {
-//        final JSONObject[] dataReceiver = new JSONObject[2];
-//        RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-//                this, dataReceiver) {
-//
-//            @Override
-//            protected void onSuccess() {
-//                new DecryptData(LaunchActivity.this).execute(dataReceiver);
-//            }
-//
-//            @Override
-//            protected void onFailure(String errorMessage) {
-//                System.out.println(errorMessage);
-//                if (errorMessage.equals(RestRequest.CONNECTION_ERROR) || errorMessage.equals(RestRequest.TIMEOUT_ERROR)) {
-//                    // Redirect to different layout showing connection error
-//                    setContentView(R.layout.activity_no_connection);
-//                    Toast.makeText(getApplicationContext(), "Connection error", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    initLayout();
-//                }
-//            }
-//        };
-//
-//        // TODO: get system date, lookup id in local db and add to transaction request.
-//
-//        try {
-//
-//            coordinator.addRequests(
-//                    RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.GET, RequestBuilder.CATEGORY,
-//                            null, null, getApplicationContext()),
-//
-//                    RequestBuilder.accessTokenAuth(1, coordinator, Request.Method.GET, RequestBuilder.TRANSACTION,
-//                            "?transactionid=1", null, getApplicationContext()));
-//
-//            coordinator.start();
-//
-//        } catch (Exception e) {
-//            // TODO: exception handling
-//            e.printStackTrace();
-//        }
-//    }
 
     private void initLayout() {
         setContentView(R.layout.activity_launch);
@@ -112,6 +87,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     @Override
     public void onSuccess(int requestType) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("startDate", startDate.getTime());
+        intent.putExtra("endDate", endDate.getTime());
         startActivity(intent);
     }
 

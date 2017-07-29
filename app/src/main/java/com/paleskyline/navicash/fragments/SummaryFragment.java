@@ -15,6 +15,8 @@ import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.SummaryListAdapter;
 import com.paleskyline.navicash.other.DividerItemDecoration;
 
+import java.util.Date;
+
 public class SummaryFragment extends Fragment {
 
     private SummaryListAdapter summaryListAdapter;
@@ -22,14 +24,29 @@ public class SummaryFragment extends Fragment {
     private RecyclerView recyclerView;
     private FragmentInteractionListener fragmentListener;
     private LinearLayoutManager layoutManager;
+    private static final String START_DATE = "START_DATE";
+    private static final String END_DATE = "END_DATE";
+    private Date startDate, endDate;
 
     public SummaryFragment() {}
+
+    public static SummaryFragment newInstance(long startDate, long endDate) {
+        SummaryFragment fragment = new SummaryFragment();
+        Bundle args = new Bundle();
+        args.putLong(START_DATE, startDate);
+        args.putLong(END_DATE, endDate);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        summaryListAdapter = new SummaryListAdapter(getActivity());
-        System.out.println("SUMMARY FRAG - onCreate");
+        if (getArguments() != null) {
+            this.startDate = new Date(getArguments().getLong(START_DATE));
+            this.endDate = new Date(getArguments().getLong(END_DATE));
+        }
+        summaryListAdapter = new SummaryListAdapter(getActivity(), startDate, endDate);
     }
 
     @Override
@@ -38,8 +55,6 @@ public class SummaryFragment extends Fragment {
 
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
-
-        System.out.println("ON CREATE SUMMARY VIEW");
 
         View fragmentView = inflater.inflate(R.layout.fragment_summary, container, false);
 

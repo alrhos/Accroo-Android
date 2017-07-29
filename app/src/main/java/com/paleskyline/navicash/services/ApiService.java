@@ -1,6 +1,7 @@
 package com.paleskyline.navicash.services;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.model.GeneralCategory;
@@ -11,6 +12,8 @@ import com.paleskyline.navicash.network.RequestCoordinator;
 import com.paleskyline.navicash.network.RestRequest;
 
 import org.json.JSONObject;
+
+import java.util.Date;
 
 /**
  * Created by oscar on 4/07/17.
@@ -79,7 +82,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void getDefaultData(String startDate) {
+    public void getDefaultData(@NonNull Date startDate, @NonNull Date endDate) {
 
         dataReceiver = new JSONObject[2];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {

@@ -15,7 +15,10 @@ import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Summary;
 import com.paleskyline.navicash.services.DataProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by oscar on 27/05/17.
@@ -32,31 +35,29 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private LayoutInflater inflater;
 
-    public SummaryListAdapter(Context context) {
+    private Date startDate, endDate;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
+    public SummaryListAdapter(Context context, Date startDate, Date endDate) {
         this.context = context;
+        this.startDate = startDate;
+        this.endDate = endDate;
         inflater = LayoutInflater.from(context);
         dataSource = new ArrayList<>();
-      //  items = new ArrayList<>();
         refreshDataSource();
-   //     items.add(new Summary());
-//        for (GeneralCategory gc : DataProvider.getInstance().getGeneralCategories()) {
-//            items.add(gc);
-////            for (SubCategory s : gc.getSubCategories()) {
-////                System.out.println(s.toString());
-////            }
-//        }
-
     }
 
     class SummaryViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView income, expenses, savings;
+        private TextView income, expenses, savings, startDateString, endDateString;
 
         public SummaryViewHolder(View view) {
             super(view);
             income = (TextView) view.findViewById(R.id.income_amount);
             expenses = (TextView) view.findViewById(R.id.expenses_amount);
             savings = (TextView) view.findViewById(R.id.savings_amount);
+            startDateString = (TextView) view.findViewById(R.id.start_date);
+            endDateString = (TextView) view.findViewById(R.id.end_date);
         }
 
     }
@@ -104,6 +105,8 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 vh1.income.setText(summary.getTotal(Summary.INCOME));
                 vh1.expenses.setText(summary.getTotal(Summary.EXPENSES));
                 vh1.savings.setText(summary.getSavings());
+                vh1.startDateString.setText(dateFormat.format(startDate.getTime()));
+                vh1.endDateString.setText(dateFormat.format(endDate.getTime()));
                 break;
 
             case GENERAL_CATEGORY:
