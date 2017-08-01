@@ -129,15 +129,16 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        if (requestType == ApiService.CREATE_GENERAL_CATEGORY) {
-            Toast.makeText(getApplicationContext(), "Category created", Toast.LENGTH_SHORT).show();
-        } else if (requestType == ApiService.UPDATE_GENERAL_CATEGORY) {
-
-        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY) {
-
-        } else if (requestType == ApiService.CREATE_SUB_CATEGORY) {
-            Toast.makeText(getApplicationContext(), "Category created", Toast.LENGTH_SHORT).show();
+        if (requestType == ApiService.CREATE_GENERAL_CATEGORY || requestType == ApiService.CREATE_SUB_CATEGORY) {
+            Toast.makeText(getApplicationContext(), R.string.category_added, Toast.LENGTH_SHORT).show();
         }
+//        } else if (requestType == ApiService.UPDATE_GENERAL_CATEGORY || requestType == ApiService.UPDATE_SUB_CATEGORY) {
+//            Toast.makeText(getApplicationContext(), R.string.category_updated, Toast.LENGTH_SHORT).show();
+//            finish();
+//        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY || requestType == ApiService.DELETE_SUB_CATEGORY) {
+//            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
     }
 
     @Override

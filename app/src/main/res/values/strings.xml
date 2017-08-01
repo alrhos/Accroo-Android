@@ -27,7 +27,10 @@
 
     <string name="income">Income</string>
     <string name="expenses">Expenses</string>
+    <string name="expense">Expense</string>
     <string name="savings">Savings</string>
+    <string name="category_name">Category name</string>
+    <string name="general_category">General category</string>
 
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">A connection could not be established</string>
@@ -37,5 +40,14 @@
     <string name="no_category">This category does not exist</string>
     <string name="no_transaction">This transaction does not exist</string>
     <string name="invalid_date_range">Invalid date range</string>
+
+    <string name="transaction_added">Transaction added</string>
+    <string name="transaction_updated">Transaction updated</string>
+    <string name="transaction_deleted">Transaction deleted</string>
+    <string name="category_added">Category added</string>
+    <string name="category_updated">Category updated</string>
+    <string name="category_deleted">Category deleted</string>
+
+    <string name="submit">SUBMIT</string>
 
 </resources>

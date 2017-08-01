@@ -11,19 +11,18 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         app:srcCompat="@drawable/sub_category_arrow"
-        android:layout_marginLeft="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
+        android:tint="@color/colorPrimaryLight"/>
 
     <TextView
-        android:id="@+id/category_overivew_subcategory"
-        android:layout_width="320dp"
+        android:id="@+id/category_overview_subcategory"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintLeft_toRightOf="@+id/imageView6"
         app:layout_constraintTop_toTopOf="parent" />
 

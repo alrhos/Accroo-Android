@@ -72,7 +72,7 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         for (final SubCategory sc : gc.getSubCategories()) {
             View v = inflater.inflate(R.layout.category_overview_subcategory_item, null, false);
 
-            TextView subCategory = (TextView) v.findViewById(R.id.category_overivew_subcategory);
+            TextView subCategory = (TextView) v.findViewById(R.id.category_overview_subcategory);
             subCategory.setText(sc.getCategoryName());
 
             v.setOnClickListener(new View.OnClickListener() {
