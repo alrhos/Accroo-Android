@@ -40,6 +40,9 @@
     <string name="no_category">This category does not exist</string>
     <string name="no_transaction">This transaction does not exist</string>
     <string name="invalid_date_range">Invalid date range</string>
+    <string name="select_general_category">Select a general category</string>
+    <string name="enter_sub_category">Enter a sub category name</string>
+    <string name="category_exists">Category already exists</string>
 
     <string name="transaction_added">Transaction added</string>
     <string name="transaction_updated">Transaction updated</string>
@@ -49,5 +52,12 @@
     <string name="category_deleted">Category deleted</string>
 
     <string name="submit">SUBMIT</string>
+    <string name="login">LOGIN</string>
+    <string name="log_in">Log in</string>
+    <string name="register">REGISTER</string>
+    <string name="username">Username</string>
+    <string name="login_password">Login password</string>
+    <string name="data_password">Data password</string>
+    <string name="unlock">UNLOCK</string>
 
 </resources>

@@ -16,7 +16,6 @@ public class KeyDecryptionActivity extends AppCompatActivity {
 
     private EditText keyPassword;
     private Button unlockButton;
-  //  private KeyPackage keyPackage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +23,6 @@ public class KeyDecryptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_key_decryption);
         keyPassword = (EditText) findViewById(R.id.key_password);
         unlockButton = (Button) findViewById(R.id.unlock_button);
-
-//        System.out.println("------------KEY DECRYPTION ACTIVITY-------------");
-//        keyPackage = getIntent().getParcelableExtra("keyPackage");
-//        System.out.println(keyPackage.toString());
 
         addListeners();
     }

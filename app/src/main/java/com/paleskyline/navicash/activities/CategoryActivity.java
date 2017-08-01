@@ -129,7 +129,10 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        if (requestType == ApiService.CREATE_GENERAL_CATEGORY || requestType == ApiService.CREATE_SUB_CATEGORY) {
+        if (requestType == ApiService.CREATE_GENERAL_CATEGORY) {
+            Toast.makeText(getApplicationContext(), R.string.category_added, Toast.LENGTH_SHORT).show();
+        } else if (requestType == ApiService.CREATE_SUB_CATEGORY) {
+            subCategoryFragment.clearFields();
             Toast.makeText(getApplicationContext(), R.string.category_added, Toast.LENGTH_SHORT).show();
         }
 //        } else if (requestType == ApiService.UPDATE_GENERAL_CATEGORY || requestType == ApiService.UPDATE_SUB_CATEGORY) {

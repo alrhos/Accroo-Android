@@ -141,14 +141,14 @@ public class SubCategoryFragment extends Fragment {
         if (generalCategory != null) {
             return true;
         }
-        Toast.makeText(getActivity(), "Select a general category", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.select_general_category, Toast.LENGTH_SHORT).show();
         return false;
     }
 
     private boolean isValidSubCategory() {
 
         if (subCategoryName.getText().toString().length() == 0) {
-            Toast.makeText(getActivity(), "Enter a sub category name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.enter_sub_category, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -156,7 +156,7 @@ public class SubCategoryFragment extends Fragment {
 
         if (!editing) {
             if (DataProvider.checkDuplicateSubCategory(category)) {
-                Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.category_exists, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -170,6 +170,10 @@ public class SubCategoryFragment extends Fragment {
         subCategoryName.setEnabled(editable);
         generalCategoryName.setEnabled(editable);
         submit.setEnabled(editable);
+    }
+
+    public void clearFields() {
+        subCategoryName.setText("");
     }
 
 }

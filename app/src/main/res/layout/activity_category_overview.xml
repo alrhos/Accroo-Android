@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/category_overview_item_old" />
+    <include layout="@layout/category_overview_item" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
