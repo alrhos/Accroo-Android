@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -201,9 +201,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        if (id == R.id.settings) {
+            // TODO: implement settings activity
+            return true;
+        } else if (id == R.id.sign_out) {
+            // TODO: delete refresh token from server and wipe saved data
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

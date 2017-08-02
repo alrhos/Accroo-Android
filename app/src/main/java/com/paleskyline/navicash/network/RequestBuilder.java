@@ -44,7 +44,7 @@ public class RequestBuilder {
     }
 
     public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
-                                        int method, String endpoint, String username,
+                                        String endpoint, String username,
                                         char[] password, Context context) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
@@ -57,8 +57,8 @@ public class RequestBuilder {
 
         // TODO: password security
 
-        return new RestRequest(method, url, null, responseListener, errorListener,
-                RestRequest.BASIC, authValue, context);
+        return new RestRequest(Request.Method.POST, url, null, responseListener,
+                errorListener, RestRequest.BASIC, authValue, context);
     }
 
     protected static RestRequest getAccessToken(final RequestCoordinator coordinator,
@@ -80,12 +80,27 @@ public class RequestBuilder {
 
         String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
 
-   //     authValue = "hi";
-
         String url = baseURL + ACCESS_TOKEN;
 
-        return new RestRequest(Request.Method.GET, url, null, responseListener,
+        return new RestRequest(Request.Method.POST, url, null, responseListener,
                 errorListener, RestRequest.TOKEN, authValue, context);
+    }
+
+
+    public static RestRequest deleteRefreshToken(final RequestCoordinator coordinator, int index,
+                                                 Context context) throws Exception {
+
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
+
+        String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+
+        String url = baseURL + REFRESH_TOKEN;
+
+        return new RestRequest(Request.Method.DELETE, url, null, responseListener,
+                errorListener, RestRequest.TOKEN, authValue, context);
+
     }
 
 

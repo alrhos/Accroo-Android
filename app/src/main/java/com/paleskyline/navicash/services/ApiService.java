@@ -34,6 +34,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_SUB_CATEGORY = 10;
     public final static int UPDATE_SUB_CATEGORY = 11;
     public final static int DELETE_SUB_CATEGORY = 12;
+    public final static int DELETE_REFRESH_TOKEN = 13;
 
     public final static int GENERAL_ERROR = 100;
     public final static int TIMEOUT_ERROR = 101;
@@ -313,6 +314,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
+
+    }
+
+
+    public void deleteRefreshToken() {
 
     }
 

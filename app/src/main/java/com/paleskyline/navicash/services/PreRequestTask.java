@@ -94,7 +94,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_REFRESH_TOKEN:
 
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.GET,
+                    requests.add(RequestBuilder.basicAuth(0, coordinator,
                             RequestBuilder.REFRESH_TOKEN, username, password, context));
 
                     return true;
@@ -259,6 +259,12 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
+
+                    return true;
+
+                case ApiService.DELETE_REFRESH_TOKEN:
+
+                    requests.add(RequestBuilder.deleteRefreshToken(coordinator, context));
 
                     return true;
 
