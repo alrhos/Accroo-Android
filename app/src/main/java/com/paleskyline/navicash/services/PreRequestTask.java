@@ -264,7 +264,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.DELETE_REFRESH_TOKEN:
 
-                    requests.add(RequestBuilder.deleteRefreshToken(coordinator, context));
+                    requests.add(RequestBuilder.deleteRefreshToken(0, coordinator, context));
 
                     return true;
 

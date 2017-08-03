@@ -90,23 +90,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
         apiService = new ApiService(this, getApplicationContext());
 
-        System.out.println("ON CREATE CALLED");
-
-//        RootCategory[] data = DataProvider.getInstance().getRootCategories();
-//
-//        for (int i = 0; i < data.length; i++) {
-//            for (GeneralCategory gc : data[i].getGeneralCategories()) {
-//                System.out.println(gc.toString());
-//                System.out.println(gc.getFormattedTransactionTotal());
-//                for (SubCategory sc : gc.getSubCategories()) {
-//                    System.out.println(sc.toString());
-//                    for (Transaction t : sc.getTransactions()) {
-//                        System.out.println(t.toString());
-//                    }
-//                }
-//            }
-//        }
-
     }
 
     @Override
@@ -132,63 +115,24 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
         if (categoryOverviewFragment != null) {
             categoryOverviewFragment.refreshAdapter();
-            System.out.println("CATEGORY OVERVIEW ADAPTER REFRESHED");
         }
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+        Intent intent = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getBaseContext().getPackageName());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
 
-//        System.out.println("MAIN ACTIVITY - on restore instance state");
-////        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-////        startActivity(intent);
-//        Parcelable[] savedData = savedInstanceState.getParcelableArray("workingData");
-//        RootCategory[] data = new RootCategory[savedData.length];
-//        System.arraycopy(savedData, 0, data, 0, savedData.length);
-//        DataProvider.getInstance().setRootCategories(data);
-//
-//        for (int i = 0; i < data.length; i++) {
-//            for (GeneralCategory gc : data[i].getGeneralCategories()) {
-//                System.out.println(gc.toString());
-//                System.out.println(gc.getFormattedTransactionTotal());
-//                for (SubCategory sc : gc.getSubCategories()) {
-//                    System.out.println(sc.toString());
-//                    for (Transaction t : sc.getTransactions()) {
-//                        System.out.println(t.toString());
-//                    }
-//                }
-//            }
-//        }
-//
-//        summaryFragment = (SummaryFragment) getSupportFragmentManager().getFragment(savedInstanceState, "summaryFragment");
-//        transactionsFragment = (TransactionsFragment) getSupportFragmentManager().getFragment(savedInstanceState, "transactionFragment");
-//        categoryOverviewFragment = (CategoryOverviewFragment) getSupportFragmentManager().getFragment(savedInstanceState, "categoryFragment");
-
-        //summaryFragment.refreshAdapter();
-
-
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        savedInstanceState.putParcelableArray("workingData", DataProvider.getInstance().getRootCategories());
-//        if (summaryFragment != null) {
-//            getSupportFragmentManager().putFragment(savedInstanceState, "summaryFragment", summaryFragment);
-//        }
-//        if (transactionsFragment != null) {
-//            getSupportFragmentManager().putFragment(savedInstanceState, "transactionFragment", transactionsFragment);
-//        }
-//        if (categoryOverviewFragment != null) {
-//            getSupportFragmentManager().putFragment(savedInstanceState, "categoryFragment", categoryOverviewFragment);
-//        }
-        super.onSaveInstanceState(savedInstanceState);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        super.onSaveInstanceState(savedInstanceState);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -205,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             // TODO: implement settings activity
             return true;
         } else if (id == R.id.sign_out) {
-            // TODO: delete refresh token from server and wipe saved data
-            return true;
+            apiService.deleteRefreshToken();
+            //return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -318,17 +262,25 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public void onSuccess(int requestType) {
-        if (summaryFragment != null) {
-            summaryFragment.refreshAdapter();
-            summaryFragment.setRefreshStatus(false);
-        }
-        if (transactionsFragment != null) {
-            transactionsFragment.refreshAdapter();
-            transactionsFragment.setRefreshStatus(false);
-        }
-        if (categoryOverviewFragment != null) {
-            categoryOverviewFragment.refreshAdapter();
-            categoryOverviewFragment.setRefreshStatus(false);
+        if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+            Intent intent = getBaseContext().getPackageManager()
+                    .getLaunchIntentForPackage(getBaseContext().getPackageName());
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        } else {
+            if (summaryFragment != null) {
+                summaryFragment.refreshAdapter();
+                summaryFragment.setRefreshStatus(false);
+            }
+            if (transactionsFragment != null) {
+                transactionsFragment.refreshAdapter();
+                transactionsFragment.setRefreshStatus(false);
+            }
+            if (categoryOverviewFragment != null) {
+                categoryOverviewFragment.refreshAdapter();
+                categoryOverviewFragment.setRefreshStatus(false);
+            }
         }
     }
 

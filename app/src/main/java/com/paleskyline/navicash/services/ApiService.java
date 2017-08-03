@@ -3,7 +3,6 @@ package com.paleskyline.navicash.services;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
@@ -320,6 +319,21 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public void deleteRefreshToken() {
 
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(DELETE_REFRESH_TOKEN, ApiService.this, context).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+            }
+        };
+
+        new PreRequestTask(DELETE_REFRESH_TOKEN, this, context, coordinator).execute();
+
     }
 
 
@@ -346,7 +360,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     private int mapErrorMessage(String errorMessage) {
         switch (errorMessage) {
             case RestRequest.UNAUTHORIZED:
-                clearSavedCredentials();
+                // TODO: determine how to handle clearing user data (if it's necessary here)
                 return UNAUTHORIZED;
             case RestRequest.CONNECTION_ERROR:
                 return CONNECTION_ERROR;
@@ -366,17 +380,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 return NO_TRANSACTION;
         }
         return GENERAL_ERROR;
-    }
-
-    private void clearSavedCredentials() {
-        try {
-            AuthManager.getInstance(context).deleteEntry(AuthManager.USERNAME_KEY);
-            AuthManager.getInstance(context).deleteEntry(AuthManager.ENCRYPTION_KEY);
-            AuthManager.getInstance(context).deleteEntry(AuthManager.REFRESH_TOKEN_KEY);
-            AuthManager.getInstance(context).deleteEntry(AuthManager.ACCESS_TOKEN_KEY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

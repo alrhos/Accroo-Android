@@ -209,6 +209,13 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     DataProvider.deleteSubCategory(subCategory);
                     return true;
 
+                case ApiService.DELETE_REFRESH_TOKEN:
+
+                    AuthManager.getInstance(context).clearSavedData();
+                    return true;
+
+                    // TODO: clear local db tables with user specific data
+
             }
         } catch (Exception e) {
             e.printStackTrace();

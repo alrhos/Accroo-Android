@@ -87,7 +87,7 @@ public class RequestBuilder {
     }
 
 
-    public static RestRequest deleteRefreshToken(final RequestCoordinator coordinator, int index,
+    public static RestRequest deleteRefreshToken(int index, RequestCoordinator coordinator,
                                                  Context context) throws Exception {
 
 
