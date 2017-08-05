@@ -29,6 +29,9 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_general_category);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         apiService = new ApiService(this, getApplicationContext());
         generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
         generalCategoryFragment.toggleEditing();
@@ -80,7 +83,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     }
 
     @Override
-    public void onUnsuccessfulRequest(int errorCode) {
+    public void onUnsuccessfulRequest(int requestType, int errorCode) {
         progressDialog.dismiss();
         System.out.println(errorCode);
     }

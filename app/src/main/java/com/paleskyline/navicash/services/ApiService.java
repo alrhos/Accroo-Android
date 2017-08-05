@@ -58,7 +58,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public interface RequestOutcome {
-        void onUnsuccessfulRequest(int errorCode);
+        void onUnsuccessfulRequest(int requestType, int errorCode);
         void onUnsuccessfulDecryption();
         void onGeneralError();
         void onSuccess(int requestType);
@@ -75,7 +75,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(GET_REFRESH_TOKEN, mapErrorMessage(errorMessage));
             }
         };
 
@@ -95,13 +95,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
                 @Override
                 protected void onFailure(String errorMessage) {
-                    requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                    requestOutcome.onUnsuccessfulRequest(GET_DEFAULT_DATA, mapErrorMessage(errorMessage));
                 }
             };
 
             new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator).execute();
         } else {
-            requestOutcome.onUnsuccessfulRequest(INVALID_DATE_RANGE);
+            requestOutcome.onUnsuccessfulRequest(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
 
 
@@ -118,7 +118,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(CREATE_USER, mapErrorMessage(errorMessage));
             }
         };
 
@@ -137,7 +137,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(CREATE_DEFAULT_CATEGORIES, mapErrorMessage(errorMessage));
             }
         };
 
@@ -156,7 +156,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(CREATE_TRANSACTION, mapErrorMessage(errorMessage));
             }
         };
 
@@ -175,7 +175,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(UPDATE_TRANSACTION, mapErrorMessage(errorMessage));
             }
         };
 
@@ -194,7 +194,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(DELETE_TRANSACTION, mapErrorMessage(errorMessage));
             }
         };
 
@@ -213,7 +213,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(CREATE_GENERAL_CATEGORY, mapErrorMessage(errorMessage));
             }
         };
 
@@ -232,7 +232,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(UPDATE_GENERAL_CATEGORY, mapErrorMessage(errorMessage));
             }
         };
 
@@ -251,7 +251,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(DELETE_GENERAL_CATEGORY, mapErrorMessage(errorMessage));
             }
         };
 
@@ -270,7 +270,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(CREATE_SUB_CATEGORY, mapErrorMessage(errorMessage));
             }
         };
 
@@ -289,7 +289,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(UPDATE_SUB_CATEGORY, mapErrorMessage(errorMessage));
             }
         };
 
@@ -308,7 +308,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(DELETE_SUB_CATEGORY, mapErrorMessage(errorMessage));
             }
         };
 
@@ -328,7 +328,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
-                requestOutcome.onUnsuccessfulRequest(mapErrorMessage(errorMessage));
+                requestOutcome.onUnsuccessfulRequest(DELETE_REFRESH_TOKEN, mapErrorMessage(errorMessage));
             }
         };
 

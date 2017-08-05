@@ -2,18 +2,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.paleskyline.navicash.activities.ScrollingActivity">
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:icon="@drawable/settings"
-        android:title="@string/action_settings"
+        android:title="@string/settings"
         app:showAsAction="always" >
 
         <menu>
 
             <item
-                android:id="@+id/settings"
-                android:title="@string/action_settings"
+                android:id="@+id/change_email"
+                android:title="@string/change_email"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/change_login_password"
+                android:title="@string/change_login_password"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/change_data_password"
+                android:title="@string/change_data_password"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/delete_account"
+                android:title="@string/delete_account"
                 app:showAsAction="ifRoom" />
 
             <item

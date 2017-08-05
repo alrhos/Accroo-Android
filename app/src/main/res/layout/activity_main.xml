@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/main_app_bar_layout"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="6dp">
+        app:elevation="4dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_toolbar"

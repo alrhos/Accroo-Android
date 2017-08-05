@@ -65,7 +65,7 @@ public class AuthManager {
             String encryptedValue = keyStoreManager.encrypt(value);
             editor = sharedPreferences.edit();
             editor.putString(key, encryptedValue);
-            editor.commit();
+            editor.apply();
         } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
                 KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
                 IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
@@ -95,8 +95,9 @@ public class AuthManager {
     }
 
     public void clearSavedData() {
+        editor = sharedPreferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
 

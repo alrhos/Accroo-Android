@@ -59,7 +59,8 @@
         <activity
             android:name=".activities.EditGeneralCategoryActivity"
             android:label="Edit General Category"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activities.SelectGeneralCategoryActivity"
             android:label="Select General Category"

@@ -53,8 +53,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
             startDate = calendar.getTime();
 
-            System.out.println(startDate.getTime());
-
             apiService.getDefaultData(startDate, endDate);
 
         } catch (Exception e) {
@@ -93,7 +91,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     }
 
     @Override
-    public void onUnsuccessfulRequest(int errorCode) {
+    public void onUnsuccessfulRequest(int requestType, int errorCode) {
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR) {
@@ -112,17 +110,5 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     public void onGeneralError() {
         System.out.println("GENERAL ERROR");
     }
-
-//    @Override
-//    public void onSuccessfulDecryption() {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
-//    }
-//
-//    @Override
-//    public void onUnsuccessfulDecryption() {
-//        // TODO - exception handling
-//        System.out.println("AN ERROR OCCURRED DURING STARTUP DECRYPTION");
-//    }
 
 }

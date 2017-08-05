@@ -269,7 +269,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     @Override
-    public void onUnsuccessfulRequest(int errorCode) {
+    public void onUnsuccessfulRequest(int requestType, int errorCode) {
         progressDialog.dismiss();
 //        Toast.makeText(getApplicationContext(), errorMessage,
 //                Toast.LENGTH_SHORT).show();

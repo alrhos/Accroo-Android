@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         endDate = new Date (getIntent().getLongExtra("endDate", -1));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-
         setSupportActionBar(toolbar);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
@@ -121,6 +120,10 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        relaunch();
+    }
+
+    private void relaunch() {
         Intent intent = getBaseContext().getPackageManager()
                 .getLaunchIntentForPackage(getBaseContext().getPackageName());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -145,12 +148,20 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.settings) {
-            // TODO: implement settings activity
-            return true;
+        switch (item.getItemId()) {
+            // TODO: convert to switch
+        }
+
+        if (id == R.id.change_email) {
+
+        } else if (id == R.id.change_login_password) {
+
+        } else if (id == R.id.change_data_password) {
+
+        } else if (id == R.id.delete_account) {
+
         } else if (id == R.id.sign_out) {
             apiService.deleteRefreshToken();
-            //return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -166,7 +177,10 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
      class PagerAdapter extends FragmentPagerAdapter {
 
-        String tabTitles[] = {"Summary", "Transactions", "Categories"};
+        String tabTitles[] = {
+                getResources().getString(R.string.summary),
+                getResources().getString(R.string.transactions),
+                getResources().getString(R.string.categories)};
         Context context;
 
         private PagerAdapter(FragmentManager fm, Context context) {
@@ -263,12 +277,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSuccess(int requestType) {
         if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-            Intent intent = getBaseContext().getPackageManager()
-                    .getLaunchIntentForPackage(getBaseContext().getPackageName());
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        } else {
+          //  relaunch();
+        } else if (requestType == ApiService.GET_DEFAULT_DATA) {
             if (summaryFragment != null) {
                 summaryFragment.refreshAdapter();
                 summaryFragment.setRefreshStatus(false);
@@ -297,9 +307,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
-    public void onUnsuccessfulRequest(int errorCode) {
+    public void onUnsuccessfulRequest(int requestType, int errorCode) {
         hideRefreshing();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+         //   relaunch();
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
             startActivity(intent);
             finish();
