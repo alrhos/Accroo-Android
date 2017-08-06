@@ -45,66 +45,80 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+            super.onCreate(savedInstanceState);
 
-        startDate = new Date(getIntent().getLongExtra("startDate", -1));
-        endDate = new Date (getIntent().getLongExtra("endDate", -1));
+            if (!LaunchActivity.initialized) {
+                relaunch();
+            } else {
+                setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+                startDate = new Date(getIntent().getLongExtra("startDate", -1));
+                endDate = new Date (getIntent().getLongExtra("endDate", -1));
 
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+                Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+                setSupportActionBar(toolbar);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.main_viewpager);
-        viewPager.setAdapter(pagerAdapter);
+                PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
 
-        // Give the TabLayout the ViewPager
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+                ViewPager viewPager = (ViewPager) findViewById(R.id.main_viewpager);
+                viewPager.setAdapter(pagerAdapter);
 
-        // TODO: review if this is even needed
+                // Give the TabLayout the ViewPager
+                final TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
+                tabLayout.setupWithViewPager(viewPager);
 
-        // Iterate over all tabs and set the custom view
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            tab.setCustomView(pagerAdapter.getTabView(i));
-        }
+                // TODO: review if this is even needed
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int selectedTab = tabLayout.getSelectedTabPosition();
-                if (selectedTab == 0 || selectedTab == 1) {
-                    Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
-                    startActivity(intent);
-                } else if (selectedTab == 2) {
-                    Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
-                    startActivity(intent);
+                // Iterate over all tabs and set the custom view
+                for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                    TabLayout.Tab tab = tabLayout.getTabAt(i);
+                    tab.setCustomView(pagerAdapter.getTabView(i));
                 }
+
+                fab = (FloatingActionButton) findViewById(R.id.fab);
+
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int selectedTab = tabLayout.getSelectedTabPosition();
+                        if (selectedTab == 0 || selectedTab == 1) {
+                            Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
+                            startActivity(intent);
+                        } else if (selectedTab == 2) {
+                            Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
+
+                apiService = new ApiService(this, getApplicationContext());
             }
-        });
 
-        apiService = new ApiService(this, getApplicationContext());
+
+
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        System.out.println("ON MAIN ACTIVITY RESUME");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        System.out.println("MAIN ACTIVITY STOPPED");
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        System.out.println("ON MAIN ACTIVITY RESUME");
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        System.out.println("MAIN ACTIVITY STOPPED");
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Override
     public void onRestart() {
+        System.out.println("MAIN - on restart");
         super.onRestart();
         if (summaryFragment != null) {
             summaryFragment.refreshAdapter();
@@ -124,11 +138,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     private void relaunch() {
-        Intent intent = getBaseContext().getPackageManager()
-                .getLaunchIntentForPackage(getBaseContext().getPackageName());
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        finish();
     }
 
 
@@ -277,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSuccess(int requestType) {
         if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-          //  relaunch();
+            relaunch();
         } else if (requestType == ApiService.GET_DEFAULT_DATA) {
             if (summaryFragment != null) {
                 summaryFragment.refreshAdapter();
@@ -307,14 +319,17 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
+    public void onAuthorizationError() {
+        hideRefreshing();
+        relaunch();
+        System.out.println("AUTHORIZATION ERROR");
+    }
+
+    @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {
         hideRefreshing();
         if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-         //   relaunch();
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            startActivity(intent);
-            finish();
+            relaunch();
         } else {
             String message;
             switch (errorCode) {

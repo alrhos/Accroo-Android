@@ -19,9 +19,9 @@ import java.util.Iterator;
 
 public class DataProvider {
 
-    private static ArrayList<GeneralCategory> generalCategories;
-    private static ArrayList<SubCategory> subCategories;
-    private static ArrayList<Transaction> transactions;
+    private static ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
+    private static ArrayList<SubCategory> subCategories = new ArrayList<>();
+    private static ArrayList<Transaction> transactions = new ArrayList<>();
     private static RootCategory[] rootCategories;
     private static KeyPackage keyPackage;
 
@@ -35,6 +35,18 @@ public class DataProvider {
 
         sortData();
 
+    }
+
+    public static boolean isDataLoaded() {
+        if (DataProvider.generalCategories == null) {
+            return false;
+        }
+        if (DataProvider.subCategories == null) {
+            return false;
+        } if (DataProvider.transactions == null) {
+            return false;
+        }
+        return true;
     }
 
     private static void sortData() {

@@ -27,13 +27,19 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_sub_category);
-        apiService = new ApiService(this, getApplicationContext());
-        subCategoryFragment = (SubCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_sub_category);
-        subCategoryFragment.toggleEditing();
-        subCategory = getIntent().getParcelableExtra("subCategory");
-        progressDialog = new ProgressDialog(EditSubCategoryActivity.this);
-        progressDialog.setMessage("Saving...");
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_edit_sub_category);
+            apiService = new ApiService(this, getApplicationContext());
+            subCategoryFragment = (SubCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_sub_category);
+            subCategoryFragment.toggleEditing();
+            subCategory = getIntent().getParcelableExtra("subCategory");
+            progressDialog = new ProgressDialog(EditSubCategoryActivity.this);
+            progressDialog.setMessage("Saving...");
+        }
     }
 
     @Override
@@ -98,6 +104,11 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_LONG).show();
         }
         finish();
+    }
+
+    @Override
+    public void onAuthorizationError() {
+
     }
 
     @Override

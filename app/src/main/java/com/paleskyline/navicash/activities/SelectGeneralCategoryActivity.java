@@ -20,14 +20,20 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_general_category);
-        generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
-        recyclerView = (RecyclerView) findViewById(R.id.general_category_recycler_view);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(generalCategoryAdapter);
-        layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_select_general_category);
+            generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
+            recyclerView = (RecyclerView) findViewById(R.id.general_category_recycler_view);
+            recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(generalCategoryAdapter);
+            layoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+        }
 
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

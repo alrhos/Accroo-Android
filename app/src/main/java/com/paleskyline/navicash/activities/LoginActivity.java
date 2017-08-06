@@ -22,14 +22,20 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_login);
 
-        usernameField = (EditText) findViewById(R.id.username);
-        passwordField = (EditText) findViewById(R.id.password);
-        loginButton = (Button) findViewById(R.id.login_button);
+            usernameField = (EditText) findViewById(R.id.username);
+            passwordField = (EditText) findViewById(R.id.password);
+            loginButton = (Button) findViewById(R.id.login_button);
 
-        apiService = new ApiService(this, getApplicationContext());
-        addListeners();
+            apiService = new ApiService(this, getApplicationContext());
+            addListeners();
+        }
     }
 
 
@@ -54,83 +60,15 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         });
     }
 
-
-
-
-
-//                    final JSONObject[] dataReceiver = new JSONObject[1];
-//                    RequestCoordinator coordinator = new RequestCoordinator(getApplicationContext(),
-//                            this, dataReceiver) {
-//
-//                        @Override
-//                        protected void onSuccess() {
-//                            try {
-//
-//                                String accessToken = dataReceiver[0].getString("accessToken");
-//                                String refreshToken = dataReceiver[0].getString("refreshToken");
-//
-//                                AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
-//                                AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
-//
-//
-//                                JSONObject keyData = dataReceiver[0].getJSONObject("key");
-//
-//                                String key = keyData.getString("dataKey");
-//                                String nonce = keyData.getString("nonce");
-//                                String salt = keyData.getString("salt");
-//                                int memlimit = keyData.getInt("memLimit");
-//                                int opslimit = keyData.getInt("opsLimit");
-//
-//                                KeyPackage keyPackage = new KeyPackage(key, nonce, salt, opslimit, memlimit);
-//
-//                                Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
-//                                intent.putExtra("keyPackage", keyPackage);
-//                                startActivity(intent);
-//
-//                            } catch (Exception e) {
-//                                // TODO: exception handling
-//                                e.printStackTrace();
-//                            }
-//                        }
-//
-//                        @Override
-//                        protected void onFailure(String errorMessage) {
-//                            System.out.println("AN ERROR OCCURRED!");
-//                            System.out.println(errorMessage);
-//                        }
-//                    };
-//
-//                    try {
-//
-//                        // TODO: review password security
-//
-//                        int passwordLength = password.getText().length();
-//                        char[] enteredPassword = new char[passwordLength];
-//                        password.getText().getChars(0, passwordLength, enteredPassword, 0);
-//
-//                        AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.USERNAME_KEY, username.getText().toString());
-//                        AuthManager.getInstance(getApplicationContext()).saveEntry(AuthManager.PASSWORD_KEY, password.getText().toString());
-//
-//                        coordinator.addRequests(RequestBuilder.basicAuth(0, coordinator,
-//                                Request.Method.GET, RequestBuilder.REFRESH_TOKEN, username.getText().toString(),
-//                                enteredPassword, getApplicationContext()));
-//
-//                    //    coordinator.addRequests(RequestBuilder.getKey(coordinator, 0, getApplicationContext()));
-//                        coordinator.start();
-//
-//                    } catch (Exception e) {
-//                        // TODO: Exception handling
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            }
-
-
     @Override
     public void onSuccess(int requestType) {
         Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onAuthorizationError() {
+
     }
 
     @Override

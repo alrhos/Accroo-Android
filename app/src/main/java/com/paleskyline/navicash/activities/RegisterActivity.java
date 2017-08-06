@@ -145,6 +145,11 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
     }
 
     @Override
+    public void onAuthorizationError() {
+
+    }
+
+    @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {
         System.out.println("ERROR");
     }

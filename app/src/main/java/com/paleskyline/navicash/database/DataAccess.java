@@ -60,9 +60,7 @@ public class DataAccess {
             ));
         }
 
-        cursor.close();
-        dbHelper.close();
-        db.close();
+        close();
 
         return categories;
     }
@@ -93,9 +91,7 @@ public class DataAccess {
             ));
         }
 
-        cursor.close();
-        dbHelper.close();
-        db.close();
+        close();
 
         return categories;
     }
@@ -122,11 +118,15 @@ public class DataAccess {
             icons.add(cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Icon.COLUMN_ICON_NAME)));
         }
 
+        close();
+
+        return icons;
+    }
+
+    private void close() {
         cursor.close();
         dbHelper.close();
         db.close();
-
-        return icons;
     }
 
 }

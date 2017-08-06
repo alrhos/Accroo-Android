@@ -28,16 +28,22 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_general_category);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_edit_general_category);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        apiService = new ApiService(this, getApplicationContext());
-        generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
-        generalCategoryFragment.toggleEditing();
-        generalCategory = getIntent().getParcelableExtra("generalCategory");
-        progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
-        progressDialog.setMessage("Saving...");
+            apiService = new ApiService(this, getApplicationContext());
+            generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
+            generalCategoryFragment.toggleEditing();
+            generalCategory = getIntent().getParcelableExtra("generalCategory");
+            progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
+            progressDialog.setMessage("Saving...");
+        }
     }
 
     @Override
@@ -80,6 +86,11 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_LONG).show();
         }
         finish();
+    }
+
+    @Override
+    public void onAuthorizationError() {
+
     }
 
     @Override

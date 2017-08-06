@@ -20,11 +20,17 @@ public class KeyDecryptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_key_decryption);
-        keyPassword = (EditText) findViewById(R.id.key_password);
-        unlockButton = (Button) findViewById(R.id.unlock_button);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_key_decryption);
+            keyPassword = (EditText) findViewById(R.id.key_password);
+            unlockButton = (Button) findViewById(R.id.unlock_button);
 
-        addListeners();
+            addListeners();
+        }
     }
 
 

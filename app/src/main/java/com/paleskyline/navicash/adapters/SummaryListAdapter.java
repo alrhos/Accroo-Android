@@ -27,7 +27,6 @@ import java.util.Locale;
 public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Object> dataSource;
-   // private ArrayList<Object> items;
 
     private final int SUMMARY = 0;
     private final int GENERAL_CATEGORY = 1;

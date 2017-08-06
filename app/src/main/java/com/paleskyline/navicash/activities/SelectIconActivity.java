@@ -17,18 +17,25 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_icon);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_select_icon);
 
-        iconAdapter = new IconAdapter(getApplicationContext(), this);
+            iconAdapter = new IconAdapter(getApplicationContext(), this);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.select_icon_recycler_view);
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.select_icon_recycler_view);
 
 
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(iconAdapter);
+            recyclerView.setHasFixedSize(false);
+            recyclerView.setAdapter(iconAdapter);
 
-        layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
+            layoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+        }
+
 
     }
 

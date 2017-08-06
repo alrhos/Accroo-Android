@@ -50,119 +50,125 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_transaction);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.transaction_toolbar);
 //        setSupportActionBar(toolbar);
 
-        amountField = (EditText) findViewById(R.id.add_transaction_amount);
-        descriptionField = (EditText) findViewById(R.id.add_transaction_description);
-        categoryField = (TextView) findViewById(R.id.add_transaction_category);
-        dateField = (TextView) findViewById(R.id.add_transaction_date);
-        categoryIcon = (ImageView) findViewById(R.id.add_transaction_category_icon);
-        submitButton = (Button) findViewById(R.id.submit_transaction_button);
+            amountField = (EditText) findViewById(R.id.add_transaction_amount);
+            descriptionField = (EditText) findViewById(R.id.add_transaction_description);
+            categoryField = (TextView) findViewById(R.id.add_transaction_category);
+            dateField = (TextView) findViewById(R.id.add_transaction_date);
+            categoryIcon = (ImageView) findViewById(R.id.add_transaction_category_icon);
+            submitButton = (Button) findViewById(R.id.submit_transaction_button);
 
-        progressDialog = new ProgressDialog(TransactionActivity.this);
-        progressDialog.setMessage("Submitting...");
+            progressDialog = new ProgressDialog(TransactionActivity.this);
+            progressDialog.setMessage("Submitting...");
 
-        apiService = new ApiService(this, getApplicationContext());
-        calendar = Calendar.getInstance();
+            apiService = new ApiService(this, getApplicationContext());
+            calendar = Calendar.getInstance();
 
-        existingTransaction = getIntent().getParcelableExtra("transaction");
+            existingTransaction = getIntent().getParcelableExtra("transaction");
 
-        if (existingTransaction != null) {
+            if (existingTransaction != null) {
 
-            // TODO: change tool bar header to edit transaction
+                // TODO: change tool bar header to edit transaction
 
-            editing = true;
+                editing = true;
 
-            amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
-            dateField.setText(existingTransaction.getDateString());
-            descriptionField.setText(existingTransaction.getDescription());
+                amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
+                dateField.setText(existingTransaction.getDateString());
+                descriptionField.setText(existingTransaction.getDescription());
 
-            System.out.println(((SubCategory) existingTransaction.getParent()).getParent().toString());
+                System.out.println(((SubCategory) existingTransaction.getParent()).getParent().toString());
 
-            String icon = ((GeneralCategory) ((SubCategory) existingTransaction.getParent()).getParent()).getIconFile();
-            int iconId = getApplicationContext().getResources().getIdentifier(
-                    "@drawable/" + icon, null,
-                    getApplicationContext().getPackageName());
+                String icon = ((GeneralCategory) ((SubCategory) existingTransaction.getParent()).getParent()).getIconFile();
+                int iconId = getApplicationContext().getResources().getIdentifier(
+                        "@drawable/" + icon, null,
+                        getApplicationContext().getPackageName());
 
-            categoryIcon.setImageResource(iconId);
-            String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
-            categoryField.setText(subCategoryName);
+                categoryIcon.setImageResource(iconId);
+                String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
+                categoryField.setText(subCategoryName);
 
-            this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
+                this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
 
-            submitButton.setText("SAVE");
-            toggleEditing();
+                submitButton.setText("SAVE");
+                toggleEditing();
 
-        } else {
-            updateDate();
-        }
-
-        date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            } else {
                 updateDate();
             }
-        };
 
-        dateField.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(TransactionActivity.this, date, calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-
-                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(dateField.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-
-        });
-
-        categoryField.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
-                startActivityForResult(intent, SUB_CATEGORY_REQUEST);
-            }
-        });
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!isValidAmount()) {
-                    return;
+            date = new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, monthOfYear);
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    updateDate();
                 }
-                if (!isCategorySelected()) {
-                    return;
-                }
-                if (!isDescriptionValid()) {
-                    return;
+            };
+
+            dateField.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new DatePickerDialog(TransactionActivity.this, date, calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+
+                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    in.hideSoftInputFromWindow(dateField.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
 
-                progressDialog.show();
+            });
 
-                String formattedDescription = InputService.capitaliseAndTrim(descriptionField.getText().toString());
-
-                if (editing) {
-                    existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
-                    existingTransaction.setSubCategoryID(selectedSubCategoryID);
-                    existingTransaction.setDateString(dateField.getText().toString());
-                    existingTransaction.setDescription(formattedDescription);
-                    apiService.updateTransaction(existingTransaction);
-                } else {
-                    newTransaction = new Transaction(selectedSubCategoryID,
-                            dateField.getText().toString(),
-                            Double.parseDouble(amountField.getText().toString()),
-                            formattedDescription);
-                    apiService.createTransaction(newTransaction);
+            categoryField.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
+                    startActivityForResult(intent, SUB_CATEGORY_REQUEST);
                 }
-            }
-        });
+            });
+
+            submitButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (!isValidAmount()) {
+                        return;
+                    }
+                    if (!isCategorySelected()) {
+                        return;
+                    }
+                    if (!isDescriptionValid()) {
+                        return;
+                    }
+
+                    progressDialog.show();
+
+                    String formattedDescription = InputService.capitaliseAndTrim(descriptionField.getText().toString());
+
+                    if (editing) {
+                        existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
+                        existingTransaction.setSubCategoryID(selectedSubCategoryID);
+                        existingTransaction.setDateString(dateField.getText().toString());
+                        existingTransaction.setDescription(formattedDescription);
+                        apiService.updateTransaction(existingTransaction);
+                    } else {
+                        newTransaction = new Transaction(selectedSubCategoryID,
+                                dateField.getText().toString(),
+                                Double.parseDouble(amountField.getText().toString()),
+                                formattedDescription);
+                        apiService.createTransaction(newTransaction);
+                    }
+                }
+            });
+        }
 
     }
 
@@ -273,6 +279,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         progressDialog.dismiss();
 //        Toast.makeText(getApplicationContext(), errorMessage,
 //                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAuthorizationError() {
+        progressDialog.dismiss();
+        System.out.println("AUTHORIZATION ERROR");
     }
 
     @Override

@@ -18,10 +18,12 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     private Calendar calendar;
     private Date startDate, endDate;
+    public static boolean initialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialized = true;
         setContentView(R.layout.activity_launch_loading);
         autoLogin();
     }
@@ -68,16 +70,14 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         Button login = (Button) findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
 
         Button register = (Button) findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
     }
@@ -88,6 +88,12 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         intent.putExtra("startDate", startDate.getTime());
         intent.putExtra("endDate", endDate.getTime());
         startActivity(intent);
+    }
+
+    @Override
+    public void onAuthorizationError() {
+        System.out.println("AUTHORIZATION ERROR");
+        initLayout();
     }
 
     @Override

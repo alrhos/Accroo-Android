@@ -23,15 +23,15 @@ import javax.crypto.NoSuchPaddingException;
 
 public class AuthManager {
 
-    private static AuthManager instance = null;
-    private static KeyStoreManager keyStoreManager;
-    private static SharedPreferences sharedPreferences;
+    private static AuthManager              instance = null;
+    private static KeyStoreManager          keyStoreManager;
+    private static SharedPreferences        sharedPreferences;
     private static SharedPreferences.Editor editor;
-    private static final String APP = "com.paleskyline.navicash";
-    public static final String USERNAME_KEY = "usernameKey";
-    public static final String ENCRYPTION_KEY = "encryptionKey";
-    public static final String REFRESH_TOKEN_KEY = "refreshTokenKey";
-    public static final String ACCESS_TOKEN_KEY = "accessTokenKey";
+    private static final String             APP = "com.paleskyline.navicash";
+    public static final String              USERNAME_KEY = "usernameKey";
+    public static final String              ENCRYPTION_KEY = "encryptionKey";
+    public static final String              REFRESH_TOKEN_KEY = "refreshTokenKey";
+    public static final String              ACCESS_TOKEN_KEY = "accessTokenKey";
 
     private AuthManager() throws KeyStoreException, NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException,
@@ -47,10 +47,10 @@ public class AuthManager {
             } catch (KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException |
                     InvalidAlgorithmParameterException | IOException | CertificateException |
                     NoSuchPaddingException e) {
-
+                // TODO: review error logging
                 e.printStackTrace();
                 // TODO: review exception that is thrown here
-                throw new Exception("KeyStore exception!");
+                throw new Exception("The KeyStore could not be initialized");
             }
         }
         sharedPreferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE);
@@ -69,10 +69,10 @@ public class AuthManager {
         } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
                 KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
                 IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
-
+            // TODO: review error logging
             e.printStackTrace();
             // TODO: review exception that is thrown here
-            throw new Exception("Encryption exception!");
+            throw new Exception("The value could not be encrypted");
         }
     }
 
@@ -80,17 +80,17 @@ public class AuthManager {
         try {
             String encryptedValue = sharedPreferences.getString(key, null);
             if (encryptedValue == null) {
-                throw new Exception("Value doesn't exist!");
+                throw new Exception("No shared preferences value exists for the key " + key);
             }
             return keyStoreManager.decrypt(encryptedValue);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | UnrecoverableEntryException |
                 KeyStoreException | InvalidKeyException | IllegalBlockSizeException |
                 BadPaddingException | UnsupportedEncodingException |
                 InvalidAlgorithmParameterException e) {
-
+            // TODO: review error logging
             e.printStackTrace();
             // TODO: review exception that is thrown here
-            throw new Exception("Decryption exception!");
+            throw new Exception("The value could not be decrypted");
         }
     }
 

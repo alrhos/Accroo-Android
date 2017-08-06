@@ -39,31 +39,37 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category);
+        if (!LaunchActivity.initialized) {
+            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_category);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.category_toolbar);
-        setSupportActionBar(toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.category_toolbar);
+            setSupportActionBar(toolbar);
 
-        progressDialog = new ProgressDialog(CategoryActivity.this);
-        progressDialog.setMessage("Loading...");
+            progressDialog = new ProgressDialog(CategoryActivity.this);
+            progressDialog.setMessage("Loading...");
 
-        apiService = new ApiService(this, getApplicationContext());
+            apiService = new ApiService(this, getApplicationContext());
 
-        CategoryActivity.PagerAdapter pagerAdapter = new CategoryActivity.PagerAdapter(getSupportFragmentManager(), CategoryActivity.this);
+            CategoryActivity.PagerAdapter pagerAdapter = new CategoryActivity.PagerAdapter(getSupportFragmentManager(), CategoryActivity.this);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.category_viewpager);
-        viewPager.setAdapter(pagerAdapter);
+            ViewPager viewPager = (ViewPager) findViewById(R.id.category_viewpager);
+            viewPager.setAdapter(pagerAdapter);
 
-        // Give the TabLayout the ViewPager
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+            // Give the TabLayout the ViewPager
+            final TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tab_layout);
+            tabLayout.setupWithViewPager(viewPager);
 
-        // TODO: review if this is even needed
+            // TODO: review if this is even needed
 
-        // Iterate over all tabs and set the custom view
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            tab.setCustomView(pagerAdapter.getTabView(i));
+            // Iterate over all tabs and set the custom view
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                tab.setCustomView(pagerAdapter.getTabView(i));
+            }
         }
     }
 
@@ -142,6 +148,12 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 //            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
 //            finish();
 //        }
+    }
+
+    @Override
+    public void onAuthorizationError() {
+        progressDialog.dismiss();
+        System.out.println("AUTHORIZATION ERROR");
     }
 
     @Override

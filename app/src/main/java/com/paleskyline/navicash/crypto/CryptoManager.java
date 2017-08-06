@@ -25,9 +25,9 @@ import java.util.Arrays;
 
 public class CryptoManager {
 
-    private Random random;
-    private byte[] masterKey;
-    private SecretBox secretBox;
+    private Random               random;
+    private byte[]               masterKey;
+    private SecretBox            secretBox;
     private static CryptoManager instance = null;
 
     public static CryptoManager getInstance() {
@@ -40,9 +40,8 @@ public class CryptoManager {
     private CryptoManager() {
         NaCl.sodium();
         if (Sodium.sodium_init() == -1) {
-            throw new IllegalStateException("Sodium couldn't be initialised");
+            throw new IllegalStateException("Libsodium could not be initialised");
         }
-        //this.context = context;
         this.random = new Random();
     }
 
@@ -61,10 +60,6 @@ public class CryptoManager {
 
         return passwordBytes;
     }
-
-/*    public String getMasterKey() {
-        return encode(masterKey);
-    }*/
 
     private byte[] generateNonce() {
         int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
