@@ -36,6 +36,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_SUB_CATEGORY = 11;
     public final static int DELETE_SUB_CATEGORY = 12;
     public final static int DELETE_REFRESH_TOKEN = 13;
+    public final static int UPDATE_EMAIL = 14;
 
     public final static int GENERAL_ERROR = 100;
     public final static int TIMEOUT_ERROR = 101;
@@ -103,6 +104,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(String errorMessage) {
+                // TODO: double check that the handleFailedRequest is the right approach here
                 handleFailedRequest(GET_REFRESH_TOKEN, errorMessage);
                 //requestOutcome.onUnsuccessfulRequest(GET_REFRESH_TOKEN, mapErrorMessage(errorMessage));
             }
@@ -378,6 +380,28 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
+    public void updateEmail(final String newEmail, char[] password) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(UPDATE_EMAIL, ApiService.this, context, newEmail).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                System.out.println(errorMessage);
+                requestOutcome.onUnsuccessfulRequest(UPDATE_EMAIL, mapErrorMessage(errorMessage));
+            }
+        };
+
+        new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, password, newEmail).execute();
+
+    }
+
+
+    // TODO: maybe a different api method called 'logout' could be called from an activity which could clear saved data'
 
     private void handleFailedRequest(int requestType, String errorMessage) {
         if (errorMessage.equals(RestRequest.UNAUTHORIZED)) {

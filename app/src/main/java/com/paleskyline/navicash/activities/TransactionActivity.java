@@ -68,7 +68,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             submitButton = (Button) findViewById(R.id.submit_transaction_button);
 
             progressDialog = new ProgressDialog(TransactionActivity.this);
-            progressDialog.setMessage("Submitting...");
+            progressDialog.setMessage(getResources().getString(R.string.submitting));
 
             apiService = new ApiService(this, getApplicationContext());
             calendar = Calendar.getInstance();

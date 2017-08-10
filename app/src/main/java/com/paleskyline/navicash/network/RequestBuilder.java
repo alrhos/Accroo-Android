@@ -26,6 +26,7 @@ public class RequestBuilder {
     public final static String REFRESH_TOKEN = "token/refresh";
     private final static String ACCESS_TOKEN = "token/access";
     public final static String USER = "user";
+    public final static String EMAIL = "user/email";
     public final static String CATEGORY = "category";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String SUB_CATEGORY = "category/sub";
@@ -44,8 +45,8 @@ public class RequestBuilder {
     }
 
     public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
-                                        String endpoint, String username,
-                                        char[] password, Context context) {
+                                        int method, JSONObject json, String endpoint,
+                                        String username, char[] password, Context context) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator, BASIC_AUTH);
@@ -57,7 +58,7 @@ public class RequestBuilder {
 
         // TODO: password security
 
-        return new RestRequest(Request.Method.POST, url, null, responseListener,
+        return new RestRequest(method, url, json, responseListener,
                 errorListener, RestRequest.BASIC, authValue, context);
     }
 
@@ -190,8 +191,7 @@ public class RequestBuilder {
         return errorListener;
     }
 
-    private static Response.Listener<JSONObject> createResponseListener(
-            final int index, final RequestCoordinator coordinator) {
+    private static Response.Listener<JSONObject> createResponseListener(final int index, final RequestCoordinator coordinator) {
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

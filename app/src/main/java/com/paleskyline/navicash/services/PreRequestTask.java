@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
+import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
@@ -45,6 +46,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private String username;
     private char[] password;
+    private String newEmail;
 
     // TODO: also needs to take in model object to encrypt
 
@@ -73,6 +75,19 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+                          RequestCoordinator coordinator, char[] password, String newEmail) {
+
+        this.requestType = requestType;
+        this.preRequestOutcome = preRequestOutcome;
+        this.context = context;
+        this.coordinator = coordinator;
+        this.password = password;
+        this.newEmail = newEmail;
+        requests = new ArrayList<>();
+
+    }
+
+    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
                           RequestCoordinator coordinator, Object dataObject) {
 
         this.requestType = requestType;
@@ -96,8 +111,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_REFRESH_TOKEN:
 
-                    requests.add(RequestBuilder.basicAuth(0, coordinator,
-                            RequestBuilder.REFRESH_TOKEN, username, password, context));
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
+                            null, RequestBuilder.REFRESH_TOKEN, username, password, context));
 
                     // TODO: password security
 
@@ -276,6 +291,18 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     requests.add(RequestBuilder.deleteRefreshToken(0, coordinator, context));
                     return true;
 
+                case ApiService.UPDATE_EMAIL:
+
+                    String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+
+                    JSONObject json = new JSONObject();
+                    json.put("email", newEmail);
+
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
+                            json, RequestBuilder.EMAIL, username, password, context));
+
+                    return true;
+
             }
 
         } catch (Exception e) {
@@ -288,6 +315,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
+        // TODO: could override passwords here
         if (success) {
             preRequestOutcome.onPreRequestTaskSuccess(requests.toArray(new RestRequest[requests.size()]));
         } else {

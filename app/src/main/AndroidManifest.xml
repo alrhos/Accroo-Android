@@ -60,7 +60,7 @@
             android:name=".activities.EditGeneralCategoryActivity"
             android:label="Edit General Category"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SelectGeneralCategoryActivity"
             android:label="Select General Category"
@@ -68,6 +68,10 @@
         <activity
             android:name=".activities.EditSubCategoryActivity"
             android:label="Edit Sub Category"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ChangeEmailActivity"
+            android:label="@string/title_activity_update_email"
             android:screenOrientation="portrait" />
     </application>
 

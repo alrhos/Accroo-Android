@@ -119,19 +119,6 @@ public abstract class RequestCoordinator {
         }
     }
 
-
-//        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-//            retryRequired = true;
-//            RequestDispatcher.getInstance(context).flushRequests(tag);
-//            try {
-//                RequestDispatcher.getInstance(context).addRequest(RequestBuilder.getAccessToken(this, context));
-//            } catch (Exception e) {
-//                abort(RestRequest.GENERAL_ERROR);
-//            }
-//        } else {
-//            abort(errorMessage);
-//        }
-
     protected void abort(String errorMessage) {
         RequestDispatcher.getInstance(context).flushRequests(tag);
         onFailure(errorMessage);

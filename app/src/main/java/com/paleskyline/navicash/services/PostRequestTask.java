@@ -227,6 +227,11 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     // TODO: clear local db tables with user specific data
 
+                case ApiService.UPDATE_EMAIL:
+
+                    AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
+                    return true;
+
             }
         } catch (Exception e) {
             e.printStackTrace();
