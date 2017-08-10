@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
+import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.database.DataAccess;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.model.User;
@@ -97,6 +99,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     requests.add(RequestBuilder.basicAuth(0, coordinator,
                             RequestBuilder.REFRESH_TOKEN, username, password, context));
 
+                    // TODO: password security
+
                     return true;
 
                 case ApiService.GET_DEFAULT_DATA:
@@ -114,8 +118,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     User user = (User) dataObject;
 
+                    KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(user.getDataPassword());
+                    user.setKeyPackage(keyPackage);
+
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.USER, user.toJSON(), context));
+
+                    // TODO: review password security here - probably need to clear user object
 
                     return true;
 

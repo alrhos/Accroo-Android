@@ -9,35 +9,54 @@ import org.json.JSONObject;
 
 public class User {
 
-    private String emailAddress;
-    private char[] password;
+    private String email;
+    private char[] loginPassword;
+    private char[] dataPassword;
     private KeyPackage keyPackage;
 
-    public User(String emailAddress, char[] password, KeyPackage keyPackage) {
-        this.emailAddress = emailAddress;
-        this.password = password;
+    public User(String email, char[] loginPassword, KeyPackage keyPackage) {
+        this.email = email;
+        this.loginPassword = loginPassword;
         this.keyPackage = keyPackage;
     }
 
-    public User(String emailAddress, char[] password) {
-        this.emailAddress = emailAddress;
-        this.password = password;
+    public User(String email, char[] loginPassword, char[] dataPassword) {
+        this.email = email;
+        this.loginPassword = loginPassword;
+        this.dataPassword = dataPassword;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public User(String email, char[] loginPassword) {
+        this.email = email;
+        this.loginPassword = loginPassword;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public char[] getPassword() {
-        return password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setPassword(char[] password) {
-        this.password = password;
+    public char[] getLoginPassword() {
+        return loginPassword;
+    }
+
+    public void setLoginPasswordPassword(char[] password) {
+        this.loginPassword = password;
+    }
+
+    public void setLoginPassword(char[] loginPassword) {
+        this.loginPassword = loginPassword;
+    }
+
+    public char[] getDataPassword() {
+        return dataPassword;
+    }
+
+    public void setDataPassword(char[] dataPassword) {
+        this.dataPassword = dataPassword;
     }
 
     public KeyPackage getKeyPackage() {
@@ -48,11 +67,15 @@ public class User {
         this.keyPackage = keyPackage;
     }
 
+    public void clearPasswords() {
+        // TODO: clear password arrays
+    }
+
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
-            json.put("email", emailAddress);
-            json.put("password", String.copyValueOf(password));
+            json.put("email", email);
+            json.put("password", String.copyValueOf(loginPassword));
             json.put("dataKey", keyPackage.getEncryptedMasterKey());
             json.put("salt", keyPackage.getSalt());
             json.put("nonce", keyPackage.getNonce());
@@ -68,8 +91,8 @@ public class User {
     public JSONObject toJSONLogin() {
         JSONObject json = new JSONObject();
         try {
-            json.put("email", emailAddress);
-            json.put("password", String.copyValueOf(password));
+            json.put("email", email);
+            json.put("password", String.copyValueOf(loginPassword));
         } catch (JSONException e) {
             e.printStackTrace();
         }

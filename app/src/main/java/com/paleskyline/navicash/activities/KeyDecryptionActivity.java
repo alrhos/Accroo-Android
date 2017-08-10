@@ -8,14 +8,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.crypto.CryptoManager;
-import com.paleskyline.navicash.model.KeyPackage;
-import com.paleskyline.navicash.services.DataProvider;
+import com.paleskyline.navicash.services.ApiService;
 
-public class KeyDecryptionActivity extends AppCompatActivity {
+public class KeyDecryptionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText keyPassword;
     private Button unlockButton;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,7 @@ public class KeyDecryptionActivity extends AppCompatActivity {
             setContentView(R.layout.activity_key_decryption);
             keyPassword = (EditText) findViewById(R.id.key_password);
             unlockButton = (Button) findViewById(R.id.unlock_button);
-
+            apiService = new ApiService(this, getApplicationContext());
             addListeners();
         }
     }
@@ -46,13 +45,14 @@ public class KeyDecryptionActivity extends AppCompatActivity {
 
                     try {
 
-                        KeyPackage keyPackage = DataProvider.getKeyPackage();
+//                        KeyPackage keyPackage = DataProvider.getKeyPackage();
+//
+//                        CryptoManager.getInstance().decryptMasterKey(password, keyPackage);
+//                        CryptoManager.getInstance().saveMasterKey(getApplicationContext());
 
-                        CryptoManager.getInstance().decryptMasterKey(password, keyPackage);
-                        CryptoManager.getInstance().saveMasterKey(getApplicationContext());
-
-                        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-                        startActivity(intent);
+                        apiService.initializeKey(password);
+                        // TODO: review password security
+                        startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                     } catch (Exception e) {
                         // TODO: error handling for incorrect password
                         e.printStackTrace();
@@ -66,6 +66,26 @@ public class KeyDecryptionActivity extends AppCompatActivity {
     // TODO: implement logic
     private boolean isValidInput() {
         return true;
+    }
+
+    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+
+    }
+
+    public void onAuthorizationError() {
+
+    }
+
+    public void onUnsuccessfulDecryption() {
+
+    }
+
+    public void onGeneralError() {
+
+    }
+
+    public void onSuccess(int requestType) {
+
     }
 
 

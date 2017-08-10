@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
     }
 
+    // TODO: review if this method is needed now that there's logic in the onCreate method to check for initialization
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -169,8 +171,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         } else if (id == R.id.change_login_password) {
 
         } else if (id == R.id.change_data_password) {
-
-        } else if (id == R.id.delete_account) {
 
         } else if (id == R.id.sign_out) {
             apiService.deleteRefreshToken();

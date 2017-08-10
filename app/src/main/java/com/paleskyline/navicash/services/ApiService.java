@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.paleskyline.navicash.crypto.AuthManager;
+import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
@@ -66,14 +67,38 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         void onSuccess(int requestType);
     }
 
-    public void getRefreshToken(String username, char[] password) {
+    public String getUsername() {
+        try {
+            return AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean userLoggedIn() {
+        try {
+            AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+            CryptoManager.getInstance().initMasterKey(context);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void initializeKey(@NonNull char[] password) throws Exception {
+        // TODO: review password security
+        CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
+        CryptoManager.getInstance().saveMasterKey(context);
+    }
+
+    public void getRefreshToken(@NonNull final String username, @NonNull char[] password) {
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                // TODO: this would be a good time to save the username to shared preferences
-                new PostRequestTask(GET_REFRESH_TOKEN, ApiService.this, context).execute(dataReceiver);
+                new PostRequestTask(GET_REFRESH_TOKEN, ApiService.this, context, username).execute(dataReceiver);
             }
 
             @Override

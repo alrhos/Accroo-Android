@@ -9,8 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.crypto.CryptoManager;
-import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.model.User;
 import com.paleskyline.navicash.services.ApiService;
 
@@ -125,10 +123,16 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
                 dataPwd = new char[dataPasswordLength];
                 dataPassword.getText().getChars(0, dataPasswordLength, dataPwd, 0);
 
-                KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPwd);
-                User user = new User(emailAddress.getText().toString(), loginPwd, keyPackage);
+                // TODO: review this code - CryptoManager should be invoked in ApiService
 
-                apiService.createUser(user);
+                //KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPwd);
+                //User user = new User(emailAddress.getText().toString(), loginPwd, keyPackage);
+
+               // User user = new User(emailAddress.getText().toString(), loginPwd, dataPwd);
+
+                // TODO: password security
+
+                apiService.createUser(new User(emailAddress.getText().toString(), loginPwd, dataPwd));
 
             }
         });
@@ -139,8 +143,7 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
         if (requestType == ApiService.CREATE_USER) {
             apiService.createDefaultCategories();
         } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
         }
     }
 

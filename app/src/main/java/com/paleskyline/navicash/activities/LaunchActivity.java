@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.crypto.AuthManager;
-import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.services.ApiService;
 
 import java.util.Calendar;
@@ -31,20 +29,11 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
 
     private void autoLogin() {
-        try {
 
-            // Check if refresh token exists
+        ApiService apiService = new ApiService(this, getApplicationContext());
 
-            AuthManager.getInstance(getApplicationContext()).getEntry(AuthManager.REFRESH_TOKEN_KEY);
-
-            // Init master key
-
-            CryptoManager.getInstance().initMasterKey(getApplicationContext());
-
-            ApiService apiService = new ApiService(this, getApplicationContext());
-
+        if (apiService.userLoggedIn()) {
             calendar = Calendar.getInstance();
-
             endDate = calendar.getTime();
 
             calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -56,12 +45,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             startDate = calendar.getTime();
 
             apiService.getDefaultData(startDate, endDate);
-
-        } catch (Exception e) {
-            // TODO: exception handling
-            e.printStackTrace();
+        } else {
             initLayout();
         }
+
     }
 
     private void initLayout() {

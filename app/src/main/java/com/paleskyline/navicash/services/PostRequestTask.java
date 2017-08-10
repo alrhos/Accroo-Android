@@ -32,6 +32,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
     private int id;
+    private String username;
 
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
@@ -53,6 +54,15 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         this.context = context;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome,
+                           Context context, String username) {
+
+        this.requestType = requestType;
+        this.postRequestOutcome = postRequestOutcome;
+        this.context = context;
+        this.username = username;
     }
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome,
@@ -80,6 +90,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     accessToken = dataReceiver[0][0].getString("accessToken");
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
 
+                    AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
                     AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
                     AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
 
