@@ -101,6 +101,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+                          RequestCoordinator coordinator, char[] password) {
+
+        this.requestType = requestType;
+        this.preRequestOutcome = preRequestOutcome;
+        this.context = context;
+        this.coordinator = coordinator;
+        this.password = password;
+        requests = new ArrayList<>();
+    }
+
+    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
                           RequestCoordinator coordinator, char[] password, char[] newPassword) {
 
         this.requestType = requestType;

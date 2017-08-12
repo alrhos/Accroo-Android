@@ -43,19 +43,10 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                     char[] password = new char[passwordLength];
                     keyPassword.getText().getChars(0, passwordLength, password, 0);
 
-                    try {
-
-//                        KeyPackage keyPackage = DataProvider.getKeyPackage();
-//
-//                        CryptoManager.getInstance().decryptMasterKey(password, keyPackage);
-//                        CryptoManager.getInstance().saveMasterKey(getApplicationContext());
-
-                        apiService.initializeKey(password);
-                        // TODO: review password security
+                    if (apiService.initializeKey(password)) {
                         startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
-                    } catch (Exception e) {
-                        // TODO: error handling for incorrect password
-                        e.printStackTrace();
+                    } else {
+                        // TODO: incorrect password to decrypt key
                     }
                 }
             }

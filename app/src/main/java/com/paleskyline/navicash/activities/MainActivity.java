@@ -160,23 +160,40 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
+//        int id = item.getItemId();
+//
+//        switch (item.getItemId()) {
+//            // TODO: convert to switch
+//        }
+//
         switch (item.getItemId()) {
-            // TODO: convert to switch
+            case R.id.change_email:
+                startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
+                return true;
+            case R.id.change_login_password:
+                startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
+                return true;
+            case R.id.change_data_password:
+                startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
+                return true;
+            case R.id.sign_out:
+                apiService.deleteRefreshToken();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        if (id == R.id.change_email) {
-            startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
-        } else if (id == R.id.change_login_password) {
-            startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
-        } else if (id == R.id.change_data_password) {
-
-        } else if (id == R.id.sign_out) {
-            apiService.deleteRefreshToken();
-        }
-
-        return super.onOptionsItemSelected(item);
+//        if (id == R.id.change_email) {
+//            startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
+//        } else if (id == R.id.change_login_password) {
+//            startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
+//        } else if (id == R.id.change_data_password) {
+//            startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
+//        } else if (id == R.id.sign_out) {
+//            apiService.deleteRefreshToken();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
     }
 
     @Override

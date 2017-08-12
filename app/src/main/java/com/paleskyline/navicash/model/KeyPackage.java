@@ -3,6 +3,9 @@ package com.paleskyline.navicash.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by oscar on 4/03/17.
  */
@@ -63,6 +66,20 @@ public class KeyPackage implements Parcelable {
 
     public void setMemlimit(int memlimit) {
         this.memlimit = memlimit;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("dataKey", encryptedMasterKey);
+            json.put("salt", salt);
+            json.put("nonce", nonce);
+            json.put("opsLimit", opslimit);
+            json.put("memLimit", memlimit);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 
     @Override

@@ -88,15 +88,15 @@ public class User {
         return json;
     }
 
-    public JSONObject toJSONLogin() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("email", email);
-            json.put("password", String.copyValueOf(loginPassword));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
+//    public JSONObject toJSONLogin() {
+//        JSONObject json = new JSONObject();
+//        try {
+//            json.put("email", email);
+//            json.put("password", String.copyValueOf(loginPassword));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return json;
+//    }
 
 }

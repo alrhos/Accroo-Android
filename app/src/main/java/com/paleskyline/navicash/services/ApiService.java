@@ -38,7 +38,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int DELETE_REFRESH_TOKEN = 13;
     public final static int UPDATE_EMAIL = 14;
     public final static int UPDATE_LOGIN_PASSWORD = 15;
-    public final static int UPDATE_DATA_PASSWORD = 16;
+    public final static int GET_KEY_PACKAGE = 16;
+    public final static int UPDATE_DATA_PASSWORD = 17;
 
     public final static int GENERAL_ERROR = 100;
     public final static int TIMEOUT_ERROR = 101;
@@ -70,13 +71,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         void onSuccess(int requestType);
     }
 
-    public String getUsername() {
-        try {
-            return AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+//    public String getUsername() {
+//        try {
+//            return AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 
     public boolean userLoggedIn() {
         try {
@@ -89,10 +90,16 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void initializeKey(@NonNull char[] password) throws Exception {
-        // TODO: review password security
-        CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
-        CryptoManager.getInstance().saveMasterKey(context);
+    public boolean initializeKey(@NonNull char[] password) {
+        try {
+            // TODO: review password security
+            CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
+            CryptoManager.getInstance().saveMasterKey(context);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void getRefreshToken(@NonNull final String username, @NonNull char[] password) {
@@ -407,7 +414,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                // TODO: create constructor
                 new PostRequestTask(UPDATE_LOGIN_PASSWORD, ApiService.this, context).execute(dataReceiver);
             }
 
@@ -417,11 +423,29 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        // TODO: need new constructor for password update
         new PreRequestTask(UPDATE_LOGIN_PASSWORD, this, context, coordinator, currentPassword, newPassword).execute();
 
     }
 
+    public void getKeyPackage(char[] loginPassword) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+
+            }
+        };
+
+        new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, loginPassword).execute();
+    }
+
+    // TODO: make sure this is called everywhere where it needs to be
     public void clearUserData() {
         try {
             AuthManager.getInstance(context).clearSavedData();
