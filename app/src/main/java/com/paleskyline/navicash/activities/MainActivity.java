@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         if (id == R.id.change_email) {
             startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
         } else if (id == R.id.change_login_password) {
-
+            startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
         } else if (id == R.id.change_data_password) {
 
         } else if (id == R.id.sign_out) {
@@ -318,12 +318,12 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
     }
 
-    @Override
-    public void onAuthorizationError() {
-        hideRefreshing();
-        relaunch();
-        System.out.println("AUTHORIZATION ERROR");
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//        hideRefreshing();
+//        relaunch();
+//        System.out.println("AUTHORIZATION ERROR");
+//    }
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {

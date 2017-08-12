@@ -24,6 +24,7 @@
     <string name="title_activity_select_category">Select Category</string>
     <string name="title_activity_select_general_category">Select General Category</string>
     <string name="title_activity_update_email">Update Email</string>
+    <string name="title_activity_change_login_password">Update Login Password</string>
 
     <string name="income">Income</string>
     <string name="expenses">Expenses</string>
@@ -70,7 +71,11 @@
     <string name="sign_out">Sign out</string>
     <string name="new_email">New email</string>
     <string name="confirm_login_password">Confirm login password</string>
+    <string name="confirm_current_login_password">Confirm current login password</string>
+    <string name="new_login_password">New login password</string>
+    <string name="confirm_new_login_password">Confirm new login password</string>
     <string name="submitting">Submitting...</string>
     <string name="email_updated">Email address updated</string>
+    <string name="login_password_updated">Login password updated</string>
 
 </resources>

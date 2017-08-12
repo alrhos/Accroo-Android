@@ -46,6 +46,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private String username;
     private char[] password;
+    private char[] newPassword;
     private String newEmail;
 
     // TODO: also needs to take in model object to encrypt
@@ -97,6 +98,18 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.dataObject = dataObject;
         requests = new ArrayList<>();
 
+    }
+
+    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+                          RequestCoordinator coordinator, char[] password, char[] newPassword) {
+
+        this.requestType = requestType;
+        this.preRequestOutcome = preRequestOutcome;
+        this.context = context;
+        this.coordinator = coordinator;
+        this.password = password;
+        this.newPassword = newPassword;
+        requests = new ArrayList<>();
     }
 
     public interface PreRequestOutcome {
@@ -293,13 +306,27 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_EMAIL:
 
-                    String username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
 
-                    JSONObject json = new JSONObject();
+                    json = new JSONObject();
                     json.put("email", newEmail);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
                             json, RequestBuilder.EMAIL, username, password, context));
+
+                    return true;
+
+                case ApiService.UPDATE_LOGIN_PASSWORD:
+
+                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+
+                    // TODO: password security
+
+                    json = new JSONObject();
+                    json.put("password", String.copyValueOf(newPassword));
+
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
+                            json, RequestBuilder.LOGIN_PASSWORD, username, password, context));
 
                     return true;
 

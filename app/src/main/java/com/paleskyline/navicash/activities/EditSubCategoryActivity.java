@@ -106,10 +106,10 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
         finish();
     }
 
-    @Override
-    public void onAuthorizationError() {
-
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//
+//    }
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {

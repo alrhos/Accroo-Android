@@ -66,10 +66,10 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         startActivity(intent);
     }
 
-    @Override
-    public void onAuthorizationError() {
-
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//
+//    }
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {

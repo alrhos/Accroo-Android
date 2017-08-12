@@ -11,51 +11,52 @@ import android.widget.Toast;
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.services.ApiService;
 
-public class ChangeEmailActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+public class ChangeLoginPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private EditText newEmailField, passwordField;
-    private Button updateEmailButton;
+    private EditText existingPasswordField, newPasswordField, confirmNewPasswordField;
+    private Button updatePasswordButton;
     private ApiService apiService;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_email);
-
+        setContentView(R.layout.activity_change_login_password);
         apiService = new ApiService(this, getApplicationContext());
-        progressDialog = new ProgressDialog(ChangeEmailActivity.this);
+        progressDialog = new ProgressDialog(ChangeLoginPasswordActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-        newEmailField = (EditText) findViewById(R.id.new_email);
-        passwordField = (EditText) findViewById(R.id.confirm_login_password);
-        updateEmailButton = (Button) findViewById(R.id.update_email_button);
-        updateEmailButton.setOnClickListener(new View.OnClickListener() {
+        existingPasswordField = (EditText) findViewById(R.id.confirm_login_password);
+        newPasswordField = (EditText) findViewById(R.id.new_login_password);
+        confirmNewPasswordField = (EditText) findViewById(R.id.confirm_new_login_password);
+        updatePasswordButton = (Button) findViewById(R.id.update_login_password_button);
+
+        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isValidEmail()) {
-                    return;
-                }
+                // TODO: add validation login
+
+                // Check new passwords are equal
+                // Check new password is not the same
+                // Length checks etc.
 
                 progressDialog.show();
 
-                String newEmail = newEmailField.getText().toString();
-                int passwordLength = passwordField.getText().length();
-                char[] password = new char[passwordLength];
-                passwordField.getText().getChars(0, passwordLength, password, 0);
+                int currentPasswordLength = existingPasswordField.getText().length();
+                char[] currentPassword = new char[currentPasswordLength];
+                existingPasswordField.getText().getChars(0, currentPasswordLength, currentPassword, 0);
 
-                apiService.updateEmail(newEmail, password);
+                int newPasswordLength = newPasswordField.getText().length();
+                char[] newPassword = new char[newPasswordLength];
+                newPasswordField.getText().getChars(0, newPasswordLength, newPassword, 0);
+
+                apiService.updateLoginPassword(currentPassword, newPassword);
 
             }
         });
-
-
     }
 
-    private boolean isValidEmail() {
-        return true;
-        // TODO: add logic
-    }
+
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {
@@ -98,7 +99,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.login_password_updated, Toast.LENGTH_LONG).show();
         finish();
     }
 

@@ -281,11 +281,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 //                Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onAuthorizationError() {
-        progressDialog.dismiss();
-        System.out.println("AUTHORIZATION ERROR");
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//        progressDialog.dismiss();
+//        System.out.println("AUTHORIZATION ERROR");
+//    }
 
     @Override
     public void onUnsuccessfulDecryption() {

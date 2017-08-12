@@ -27,6 +27,8 @@ public class RequestBuilder {
     private final static String ACCESS_TOKEN = "token/access";
     public final static String USER = "user";
     public final static String EMAIL = "user/email";
+    public final static String LOGIN_PASSWORD = "user/password";
+    public final static String DATA_PASSWORD = "user/key";
     public final static String CATEGORY = "category";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String SUB_CATEGORY = "category/sub";

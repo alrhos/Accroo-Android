@@ -77,11 +77,11 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         startActivity(intent);
     }
 
-    @Override
-    public void onAuthorizationError() {
-        System.out.println("AUTHORIZATION ERROR");
-        initLayout();
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//        System.out.println("AUTHORIZATION ERROR");
+//        initLayout();
+//    }
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {

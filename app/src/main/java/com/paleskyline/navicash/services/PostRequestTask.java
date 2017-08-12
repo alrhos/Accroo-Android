@@ -232,6 +232,10 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
                     return true;
 
+                case ApiService.UPDATE_LOGIN_PASSWORD:
+
+                    return true;
+
             }
         } catch (Exception e) {
             e.printStackTrace();

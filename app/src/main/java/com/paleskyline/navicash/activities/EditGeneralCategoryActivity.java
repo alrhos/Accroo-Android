@@ -88,10 +88,10 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         finish();
     }
 
-    @Override
-    public void onAuthorizationError() {
-
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//
+//    }
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {

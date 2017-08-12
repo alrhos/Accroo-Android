@@ -150,11 +150,11 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 //        }
     }
 
-    @Override
-    public void onAuthorizationError() {
-        progressDialog.dismiss();
-        System.out.println("AUTHORIZATION ERROR");
-    }
+//    @Override
+//    public void onAuthorizationError() {
+//        progressDialog.dismiss();
+//        System.out.println("AUTHORIZATION ERROR");
+//    }
 
     @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {
