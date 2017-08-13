@@ -157,7 +157,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     User user = (User) dataObject;
 
-                    KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(user.getDataPassword());
+                    KeyPackage keyPackage = CryptoManager.getInstance().generateNewKey(user.getDataPassword());
                     user.setKeyPackage(keyPackage);
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
@@ -338,6 +338,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
                             json, RequestBuilder.LOGIN_PASSWORD, username, password, context));
+
+                    return true;
+
+                case ApiService.GET_KEY_PACKAGE:
+
+                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.GET,
+                            null, RequestBuilder.DATA_PASSWORD, username, password, context));
 
                     return true;
 

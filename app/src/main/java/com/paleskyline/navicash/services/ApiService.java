@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.paleskyline.navicash.crypto.AuthManager;
 import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.model.GeneralCategory;
+import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
 import com.paleskyline.navicash.model.User;
@@ -94,6 +95,17 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         try {
             // TODO: review password security
             CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
+            CryptoManager.getInstance().saveMasterKey(context);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean encryptKey(@NonNull char[] password, @NonNull Context context) {
+        try {
+            CryptoManager.getInstance().encryptMasterKey(password, context);
             CryptoManager.getInstance().saveMasterKey(context);
             return true;
         } catch (Exception e) {
@@ -433,16 +445,21 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-
+                new PostRequestTask(GET_KEY_PACKAGE, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(String errorMessage) {
-
+                requestOutcome.onUnsuccessfulRequest(GET_KEY_PACKAGE, mapErrorMessage(errorMessage));
             }
         };
 
         new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, loginPassword).execute();
+
+    }
+
+    public void updateDataKey(char[] loginPassword, KeyPackage keyPackage) {
+
     }
 
     // TODO: make sure this is called everywhere where it needs to be

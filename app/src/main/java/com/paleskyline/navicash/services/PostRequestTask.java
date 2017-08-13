@@ -236,6 +236,16 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     return true;
 
+                case ApiService.GET_KEY_PACKAGE:
+
+                   // System.out.println(((JSONObject) dataObject).toString());
+
+                    JSONObject json = dataReceiver[0][0].getJSONObject("key");
+                    System.out.println(json.toString());
+
+                    DataProvider.setKeyPackage(new KeyPackage(json));
+                    return true;
+
             }
         } catch (Exception e) {
             e.printStackTrace();

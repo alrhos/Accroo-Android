@@ -74,7 +74,57 @@ public class CryptoManager {
         return Base64.decode(value, Base64.NO_WRAP);
     }
 
-    public KeyPackage generateKeyPackage(char[] password) {
+    private KeyPackage generateKeyPackage(byte[] key, char[] password) {
+
+        // Generate byte array from password
+
+        byte[] passwordBytes = passwordToByteArray(password);
+
+        // Derive key from password byte array
+
+        int saltSize = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
+        byte[] salt = random.randomBytes(saltSize);
+        byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
+
+        int opslimit = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
+        int memlimit = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
+
+        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
+                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
+
+        // Encrypt the master key using the key derived from the password
+
+        SecretBox box = new SecretBox(dataPasswordKey);
+        int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
+        byte[] nonce = random.randomBytes(nonceSize);
+
+        byte[] encryptedMasterKey = box.encrypt(nonce, key);
+
+        // Create a key package to persistently store key data
+
+        String encodedMasterKey = encode(encryptedMasterKey);
+        String encodedNonce = encode(nonce);
+        String encodedSalt = encode(salt);
+
+        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce,
+                encodedSalt, opslimit, memlimit);
+
+        // Override values
+
+        Arrays.fill(passwordBytes, (byte) 0);
+        Arrays.fill(dataPasswordKey, (byte) 0);
+
+        // TODO: the password char[] should probably also be overridden
+
+        // Initialise the application secret box
+
+        secretBox = new SecretBox(key);
+
+        return keyPackage;
+
+    }
+
+    public KeyPackage generateNewKey(char[] password) {
 
         // Generate a master key
 
@@ -126,6 +176,12 @@ public class CryptoManager {
 
     }
 
+    public KeyPackage encryptMasterKey(char[] password, Context context) throws Exception {
+        // TODO: review security of password and key array
+        byte[] secretKeyBytes = decode(AuthManager.getInstance(context).getEntry(AuthManager.ENCRYPTION_KEY));
+        return generateKeyPackage(secretKeyBytes, password);
+    }
+
     public void decryptMasterKey(char[] password, KeyPackage keyPackage) {
 
         byte[] passwordBytes = passwordToByteArray(password);
@@ -155,6 +211,8 @@ public class CryptoManager {
 
     }
 
+
+    // TODO: review this method's use
     public void saveMasterKey(Context context) throws Exception {
         AuthManager.getInstance(context).saveEntry(AuthManager.ENCRYPTION_KEY, encode(masterKey));
     }

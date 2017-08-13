@@ -28,6 +28,18 @@ public class KeyPackage implements Parcelable {
 
     }
 
+    public KeyPackage(JSONObject json) throws JSONException {
+
+        System.out.println(json.toString());
+
+        this.encryptedMasterKey = json.getString("dataKey");
+        this.nonce = json.getString("nonce");
+        this.salt = json.getString("salt");
+        this.opslimit = json.getInt("opsLimit");
+        this.memlimit = json.getInt("memLimit");
+
+    }
+
     public String getEncryptedMasterKey() {
         return encryptedMasterKey;
     }

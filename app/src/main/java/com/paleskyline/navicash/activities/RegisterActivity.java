@@ -125,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
 
                 // TODO: review this code - CryptoManager should be invoked in ApiService
 
-                //KeyPackage keyPackage = CryptoManager.getInstance().generateKeyPackage(dataPwd);
+                //KeyPackage keyPackage = CryptoManager.getInstance().generateNewKey(dataPwd);
                 //User user = new User(emailAddress.getText().toString(), loginPwd, keyPackage);
 
                // User user = new User(emailAddress.getText().toString(), loginPwd, dataPwd);

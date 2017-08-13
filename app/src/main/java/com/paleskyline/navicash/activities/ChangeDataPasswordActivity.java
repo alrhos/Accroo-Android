@@ -9,7 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.services.ApiService;
+import com.paleskyline.navicash.services.DataProvider;
 
 public class ChangeDataPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -35,6 +37,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         updateDataPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 // TODO: add validation login
 
                 // Check new passwords are the same
@@ -47,9 +50,9 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 char[] loginPassword = new char[loginPasswordLength];
                 loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
 
-                int dataPasswordLength = currentDataPasswordField.getText().length();
-                char[] dataPassword = new char[dataPasswordLength];
-                currentDataPasswordField.getText().getChars(0, dataPasswordLength, dataPassword, 0);
+                // TODO: password security
+
+                apiService.getKeyPackage(loginPassword);
 
             }
         });
@@ -97,9 +100,28 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
 
     @Override
     public void onSuccess(int requestType) {
-//        progressDialog.dismiss();
-//        Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
-//        finish();
+        if (requestType == ApiService.GET_KEY_PACKAGE) {
+
+            int dataPasswordLength = currentDataPasswordField.getText().length();
+            char[] dataPassword = new char[dataPasswordLength];
+            currentDataPasswordField.getText().getChars(0, dataPasswordLength, dataPassword, 0);
+
+            try {
+                CryptoManager.getInstance().decryptMasterKey(dataPassword, DataProvider.getKeyPackage());
+
+                int newDataPasswordLength = newDataPasswordField.getText().length();
+                char[] newDataPassword = new char[newDataPasswordLength];
+                newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
+
+
+
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+
+        } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
+            progressDialog.dismiss();
+        }
     }
 
 
