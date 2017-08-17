@@ -118,7 +118,9 @@ public class CryptoManager {
 
         // Initialise the application secret box
 
-        secretBox = new SecretBox(key);
+        // TODO: The secret box probably doesn't need to be initalised here as it will already have been inited during launch
+
+        //secretBox = new SecretBox(key);
 
         return keyPackage;
 
@@ -126,55 +128,71 @@ public class CryptoManager {
 
     public KeyPackage generateNewKey(char[] password) {
 
-        // Generate a master key
-
         masterKey = random.randomBytes(SodiumConstants.SECRETKEY_BYTES);
-
-        // Generate byte array from password
-
-        byte[] passwordBytes = passwordToByteArray(password);
-
-        // Derive key from password byte array
-
-        int saltSize = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
-        byte[] salt = random.randomBytes(saltSize);
-        byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
-
-        int opslimit = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
-        int memlimit = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
-
-        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
-                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
-
-        // Encrypt the master key using the key derived from the password
-
-        SecretBox box = new SecretBox(dataPasswordKey);
-        int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
-        byte[] nonce = random.randomBytes(nonceSize);
-
-        byte[] encryptedMasterKey = box.encrypt(nonce, masterKey);
-
-        // Create a key package to persistently store key data
-
-        String encodedMasterKey = encode(encryptedMasterKey);
-        String encodedNonce = encode(nonce);
-        String encodedSalt = encode(salt);
-
-        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce,
-                encodedSalt, opslimit, memlimit);
-
-        // Override values
-
-        Arrays.fill(passwordBytes, (byte) 0);
-        Arrays.fill(dataPasswordKey, (byte) 0);
 
         // Initialise the application secret box
 
         secretBox = new SecretBox(masterKey);
 
-        return keyPackage;
+        KeyPackage keyPackage = generateKeyPackage(masterKey, password);
+
+        // TODO: review password security
+
+        return  keyPackage;
 
     }
+
+//    public KeyPackage generateNewKey(char[] password) {
+//
+//        // Generate a master key
+//
+//        masterKey = random.randomBytes(SodiumConstants.SECRETKEY_BYTES);
+//
+//        // Generate byte array from password
+//
+//        byte[] passwordBytes = passwordToByteArray(password);
+//
+//        // Derive key from password byte array
+//
+//        int saltSize = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
+//        byte[] salt = random.randomBytes(saltSize);
+//        byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
+//
+//        int opslimit = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
+//        int memlimit = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
+//
+//        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
+//                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
+//
+//        // Encrypt the master key using the key derived from the password
+//
+//        SecretBox box = new SecretBox(dataPasswordKey);
+//        int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
+//        byte[] nonce = random.randomBytes(nonceSize);
+//
+//        byte[] encryptedMasterKey = box.encrypt(nonce, masterKey);
+//
+//        // Create a key package to persistently store key data
+//
+//        String encodedMasterKey = encode(encryptedMasterKey);
+//        String encodedNonce = encode(nonce);
+//        String encodedSalt = encode(salt);
+//
+//        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce,
+//                encodedSalt, opslimit, memlimit);
+//
+//        // Override values
+//
+//        Arrays.fill(passwordBytes, (byte) 0);
+//        Arrays.fill(dataPasswordKey, (byte) 0);
+//
+//        // Initialise the application secret box
+//
+//        secretBox = new SecretBox(masterKey);
+//
+//        return keyPackage;
+//
+//    }
 
     public KeyPackage encryptMasterKey(char[] password, Context context) throws Exception {
         // TODO: review security of password and key array
@@ -219,7 +237,7 @@ public class CryptoManager {
 
     public void initMasterKey(Context context) throws Exception {
         byte[] secretKeyBytes = decode(AuthManager.getInstance(context).getEntry(AuthManager.ENCRYPTION_KEY));
-        this.secretBox = new SecretBox(secretKeyBytes);
+        secretBox = new SecretBox(secretKeyBytes);
         // TODO: review password security here and override secretKeyBytes
     }
 

@@ -350,6 +350,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
+                case ApiService.UPDATE_DATA_PASSWORD:
+
+                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+
+                    KeyPackage newKeyPackage = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
+
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
+                            newKeyPackage.toJSON(), RequestBuilder.DATA_PASSWORD, username, password, context));
+
+                    return true;
+
             }
 
         } catch (Exception e) {

@@ -82,5 +82,6 @@
     <string name="email_updated">Email address updated</string>
     <string name="login_password_updated">Login password updated</string>
     <string name="data_password_updated">Data password updated</string>
+    <string name="incorrect_data_password">Incorrect data password</string>
 
 </resources>

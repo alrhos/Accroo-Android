@@ -458,7 +458,22 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void updateDataKey(char[] loginPassword, KeyPackage keyPackage) {
+    public void updateDataKey(char[] loginPassword, char[] newDataPassword) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(UPDATE_DATA_PASSWORD, ApiService.this, context).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(String errorMessage) {
+                requestOutcome.onUnsuccessfulRequest(UPDATE_DATA_PASSWORD, mapErrorMessage(errorMessage));
+            }
+        };
+
+        new PreRequestTask(UPDATE_DATA_PASSWORD, this, context, coordinator, loginPassword, newDataPassword).execute();
 
     }
 

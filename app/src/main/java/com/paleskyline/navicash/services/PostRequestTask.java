@@ -246,6 +246,10 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     DataProvider.setKeyPackage(new KeyPackage(json));
                     return true;
 
+                case ApiService.UPDATE_DATA_PASSWORD:
+
+                    return true;
+
             }
         } catch (Exception e) {
             e.printStackTrace();

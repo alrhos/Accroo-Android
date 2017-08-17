@@ -19,6 +19,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     private Button updateDataPassword;
     private ApiService apiService;
     private ProgressDialog progressDialog;
+    private char[] loginPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 progressDialog.show();
 
                 int loginPasswordLength = loginPasswordField.getText().length();
-                char[] loginPassword = new char[loginPasswordLength];
+                loginPassword = new char[loginPasswordLength];
                 loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
 
                 // TODO: password security
@@ -83,11 +84,6 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-//    public void onAuthorizationError() {
-//        progressDialog.dismiss();
-//        Toast.makeText(getApplicationContext(), R.string.error_incorrect_password, Toast.LENGTH_SHORT).show();
-//    }
-
     @Override
     public void onUnsuccessfulDecryption() {
         progressDialog.dismiss();
@@ -106,21 +102,19 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
             char[] dataPassword = new char[dataPasswordLength];
             currentDataPasswordField.getText().getChars(0, dataPasswordLength, dataPassword, 0);
 
-            try {
-                CryptoManager.getInstance().decryptMasterKey(dataPassword, DataProvider.getKeyPackage());
-
+            if (apiService.initializeKey(dataPassword)) {
                 int newDataPasswordLength = newDataPasswordField.getText().length();
                 char[] newDataPassword = new char[newDataPasswordLength];
                 newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
 
-
-
-            } catch (RuntimeException e) {
-                e.printStackTrace();
+                apiService.updateDataKey(loginPassword, newDataPassword);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
             }
-
         } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
             progressDialog.dismiss();
+            Toast.makeText(getApplicationContext(), R.string.data_password_updated, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
