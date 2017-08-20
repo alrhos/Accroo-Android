@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                 if (isValidInput()) {
                     // Attempt decryption
                     // TODO: review password security
+
                     int passwordLength = keyPassword.length();
                     char[] password = new char[passwordLength];
                     keyPassword.getText().getChars(0, passwordLength, password, 0);
@@ -66,25 +68,23 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
         return true;
     }
 
+
+    @Override
+    public void onSuccess(int requestType) {
+    }
+
+    @Override
     public void onUnsuccessfulRequest(int requestType, int errorCode) {
-
     }
 
-    public void onAuthorizationError() {
-
-    }
-
+    @Override
     public void onUnsuccessfulDecryption() {
 
     }
 
+    @Override
     public void onGeneralError() {
 
     }
-
-    public void onSuccess(int requestType) {
-
-    }
-
 
 }
