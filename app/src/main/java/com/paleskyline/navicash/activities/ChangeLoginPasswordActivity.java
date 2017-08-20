@@ -22,6 +22,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_login_password);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         apiService = new ApiService(this, getApplicationContext());
         progressDialog = new ProgressDialog(ChangeLoginPasswordActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.submitting));
@@ -54,6 +55,12 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
 
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

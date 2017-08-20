@@ -23,6 +23,7 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_select_icon);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             iconAdapter = new IconAdapter(getApplicationContext(), this);
 
@@ -35,8 +36,12 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
             layoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
         }
+    }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

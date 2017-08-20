@@ -29,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         emailAddress = (EditText) findViewById(R.id.email);
         loginPassword = (EditText) findViewById(R.id.loginPassword);
@@ -40,6 +41,12 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
         apiService = new ApiService(this, getApplicationContext());
 
         addListeners();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     // TODO: add proper validation
@@ -137,6 +144,8 @@ public class RegisterActivity extends AppCompatActivity implements ApiService.Re
             }
         });
     }
+
+
 
     @Override
     public void onSuccess(int requestType) {

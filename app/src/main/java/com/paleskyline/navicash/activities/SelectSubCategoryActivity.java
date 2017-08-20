@@ -22,6 +22,7 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_select_sub_category);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -34,6 +35,12 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
 //        fragmentTransaction.add(R.id.select_category_fragment, categoryOverviewFragment);
 //        fragmentTransaction.commit();
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

@@ -26,6 +26,7 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_select_general_category);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
             recyclerView = (RecyclerView) findViewById(R.id.general_category_recycler_view);
             recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
@@ -39,6 +40,12 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

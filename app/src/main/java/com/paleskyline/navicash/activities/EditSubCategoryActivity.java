@@ -33,6 +33,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_edit_sub_category);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             apiService = new ApiService(this, getApplicationContext());
             subCategoryFragment = (SubCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_sub_category);
             subCategoryFragment.toggleEditing();
@@ -40,6 +41,12 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             progressDialog = new ProgressDialog(EditSubCategoryActivity.this);
             progressDialog.setMessage("Saving...");
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

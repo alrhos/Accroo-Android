@@ -56,6 +56,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_transaction);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.transaction_toolbar);
 //        setSupportActionBar(toolbar);
@@ -170,6 +171,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             });
         }
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

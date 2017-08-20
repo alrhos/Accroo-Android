@@ -48,6 +48,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.category_toolbar);
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
             progressDialog.setMessage("Loading...");
@@ -114,6 +115,12 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             return tab;
         }
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

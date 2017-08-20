@@ -22,6 +22,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_email);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         apiService = new ApiService(this, getApplicationContext());
         progressDialog = new ProgressDialog(ChangeEmailActivity.this);
@@ -50,6 +51,12 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
         });
 
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private boolean isValidEmail() {

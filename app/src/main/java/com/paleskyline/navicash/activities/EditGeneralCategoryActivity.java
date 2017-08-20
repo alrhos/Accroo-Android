@@ -34,7 +34,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_edit_general_category);
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             apiService = new ApiService(this, getApplicationContext());
@@ -44,6 +43,12 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
             progressDialog.setMessage("Saving...");
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

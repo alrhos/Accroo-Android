@@ -25,6 +25,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_data_password);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         apiService = new ApiService(this, getApplicationContext());
         progressDialog = new ProgressDialog(ChangeDataPasswordActivity.this);
@@ -58,6 +59,12 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
             }
         });
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 

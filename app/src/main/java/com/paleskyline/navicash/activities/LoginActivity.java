@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
             startActivity(intent);
         } else {
             setContentView(R.layout.activity_login);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             usernameField = (EditText) findViewById(R.id.username);
             passwordField = (EditText) findViewById(R.id.password);
@@ -36,6 +37,12 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
             apiService = new ApiService(this, getApplicationContext());
             addListeners();
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 
