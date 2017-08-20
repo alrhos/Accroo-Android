@@ -2,6 +2,7 @@ package com.paleskyline.navicash.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -70,13 +71,25 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_category_overview, container, false);
-        RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.category_overview_recycler_view);
-        rv.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
-        rv.setHasFixedSize(true);
-        rv.setAdapter(categoryOverviewAdapter);
+        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.category_overview_recycler_view);
+        recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(categoryOverviewAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    fragmentListener.getFab().hide();
+                }
+                else if (dy < 0) {
+                    fragmentListener.getFab().show();
+                }
+            }
+        });
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
+        recyclerView.setLayoutManager(llm);
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.category_overview_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
@@ -145,6 +158,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         void onGeneralCategoryClicked(GeneralCategory generalCategory);
         void onSubCategoryClicked(SubCategory subCategory);
         void onCategorySwipeRefresh();
+        FloatingActionButton getFab();
     }
 
     @Override

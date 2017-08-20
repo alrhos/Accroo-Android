@@ -253,6 +253,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
+    public FloatingActionButton getFab() {
+        return fab;
+    }
+
+    @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
         apiService.getDefaultData(startDate, endDate);

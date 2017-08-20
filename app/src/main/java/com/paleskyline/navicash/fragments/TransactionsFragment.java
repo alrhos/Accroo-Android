@@ -2,6 +2,7 @@ package com.paleskyline.navicash.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -74,12 +75,24 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_transactions, container, false);
-        RecyclerView rv = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
-        rv.setHasFixedSize(false);
-        rv.setAdapter(transactionAdapter);
+        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setAdapter(transactionAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    fragmentListener.getFab().hide();
+                }
+                else if (dy < 0) {
+                    fragmentListener.getFab().show();
+                }
+            }
+        });
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
+        recyclerView.setLayoutManager(llm);
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.transaction_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
@@ -142,6 +155,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
     public interface FragmentInteractionListener {
         void onTransactionSwipeRefresh();
         void onTransactionSelected(Transaction transaction);
+        FloatingActionButton getFab();
     }
 
     public void refreshAdapter() {

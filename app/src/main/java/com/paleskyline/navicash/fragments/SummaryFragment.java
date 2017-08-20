@@ -3,6 +3,7 @@ package com.paleskyline.navicash.fragments;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -73,6 +74,18 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         recyclerView.setAdapter(summaryListAdapter);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    fragmentListener.getFab().hide();
+                }
+                else if (dy < 0) {
+                    fragmentListener.getFab().show();
+                }
+            }
+        });
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
@@ -153,6 +166,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         void onSummarySwipeRefresh();
         void onStartDateUpdated(Date date);
         void onEndDateUpdated(Date date);
+        FloatingActionButton getFab();
     }
 
     public void refreshAdapter() {

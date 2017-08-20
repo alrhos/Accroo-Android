@@ -2,6 +2,7 @@ package com.paleskyline.navicash.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -51,6 +52,12 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
         data.putExtra("subCategory", subCategory);
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    @Override
+    public FloatingActionButton getFab() {
+        // Not invoked
+        return null;
     }
 
 }
