@@ -79,10 +79,10 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    fragmentListener.getFab().hide();
+                    fragmentListener.hideFab();
                 }
                 else if (dy < 0) {
-                    fragmentListener.getFab().show();
+                    fragmentListener.showFab();
                 }
             }
         });
@@ -166,7 +166,8 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         void onSummarySwipeRefresh();
         void onStartDateUpdated(Date date);
         void onEndDateUpdated(Date date);
-        FloatingActionButton getFab();
+        void hideFab();
+        void showFab();
     }
 
     public void refreshAdapter() {

@@ -80,10 +80,10 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    fragmentListener.getFab().hide();
+                    fragmentListener.hideFab();
                 }
                 else if (dy < 0) {
-                    fragmentListener.getFab().show();
+                    fragmentListener.showFab();
                 }
             }
         });
@@ -158,7 +158,8 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         void onGeneralCategoryClicked(GeneralCategory generalCategory);
         void onSubCategoryClicked(SubCategory subCategory);
         void onCategorySwipeRefresh();
-        FloatingActionButton getFab();
+        void hideFab();
+        void showFab();
     }
 
     @Override

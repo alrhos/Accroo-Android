@@ -62,9 +62,14 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
     }
 
     @Override
-    public FloatingActionButton getFab() {
+    public void hideFab() {
         // Not invoked
-        return null;
+
+    }
+
+    @Override
+    public void showFab() {
+        // Not invoked
     }
 
 }

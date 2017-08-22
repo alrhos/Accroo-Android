@@ -253,8 +253,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
-    public FloatingActionButton getFab() {
-        return fab;
+    public void hideFab() {
+        fab.hide();
+    }
+
+    @Override
+    public void showFab() {
+        fab.show();
     }
 
     @Override

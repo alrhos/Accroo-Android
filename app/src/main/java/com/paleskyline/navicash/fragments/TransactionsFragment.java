@@ -83,10 +83,10 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    fragmentListener.getFab().hide();
+                    fragmentListener.hideFab();
                 }
                 else if (dy < 0) {
-                    fragmentListener.getFab().show();
+                    fragmentListener.showFab();
                 }
             }
         });
@@ -155,7 +155,8 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
     public interface FragmentInteractionListener {
         void onTransactionSwipeRefresh();
         void onTransactionSelected(Transaction transaction);
-        FloatingActionButton getFab();
+        void hideFab();
+        void showFab();
     }
 
     public void refreshAdapter() {
