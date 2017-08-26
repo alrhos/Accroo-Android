@@ -1,6 +1,8 @@
 package com.paleskyline.navicash.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -87,9 +89,19 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     }
 
     private void deleteSubCategory() {
-        // TODO: add confirm dialog
-        progressDialog.show();
-        apiService.deleteSubCategory(subCategory);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditSubCategoryActivity.this);
+        builder.setMessage(R.string.delete_sub_category)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.show();
+                        apiService.deleteSubCategory(subCategory);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                }).create().show();
     }
 
     @Override

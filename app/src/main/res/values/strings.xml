@@ -88,5 +88,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="delete_transaction">Delete this transaction?</string>
+    <string name="delete_general_category">Delete this general category and any associated sub categories and transactions?</string>
+    <string name="delete_sub_category">Delete this sub category and any associated transactions?</string>
 
 </resources>

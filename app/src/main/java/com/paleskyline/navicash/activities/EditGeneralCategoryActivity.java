@@ -1,6 +1,8 @@
 package com.paleskyline.navicash.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -135,9 +137,19 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     }
 
     private void deleteGeneralCategory() {
-        // TODO: add confirm dialog
-        progressDialog.show();
-        apiService.deleteGeneralCategory(generalCategory);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditGeneralCategoryActivity.this);
+        builder.setMessage(R.string.delete_general_category)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.show();
+                        apiService.deleteGeneralCategory(generalCategory);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                }).create().show();
     }
 
 }
