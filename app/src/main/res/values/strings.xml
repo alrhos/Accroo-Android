@@ -85,5 +85,8 @@
     <string name="login_password_updated">Login password updated</string>
     <string name="data_password_updated">Data password updated</string>
     <string name="incorrect_data_password">Incorrect data password</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_transaction">Delete this transaction?</string>
 
 </resources>

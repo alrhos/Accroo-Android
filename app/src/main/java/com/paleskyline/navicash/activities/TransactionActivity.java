@@ -1,8 +1,10 @@
 package com.paleskyline.navicash.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -30,6 +32,8 @@ import com.paleskyline.navicash.services.InputService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+//import android.support.v7.app.AlertDialog;
 
 public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -240,9 +244,19 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     private void deleteTransaction() {
-        // TODO: add confirmation dialog before deleting
-        progressDialog.show();
-        apiService.deleteTransaction(existingTransaction);
+        AlertDialog.Builder builder = new AlertDialog.Builder(TransactionActivity.this);
+        builder.setMessage(R.string.delete_transaction)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.show();
+                        apiService.deleteTransaction(existingTransaction);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                }).create().show();
     }
 
     // TODO: implement amount regex and toast
