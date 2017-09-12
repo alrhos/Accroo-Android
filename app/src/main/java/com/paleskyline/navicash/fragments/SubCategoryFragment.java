@@ -78,7 +78,7 @@ public class SubCategoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (!isValidGeneralCategory()) {
+                if (!isGeneralCategorySelected()) {
                     return;
                 }
 
@@ -137,7 +137,7 @@ public class SubCategoryFragment extends Fragment {
         void selectGeneralCategory();
     }
 
-    private boolean isValidGeneralCategory() {
+    private boolean isGeneralCategorySelected() {
         if (generalCategory != null) {
             return true;
         }
@@ -146,9 +146,8 @@ public class SubCategoryFragment extends Fragment {
     }
 
     private boolean isValidSubCategory() {
-
         if (subCategoryName.getText().toString().length() == 0) {
-            Toast.makeText(getActivity(), R.string.enter_sub_category, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.enter_category_name, Toast.LENGTH_SHORT).show();
             return false;
         }
 

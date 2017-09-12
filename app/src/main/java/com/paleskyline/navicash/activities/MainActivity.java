@@ -2,7 +2,9 @@ package com.paleskyline.navicash.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -314,23 +316,28 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         startActivity(intent);
     }
 
+    // TODO: review order of operations here to ensure smooth refreshing status
+
     @Override
     public void onSuccess(int requestType) {
+        hideRefreshing();
         if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
             relaunch();
         } else if (requestType == ApiService.GET_DEFAULT_DATA) {
-            if (summaryFragment != null) {
-                summaryFragment.refreshAdapter();
-                summaryFragment.setRefreshStatus(false);
-            }
-            if (transactionsFragment != null) {
-                transactionsFragment.refreshAdapter();
-                transactionsFragment.setRefreshStatus(false);
-            }
-            if (categoryOverviewFragment != null) {
-                categoryOverviewFragment.refreshAdapter();
-                categoryOverviewFragment.setRefreshStatus(false);
-            }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    if (summaryFragment != null) {
+                        summaryFragment.refreshAdapter();
+                    }
+                    if (transactionsFragment != null) {
+                        transactionsFragment.refreshAdapter();
+                    }
+                    if (categoryOverviewFragment != null) {
+                        categoryOverviewFragment.refreshAdapter();
+                    }
+                }
+            }, 200);
         }
     }
 
@@ -374,6 +381,28 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public void onError() {
         hideRefreshing();
         System.out.println("GENERAL ERROR");
+    }
+
+    class RefreshFragmentContents extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (summaryFragment != null) {
+                summaryFragment.refreshAdapter();
+            }
+            if (transactionsFragment != null) {
+                transactionsFragment.refreshAdapter();
+            }
+            if (categoryOverviewFragment != null) {
+                categoryOverviewFragment.refreshAdapter();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            hideRefreshing();
+        }
     }
 
 }
