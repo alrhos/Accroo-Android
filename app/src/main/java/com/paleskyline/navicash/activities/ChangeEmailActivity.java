@@ -65,7 +65,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     }
 
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         String message;
         switch (errorCode) {
@@ -93,12 +93,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
 //    }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        progressDialog.dismiss();
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         progressDialog.dismiss();
     }
 

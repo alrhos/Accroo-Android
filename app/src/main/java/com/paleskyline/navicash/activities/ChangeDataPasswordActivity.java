@@ -9,9 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
-import com.paleskyline.navicash.crypto.CryptoManager;
 import com.paleskyline.navicash.services.ApiService;
-import com.paleskyline.navicash.services.DataProvider;
 
 public class ChangeDataPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -69,7 +67,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
 
 
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         String message;
         switch (errorCode) {
@@ -92,12 +90,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        progressDialog.dismiss();
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         progressDialog.dismiss();
     }
 
@@ -113,7 +106,6 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 int newDataPasswordLength = newDataPasswordField.getText().length();
                 char[] newDataPassword = new char[newDataPasswordLength];
                 newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
-
                 apiService.updateDataKey(loginPassword, newDataPassword);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();

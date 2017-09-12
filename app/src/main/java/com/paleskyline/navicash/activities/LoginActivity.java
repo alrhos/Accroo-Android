@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                     char[] password = new char[passwordLength];
                     passwordField.getText().getChars(0, passwordLength, password, 0);
 
-                    apiService.getRefreshToken(username, password);
+                    apiService.login(username, password);
                 }
             }
         });
@@ -82,13 +82,8 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         startActivity(intent);
     }
 
-//    @Override
-//    public void onAuthorizationError() {
-//
-//    }
-
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         String message;
         switch (errorCode) {
@@ -108,13 +103,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        progressDialog.dismiss();
-        System.out.println("DECRYPTION ERROR");
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         progressDialog.dismiss();
         System.out.println("GENERAL ERROR");
     }

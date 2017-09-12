@@ -206,6 +206,7 @@
         android:layout_marginRight="14dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="12dp"
+        android:maxLength="100"
         android:hint="Description"
         android:backgroundTint="@color/colorPrimary"
         android:inputType="text"

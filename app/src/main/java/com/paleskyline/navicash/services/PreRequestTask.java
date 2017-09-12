@@ -124,8 +124,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     }
 
     public interface PreRequestOutcome {
-        void onPreRequestTaskFailure();
         void onPreRequestTaskSuccess(RestRequest... requests);
+        void onPreRequestTaskFailure();
     }
 
     @Override
@@ -183,7 +183,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     // Shuffle items so that each user's categories are inserted in a different
                     // order making it difficult for sysadmins to guess a certain category given
-                    // the cipher text length.
+                    // the cipher text length or order of records in db table.
 
                     Collections.shuffle(generalCategories);
 
@@ -364,7 +364,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
             }
 
         } catch (Exception e) {
-            // TODO: review error logging
+            // TODO: this exception should be logged somehow
             e.printStackTrace();
             return false;
         }

@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
                 return true;
             case R.id.sign_out:
-                apiService.deleteRefreshToken();
+                apiService.logout();
+                // TODO: handle loading screen here
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 //        } else if (id == R.id.change_data_password) {
 //            startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
 //        } else if (id == R.id.sign_out) {
-//            apiService.deleteRefreshToken();
+//            apiService.logout();
 //        }
 //
 //        return super.onOptionsItemSelected(item);
@@ -345,15 +346,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
     }
 
-//    @Override
-//    public void onAuthorizationError() {
-//        hideRefreshing();
-//        relaunch();
-//        System.out.println("AUTHORIZATION ERROR");
-//    }
-
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
         if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
             relaunch();
@@ -377,13 +371,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        hideRefreshing();
-        System.out.println("DECRYPTION ERROR");
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         hideRefreshing();
         System.out.println("GENERAL ERROR");
     }

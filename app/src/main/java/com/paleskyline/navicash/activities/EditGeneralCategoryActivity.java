@@ -95,25 +95,14 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         finish();
     }
 
-//    @Override
-//    public void onAuthorizationError() {
-//
-//    }
-
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         System.out.println(errorCode);
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        progressDialog.dismiss();
-        System.out.println("DECRYPTION ERROR");
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         progressDialog.dismiss();
         System.out.println("GENERAL ERROR");
     }

@@ -30,6 +30,7 @@ public class GeneralCategoryFragment extends Fragment {
     private RadioButton expenseRadioButton;
     private Button submit;
     private String iconName = "i0";
+    private final String defaultIcon = "i0";
 
     private GeneralCategory existingCategory;
     private boolean editing = false;
@@ -98,6 +99,10 @@ public class GeneralCategoryFragment extends Fragment {
                     return;
                 }
 
+                if (!isIconSelected()) {
+                    return;
+                }
+
                 int radioID = radioGroup.getCheckedRadioButtonId();
                 View radioButton = radioGroup.findViewById(radioID);
                 int radioButtonIndex = radioGroup.indexOfChild(radioButton);
@@ -160,15 +165,25 @@ public class GeneralCategoryFragment extends Fragment {
     }
 
     private boolean isValidCategoryName() {
-        // TODO: might need another check to ensure name isn't null
-        if (!editing) {
-            String category = InputService.capitaliseAndTrim(categoryName.getText().toString());
-            if (DataProvider.checkDuplicateGeneralCategory(category)) {
-                Toast.makeText(getActivity(), "Category already exists", Toast.LENGTH_SHORT).show();
-                return false;
-            } else {
-                return true;
+        String categoryString = categoryName.getText().toString();
+        if (categoryString.length() > 0) {
+            if (!editing) {
+                String category = InputService.capitaliseAndTrim(categoryName.getText().toString());
+                if (DataProvider.checkDuplicateGeneralCategory(category)) {
+                    Toast.makeText(getActivity(), R.string.general_category_already_exists, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
+            return true;
+        }
+        Toast.makeText(getActivity(), R.string.enter_category_name, Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private boolean isIconSelected() {
+        if (iconName.equals(defaultIcon)) {
+            Toast.makeText(getActivity(), R.string.select_category_icon, Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }

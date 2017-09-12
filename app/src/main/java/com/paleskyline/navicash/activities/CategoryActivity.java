@@ -164,19 +164,14 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 //    }
 
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
 //        Toast.makeText(getApplicationContext(), errorMessage,
 //                Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        System.out.println("DECRYPTION ERROR");
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         System.out.println("GENERAL ERROR");
     }
 

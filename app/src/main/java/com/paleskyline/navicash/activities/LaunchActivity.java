@@ -77,14 +77,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         startActivity(intent);
     }
 
-//    @Override
-//    public void onAuthorizationError() {
-//        System.out.println("AUTHORIZATION ERROR");
-//        initLayout();
-//    }
-
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR) {
@@ -95,12 +89,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-        System.out.println("DECRYPTION ERROR");
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         System.out.println("GENERAL ERROR");
     }
 

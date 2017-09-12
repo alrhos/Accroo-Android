@@ -75,8 +75,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     }
 
     public interface PostRequestOutcome {
-        void onPostRequestTaskFailure();
         void onPostRequestTaskSuccess(int requestType);
+        void onPostRequestTaskFailure();
     }
 
     @Override
@@ -121,7 +121,6 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.CREATE_DEFAULT_CATEGORIES:
-
                     return true;
 
                 case ApiService.GET_DEFAULT_DATA:
@@ -233,25 +232,20 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.UPDATE_LOGIN_PASSWORD:
-
                     return true;
 
                 case ApiService.GET_KEY_PACKAGE:
 
-                   // System.out.println(((JSONObject) dataObject).toString());
-
                     JSONObject json = dataReceiver[0][0].getJSONObject("key");
-                    System.out.println(json.toString());
-
                     DataProvider.setKeyPackage(new KeyPackage(json));
                     return true;
 
                 case ApiService.UPDATE_DATA_PASSWORD:
-
                     return true;
 
             }
         } catch (Exception e) {
+            // TODO: this exception should be logged somehow
             e.printStackTrace();
             return false;
         }

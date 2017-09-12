@@ -1,6 +1,5 @@
 package com.paleskyline.navicash.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -74,16 +73,11 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     }
 
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
     }
 
     @Override
-    public void onUnsuccessfulDecryption() {
-
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
 
     }
 

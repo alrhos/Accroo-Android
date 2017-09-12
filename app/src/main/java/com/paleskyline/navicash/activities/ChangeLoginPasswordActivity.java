@@ -66,7 +66,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
 
 
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         String message;
         switch (errorCode) {
@@ -88,18 +88,8 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-//    public void onAuthorizationError() {
-//        progressDialog.dismiss();
-//        Toast.makeText(getApplicationContext(), R.string.error_incorrect_password, Toast.LENGTH_SHORT).show();
-//    }
-
     @Override
-    public void onUnsuccessfulDecryption() {
-        progressDialog.dismiss();
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         progressDialog.dismiss();
     }
 

@@ -150,9 +150,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                     if (!isCategorySelected()) {
                         return;
                     }
-                    if (!isDescriptionValid()) {
-                        return;
-                    }
 
                     progressDialog.show();
 
@@ -262,18 +259,24 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     // TODO: implement amount regex and toast
 
     private boolean isValidAmount() {
-        return true;
+        String amountString = amountField.getText().toString();
+        if (amountString.length() > 0) {
+            Double amount = Double.parseDouble(amountString);
+            if (amount < 0) {
+                Toast.makeText(getApplicationContext(), R.string.negative_amount, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        }
+        Toast.makeText(getApplicationContext(), R.string.enter_amount, Toast.LENGTH_SHORT).show();
+        return false;
     }
-
-    // TODO: implement category selected check and toast
 
     private boolean isCategorySelected() {
-        return true;
-    }
-
-    // TODO: implement description regex and toast
-
-    private boolean isDescriptionValid() {
+        if (selectedSubCategoryID == 0) {
+            Toast.makeText(getApplicationContext(), R.string.select_sub_category, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -296,25 +299,14 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     @Override
-    public void onUnsuccessfulRequest(int requestType, int errorCode) {
+    public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
 //        Toast.makeText(getApplicationContext(), errorMessage,
 //                Toast.LENGTH_SHORT).show();
     }
 
-//    @Override
-//    public void onAuthorizationError() {
-//        progressDialog.dismiss();
-//        System.out.println("AUTHORIZATION ERROR");
-//    }
-
     @Override
-    public void onUnsuccessfulDecryption() {
-        System.out.println("DECRYPTION ERROR");
-    }
-
-    @Override
-    public void onGeneralError() {
+    public void onError() {
         System.out.println("GENERAL ERROR");
     }
 
