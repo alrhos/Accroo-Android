@@ -81,6 +81,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public GeneralCategoryViewHolder(View view) {
             super(view);
+            //View layout = view.findViewById(R.id.category_t);
             category = (TextView) view.findViewById(R.id.category_name);
             amount = (TextView) view.findViewById(R.id.category_amount);
             icon = (ImageView) view.findViewById(R.id.category_icon);
