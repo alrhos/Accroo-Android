@@ -2,7 +2,6 @@ package com.paleskyline.navicash.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -23,6 +22,7 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
         } else {
             setContentView(R.layout.activity_select_sub_category);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            findViewById(R.id.category_overview_swipe_refresh).setEnabled(false);
         }
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,7 +50,7 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
 
     @Override
     public void onCategorySwipeRefresh() {
-        // TODO: call get all categories data or consider disable swipe to refresh here
+        // No invoked
     }
 
     @Override
