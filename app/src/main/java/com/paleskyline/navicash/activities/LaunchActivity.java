@@ -22,13 +22,13 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initialized = true;
-        setContentView(R.layout.activity_launch_loading);
         autoLogin();
     }
 
 
 
     private void autoLogin() {
+        setContentView(R.layout.activity_launch_loading);
 
         ApiService apiService = new ApiService(this, getApplicationContext());
 
@@ -83,6 +83,12 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR) {
             setContentView(R.layout.activity_no_connection);
+            Button tryAgain = (Button) findViewById(R.id.try_again);
+            tryAgain.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    autoLogin();
+                }
+            });
         } else if (errorCode == ApiService.GENERAL_ERROR) {
             // TODO: need to handle this
         }

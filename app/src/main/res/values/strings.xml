@@ -99,4 +99,7 @@
     <string name="no_transactions">No transactions</string>
     <string name="no_categories">No categories</string>
 
+    <string name="no_connection">NO CONNECTION</string>
+    <string name="try_again">TRY AGAIN</string>
+
 </resources>

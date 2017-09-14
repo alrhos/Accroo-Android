@@ -21,10 +21,6 @@ public abstract class RequestCoordinator {
     private Object tag;
     private ArrayList<RestRequest> requests;
     private JSONObject[] dataReceiver;
-
-    private long start;
-    private static final long MINIMUM_DURATION = 800;
-
     private ArrayList<RestRequest> retryRequests;
 
     public RequestCoordinator(Context context, Object tag, JSONObject[] dataReceiver) {
@@ -46,8 +42,6 @@ public abstract class RequestCoordinator {
     // TODO: add functionality to check token expiry and request a new access token if necessary
 
     public void start() {
-        start = System.currentTimeMillis();
-        System.out.println("Started at:" + start);
         if (!requests.isEmpty()) {
             for (RestRequest request : requests) {
                 RequestDispatcher.getInstance(context).addRequest(request);
@@ -65,7 +59,6 @@ public abstract class RequestCoordinator {
         dataReceiver[index] = data;
         doneCount++;
         if (doneCount == requests.size()) {
-            measureElapsedTime();
             onSuccess();
         }
     }
@@ -120,7 +113,6 @@ public abstract class RequestCoordinator {
                 abort(RestRequest.GENERAL_ERROR);
             }
         } else {
-            System.out.println("ABORTING!!");
             abort(errorMessage);
         }
     }
@@ -128,29 +120,6 @@ public abstract class RequestCoordinator {
     protected void abort(String errorMessage) {
         RequestDispatcher.getInstance(context).flushRequests(tag);
         onFailure(errorMessage);
-    }
-
-    private void measureElapsedTime() {
-        long end = System.currentTimeMillis();
-        if ((end - start) < MINIMUM_DURATION) {
-            long delay = MINIMUM_DURATION - (end - start);
-            System.out.println("The request took: " + (end - start) + " seconds");
-            System.out.println("Adding a delay of: " + delay);
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    onSuccess();
-//                    // exec code here
-//                }
-//            }, delay);
-//            try {
-//                Thread.sleep(delay);
-//            } catch (InterruptedException e) {
-//                return;
-//            }
-        } else {
-            System.out.println("No delay needed - request duration: " + (end - start));
-        }
     }
 
     protected abstract void onSuccess();

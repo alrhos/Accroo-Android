@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                         categoryOverviewFragment.refreshAdapter();
                     }
                 }
-            }, 200);
+            }, 300);
         }
     }
 
