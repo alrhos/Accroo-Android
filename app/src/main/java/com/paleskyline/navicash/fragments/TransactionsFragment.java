@@ -2,7 +2,6 @@ package com.paleskyline.navicash.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.TransactionAdapter;
@@ -28,6 +28,8 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
     private TransactionAdapter transactionAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private TextView emptyView;
     private FragmentInteractionListener fragmentListener;
 
     public TransactionsFragment() {}
@@ -73,9 +75,10 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_transactions, container, false);
-        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
+        emptyView = (TextView) fragmentView.findViewById(R.id.empty_view);
+
+        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(transactionAdapter);
 
@@ -100,12 +103,12 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
             @Override
             public void onRefresh() {
-                //swipeRefreshLayout.setRefreshing(false);
                 fragmentListener.onTransactionSwipeRefresh();
             }
+
         });
 
-        //swipeRefreshLayout.setEnabled(false);
+        transactionAdapter.refreshDataSource();
 
         return fragmentView;
     }
@@ -167,6 +170,17 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         swipeRefreshLayout.setRefreshing(status);
     }
 
+    @Override
+    public void onEmptyList() {
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onNonEmptyList() {
+        emptyView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onTransactionSelected(Transaction transaction) {

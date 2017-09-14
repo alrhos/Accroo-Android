@@ -36,15 +36,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
-
-        // TODO: data source can probably be initialised from within
-
         this.context = context;
         this.adapterInteractionListener = adapterInteractionListener;
         inflater = LayoutInflater.from(context);
         transactions = new ArrayList<>();
         groupedTransactions = new LinkedHashMap<>();
-        refreshDataSource();
     }
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
@@ -58,6 +54,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public interface AdapterInteractionListener {
+        void onEmptyList();
+        void onNonEmptyList();
         void onTransactionSelected(Transaction transaction);
     }
 
@@ -130,24 +128,28 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         groupedTransactions.clear();
         transactions = DataProvider.getTransactions();
 
-        for (Transaction transaction : transactions) {
-            if (!groupedTransactions.containsKey(transaction.getDate())) {
-                groupedTransactions.put(transaction.getDate(), null);
-            }
-        }
-
-        for (Date key : groupedTransactions.keySet()) {
-            ArrayList<Transaction> matches = new ArrayList<>();
+        if (transactions.size() == 0) {
+            adapterInteractionListener.onEmptyList();
+        } else {
+            adapterInteractionListener.onNonEmptyList();
             for (Transaction transaction : transactions) {
-                if (key.equals(transaction.getDate())) {
-                    matches.add(transaction);
+                if (!groupedTransactions.containsKey(transaction.getDate())) {
+                    groupedTransactions.put(transaction.getDate(), null);
                 }
             }
-            groupedTransactions.put(key, matches);
+
+            for (Date key : groupedTransactions.keySet()) {
+                ArrayList<Transaction> matches = new ArrayList<>();
+                for (Transaction transaction : transactions) {
+                    if (key.equals(transaction.getDate())) {
+                        matches.add(transaction);
+                    }
+                }
+                groupedTransactions.put(key, matches);
+            }
+
+            notifyDataSetChanged();
         }
-
-        notifyDataSetChanged();
-
     }
 
 }

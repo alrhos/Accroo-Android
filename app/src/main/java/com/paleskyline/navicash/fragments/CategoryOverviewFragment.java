@@ -2,7 +2,6 @@ package com.paleskyline.navicash.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.adapters.CategoryOverviewAdapter;
@@ -31,6 +31,8 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
     private CategoryOverviewAdapter categoryOverviewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FragmentInteractionListener fragmentListener;
+    private RecyclerView recyclerView;
+    private TextView emptyView;
 
     public CategoryOverviewFragment() {}
 
@@ -71,7 +73,9 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_category_overview, container, false);
-        RecyclerView recyclerView = (RecyclerView) fragmentView.findViewById(R.id.category_overview_recycler_view);
+        emptyView = (TextView) fragmentView.findViewById(R.id.empty_view);
+
+        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.category_overview_recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(categoryOverviewAdapter);
@@ -99,6 +103,8 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
                 fragmentListener.onCategorySwipeRefresh();
             }
         });
+
+        categoryOverviewAdapter.refreshDataSource();
 
         return fragmentView;
 
@@ -160,6 +166,18 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         void onCategorySwipeRefresh();
         void hideFab();
         void showFab();
+    }
+
+    @Override
+    public void onEmptyList() {
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onNonEmptyList() {
+        emptyView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override

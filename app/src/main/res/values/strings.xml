@@ -96,5 +96,7 @@
     <string name="general_category_already_exists">General category already exists</string>
     <string name="enter_category_name">Please enter a category name</string>
     <string name="select_category_icon">Please select a category icon</string>
+    <string name="no_transactions">No transactions</string>
+    <string name="no_categories">No categories</string>
 
 </resources>
