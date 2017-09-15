@@ -161,7 +161,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } else {
                     View a = inflater.inflate(R.layout.sub_category_summary_item, null, false);
                     TextView tv = (TextView) a.findViewById(R.id.sub_category_name);
-                    tv.setText("No sub categories exist");
+                    tv.setText(R.string.no_sub_categories);
                     ll.addView(a);
                 }
 
