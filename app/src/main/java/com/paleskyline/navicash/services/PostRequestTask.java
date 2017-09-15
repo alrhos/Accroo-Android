@@ -150,13 +150,6 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                         if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
                             transactions.add(transaction);
                         }
-
-//                        if (transaction.getDate().after(startDate) && transaction.getDate().before(endDate)) {
-//                            transactions.add(transaction);
-//                        } else if (transaction.getDate().equals(startDate) || transaction.getDate().equals(endDate)) {
-//                            transactions.add(transaction);
-//                        }
-
                     }
 
                     DataProvider.loadData(generalCategories, subCategories, transactions);
@@ -234,6 +227,13 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.UPDATE_LOGIN_PASSWORD:
+
+                    refreshToken = dataReceiver[0][0].get("refreshToken").toString();
+                    accessToken = dataReceiver[0][0].get("accessToken").toString();
+
+                    AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
+                    AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+
                     return true;
 
                 case ApiService.GET_KEY_PACKAGE:
