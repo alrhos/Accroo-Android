@@ -218,5 +218,4 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_transaction_date" />
 
-
 </android.support.constraint.ConstraintLayout>

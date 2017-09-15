@@ -162,6 +162,7 @@ public class GeneralCategoryFragment extends Fragment {
         radioGroup.setEnabled(editable);
         incomeRadioButton.setEnabled(editable);
         expenseRadioButton.setEnabled(editable);
+        submit.setEnabled(editable);
     }
 
     private boolean isValidCategoryName() {

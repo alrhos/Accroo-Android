@@ -37,7 +37,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         } else {
             setContentView(R.layout.activity_edit_general_category);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
             apiService = new ApiService(this, getApplicationContext());
             generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
             generalCategoryFragment.toggleEditing();
