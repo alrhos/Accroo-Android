@@ -136,6 +136,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
 
         if (startDate.before(endDate)) {
+
+            DataProvider.setStartDate(startDate);
+            DataProvider.setEndDate(endDate);
+
             dataReceiver = new JSONObject[2];
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
                 @Override

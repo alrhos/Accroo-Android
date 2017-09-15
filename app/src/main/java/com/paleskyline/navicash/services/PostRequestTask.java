@@ -147,11 +147,15 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                         JSONObject t = transactionsArray.getJSONObject(k);
                         Transaction transaction = new Transaction(t);
 
-                        if (transaction.getDate().after(startDate) && transaction.getDate().before(endDate)) {
-                            transactions.add(transaction);
-                        } else if (transaction.getDate().equals(startDate) || transaction.getDate().equals(endDate)) {
+                        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
                             transactions.add(transaction);
                         }
+
+//                        if (transaction.getDate().after(startDate) && transaction.getDate().before(endDate)) {
+//                            transactions.add(transaction);
+//                        } else if (transaction.getDate().equals(startDate) || transaction.getDate().equals(endDate)) {
+//                            transactions.add(transaction);
+//                        }
 
                     }
 

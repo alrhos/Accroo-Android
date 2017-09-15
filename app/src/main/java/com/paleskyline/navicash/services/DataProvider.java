@@ -11,6 +11,7 @@ import com.paleskyline.navicash.model.TransactionComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -24,6 +25,8 @@ public class DataProvider {
     private static ArrayList<Transaction> transactions = new ArrayList<>();
     private static RootCategory[] rootCategories;
     private static KeyPackage keyPackage;
+    private static Date startDate, endDate;
+
 
     public static void loadData(ArrayList<GeneralCategory> generalCategories,
                                 ArrayList<SubCategory> subCategories,
@@ -116,6 +119,14 @@ public class DataProvider {
         return keyPackage;
     }
 
+    public static void setStartDate(Date startDate) {
+        DataProvider.startDate = startDate;
+    }
+
+    public static void setEndDate(Date endDate) {
+        DataProvider.endDate = endDate;
+    }
+
     public static ArrayList<Transaction> getTransactions() {
         return transactions;
     }
@@ -153,23 +164,29 @@ public class DataProvider {
     }
 
     public static void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        for (SubCategory subCategory : subCategories) {
-            if (transaction.getSubCategoryID() == subCategory.getId()) {
-                transaction.setParent(subCategory);
-                subCategory.getTransactions().add(transaction);
-                break;
+        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+            transactions.add(transaction);
+            for (SubCategory subCategory : subCategories) {
+                if (transaction.getSubCategoryID() == subCategory.getId()) {
+                    transaction.setParent(subCategory);
+                    subCategory.getTransactions().add(transaction);
+                    break;
+                }
             }
-        }
 
-        Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
+            Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
+        }
     }
 
     public static void updateTransaction(Transaction transaction) {
 
         for (int i = 0; i < transactions.size(); i++) {
             if (transactions.get(i).getId() == transaction.getId()) {
-                transactions.set(i, transaction);
+                if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+                    transactions.set(i, transaction);
+                } else {
+                    transactions.remove(i);
+                }
                 break;
             }
         }

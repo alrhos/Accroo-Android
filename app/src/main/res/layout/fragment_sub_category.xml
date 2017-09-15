@@ -20,6 +20,8 @@
         android:layout_width="290dp"
         android:layout_height="26dp"
         android:text="@string/general_category"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,8 +32,11 @@
 
     <EditText
         android:id="@+id/sub_category_name"
-        android:layout_width="match_parent"
+        android:layout_width="293dp"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:inputType="text"
         android:hint="@string/category_name"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginStart="8dp"
