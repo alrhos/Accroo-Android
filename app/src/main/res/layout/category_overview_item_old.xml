@@ -14,7 +14,7 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <ImageView
-            android:id="@+id/category_overview_icon"
+            android:id="@+id/category_icon"
             android:layout_width="55dp"
             android:layout_height="55dp"
             app:srcCompat="@drawable/i0"
@@ -26,7 +26,7 @@
             android:layout_marginStart="16dp" />
 
         <TextView
-            android:id="@+id/category_overview_general_category"
+            android:id="@+id/category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"

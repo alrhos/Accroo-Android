@@ -49,8 +49,8 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public CategoryOverviewViewHolder(View view) {
             super(view);
-            categoryIcon = (ImageView) view.findViewById(R.id.category_overview_icon);
-            generalCategory = (TextView) view.findViewById(R.id.category_overview_general_category);
+            categoryIcon = (ImageView) view.findViewById(R.id.category_icon);
+            generalCategory = (TextView) view.findViewById(R.id.category_name);
         }
     }
 
