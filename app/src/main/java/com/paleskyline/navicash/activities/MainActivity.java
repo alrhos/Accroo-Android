@@ -356,7 +356,10 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+        if (errorCode == ApiService.UNAUTHORIZED) {
+            apiService.logout();
+            relaunch();
+        } else if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
             relaunch();
         } else {
             String message;

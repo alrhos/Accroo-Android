@@ -224,8 +224,6 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.DELETE_REFRESH_TOKEN:
-
-                    AuthManager.getInstance(context).clearSavedData();
                     return true;
 
                     // TODO: clear local db tables with user specific data
