@@ -66,6 +66,13 @@ public class SubCategoryFragment extends Fragment {
 
         }
 
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentListener.selectGeneralCategory();
+            }
+        });
+
         generalCategoryName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

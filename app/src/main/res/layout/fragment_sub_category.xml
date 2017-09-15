@@ -32,11 +32,12 @@
 
     <EditText
         android:id="@+id/sub_category_name"
-        android:layout_width="293dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
         android:inputType="text"
+        android:textSize="16sp"
         android:hint="@string/category_name"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginStart="8dp"

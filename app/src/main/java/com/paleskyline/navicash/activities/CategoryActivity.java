@@ -59,6 +59,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             ViewPager viewPager = (ViewPager) findViewById(R.id.category_viewpager);
             viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(2);
 
             // Give the TabLayout the ViewPager
             final TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tab_layout);

@@ -28,7 +28,6 @@
         android:layout_height="55dp"
         app:srcCompat="@drawable/i0"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp" />
@@ -62,7 +61,9 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="36dp"
-        app:layout_constraintTop_toBottomOf="@+id/select_icon">
+        app:layout_constraintTop_toBottomOf="@+id/select_icon"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
 
         <RadioButton
             android:id="@+id/income_category"
