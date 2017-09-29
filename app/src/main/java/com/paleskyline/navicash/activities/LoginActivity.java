@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
 
             progressDialog = new ProgressDialog(LoginActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
             addListeners();

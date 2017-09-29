@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.services.ApiService;
@@ -54,7 +55,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                     if (apiService.initializeKey(password)) {
                         startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                     } else {
-                        // TODO: incorrect password to decrypt key
+                        Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -42,6 +42,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             generalCategoryFragment.toggleEditing();
             generalCategory = getIntent().getParcelableExtra("generalCategory");
             progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
+            progressDialog.setCancelable(false);
             progressDialog.setMessage("Saving...");
         }
     }

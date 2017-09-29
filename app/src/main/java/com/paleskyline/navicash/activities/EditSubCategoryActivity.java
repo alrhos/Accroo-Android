@@ -41,6 +41,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             subCategoryFragment.toggleEditing();
             subCategory = getIntent().getParcelableExtra("subCategory");
             progressDialog = new ProgressDialog(EditSubCategoryActivity.this);
+            progressDialog.setCancelable(false);
             progressDialog.setMessage("Saving...");
         }
     }

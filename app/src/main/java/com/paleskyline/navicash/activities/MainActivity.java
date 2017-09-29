@@ -1,5 +1,6 @@
 package com.paleskyline.navicash.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
+    private ProgressDialog progressDialog;
 
     private ApiService apiService;
 
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 relaunch();
             } else {
                 setContentView(R.layout.activity_main);
+                progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage(getResources().getString(R.string.signing_out));
+                progressDialog.setCancelable(false);
 
                 startDate = new Date(getIntent().getLongExtra("startDate", -1));
                 endDate = new Date (getIntent().getLongExtra("endDate", -1));
@@ -179,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
                 return true;
             case R.id.sign_out:
+                progressDialog.show();
                 apiService.logout();
                 // TODO: handle loading screen here
                 return true;
@@ -322,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public void onSuccess(int requestType) {
         hideRefreshing();
         if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+            progressDialog.dismiss();
             relaunch();
         } else if (requestType == ApiService.GET_DEFAULT_DATA) {
             Handler handler = new Handler();
@@ -360,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+            progressDialog.dismiss();
             relaunch();
         } else {
             String message;

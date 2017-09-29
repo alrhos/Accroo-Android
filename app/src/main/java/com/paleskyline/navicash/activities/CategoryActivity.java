@@ -51,6 +51,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
+            progressDialog.setCancelable(false);
             progressDialog.setMessage("Loading...");
 
             apiService = new ApiService(this, getApplicationContext());

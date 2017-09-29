@@ -74,6 +74,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
             progressDialog = new ProgressDialog(TransactionActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.submitting));
+            progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
             calendar = Calendar.getInstance();
