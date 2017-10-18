@@ -161,7 +161,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     user.setKeyPackage(keyPackage);
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.USER, user.toJSON(), context));
+                            RequestBuilder.REGISTER, user.toJSON(), context));
 
                     // TODO: review password security here - probably need to clear user object
 

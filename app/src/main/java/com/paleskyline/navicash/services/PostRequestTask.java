@@ -87,20 +87,20 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.GET_REFRESH_TOKEN:
 
-                    accessToken = dataReceiver[0][0].getString("accessToken");
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
+                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
 
                     AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
                     AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
                     AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
 
-                    JSONObject keyData = dataReceiver[0][0].getJSONObject("key");
+                    JSONObject keyData = dataReceiver[0][0].getJSONObject("keyPackage");
 
-                    String key = keyData.getString("dataKey");
+                    String key = keyData.getString("key");
                     String nonce = keyData.getString("nonce");
                     String salt = keyData.getString("salt");
-                    int memlimit = keyData.getInt("memLimit");
-                    int opslimit = keyData.getInt("opsLimit");
+                    int memlimit = keyData.getInt("memlimit");
+                    int opslimit = keyData.getInt("opslimit");
 
                     KeyPackage keyPackage = new KeyPackage(key, nonce, salt, opslimit, memlimit);
 
@@ -110,8 +110,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.CREATE_USER:
 
-                    refreshToken = dataReceiver[0][0].get("refreshToken").toString();
-                    accessToken = dataReceiver[0][0].get("accessToken").toString();
+                    refreshToken = dataReceiver[0][0].getString("refreshToken");
+                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
+                    //accessToken = dataReceiver[0][0].get("accessToken").toString();
 
                     AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
                     AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
@@ -121,6 +122,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.CREATE_DEFAULT_CATEGORIES:
+
                     return true;
 
                 case ApiService.GET_DEFAULT_DATA:
@@ -228,8 +230,11 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_LOGIN_PASSWORD:
 
-                    refreshToken = dataReceiver[0][0].get("refreshToken").toString();
-                    accessToken = dataReceiver[0][0].get("accessToken").toString();
+//                    refreshToken = dataReceiver[0][0].get("refreshToken").toString();
+//                    accessToken = dataReceiver[0][0].get("accessToken").toString();
+
+                    refreshToken = dataReceiver[0][0].getString("refreshToken");
+                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
 
                     AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
                     AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
@@ -238,7 +243,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.GET_KEY_PACKAGE:
 
-                    JSONObject json = dataReceiver[0][0].getJSONObject("key");
+                    JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
                     DataProvider.setKeyPackage(new KeyPackage(json));
                     return true;
 
