@@ -76,21 +76,34 @@ public class CryptoManager {
 
     private KeyPackage generateKeyPackage(byte[] key, char[] password) {
 
+        System.out.println("ALGO: " + Sodium.crypto_pwhash_alg_argon2i13());
+
         // Generate byte array from password
 
         byte[] passwordBytes = passwordToByteArray(password);
 
         // Derive key from password byte array
 
-        int saltSize = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
+        //int saltSize = Sodium.crypto_pwhash_scryptsalsa208sha256_saltbytes();
+        int saltSize = Sodium.crypto_pwhash_saltbytes();
+        System.out.println("Salt size: " + saltSize);
+        System.out.println("Max password hash: " + Sodium.crypto_pwhash_bytes_max());
+        System.out.println("Password bytes length range: " + Sodium.crypto_pwhash_passwd_min() + " - " + Sodium.crypto_pwhash_passwd_max());
         byte[] salt = random.randomBytes(saltSize);
         byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
 
-        int opslimit = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
-        int memlimit = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
+//        int opslimit = Sodium.crypto_pwhash_scryptsalsa208sha256_opslimit_interactive();
+//        int memlimit = Sodium.crypto_pwhash_scryptsalsa208sha256_memlimit_interactive();
 
-        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
-                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
+        int opslimit = Sodium.crypto_pwhash_opslimit_interactive();
+        int memlimit = Sodium.crypto_pwhash_memlimit_interactive();
+
+
+//        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
+//                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
+
+        Sodium.crypto_pwhash(dataPasswordKey, dataPasswordKey.length, passwordBytes,
+                passwordBytes.length, salt, opslimit, memlimit, Sodium.crypto_pwhash_alg_default());
 
         // Encrypt the master key using the key derived from the password
 
@@ -209,8 +222,13 @@ public class CryptoManager {
         int opslimit = keyPackage.getOpslimit();
         int memlimit = keyPackage.getMemlimit();
 
-        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
-                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
+//        Sodium.crypto_pwhash_scryptsalsa208sha256(dataPasswordKey, dataPasswordKey.length,
+//                passwordBytes, passwordBytes.length, salt, opslimit, memlimit);
+
+
+        Sodium.crypto_pwhash(dataPasswordKey, dataPasswordKey.length, passwordBytes,
+                passwordBytes.length, salt, opslimit, memlimit, Sodium.crypto_pwhash_alg_default());
+
 
         byte[] nonce = decode(keyPackage.getNonce());
         byte[] encryptedMasterKey = decode(keyPackage.getEncryptedMasterKey());

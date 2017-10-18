@@ -30,8 +30,6 @@ public class KeyPackage implements Parcelable {
 
     public KeyPackage(JSONObject json) throws JSONException {
 
-        System.out.println(json.toString());
-
         this.encryptedMasterKey = json.getString("dataKey");
         this.nonce = json.getString("nonce");
         this.salt = json.getString("salt");
@@ -83,11 +81,11 @@ public class KeyPackage implements Parcelable {
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
-            json.put("dataKey", encryptedMasterKey);
+            json.put("key", encryptedMasterKey);
             json.put("salt", salt);
             json.put("nonce", nonce);
-            json.put("opsLimit", opslimit);
-            json.put("memLimit", memlimit);
+            json.put("opslimit", opslimit);
+            json.put("memlimit", memlimit);
         } catch (JSONException e) {
             e.printStackTrace();
         }
