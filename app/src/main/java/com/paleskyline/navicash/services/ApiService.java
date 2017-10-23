@@ -162,13 +162,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void createUser(User user) {
+    public void createUser(final User user) {
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_USER, ApiService.this, context).execute(dataReceiver);
+                new PostRequestTask(CREATE_USER, ApiService.this, context, user).execute(dataReceiver);
             }
 
             @Override

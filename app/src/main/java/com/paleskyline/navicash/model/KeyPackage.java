@@ -15,14 +15,17 @@ public class KeyPackage implements Parcelable {
     private String encryptedMasterKey;
     private String nonce;
     private String salt;
+    private int algorithm;
     private int opslimit;
     private int memlimit;
 
-    public KeyPackage(String encryptedMasterKey, String nonce, String salt, int opslimit, int memlimit) {
+    public KeyPackage(String encryptedMasterKey, String nonce, String salt, int algorithm,
+                      int opslimit, int memlimit) {
 
         this.encryptedMasterKey = encryptedMasterKey;
         this.nonce = nonce;
         this.salt = salt;
+        this.algorithm = algorithm;
         this.opslimit = opslimit;
         this.memlimit = memlimit;
 
@@ -33,8 +36,9 @@ public class KeyPackage implements Parcelable {
         this.encryptedMasterKey = json.getString("dataKey");
         this.nonce = json.getString("nonce");
         this.salt = json.getString("salt");
-        this.opslimit = json.getInt("opsLimit");
-        this.memlimit = json.getInt("memLimit");
+        this.algorithm = json.getInt("algorithm");
+        this.opslimit = json.getInt("opslimit");
+        this.memlimit = json.getInt("memlimit");
 
     }
 
@@ -62,6 +66,14 @@ public class KeyPackage implements Parcelable {
         this.salt = salt;
     }
 
+    public int getAlgorithm() {
+        return algorithm;
+    }
+
+    public void setAlgorithm(int algorithm) {
+        this.algorithm = algorithm;
+    }
+
     public int getOpslimit() {
         return opslimit;
     }
@@ -82,8 +94,9 @@ public class KeyPackage implements Parcelable {
         JSONObject json = new JSONObject();
         try {
             json.put("key", encryptedMasterKey);
-            json.put("salt", salt);
             json.put("nonce", nonce);
+            json.put("salt", salt);
+            json.put("algorithm", algorithm);
             json.put("opslimit", opslimit);
             json.put("memlimit", memlimit);
         } catch (JSONException e) {
@@ -102,6 +115,7 @@ public class KeyPackage implements Parcelable {
         dest.writeString(this.encryptedMasterKey);
         dest.writeString(this.nonce);
         dest.writeString(this.salt);
+        dest.writeInt(this.algorithm);
         dest.writeInt(this.opslimit);
         dest.writeInt(this.memlimit);
     }
@@ -110,6 +124,7 @@ public class KeyPackage implements Parcelable {
         this.encryptedMasterKey = in.readString();
         this.nonce = in.readString();
         this.salt = in.readString();
+        this.algorithm = in.readInt();
         this.opslimit = in.readInt();
         this.memlimit = in.readInt();
     }
@@ -132,6 +147,7 @@ public class KeyPackage implements Parcelable {
                 "encryptedMasterKey='" + encryptedMasterKey + '\'' +
                 ", nonce='" + nonce + '\'' +
                 ", salt='" + salt + '\'' +
+                ", algorithm=" + algorithm +
                 ", opslimit=" + opslimit +
                 ", memlimit=" + memlimit +
                 '}';

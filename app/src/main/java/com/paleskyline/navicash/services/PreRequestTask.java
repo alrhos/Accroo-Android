@@ -346,7 +346,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
 
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.GET,
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
                             null, RequestBuilder.DATA_PASSWORD, username, password, context));
 
                     return true;

@@ -9,6 +9,7 @@ import com.paleskyline.navicash.model.GeneralCategory;
 import com.paleskyline.navicash.model.KeyPackage;
 import com.paleskyline.navicash.model.SubCategory;
 import com.paleskyline.navicash.model.Transaction;
+import com.paleskyline.navicash.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -99,10 +100,11 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     String key = keyData.getString("key");
                     String nonce = keyData.getString("nonce");
                     String salt = keyData.getString("salt");
+                    int algorithm = keyData.getInt("algorithm");
                     int memlimit = keyData.getInt("memlimit");
                     int opslimit = keyData.getInt("opslimit");
 
-                    KeyPackage keyPackage = new KeyPackage(key, nonce, salt, opslimit, memlimit);
+                    KeyPackage keyPackage = new KeyPackage(key, nonce, salt, algorithm, opslimit, memlimit);
 
                     DataProvider.setKeyPackage(keyPackage);
 
@@ -110,10 +112,12 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.CREATE_USER:
 
+                    username = ((User) dataObject).getEmail();
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
                     accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
                     //accessToken = dataReceiver[0][0].get("accessToken").toString();
 
+                    AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
                     AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
                     AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
 
@@ -219,6 +223,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.DELETE_REFRESH_TOKEN:
+
                     return true;
 
                     // TODO: clear local db tables with user specific data
