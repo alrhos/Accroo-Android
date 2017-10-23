@@ -184,9 +184,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
                 return true;
             case R.id.sign_out:
-                progressDialog.show();
                 apiService.logout();
-                // TODO: handle loading screen here
+                relaunch();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -327,10 +326,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSuccess(int requestType) {
         hideRefreshing();
-        if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-            progressDialog.dismiss();
-            relaunch();
-        } else if (requestType == ApiService.GET_DEFAULT_DATA) {
+//        if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+//            progressDialog.dismiss();
+//            relaunch();
+//        } else
+        if (requestType == ApiService.GET_DEFAULT_DATA) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                         categoryOverviewFragment.refreshAdapter();
                     }
                 }
-            }, 300);
+            }, 250);
         }
     }
 
@@ -366,9 +366,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();
-        } else if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-            progressDialog.dismiss();
-            relaunch();
+//        } else if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
+//            progressDialog.dismiss();
+//            relaunch();
         } else {
             String message;
             switch (errorCode) {

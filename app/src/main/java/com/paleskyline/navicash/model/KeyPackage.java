@@ -33,7 +33,7 @@ public class KeyPackage implements Parcelable {
 
     public KeyPackage(JSONObject json) throws JSONException {
 
-        this.encryptedMasterKey = json.getString("dataKey");
+        this.encryptedMasterKey = json.getString("key");
         this.nonce = json.getString("nonce");
         this.salt = json.getString("salt");
         this.algorithm = json.getInt("algorithm");

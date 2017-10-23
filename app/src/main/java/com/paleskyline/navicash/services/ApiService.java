@@ -35,7 +35,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_SUB_CATEGORY = 10;
     public final static int UPDATE_SUB_CATEGORY = 11;
     public final static int DELETE_SUB_CATEGORY = 12;
-    public final static int DELETE_REFRESH_TOKEN = 13;
+  //  public final static int DELETE_REFRESH_TOKEN = 13;
     public final static int UPDATE_EMAIL = 14;
     public final static int UPDATE_LOGIN_PASSWORD = 15;
     public final static int GET_KEY_PACKAGE = 16;
@@ -84,7 +84,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             CryptoManager.getInstance().initMasterKey(context);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -132,6 +131,33 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         new PreRequestTask(GET_REFRESH_TOKEN, this, context, coordinator, username, password).execute();
 
     }
+
+    public void logout() {
+        try {
+            AuthManager.getInstance(context).clearSavedData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//                new PostRequestTask(DELETE_REFRESH_TOKEN, ApiService.this, context).execute(dataReceiver);
+//            }
+//
+//            @Override
+//            protected void onFailure(String errorMessage) {
+//                //handleFailedRequest(DELETE_REFRESH_TOKEN, errorMessage);
+//                requestOutcome.onFailure(DELETE_REFRESH_TOKEN, mapErrorMessage(errorMessage));
+//            }
+//        };
+//
+//        new PreRequestTask(DELETE_REFRESH_TOKEN, this, context, coordinator).execute();
+
 
     public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
 
@@ -382,27 +408,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-
-    public void logout() {
-
-        dataReceiver = new JSONObject[1];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                new PostRequestTask(DELETE_REFRESH_TOKEN, ApiService.this, context).execute(dataReceiver);
-            }
-
-            @Override
-            protected void onFailure(String errorMessage) {
-                //handleFailedRequest(DELETE_REFRESH_TOKEN, errorMessage);
-                requestOutcome.onFailure(DELETE_REFRESH_TOKEN, mapErrorMessage(errorMessage));
-            }
-        };
-
-        new PreRequestTask(DELETE_REFRESH_TOKEN, this, context, coordinator).execute();
-
-    }
-
     public void updateEmail(final String newEmail, char[] password) {
 
         dataReceiver = new JSONObject[1];
@@ -494,13 +499,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //            requestOutcome.onFailure(requestType, mapErrorMessage(errorMessage));
 //        }
 //    }
-
-
-    // TODO: add data service methods
-
-    private void syncTransactions() {
-        // Run in background after certain data services to get latest transaction data
-    }
 
     @Override
     public void onPreRequestTaskSuccess(RestRequest... requests) {

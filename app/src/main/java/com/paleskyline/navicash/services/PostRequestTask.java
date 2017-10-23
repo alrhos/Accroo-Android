@@ -222,11 +222,11 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     DataProvider.deleteSubCategory(subCategory);
                     return true;
 
-                case ApiService.DELETE_REFRESH_TOKEN:
-
-                    return true;
-
-                    // TODO: clear local db tables with user specific data
+//                case ApiService.DELETE_REFRESH_TOKEN:
+//
+//                    return true;
+//
+//                    // TODO: clear local db tables with user specific data
 
                 case ApiService.UPDATE_EMAIL:
 
@@ -253,6 +253,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     return true;
 
                 case ApiService.UPDATE_DATA_PASSWORD:
+
                     return true;
 
             }
