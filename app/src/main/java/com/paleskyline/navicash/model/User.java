@@ -81,7 +81,6 @@ public class User {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(json);
         return json;
     }
 

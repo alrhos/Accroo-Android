@@ -73,7 +73,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         switch (errorCode) {
             case ApiService.UNAUTHORIZED:
                 // TODO: change string to incorrect login password
-                message = getResources().getString(R.string.error_incorrect_password);
+                message = getResources().getString(R.string.incorrect_password);
                 break;
             case ApiService.CONNECTION_ERROR:
                 message = getResources().getString(R.string.connection_error);

@@ -46,11 +46,8 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
                 passwordField.getText().getChars(0, passwordLength, password, 0);
 
                 apiService.updateEmail(newEmail, password);
-
             }
         });
-
-
     }
 
     @Override

@@ -91,12 +91,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 dateField.setText(existingTransaction.getDateString());
                 descriptionField.setText(existingTransaction.getDescription());
 
-                System.out.println(((SubCategory) existingTransaction.getParent()).getParent().toString());
-
                 String icon = ((GeneralCategory) ((SubCategory) existingTransaction.getParent()).getParent()).getIconFile();
                 int iconId = getApplicationContext().getResources().getIdentifier(
-                        "@drawable/" + icon, null,
-                        getApplicationContext().getPackageName());
+                        "@drawable/" + icon, null, getApplicationContext().getPackageName());
 
                 categoryIcon.setImageResource(iconId);
                 String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();

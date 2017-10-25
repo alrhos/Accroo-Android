@@ -71,7 +71,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
         String message;
         switch (errorCode) {
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.error_incorrect_password);
+                message = getResources().getString(R.string.incorrect_password);
                 break;
             case ApiService.CONNECTION_ERROR:
                 message = getResources().getString(R.string.connection_error);

@@ -90,21 +90,21 @@ public class RequestBuilder {
     }
 
 
-    public static RestRequest deleteRefreshToken(int index, RequestCoordinator coordinator,
-                                                 Context context) throws Exception {
-
-
-        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
-
-        String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
-
-        String url = baseURL + REFRESH_TOKEN;
-
-        return new RestRequest(Request.Method.DELETE, url, null, responseListener,
-                errorListener, RestRequest.TOKEN, authValue, context);
-
-    }
+//    public static RestRequest deleteRefreshToken(int index, RequestCoordinator coordinator,
+//                                                 Context context) throws Exception {
+//
+//
+//        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
+//
+//        String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+//
+//        String url = baseURL + REFRESH_TOKEN;
+//
+//        return new RestRequest(Request.Method.DELETE, url, null, responseListener,
+//                errorListener, RestRequest.TOKEN, authValue, context);
+//
+//    }
 
 
     public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,

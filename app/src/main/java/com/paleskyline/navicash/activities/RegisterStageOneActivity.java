@@ -10,15 +10,13 @@ import android.widget.Toast;
 
 import com.paleskyline.navicash.R;
 import com.paleskyline.navicash.model.User;
+import com.paleskyline.navicash.other.Constants;
 import com.paleskyline.navicash.services.ApiService;
 
 public class RegisterStageOneActivity extends AppCompatActivity {
 
-    private EditText emailAddress, loginPassword, confirmLoginPassword;
+    private EditText emailAddress, confirmEmailAddress, loginPassword, confirmLoginPassword;
     private Button next;
-    private char[] loginPwd;
-    private static final int MIN_PASSWORD_LENGTH = 10;
-    private static final int MAX_PASSWORD_LENGTH = 80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +25,7 @@ public class RegisterStageOneActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         emailAddress = (EditText) findViewById(R.id.email);
+        confirmEmailAddress = (EditText) findViewById(R.id.confirm_email);
         loginPassword = (EditText) findViewById(R.id.login_password);
         confirmLoginPassword = (EditText) findViewById(R.id.confirm_login_password);
         next = (Button) findViewById(R.id.next);
@@ -34,11 +33,12 @@ public class RegisterStageOneActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (!isEmailValid()) {
+                    return;
+                }
                 if (!isPasswordValid()) {
                     return;
                 }
-
                 if (!isPasswordBlacklisted()) {
                     return;
                 }
@@ -46,7 +46,7 @@ public class RegisterStageOneActivity extends AppCompatActivity {
                 // TODO: review password security here
 
                 int loginPasswordLength = loginPassword.getText().length();
-                loginPwd = new char[loginPasswordLength];
+                char[] loginPwd = new char[loginPasswordLength];
                 loginPassword.getText().getChars(0, loginPasswordLength, loginPwd, 0);
 
                 Intent intent = new Intent(getApplicationContext(), RegisterStageTwoActivity.class);
@@ -63,17 +63,29 @@ public class RegisterStageOneActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean isPasswordValid() {
-        if (!loginPassword.getText().toString().equals(confirmLoginPassword.getText().toString())) {
-            Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
+    private boolean isEmailValid() {
+        if (emailAddress.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (loginPassword.getText().length() < MIN_PASSWORD_LENGTH) {
+        if (!emailAddress.getText().toString().equals(confirmEmailAddress.getText().toString())) {
+            Toast.makeText(getApplicationContext(), R.string.email_mismatch, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isPasswordValid() {
+        if (loginPassword.getText().length() < Constants.MIN_PASSWORD_LENGTH) {
             Toast.makeText(getApplicationContext(), R.string.password_too_short, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (loginPassword.getText().length() > MAX_PASSWORD_LENGTH) {
+        if (loginPassword.getText().length() > Constants.MAX_PASSWORD_LENGTH) {
             Toast.makeText(getApplicationContext(), R.string.password_too_long, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!loginPassword.getText().toString().equals(confirmLoginPassword.getText().toString())) {
+            Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
