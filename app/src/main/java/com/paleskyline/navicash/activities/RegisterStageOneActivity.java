@@ -1,0 +1,87 @@
+package com.paleskyline.navicash.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.paleskyline.navicash.R;
+import com.paleskyline.navicash.model.User;
+import com.paleskyline.navicash.services.ApiService;
+
+public class RegisterStageOneActivity extends AppCompatActivity {
+
+    private EditText emailAddress, loginPassword, confirmLoginPassword;
+    private Button next;
+    private char[] loginPwd;
+    private static final int MIN_PASSWORD_LENGTH = 10;
+    private static final int MAX_PASSWORD_LENGTH = 80;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register_stage_one);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        emailAddress = (EditText) findViewById(R.id.email);
+        loginPassword = (EditText) findViewById(R.id.login_password);
+        confirmLoginPassword = (EditText) findViewById(R.id.confirm_login_password);
+        next = (Button) findViewById(R.id.next);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!isPasswordValid()) {
+                    return;
+                }
+
+                if (!isPasswordBlacklisted()) {
+                    return;
+                }
+
+                // TODO: review password security here
+
+                int loginPasswordLength = loginPassword.getText().length();
+                loginPwd = new char[loginPasswordLength];
+                loginPassword.getText().getChars(0, loginPasswordLength, loginPwd, 0);
+
+                Intent intent = new Intent(getApplicationContext(), RegisterStageTwoActivity.class);
+                intent.putExtra("email", emailAddress.getText().toString());
+                intent.putExtra("loginPassword", loginPwd);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private boolean isPasswordValid() {
+        if (!loginPassword.getText().toString().equals(confirmLoginPassword.getText().toString())) {
+            Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (loginPassword.getText().length() < MIN_PASSWORD_LENGTH) {
+            Toast.makeText(getApplicationContext(), R.string.password_too_short, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (loginPassword.getText().length() > MAX_PASSWORD_LENGTH) {
+            Toast.makeText(getApplicationContext(), R.string.password_too_long, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isPasswordBlacklisted() {
+        // TODO: add logic here
+        return true;
+    }
+
+}

@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegisterActivity"
+            android:name=".activities.RegisterStageOneActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.KeyDecryptionActivity"
@@ -82,6 +82,7 @@
             android:name=".activities.ChangeDataPasswordActivity"
             android:label="@string/title_activity_change_data_password"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.RegisterStageTwoActivity"></activity>
     </application>
 
 </manifest>

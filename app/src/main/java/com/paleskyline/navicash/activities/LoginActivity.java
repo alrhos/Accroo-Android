@@ -33,9 +33,9 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
             setContentView(R.layout.activity_login);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            usernameField = (EditText) findViewById(R.id.username);
+            usernameField = (EditText) findViewById(R.id.email);
             passwordField = (EditText) findViewById(R.id.password);
-            loginButton = (Button) findViewById(R.id.login_button);
+            loginButton = (Button) findViewById(R.id.next);
 
             progressDialog = new ProgressDialog(LoginActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                 message = getResources().getString(R.string.timeout_error);
                 break;
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.error_incorrect_password);
+                message = getResources().getString(R.string.incorrect_password);
                 break;
             default:
                 message = getResources().getString(R.string.general_error);

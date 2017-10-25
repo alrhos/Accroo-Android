@@ -191,6 +191,7 @@
         android:layout_marginEnd="14dp"
         android:layout_marginTop="12dp"
         android:textSize="16sp"
+        android:maxLength="13"
         android:hint="@string/amount"
         android:inputType="numberDecimal"
         android:backgroundTint="@color/colorPrimary"
