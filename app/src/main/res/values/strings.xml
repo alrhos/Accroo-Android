@@ -10,6 +10,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="incorrect_password">Incorrect password</string>
+    <string name="enter_password">Enter password</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 80 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
@@ -86,6 +87,7 @@
     <string name="change_data_password">Change data password</string>
     <string name="sign_out">Sign out</string>
     <string name="new_email">New email</string>
+    <string name="confirm_new_email">Confirm new email</string>
     <string name="confirm_login_password">Confirm login password</string>
     <string name="current_login_password">Current login password</string>
     <string name="new_login_password">New login password</string>

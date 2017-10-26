@@ -13,7 +13,7 @@ import com.paleskyline.accroo.services.ApiService;
 
 public class ChangeEmailActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private EditText newEmailField, passwordField;
+    private EditText emailAddress, confirmEmailAddress, loginPassword;
     private Button updateEmailButton;
     private ApiService apiService;
     private ProgressDialog progressDialog;
@@ -28,22 +28,26 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
         progressDialog = new ProgressDialog(ChangeEmailActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-        newEmailField = (EditText) findViewById(R.id.new_email);
-        passwordField = (EditText) findViewById(R.id.confirm_login_password);
+        emailAddress = (EditText) findViewById(R.id.new_email);
+        confirmEmailAddress = (EditText) findViewById(R.id.confirm_new_email);
+        loginPassword = (EditText) findViewById(R.id.confirm_login_password);
         updateEmailButton = (Button) findViewById(R.id.update_email_button);
         updateEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isValidEmail()) {
+                if (!isEmailValid()) {
+                    return;
+                }
+                if (!isPasswordEntered()) {
                     return;
                 }
 
                 progressDialog.show();
 
-                String newEmail = newEmailField.getText().toString();
-                int passwordLength = passwordField.getText().length();
+                String newEmail = emailAddress.getText().toString();
+                int passwordLength = loginPassword.getText().length();
                 char[] password = new char[passwordLength];
-                passwordField.getText().getChars(0, passwordLength, password, 0);
+                loginPassword.getText().getChars(0, passwordLength, password, 0);
 
                 apiService.updateEmail(newEmail, password);
             }
@@ -56,9 +60,24 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
         return true;
     }
 
-    private boolean isValidEmail() {
+    private boolean isEmailValid() {
+        if (emailAddress.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!emailAddress.getText().toString().equals(confirmEmailAddress.getText().toString())) {
+            Toast.makeText(getApplicationContext(), R.string.email_mismatch, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
-        // TODO: add logic
+    }
+
+    private boolean isPasswordEntered() {
+        if (loginPassword.getText().length() < 1) {
+            Toast.makeText(getApplicationContext(), R.string.enter_password, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -83,11 +102,6 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
         }
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
-
-//    public void onAuthorizationError() {
-//        progressDialog.dismiss();
-//        Toast.makeText(getApplicationContext(), R.string.error_incorrect_password, Toast.LENGTH_SHORT).show();
-//    }
 
     @Override
     public void onError() {
