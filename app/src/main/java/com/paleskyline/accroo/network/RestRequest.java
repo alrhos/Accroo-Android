@@ -27,17 +27,17 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     // TODO: these string variables should be moved to resources file
 
-    public final static String UNAUTHORIZED = "Authentication failed";
-    public final static String TIMEOUT_ERROR = "The connection timed out";
-    public final static String CONNECTION_ERROR = "Connection error";
-    public final static String GENERAL_ERROR = "An error occurred";
-
-    public final static String INVALID_INPUT = "Invalid or incomplete details provided";
-    public final static String DATABASE_UNAVAILABLE = "Database unavailable";
-
-    public final static String EMAIL_IN_USE = "This email address is already being used";
-    public final static String NO_TRANSACTION = "Transaction does not exist";
-    public final static String NO_CATEGORY = "Category does not exist";
+//    public final static String UNAUTHORIZED = "Authentication failed";
+//    public final static String TIMEOUT_ERROR = "The connection timed out";
+//    public final static String CONNECTION_ERROR = "Connection error";
+//    public final static String GENERAL_ERROR = "An error occurred";
+//
+//    public final static String INVALID_INPUT = "Invalid or incomplete details provided";
+//    public final static String DATABASE_UNAVAILABLE = "Database unavailable";
+//
+//    public final static String EMAIL_IN_USE = "This email address is already being used";
+//    public final static String NO_TRANSACTION = "Transaction does not exist";
+//    public final static String NO_CATEGORY = "Category does not exist";
 
 
 //    protected RestRequest(int method, String url, JSONObject json,

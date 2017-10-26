@@ -41,17 +41,23 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int GET_KEY_PACKAGE = 16;
     public final static int UPDATE_DATA_PASSWORD = 17;
 
-    public final static int GENERAL_ERROR = 1000;
+    public final static int GENERIC_ERROR = 1000;
     public final static int TIMEOUT_ERROR = 1001;
     public final static int CONNECTION_ERROR = 1002;
-    public final static int DECRYPTION_ERROR = 1003;
-    public final static int INVALID_INPUT = 1004;
-    public final static int EMAIL_IN_USE = 1005;
-    public final static int NO_TRANSACTION = 1006;
-    public final static int NO_CATEGORY = 1007;
-    public final static int DATABASE_ERROR = 1008;
-    public final static int UNAUTHORIZED = 1009;
-    public final static int INVALID_DATE_RANGE = 1100;
+    public final static int UNAUTHORIZED = 1003;
+    public final static int TOO_MANY_REQUESTS = 1004;
+    public final static int INVALID_REQUEST = 1005;
+    public final static int INVALID_DATE_RANGE = 1006;
+
+
+
+   // public final static int DECRYPTION_ERROR = 1003;
+//    public final static int INVALID_INPUT = 1004;
+//    public final static int EMAIL_IN_USE = 1005;
+//    public final static int NO_TRANSACTION = 1006;
+//    public final static int NO_CATEGORY = 1007;
+// //   public final static int UNAUTHORIZED = 1009;
+//    public final static int INVALID_DATE_RANGE = 1100;
 
     private RequestOutcome requestOutcome;
     private Context context;
@@ -121,10 +127,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 // TODO: double check that the handleFailedRequest is the right approach here
                 //handleFailedRequest(GET_REFRESH_TOKEN, errorMessage);
-                requestOutcome.onFailure(GET_REFRESH_TOKEN, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(GET_REFRESH_TOKEN, errorCode);
             }
         };
 
@@ -174,9 +180,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 }
 
                 @Override
-                protected void onFailure(String errorMessage) {
+                protected void onFailure(int errorCode) {
                    // handleFailedRequest(GET_DEFAULT_DATA, errorMessage);
-                    requestOutcome.onFailure(GET_DEFAULT_DATA, mapErrorMessage(errorMessage));
+                    requestOutcome.onFailure(GET_DEFAULT_DATA, errorCode);
                 }
             };
 
@@ -198,9 +204,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(CREATE_USER, errorMessage);
-                requestOutcome.onFailure(CREATE_USER, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(CREATE_USER, errorCode);
             }
         };
 
@@ -218,9 +224,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(CREATE_DEFAULT_CATEGORIES, errorMessage);
-                requestOutcome.onFailure(CREATE_DEFAULT_CATEGORIES, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(CREATE_DEFAULT_CATEGORIES, errorCode);
             }
         };
 
@@ -238,9 +244,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(CREATE_TRANSACTION, errorMessage);
-                requestOutcome.onFailure(CREATE_TRANSACTION, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(CREATE_TRANSACTION, errorCode);
             }
         };
 
@@ -258,9 +264,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(UPDATE_TRANSACTION, errorMessage);
-                requestOutcome.onFailure(UPDATE_TRANSACTION, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(UPDATE_TRANSACTION, errorCode);
             }
         };
 
@@ -278,9 +284,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(DELETE_TRANSACTION, errorMessage);
-                requestOutcome.onFailure(DELETE_TRANSACTION, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(DELETE_TRANSACTION, errorCode);
             }
         };
 
@@ -298,9 +304,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(CREATE_GENERAL_CATEGORY, errorMessage);
-                requestOutcome.onFailure(CREATE_GENERAL_CATEGORY, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(CREATE_GENERAL_CATEGORY, errorCode);
             }
         };
 
@@ -318,9 +324,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(UPDATE_GENERAL_CATEGORY, errorMessage);
-                requestOutcome.onFailure(UPDATE_GENERAL_CATEGORY, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(UPDATE_GENERAL_CATEGORY, errorCode);
             }
         };
 
@@ -338,9 +344,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(DELETE_GENERAL_CATEGORY, errorMessage);
-                requestOutcome.onFailure(DELETE_GENERAL_CATEGORY, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(DELETE_GENERAL_CATEGORY, errorCode);
             }
         };
 
@@ -358,9 +364,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(CREATE_SUB_CATEGORY, errorMessage);
-                requestOutcome.onFailure(CREATE_SUB_CATEGORY, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(CREATE_SUB_CATEGORY, errorCode);
             }
         };
 
@@ -378,9 +384,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(UPDATE_SUB_CATEGORY, errorMessage);
-                requestOutcome.onFailure(UPDATE_SUB_CATEGORY, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(UPDATE_SUB_CATEGORY, errorCode);
             }
         };
 
@@ -398,9 +404,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
+            protected void onFailure(int errorCode) {
                 //handleFailedRequest(DELETE_SUB_CATEGORY, errorMessage);
-                requestOutcome.onFailure(DELETE_SUB_CATEGORY, mapErrorMessage(errorMessage));
+                requestOutcome.onFailure(DELETE_SUB_CATEGORY, errorCode);
             }
         };
 
@@ -418,8 +424,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
-                requestOutcome.onFailure(UPDATE_EMAIL, mapErrorMessage(errorMessage));
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(UPDATE_EMAIL, errorCode);
             }
         };
 
@@ -437,8 +443,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
-                requestOutcome.onFailure(UPDATE_LOGIN_PASSWORD, mapErrorMessage(errorMessage));
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(UPDATE_LOGIN_PASSWORD, errorCode);
             }
         };
 
@@ -456,8 +462,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
-                requestOutcome.onFailure(GET_KEY_PACKAGE, mapErrorMessage(errorMessage));
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(GET_KEY_PACKAGE, errorCode);
             }
         };
 
@@ -475,8 +481,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
 
             @Override
-            protected void onFailure(String errorMessage) {
-                requestOutcome.onFailure(UPDATE_DATA_PASSWORD, mapErrorMessage(errorMessage));
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(UPDATE_DATA_PASSWORD, errorCode);
             }
         };
 
@@ -512,30 +518,30 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    private int mapErrorMessage(String errorMessage) {
-        switch (errorMessage) {
-            case RestRequest.UNAUTHORIZED:
-                // TODO: determine how to handle clearing user data (if it's necessary here)
-                return UNAUTHORIZED;
-            case RestRequest.CONNECTION_ERROR:
-                return CONNECTION_ERROR;
-            case RestRequest.TIMEOUT_ERROR:
-                return TIMEOUT_ERROR;
-            case RestRequest.GENERAL_ERROR:
-                return GENERAL_ERROR;
-            case RestRequest.DATABASE_UNAVAILABLE:
-                return GENERAL_ERROR;
-            case RestRequest.INVALID_INPUT:
-                return INVALID_INPUT;
-            case RestRequest.EMAIL_IN_USE:
-                return EMAIL_IN_USE;
-            case RestRequest.NO_CATEGORY:
-                return NO_CATEGORY;
-            case RestRequest.NO_TRANSACTION:
-                return NO_TRANSACTION;
-        }
-        return GENERAL_ERROR;
-    }
+//    private int mapErrorMessage(String errorMessage) {
+//        switch (errorMessage) {
+//            case RestRequest.UNAUTHORIZED:
+//                // TODO: determine how to handle clearing user data (if it's necessary here)
+//                return UNAUTHORIZED;
+//            case RestRequest.CONNECTION_ERROR:
+//                return CONNECTION_ERROR;
+//            case RestRequest.TIMEOUT_ERROR:
+//                return TIMEOUT_ERROR;
+//            case RestRequest.GENERAL_ERROR:
+//                return GENERIC_ERROR;
+//            case RestRequest.DATABASE_UNAVAILABLE:
+//                return GENERIC_ERROR;
+//            case RestRequest.INVALID_INPUT:
+//                return INVALID_INPUT;
+//            case RestRequest.EMAIL_IN_USE:
+//                return EMAIL_IN_USE;
+//            case RestRequest.NO_CATEGORY:
+//                return NO_CATEGORY;
+//            case RestRequest.NO_TRANSACTION:
+//                return NO_TRANSACTION;
+//        }
+//        return GENERIC_ERROR;
+//    }
 
     @Override
     public void onPostRequestTaskSuccess(int requestType) {

@@ -8,9 +8,11 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.paleskyline.accroo.crypto.AuthManager;
+import com.paleskyline.accroo.services.ApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,7 +76,7 @@ public class RequestBuilder {
                     String accessToken = response.getString("token");
                     coordinator.receiveAccessToken(accessToken);
                 } catch (Exception e) {
-                    coordinator.abort(RestRequest.GENERAL_ERROR);
+                    coordinator.abort(ApiService.GENERIC_ERROR);
                 }
             }
         };
@@ -151,33 +153,55 @@ public class RequestBuilder {
 
 
     // TODO: see if code can be cleaned up
-    private static String parseVolleyException(VolleyError error) {
+//    private static String parseVolleyExceptionOld(VolleyError error) {
+//        error.printStackTrace();
+//        if (error instanceof AuthFailureError) {
+//            return RestRequest.UNAUTHORIZED;
+//        } else if (error instanceof TimeoutError) {
+//            return RestRequest.TIMEOUT_ERROR;
+//        } else if (error instanceof NoConnectionError) {
+//            return RestRequest.CONNECTION_ERROR;
+//        } else {
+//            try {
+//                NetworkResponse networkResponse = error.networkResponse;
+//                String serverMessage = new String(networkResponse.data);
+//                if (!serverMessage.isEmpty()) {
+//                    String jsonString = new String(networkResponse.data);
+//                    try {
+//                        JSONObject serverResponse = new JSONObject(jsonString);
+//                        return serverResponse.getString("message");
+//                    } catch (JSONException e) {
+//                        return RestRequest.GENERAL_ERROR;
+//                    }
+//                } else {
+//                    return RestRequest.GENERAL_ERROR;
+//                }
+//            } catch (Exception e) {
+//                return RestRequest.GENERAL_ERROR;
+//            }
+//        }
+//    }
+
+    private static int parseVolleyException(VolleyError error) {
         error.printStackTrace();
-        if (error instanceof AuthFailureError) {
-            return RestRequest.UNAUTHORIZED;
-        } else if (error instanceof TimeoutError) {
-            return RestRequest.TIMEOUT_ERROR;
+        if (error instanceof TimeoutError) {
+            return ApiService.TIMEOUT_ERROR;
         } else if (error instanceof NoConnectionError) {
-            return RestRequest.CONNECTION_ERROR;
-        } else {
-            try {
-                NetworkResponse networkResponse = error.networkResponse;
-                String serverMessage = new String(networkResponse.data);
-                if (!serverMessage.isEmpty()) {
-                    String jsonString = new String(networkResponse.data);
-                    try {
-                        JSONObject serverResponse = new JSONObject(jsonString);
-                        return serverResponse.getString("message");
-                    } catch (JSONException e) {
-                        return RestRequest.GENERAL_ERROR;
-                    }
-                } else {
-                    return RestRequest.GENERAL_ERROR;
-                }
-            } catch (Exception e) {
-                return RestRequest.GENERAL_ERROR;
+            return ApiService.CONNECTION_ERROR;
+        } else if (error instanceof AuthFailureError) {
+            return ApiService.UNAUTHORIZED;
+        } else if (error instanceof ServerError) {
+            int statusCode = getResponseCode(error);
+            switch (statusCode) {
+                case 400:
+                    return ApiService.INVALID_REQUEST;
+                case 429:
+                    return ApiService.TOO_MANY_REQUESTS;
+                case 500:
+                    return ApiService.GENERIC_ERROR;
             }
         }
+        return ApiService.GENERIC_ERROR;
     }
 
     private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator,
@@ -185,9 +209,10 @@ public class RequestBuilder {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                int responseCode = getResponseCode(error);
-                String errorMessage = parseVolleyException(error);
-                coordinator.receiveError(authType, responseCode, errorMessage);
+                //int responseCode = getResponseCode(error);
+                //String errorMessage = parseVolleyExceptionOld(error);
+               // int errorCode = parseVolleyException(error);
+                coordinator.receiveError(authType, parseVolleyException(error));
             }
         };
         return errorListener;
@@ -230,7 +255,7 @@ public class RequestBuilder {
 //                try {
 //                    coordinator.updateToken(response.getString("token"));
 //                } catch (Exception e) {
-//                    coordinator.abort(GENERAL_ERROR);
+//                    coordinator.abort(GENERIC_ERROR);
 //                }
 //            }
 //        };
@@ -259,7 +284,7 @@ public class RequestBuilder {
 //                    coordinator.updateToken(response.getString("token"));
 //                    coordinator.done(index, response);
 //                } catch (Exception e) {
-//                    coordinator.abort(GENERAL_ERROR);
+//                    coordinator.abort(GENERIC_ERROR);
 //                }
 //            }
 //        };

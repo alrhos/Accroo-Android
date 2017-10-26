@@ -89,7 +89,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                     autoLogin();
                 }
             });
-        } else if (errorCode == ApiService.GENERAL_ERROR) {
+        } else if (errorCode == ApiService.GENERIC_ERROR) {
             // TODO: need to handle this
         }
     }

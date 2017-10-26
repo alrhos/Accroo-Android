@@ -3,6 +3,7 @@ package com.paleskyline.accroo.network;
 import android.content.Context;
 
 import com.paleskyline.accroo.crypto.AuthManager;
+import com.paleskyline.accroo.services.ApiService;
 
 import org.json.JSONObject;
 
@@ -51,9 +52,9 @@ public abstract class RequestCoordinator {
 
     // TODO: this will contain the contents of start
 
-    private void dispatchRequests() {
-
-    }
+//    private void dispatchRequests() {
+//
+//    }
 
     protected synchronized void done(int index, JSONObject data) {
         dataReceiver[index] = data;
@@ -65,23 +66,23 @@ public abstract class RequestCoordinator {
 
     // TODO: modify this method to not use AuthManager to save tokens
 
-    protected void updateToken(String token) {
-        try {
-            AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, token);
-            if (retryRequired) {
-                retry();
-            }
-        } catch (Exception e) {
-            abort(RestRequest.GENERAL_ERROR);
-        }
-    }
+//    protected void updateToken(String token) {
+//        try {
+//            AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, token);
+//            if (retryRequired) {
+//                retry();
+//            }
+//        } catch (Exception e) {
+//            abort(ApiService.GENERIC_ERROR);
+//        }
+//    }
 
     protected void receiveAccessToken(String accessToken) {
         try {
             AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
             retry();
         } catch (Exception e) {
-            abort(RestRequest.GENERAL_ERROR);
+            abort(ApiService.GENERIC_ERROR);
         }
     }
 
@@ -94,7 +95,7 @@ public abstract class RequestCoordinator {
                 RequestBuilder.updateRequestAccessToken(request, context);
                 RequestDispatcher.getInstance(context).addRequest(request);
             } catch (Exception e) {
-                abort(RestRequest.GENERAL_ERROR);
+                abort(ApiService.GENERIC_ERROR);
             }
         }
     }
@@ -103,27 +104,27 @@ public abstract class RequestCoordinator {
 
     // TODO: review error message handling here - looks like the RequestBuilder already parses the message so should be fine to just take what is passed back here.
 
-    protected synchronized void receiveError(int authType, int responseCode, String errorMessage) {
-        if (authType == RequestBuilder.ACCESS_TOKEN_AUTH && responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+    protected synchronized void receiveError(int authType, int errorCode) {
+        if (authType == RequestBuilder.ACCESS_TOKEN_AUTH && errorCode == ApiService.UNAUTHORIZED) {
             retryRequired = true;
             RequestDispatcher.getInstance(context).flushRequests(tag);
             try {
                 RequestDispatcher.getInstance(context).addRequest(RequestBuilder.getAccessToken(this, context));
             } catch (Exception e) {
-                abort(RestRequest.GENERAL_ERROR);
+                abort(ApiService.GENERIC_ERROR);
             }
         } else {
-            abort(errorMessage);
+            abort(errorCode);
         }
     }
 
-    protected void abort(String errorMessage) {
+    protected void abort(int errorCode) {
         RequestDispatcher.getInstance(context).flushRequests(tag);
-        onFailure(errorMessage);
+        onFailure(errorCode);
     }
 
     protected abstract void onSuccess();
 
-    protected abstract void onFailure(String errorMessage);
+    protected abstract void onFailure(int errorCode);
 
 }

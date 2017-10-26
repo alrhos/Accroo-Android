@@ -79,9 +79,6 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
             case ApiService.TIMEOUT_ERROR:
                 message = getResources().getString(R.string.timeout_error);
                 break;
-            case ApiService.EMAIL_IN_USE:
-                message = getResources().getString(R.string.email_in_use);
-                break;
             default:
                 message = getResources().getString(R.string.general_error);
         }
