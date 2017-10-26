@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:name="com.paleskyline.navicash.fragments.CategoryOverviewFragment"
+        android:name="com.paleskyline.accroo.fragments.CategoryOverviewFragment"
         android:id="@+id/select_category_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

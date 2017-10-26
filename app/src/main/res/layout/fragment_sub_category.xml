@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paleskyline.navicash.fragments.SubCategoryFragment">
+    tools:context="com.paleskyline.accroo.fragments.SubCategoryFragment">
 
     <ImageView
         android:id="@+id/general_category_icon"

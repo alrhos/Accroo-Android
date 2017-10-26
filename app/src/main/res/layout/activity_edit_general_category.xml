@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paleskyline.navicash.activities.EditGeneralCategoryActivity">
+    tools:context="com.paleskyline.accroo.activities.EditGeneralCategoryActivity">
 
     <fragment
-        android:name="com.paleskyline.navicash.fragments.GeneralCategoryFragment"
+        android:name="com.paleskyline.accroo.fragments.GeneralCategoryFragment"
         android:id="@+id/edit_general_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AppTheme.AppBarOverlay"
-    tools:context="com.paleskyline.navicash.activities.MainActivity">
+    tools:context="com.paleskyline.accroo.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

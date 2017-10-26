@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paleskyline.navicash.fragments.GeneralCategoryFragment">
+    tools:context="com.paleskyline.accroo.fragments.GeneralCategoryFragment">
 
     <EditText
         android:id="@+id/general_category_name_field"

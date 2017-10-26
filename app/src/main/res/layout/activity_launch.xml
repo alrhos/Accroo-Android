@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
-    tools:context="com.paleskyline.navicash.activities.LaunchActivity">
+    tools:context="com.paleskyline.accroo.activities.LaunchActivity">
 
 
     <ImageView
