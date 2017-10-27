@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public void onRestart() {
-        System.out.println("MAIN - on restart");
         super.onRestart();
         if (summaryFragment != null) {
             summaryFragment.refreshAdapter();
@@ -232,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
         @Override
         public Fragment getItem(int position) {
-
             switch (position) {
                 case 0:
                     return summaryFragment = SummaryFragment.newInstance(startDate.getTime(), endDate.getTime());
@@ -241,9 +239,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 case 2:
                     return categoryOverviewFragment = new CategoryOverviewFragment();
             }
-
             return null;
-
         }
 
         @Override
@@ -326,10 +322,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSuccess(int requestType) {
         hideRefreshing();
-//        if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-//            progressDialog.dismiss();
-//            relaunch();
-//        } else
         if (requestType == ApiService.GET_DEFAULT_DATA) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -364,11 +356,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
         if (errorCode == ApiService.UNAUTHORIZED) {
+            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
-//        } else if (requestType == ApiService.DELETE_REFRESH_TOKEN) {
-//            progressDialog.dismiss();
-//            relaunch();
         } else {
             String message;
             switch (errorCode) {

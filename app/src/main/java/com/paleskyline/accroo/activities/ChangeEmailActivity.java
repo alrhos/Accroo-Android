@@ -94,9 +94,9 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             case ApiService.TIMEOUT_ERROR:
                 message = getResources().getString(R.string.timeout_error);
                 break;
-//            case ApiService.EMAIL_IN_USE:
-//                message = getResources().getString(R.string.email_in_use);
-//                break;
+            case ApiService.INVALID_REQUEST:
+                message = getResources().getString(R.string.email_in_use);
+                break;
             default:
                 message = getResources().getString(R.string.general_error);
         }

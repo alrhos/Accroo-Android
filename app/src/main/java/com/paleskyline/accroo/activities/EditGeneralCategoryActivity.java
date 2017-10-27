@@ -84,6 +84,12 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         }
     }
 
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
@@ -98,7 +104,24 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        System.out.println(errorCode);
+        if (errorCode == ApiService.UNAUTHORIZED) {
+            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
+            apiService.logout();
+            relaunch();
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
