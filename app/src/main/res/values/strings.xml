@@ -11,6 +11,7 @@
     <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="incorrect_password">Incorrect password</string>
+    <string name="incorrect_login_password">Incorrect login password</string>
     <string name="enter_password">Enter password</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 80 characters</string>
