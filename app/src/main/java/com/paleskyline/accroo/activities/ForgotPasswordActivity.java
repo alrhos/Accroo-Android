@@ -1,6 +1,7 @@
 package com.paleskyline.accroo.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         email = (EditText) findViewById(R.id.reset_email);
         sendLink = (Button) findViewById(R.id.send_link);
 
@@ -78,6 +80,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
     @Override
     public void onError() {
         progressDialog.dismiss();
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 }

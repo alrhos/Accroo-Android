@@ -31,9 +31,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!LaunchActivity.initialized) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            relaunch();
         } else {
             setContentView(R.layout.activity_edit_general_category);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,7 +125,9 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void onError() {
         progressDialog.dismiss();
-        System.out.println("GENERAL ERROR");
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
     @Override

@@ -24,9 +24,7 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!LaunchActivity.initialized) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            relaunch();
         } else {
             setContentView(R.layout.activity_select_general_category);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,6 +56,12 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override

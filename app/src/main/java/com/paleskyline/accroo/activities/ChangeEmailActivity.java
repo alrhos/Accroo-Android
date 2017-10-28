@@ -1,6 +1,7 @@
 package com.paleskyline.accroo.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,43 +22,53 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_email);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_change_email);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        apiService = new ApiService(this, getApplicationContext());
-        progressDialog = new ProgressDialog(ChangeEmailActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.submitting));
+            apiService = new ApiService(this, getApplicationContext());
+            progressDialog = new ProgressDialog(ChangeEmailActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-        emailAddress = (EditText) findViewById(R.id.new_email);
-        confirmEmailAddress = (EditText) findViewById(R.id.confirm_new_email);
-        loginPassword = (EditText) findViewById(R.id.confirm_login_password);
-        updateEmailButton = (Button) findViewById(R.id.update_email_button);
-        updateEmailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isEmailValid()) {
-                    return;
+            emailAddress = (EditText) findViewById(R.id.new_email);
+            confirmEmailAddress = (EditText) findViewById(R.id.confirm_new_email);
+            loginPassword = (EditText) findViewById(R.id.confirm_login_password);
+            updateEmailButton = (Button) findViewById(R.id.update_email_button);
+            updateEmailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isEmailValid()) {
+                        return;
+                    }
+                    if (!isPasswordEntered()) {
+                        return;
+                    }
+
+                    progressDialog.show();
+
+                    String newEmail = emailAddress.getText().toString();
+                    int passwordLength = loginPassword.getText().length();
+                    char[] password = new char[passwordLength];
+                    loginPassword.getText().getChars(0, passwordLength, password, 0);
+
+                    apiService.updateEmail(newEmail, password);
                 }
-                if (!isPasswordEntered()) {
-                    return;
-                }
-
-                progressDialog.show();
-
-                String newEmail = emailAddress.getText().toString();
-                int passwordLength = loginPassword.getText().length();
-                char[] password = new char[passwordLength];
-                loginPassword.getText().getChars(0, passwordLength, password, 0);
-
-                apiService.updateEmail(newEmail, password);
-            }
-        });
+            });
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private boolean isEmailValid() {
@@ -106,6 +117,9 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     @Override
     public void onError() {
         progressDialog.dismiss();
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
     @Override

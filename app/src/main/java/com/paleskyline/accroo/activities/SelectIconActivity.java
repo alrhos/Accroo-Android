@@ -18,9 +18,7 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!LaunchActivity.initialized) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            relaunch();
         } else {
             setContentView(R.layout.activity_select_icon);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -42,6 +40,12 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override

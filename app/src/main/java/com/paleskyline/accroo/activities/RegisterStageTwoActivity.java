@@ -28,46 +28,51 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_stage_two);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_register_stage_two);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        email = getIntent().getStringExtra("email");
-        loginPwd = getIntent().getCharArrayExtra("loginPassword");
+            email = getIntent().getStringExtra("email");
+            loginPwd = getIntent().getCharArrayExtra("loginPassword");
 
-        apiService = new ApiService(this, getApplicationContext());
-        progressDialog = new ProgressDialog(RegisterStageTwoActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.loading));
-        progressDialog.setCancelable(false);
+            apiService = new ApiService(this, getApplicationContext());
+            progressDialog = new ProgressDialog(RegisterStageTwoActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setCancelable(false);
 
-        dataPassword = (EditText) findViewById(R.id.data_password);
-        confirmDataPassword = (EditText) findViewById(R.id.confirm_data_password);
-        register = (Button) findViewById(R.id.register);
+            dataPassword = (EditText) findViewById(R.id.data_password);
+            confirmDataPassword = (EditText) findViewById(R.id.confirm_data_password);
+            register = (Button) findViewById(R.id.register);
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isPasswordValid()) {
-                    return;
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isPasswordValid()) {
+                        return;
+                    }
+                    if (!isPasswordBlacklisted()) {
+                        return;
+                    }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterStageTwoActivity.this);
+                    builder.setMessage(R.string.password_warning)
+                            .setTitle(R.string.important)
+                            .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    registerAccount();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            }).create().show();
                 }
-                if (!isPasswordBlacklisted()) {
-                    return;
-                }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(RegisterStageTwoActivity.this);
-                builder.setMessage(R.string.password_warning)
-                        .setTitle(R.string.important)
-                        .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                registerAccount();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {}
-                        }).create().show();
-            }
-        });
+            });
+        }
     }
 
     private void registerAccount() {
@@ -84,6 +89,12 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private boolean isPasswordValid() {
@@ -136,6 +147,9 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
     @Override
     public void onError() {
         progressDialog.dismiss();
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
 }

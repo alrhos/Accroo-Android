@@ -16,9 +16,7 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!LaunchActivity.initialized) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            relaunch();
         } else {
             setContentView(R.layout.activity_select_sub_category);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -41,6 +39,12 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override

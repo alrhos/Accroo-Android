@@ -1,6 +1,7 @@
 package com.paleskyline.accroo.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,41 +23,44 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_data_password);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_change_data_password);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        apiService = new ApiService(this, getApplicationContext());
-        progressDialog = new ProgressDialog(ChangeDataPasswordActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.submitting));
+            apiService = new ApiService(this, getApplicationContext());
+            progressDialog = new ProgressDialog(ChangeDataPasswordActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-        currentDataPasswordField = (EditText) findViewById(R.id.current_data_password);
-        newDataPasswordField = (EditText) findViewById(R.id.new_data_password);
-        confirmDataPasswordField = (EditText) findViewById(R.id.confirm_data_password);
-        loginPasswordField = (EditText) findViewById(R.id.current_login_password);
-        updateDataPassword = (Button) findViewById(R.id.update_data_password_button);
-        updateDataPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            currentDataPasswordField = (EditText) findViewById(R.id.current_data_password);
+            newDataPasswordField = (EditText) findViewById(R.id.new_data_password);
+            confirmDataPasswordField = (EditText) findViewById(R.id.confirm_data_password);
+            loginPasswordField = (EditText) findViewById(R.id.current_login_password);
+            updateDataPassword = (Button) findViewById(R.id.update_data_password_button);
+            updateDataPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                // TODO: add validation login
+                    // TODO: add validation login
 
-                // Check new passwords are the same
-                // Check new password is not the same
-                // Check password strength etc.
+                    // Check new passwords are the same
+                    // Check new password is not the same
+                    // Check password strength etc.
 
-                progressDialog.show();
+                    progressDialog.show();
 
-                int loginPasswordLength = loginPasswordField.getText().length();
-                loginPassword = new char[loginPasswordLength];
-                loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
+                    int loginPasswordLength = loginPasswordField.getText().length();
+                    loginPassword = new char[loginPasswordLength];
+                    loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
 
-                // TODO: password security
+                    // TODO: password security
 
-                apiService.getKeyPackage(loginPassword);
+                    apiService.getKeyPackage(loginPassword);
 
-            }
-        });
-
+                }
+            });
+        }
     }
 
     @Override
@@ -65,31 +69,10 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         return true;
     }
 
-
-    @Override
-    public void onFailure(int requestType, int errorCode) {
-        progressDialog.dismiss();
-        String message;
-        switch (errorCode) {
-            case ApiService.UNAUTHORIZED:
-                // TODO: change string to incorrect login password
-                message = getResources().getString(R.string.incorrect_login_password);
-                break;
-            case ApiService.CONNECTION_ERROR:
-                message = getResources().getString(R.string.connection_error);
-                break;
-            case ApiService.TIMEOUT_ERROR:
-                message = getResources().getString(R.string.timeout_error);
-                break;
-            default:
-                message = getResources().getString(R.string.general_error);
-        }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onError() {
-        progressDialog.dismiss();
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override
@@ -115,5 +98,33 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         }
     }
 
+    @Override
+    public void onFailure(int requestType, int errorCode) {
+        progressDialog.dismiss();
+        String message;
+        switch (errorCode) {
+            case ApiService.UNAUTHORIZED:
+                // TODO: change string to incorrect login password
+                message = getResources().getString(R.string.incorrect_login_password);
+                break;
+            case ApiService.CONNECTION_ERROR:
+                message = getResources().getString(R.string.connection_error);
+                break;
+            case ApiService.TIMEOUT_ERROR:
+                message = getResources().getString(R.string.timeout_error);
+                break;
+            default:
+                message = getResources().getString(R.string.general_error);
+        }
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError() {
+        progressDialog.dismiss();
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
+    }
 
 }

@@ -35,7 +35,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_SUB_CATEGORY = 10;
     public final static int UPDATE_SUB_CATEGORY = 11;
     public final static int DELETE_SUB_CATEGORY = 12;
-  //  public final static int DELETE_REFRESH_TOKEN = 13;
     public final static int FORGOT_PASSWORD = 13;
     public final static int UPDATE_EMAIL = 14;
     public final static int UPDATE_LOGIN_PASSWORD = 15;
@@ -49,16 +48,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int TOO_MANY_REQUESTS = 1004;
     public final static int INVALID_REQUEST = 1005;
     public final static int INVALID_DATE_RANGE = 1006;
-
-
-
-   // public final static int DECRYPTION_ERROR = 1003;
-//    public final static int INVALID_INPUT = 1004;
-//    public final static int EMAIL_IN_USE = 1005;
-//    public final static int NO_TRANSACTION = 1006;
-//    public final static int NO_CATEGORY = 1007;
-// //   public final static int UNAUTHORIZED = 1009;
-//    public final static int INVALID_DATE_RANGE = 1100;
 
     private RequestOutcome requestOutcome;
     private Context context;
@@ -98,17 +87,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             return false;
         }
     }
-
-//    public boolean encryptKey(@NonNull char[] password, @NonNull Context context) {
-//        try {
-//            CryptoManager.getInstance().encryptMasterKey(password, context);
-//            CryptoManager.getInstance().saveMasterKey(context);
-//            return true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 
     public void login(@NonNull final String username, @NonNull char[] password) {
 
@@ -158,25 +136,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-
-
-//        dataReceiver = new JSONObject[1];
-//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-//            @Override
-//            protected void onSuccess() {
-//                new PostRequestTask(DELETE_REFRESH_TOKEN, ApiService.this, context).execute(dataReceiver);
-//            }
-//
-//            @Override
-//            protected void onFailure(String errorMessage) {
-//                //handleFailedRequest(DELETE_REFRESH_TOKEN, errorMessage);
-//                requestOutcome.onFailure(DELETE_REFRESH_TOKEN, mapErrorMessage(errorMessage));
-//            }
-//        };
-//
-//        new PreRequestTask(DELETE_REFRESH_TOKEN, this, context, coordinator).execute();
-
-
     public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
 
         if (startDate.before(endDate)) {
@@ -202,7 +161,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         } else {
             requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
-
 
     }
 
@@ -503,22 +461,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    // TODO: maybe a different api method called 'logout' could be called from an activity which could clear saved data'
-
-//    private void handleFailedRequest(int requestType, String errorMessage) {
-//        if (errorMessage.equals(RestRequest.UNAUTHORIZED)) {
-//            try {
-//                AuthManager.getInstance(context).clearSavedData();
-//            } catch (Exception e) {
-//                // TODO: review error handling
-//                e.printStackTrace();
-//            }
-//            requestOutcome.onAuthorizationError();
-//        } else {
-//            requestOutcome.onFailure(requestType, mapErrorMessage(errorMessage));
-//        }
-//    }
-
     @Override
     public void onPreRequestTaskSuccess(RestRequest... requests) {
         try {
@@ -527,34 +469,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         } catch (Exception e) {
             // TODO: exception should be logged
             requestOutcome.onError();
-            System.out.println("ERROR STARTING COORDINATOR");
         }
     }
-
-//    private int mapErrorMessage(String errorMessage) {
-//        switch (errorMessage) {
-//            case RestRequest.UNAUTHORIZED:
-//                // TODO: determine how to handle clearing user data (if it's necessary here)
-//                return UNAUTHORIZED;
-//            case RestRequest.CONNECTION_ERROR:
-//                return CONNECTION_ERROR;
-//            case RestRequest.TIMEOUT_ERROR:
-//                return TIMEOUT_ERROR;
-//            case RestRequest.GENERAL_ERROR:
-//                return GENERIC_ERROR;
-//            case RestRequest.DATABASE_UNAVAILABLE:
-//                return GENERIC_ERROR;
-//            case RestRequest.INVALID_INPUT:
-//                return INVALID_INPUT;
-//            case RestRequest.EMAIL_IN_USE:
-//                return EMAIL_IN_USE;
-//            case RestRequest.NO_CATEGORY:
-//                return NO_CATEGORY;
-//            case RestRequest.NO_TRANSACTION:
-//                return NO_TRANSACTION;
-//        }
-//        return GENERIC_ERROR;
-//    }
 
     @Override
     public void onPostRequestTaskSuccess(int requestType) {

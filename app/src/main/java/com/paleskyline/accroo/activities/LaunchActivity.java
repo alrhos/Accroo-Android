@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.services.ApiService;
@@ -17,6 +18,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private Calendar calendar;
     private Date startDate, endDate;
     public static boolean initialized = false;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private void autoLogin() {
         setContentView(R.layout.activity_launch_loading);
 
-        ApiService apiService = new ApiService(this, getApplicationContext());
+        apiService = new ApiService(this, getApplicationContext());
 
         if (apiService.userLoggedIn()) {
             calendar = Calendar.getInstance();
@@ -90,13 +92,14 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                 }
             });
         } else if (errorCode == ApiService.GENERIC_ERROR) {
-            // TODO: need to handle this
+            onError();
         }
     }
 
     @Override
     public void onError() {
-        System.out.println("GENERAL ERROR");
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
     }
 
 }

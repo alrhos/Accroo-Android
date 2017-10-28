@@ -40,9 +40,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!LaunchActivity.initialized) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            relaunch();
         } else {
             setContentView(R.layout.activity_category);
 
@@ -191,7 +189,10 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void onError() {
-        System.out.println("GENERAL ERROR");
+        progressDialog.dismiss();
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
     @Override

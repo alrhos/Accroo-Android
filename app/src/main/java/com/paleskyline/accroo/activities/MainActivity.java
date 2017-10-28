@@ -381,7 +381,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onError() {
         hideRefreshing();
-        System.out.println("GENERAL ERROR");
+        apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
     class RefreshFragmentContents extends AsyncTask<Void, Void, Void> {

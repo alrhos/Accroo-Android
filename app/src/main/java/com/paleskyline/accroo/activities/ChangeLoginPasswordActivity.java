@@ -1,6 +1,7 @@
 package com.paleskyline.accroo.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,40 +22,44 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_login_password);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        apiService = new ApiService(this, getApplicationContext());
-        progressDialog = new ProgressDialog(ChangeLoginPasswordActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.submitting));
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_change_login_password);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            apiService = new ApiService(this, getApplicationContext());
+            progressDialog = new ProgressDialog(ChangeLoginPasswordActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-        existingPasswordField = (EditText) findViewById(R.id.confirm_login_password);
-        newPasswordField = (EditText) findViewById(R.id.new_login_password);
-        confirmNewPasswordField = (EditText) findViewById(R.id.confirm_new_login_password);
-        updatePasswordButton = (Button) findViewById(R.id.update_login_password_button);
+            existingPasswordField = (EditText) findViewById(R.id.confirm_login_password);
+            newPasswordField = (EditText) findViewById(R.id.new_login_password);
+            confirmNewPasswordField = (EditText) findViewById(R.id.confirm_new_login_password);
+            updatePasswordButton = (Button) findViewById(R.id.update_login_password_button);
 
-        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: add validation login
+            updatePasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // TODO: add validation login
 
-                // Check new passwords are equal
-                // Check new password is not the same
-                // Length checks etc.
+                    // Check new passwords are equal
+                    // Check new password is not the same
+                    // Length checks etc.
 
-                progressDialog.show();
+                    progressDialog.show();
 
-                int currentPasswordLength = existingPasswordField.getText().length();
-                char[] currentPassword = new char[currentPasswordLength];
-                existingPasswordField.getText().getChars(0, currentPasswordLength, currentPassword, 0);
+                    int currentPasswordLength = existingPasswordField.getText().length();
+                    char[] currentPassword = new char[currentPasswordLength];
+                    existingPasswordField.getText().getChars(0, currentPasswordLength, currentPassword, 0);
 
-                int newPasswordLength = newPasswordField.getText().length();
-                char[] newPassword = new char[newPasswordLength];
-                newPasswordField.getText().getChars(0, newPasswordLength, newPassword, 0);
+                    int newPasswordLength = newPasswordField.getText().length();
+                    char[] newPassword = new char[newPasswordLength];
+                    newPasswordField.getText().getChars(0, newPasswordLength, newPassword, 0);
 
-                apiService.updateLoginPassword(currentPassword, newPassword);
+                    apiService.updateLoginPassword(currentPassword, newPassword);
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override
@@ -63,7 +68,11 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
         return true;
     }
 
-
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
     @Override
     public void onFailure(int requestType, int errorCode) {
