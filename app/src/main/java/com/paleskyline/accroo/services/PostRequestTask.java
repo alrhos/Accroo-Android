@@ -43,9 +43,11 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome, Context context) {
+
         this.requestType = requestType;
         this.postRequestOutcome = postRequestOutcome;
         this.context = context;
+
     }
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome, Context context,
@@ -57,6 +59,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         this.endDate = endDate;
     }
 
+
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome,
                            Context context, String username) {
 
@@ -64,6 +67,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         this.postRequestOutcome = postRequestOutcome;
         this.context = context;
         this.username = username;
+
     }
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome,
@@ -73,6 +77,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         this.postRequestOutcome = postRequestOutcome;
         this.context = context;
         this.dataObject = dataObject;
+
     }
 
     public interface PostRequestOutcome {
@@ -222,6 +227,10 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     DataProvider.deleteSubCategory(subCategory);
                     return true;
 
+//                case ApiService.FORGOT_PASSWORD:
+//
+//                    return true;
+
 //                case ApiService.DELETE_REFRESH_TOKEN:
 //
 //                    return true;
@@ -252,9 +261,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     DataProvider.setKeyPackage(new KeyPackage(json));
                     return true;
 
-                case ApiService.UPDATE_DATA_PASSWORD:
-
-                    return true;
+//                case ApiService.UPDATE_DATA_PASSWORD:
+//
+//                    return true;
 
             }
         } catch (Exception e) {

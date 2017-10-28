@@ -16,15 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.paleskyline.accroo.activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.paleskyline.accroo.activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.LaunchActivity"
+            android:name=".activities.LaunchActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,59 +33,63 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.paleskyline.accroo.activities.RegisterStageOneActivity"
+            android:name=".activities.RegisterStageOneActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.RegisterStageTwoActivity"
+            android:name=".activities.RegisterStageTwoActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.KeyDecryptionActivity"
+            android:name=".activities.KeyDecryptionActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.TransactionActivity"
+            android:name=".activities.TransactionActivity"
             android:label="Add Transaction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.paleskyline.accroo.activities.SelectSubCategoryActivity"
+            android:name=".activities.SelectSubCategoryActivity"
             android:label="Select Sub Category"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.CategoryActivity"
+            android:name=".activities.CategoryActivity"
             android:label="Add Category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.paleskyline.accroo.activities.SelectIconActivity"
+            android:name=".activities.SelectIconActivity"
             android:label="Select Icon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.EditGeneralCategoryActivity"
+            android:name=".activities.EditGeneralCategoryActivity"
             android:label="Edit General Category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.paleskyline.accroo.activities.SelectGeneralCategoryActivity"
+            android:name=".activities.SelectGeneralCategoryActivity"
             android:label="Select General Category"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.EditSubCategoryActivity"
+            android:name=".activities.EditSubCategoryActivity"
             android:label="Edit Sub Category"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.ChangeEmailActivity"
+            android:name=".activities.ChangeEmailActivity"
             android:label="@string/title_activity_update_email"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.ChangeLoginPasswordActivity"
+            android:name=".activities.ChangeLoginPasswordActivity"
             android:label="@string/title_activity_change_login_password"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.paleskyline.accroo.activities.ChangeDataPasswordActivity"
+            android:name=".activities.ChangeDataPasswordActivity"
             android:label="@string/title_activity_change_data_password"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
             android:screenOrientation="portrait" />
     </application>
 

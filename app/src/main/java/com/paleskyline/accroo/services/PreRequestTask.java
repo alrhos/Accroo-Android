@@ -109,6 +109,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.coordinator = coordinator;
         this.password = password;
         requests = new ArrayList<>();
+
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -121,6 +122,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.password = password;
         this.newPassword = newPassword;
         requests = new ArrayList<>();
+
     }
 
     public interface PreRequestOutcome {
@@ -307,6 +309,18 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
+
+                    return true;
+
+                case ApiService.FORGOT_PASSWORD:
+
+                    username = (String) dataObject;
+
+                    json = new JSONObject();
+                    json.put("email", username);
+
+                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.FORGOT_PASSWORD, json, context));
 
                     return true;
 

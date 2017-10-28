@@ -36,6 +36,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_SUB_CATEGORY = 11;
     public final static int DELETE_SUB_CATEGORY = 12;
   //  public final static int DELETE_REFRESH_TOKEN = 13;
+    public final static int FORGOT_PASSWORD = 13;
     public final static int UPDATE_EMAIL = 14;
     public final static int UPDATE_LOGIN_PASSWORD = 15;
     public final static int GET_KEY_PACKAGE = 16;
@@ -76,14 +77,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         void onError();
     }
 
-//    public String getUsername() {
-//        try {
-//            return AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-
     public boolean userLoggedIn() {
         try {
             AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
@@ -106,16 +99,16 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public boolean encryptKey(@NonNull char[] password, @NonNull Context context) {
-        try {
-            CryptoManager.getInstance().encryptMasterKey(password, context);
-            CryptoManager.getInstance().saveMasterKey(context);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public boolean encryptKey(@NonNull char[] password, @NonNull Context context) {
+//        try {
+//            CryptoManager.getInstance().encryptMasterKey(password, context);
+//            CryptoManager.getInstance().saveMasterKey(context);
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     public void login(@NonNull final String username, @NonNull char[] password) {
 
@@ -144,6 +137,25 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void forgotPassword(@NonNull String email) {
+
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(FORGOT_PASSWORD);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(FORGOT_PASSWORD, errorCode);
+            }
+        };
+
+        new PreRequestTask(FORGOT_PASSWORD, this, context, coordinator, email).execute();
+
     }
 
 
@@ -471,13 +483,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     }
 
-    public void updateDataKey(char[] loginPassword, char[] newDataPassword) {
+    public void updateDataPassword(char[] loginPassword, char[] newDataPassword) {
 
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_DATA_PASSWORD, ApiService.this, context).execute(dataReceiver);
+                //new PostRequestTask(UPDATE_DATA_PASSWORD, ApiService.this, context).execute(dataReceiver);
+                requestOutcome.onSuccess(UPDATE_DATA_PASSWORD);
             }
 
             @Override

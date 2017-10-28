@@ -30,6 +30,7 @@ public class RequestBuilder {
     public final static String REGISTER = "register";
     public final static String EMAIL = "email";
     public final static String LOGIN_PASSWORD = "password";
+    public final static String FORGOT_PASSWORD = "password/forgot";
     public final static String DATA_PASSWORD = "key";
     public final static String CATEGORY = "category";
     public final static String GENERAL_CATEGORY = "category/general";

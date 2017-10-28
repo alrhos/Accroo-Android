@@ -13,6 +13,7 @@
     <string name="incorrect_password">Incorrect password</string>
     <string name="incorrect_login_password">Incorrect login password</string>
     <string name="enter_password">Enter password</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 80 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
@@ -27,6 +28,9 @@
         it is not possible to reset your data password if you forget it because it is never
         transmitted from your device.</string>
     <string name="password_warning">This password cannot be reset or recovered if you forget it.</string>
+    <string name="reset_password_link">You will receive a link to reset your password.</string>
+    <string name="send_link">SEND LINK</string>
+    <string name="reset_link_sent">Password reset link sent</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -38,6 +42,7 @@
     <string name="title_activity_update_email">Update Email</string>
     <string name="title_activity_change_login_password">Update Login Password</string>
     <string name="title_activity_change_data_password">Update Data Password</string>
+    <string name="title_activity_forgot_password">Forgot Password</string>
 
     <string name="income">Income</string>
     <string name="expenses">Expenses</string>

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paleskyline.accroo.R;
@@ -18,6 +19,7 @@ import com.paleskyline.accroo.services.ApiService;
 public class LoginActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText usernameField, passwordField;
+    private TextView forgotPassword;
     private Button loginButton;
     private ProgressDialog progressDialog;
     private ApiService apiService;
@@ -36,13 +38,38 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
             usernameField = (EditText) findViewById(R.id.email);
             passwordField = (EditText) findViewById(R.id.password);
             loginButton = (Button) findViewById(R.id.next);
+            forgotPassword = (TextView) findViewById(R.id.forgot_password);
 
             progressDialog = new ProgressDialog(LoginActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
-            addListeners();
+
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isValidInput()) {
+
+                        progressDialog.show();
+
+                        String username = usernameField.getText().toString();
+                        int passwordLength = passwordField.getText().length();
+                        char[] password = new char[passwordLength];
+                        passwordField.getText().getChars(0, passwordLength, password, 0);
+
+                        apiService.login(username, password);
+                    }
+                }
+            });
+
+            forgotPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
+                }
+            });
+
         }
     }
 
@@ -58,23 +85,23 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         return true;
     }
 
-    private void addListeners() {
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (isValidInput()) {
-
-                    progressDialog.show();
-
-                    String username = usernameField.getText().toString();
-                    int passwordLength = passwordField.getText().length();
-                    char[] password = new char[passwordLength];
-                    passwordField.getText().getChars(0, passwordLength, password, 0);
-
-                    apiService.login(username, password);
-                }
-            }
-        });
-    }
+//    private void addListeners() {
+//        loginButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View view) {
+//                if (isValidInput()) {
+//
+//                    progressDialog.show();
+//
+//                    String username = usernameField.getText().toString();
+//                    int passwordLength = passwordField.getText().length();
+//                    char[] password = new char[passwordLength];
+//                    passwordField.getText().getChars(0, passwordLength, password, 0);
+//
+//                    apiService.login(username, password);
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onSuccess(int requestType) {
