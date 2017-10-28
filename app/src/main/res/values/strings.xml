@@ -44,6 +44,7 @@
     <string name="title_activity_change_data_password">Update Data Password</string>
     <string name="title_activity_forgot_password">Forgot Password</string>
 
+    <string name="activity_overview">Activity Overview</string>
     <string name="income">Income</string>
     <string name="expenses">Expenses</string>
     <string name="expense">Expense</string>
@@ -55,6 +56,7 @@
     <string name="categories">Categories</string>
     <string name="sub_category">Sub category</string>
     <string name="amount">Amount</string>
+    <string name="date">Date</string>
     <string name="description">Description (optional)</string>
 
     <string name="timeout_error">The connection timed out</string>

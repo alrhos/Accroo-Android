@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="hello there dude"
+            android:textAppearance="@style/Heading"
             android:layout_marginStart="13dp"
             android:layout_marginEnd="16dp"
             android:layout_toRightOf="@+id/category_icon" />

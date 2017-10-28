@@ -70,4 +70,19 @@
         <item name="android:tint">#62ff00</item>
     </style>
 
+    <style name="Heading">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#CC000000</item>
+    </style>
+
+    <style name="SubHeading">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#BF000000</item>
+    </style>
+
+    <style name="SmallFont">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@android:color/tab_indicator_text</item>
+    </style>
+
 </resources>

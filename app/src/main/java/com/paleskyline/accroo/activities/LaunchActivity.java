@@ -27,11 +27,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         autoLogin();
     }
 
-
-
     private void autoLogin() {
         setContentView(R.layout.activity_launch_loading);
-
         apiService = new ApiService(this, getApplicationContext());
 
         if (apiService.userLoggedIn()) {
@@ -45,12 +42,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             calendar.set(Calendar.MILLISECOND, 0);
 
             startDate = calendar.getTime();
-
             apiService.getDefaultData(startDate, endDate);
         } else {
             initLayout();
         }
-
     }
 
     private void initLayout() {
@@ -100,6 +95,9 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     public void onError() {
         apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 }

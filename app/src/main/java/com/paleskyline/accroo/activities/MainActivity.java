@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
             if (!LaunchActivity.initialized) {
                 relaunch();
             } else {
@@ -100,9 +99,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 apiService = new ApiService(this, getApplicationContext());
             }
-
-
-
 
     }
 
