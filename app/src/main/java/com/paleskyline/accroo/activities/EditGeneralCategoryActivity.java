@@ -125,7 +125,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void onError() {
         progressDialog.dismiss();
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }

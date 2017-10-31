@@ -479,11 +479,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     @Override
     public void onPreRequestTaskFailure() {
+        logout();
         requestOutcome.onError();
     }
 
     @Override
     public void onPostRequestTaskFailure() {
+        logout();
         requestOutcome.onError();
     }
 

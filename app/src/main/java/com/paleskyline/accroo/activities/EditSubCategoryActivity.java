@@ -156,7 +156,6 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     @Override
     public void onError() {
         progressDialog.dismiss();
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }

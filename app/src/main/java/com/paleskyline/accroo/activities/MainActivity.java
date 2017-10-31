@@ -377,7 +377,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onError() {
         hideRefreshing();
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }

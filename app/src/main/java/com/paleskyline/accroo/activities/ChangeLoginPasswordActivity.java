@@ -97,6 +97,8 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
     @Override
     public void onError() {
         progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
     @Override

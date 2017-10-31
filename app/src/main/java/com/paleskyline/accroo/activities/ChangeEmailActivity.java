@@ -92,6 +92,13 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     }
 
     @Override
+    public void onSuccess(int requestType) {
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         String message;
@@ -117,16 +124,8 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
     @Override
     public void onError() {
         progressDialog.dismiss();
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
-    }
-
-    @Override
-    public void onSuccess(int requestType) {
-        progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
-        finish();
     }
 
 }

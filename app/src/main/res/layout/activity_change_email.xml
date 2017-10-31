@@ -13,9 +13,9 @@
         android:hint="@string/new_email"
         android:inputType="textEmailAddress"
         android:maxLength="254"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp" />
@@ -27,9 +27,9 @@
         android:hint="@string/confirm_new_email"
         android:inputType="textEmailAddress"
         android:maxLength="254"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="13dp"
         app:layout_constraintTop_toBottomOf="@+id/new_email" />
@@ -42,9 +42,9 @@
         android:inputType="textPassword"
         android:maxLength="80"
         android:layout_marginTop="13dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirm_new_email" />
 
@@ -52,18 +52,18 @@
         android:id="@+id/update_email_button"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorPrimary"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/rounded_button"
         android:elevation="0dp"
         android:text="@string/update"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_login_password" />
 
 </android.support.constraint.ConstraintLayout>

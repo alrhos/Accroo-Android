@@ -138,6 +138,9 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
             case ApiService.TIMEOUT_ERROR:
                 message = getResources().getString(R.string.timeout_error);
                 break;
+            case ApiService.INVALID_REQUEST:
+                message = getResources().getString(R.string.email_in_use);
+                break;
             default:
                 message = getResources().getString(R.string.general_error);
         }
@@ -147,7 +150,6 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
     @Override
     public void onError() {
         progressDialog.dismiss();
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }

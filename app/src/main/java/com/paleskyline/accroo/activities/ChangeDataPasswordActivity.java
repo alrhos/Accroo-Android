@@ -122,7 +122,6 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     @Override
     public void onError() {
         progressDialog.dismiss();
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
