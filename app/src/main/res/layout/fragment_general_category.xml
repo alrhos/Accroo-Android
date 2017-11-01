@@ -7,20 +7,19 @@
 
     <EditText
         android:id="@+id/general_category_name_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/category_name"
-        android:textAppearance="@style/Heading"
-        android:layout_marginStart="23dp"
-        android:maxLines="1"
-        android:maxLength="50"
-        android:inputType="text"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/select_icon"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0" />
+        android:layout_marginTop="20dp"
+        android:hint="@string/category_name"
+        android:inputType="text"
+        android:maxLength="50"
+        android:maxLines="1"
+        android:textAppearance="@style/Heading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/select_icon"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/select_icon"
@@ -35,7 +34,7 @@
     <RadioGroup
         android:id="@+id/root_category_type"
         android:layout_width="272dp"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:orientation="horizontal"
         android:layout_marginLeft="8dp"

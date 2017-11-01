@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/general_category_name"
-        android:layout_width="290dp"
+        android:layout_width="0dp"
         android:layout_height="26dp"
         android:text="@string/general_category"
         android:maxLines="1"
@@ -28,23 +28,24 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="31dp"
         app:layout_constraintLeft_toRightOf="@+id/general_category_icon"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintHorizontal_bias="0.3" />
 
     <EditText
         android:id="@+id/sub_category_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:inputType="text"
-        android:textAppearance="@style/SubHeading"
-        android:hint="@string/category_name"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/sub_category_arrow"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="36dp"
+        android:ellipsize="end"
+        android:hint="@string/category_name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textAppearance="@style/SubHeading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/general_category_icon"
         app:layout_constraintTop_toBottomOf="@+id/general_category_name" />
 
     <ImageView

@@ -85,4 +85,5 @@
         <item name="android:textColor">@android:color/tab_indicator_text</item>
     </style>
 
+
 </resources>
