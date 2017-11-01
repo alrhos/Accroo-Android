@@ -21,6 +21,11 @@
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
+    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://www.google.com">terms and conditions</a>
+        and <a href="https://www.google.com">privacy policy</a></string>
+
+
+
     <string name="important">Important!</string>
     <string name="data_password_description">Your data password is used to encrypt information that
         you enter into the app, such as transactions and categories. You should choose a password
