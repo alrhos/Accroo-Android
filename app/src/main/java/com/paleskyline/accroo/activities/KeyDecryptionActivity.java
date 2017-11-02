@@ -1,5 +1,6 @@
 package com.paleskyline.accroo.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +30,26 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             keyPassword = (EditText) findViewById(R.id.key_password);
             unlockButton = (Button) findViewById(R.id.unlock_button);
+            unlockButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    if (isValidInput()) {
+
+                        // TODO: review password security
+
+                        int passwordLength = keyPassword.length();
+                        char[] password = new char[passwordLength];
+                        keyPassword.getText().getChars(0, passwordLength, password, 0);
+
+                        if (apiService.initializeKey(password)) {
+                            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+                        } else {
+                            Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+
             apiService = new ApiService(this, getApplicationContext());
-            addListeners();
         }
     }
 
@@ -40,31 +59,11 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
         return true;
     }
 
-
-    private void addListeners() {
-        unlockButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (isValidInput()) {
-                    // Attempt decryption
-                    // TODO: review password security
-
-                    int passwordLength = keyPassword.length();
-                    char[] password = new char[passwordLength];
-                    keyPassword.getText().getChars(0, passwordLength, password, 0);
-
-                    if (apiService.initializeKey(password)) {
-                        startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
-                    } else {
-                        Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-    }
-
-
-    // TODO: implement logic
     private boolean isValidInput() {
+        if (keyPassword.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_password, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

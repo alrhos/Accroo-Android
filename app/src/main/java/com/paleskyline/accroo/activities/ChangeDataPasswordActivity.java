@@ -93,7 +93,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
             }
         } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
             progressDialog.dismiss();
-            Toast.makeText(getApplicationContext(), R.string.data_password_updated, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.data_password_updated, Toast.LENGTH_SHORT).show();
             finish();
         }
     }

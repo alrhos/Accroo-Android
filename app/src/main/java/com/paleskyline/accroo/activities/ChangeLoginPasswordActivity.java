@@ -104,7 +104,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.login_password_updated, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.login_password_updated, Toast.LENGTH_SHORT).show();
         finish();
     }
 

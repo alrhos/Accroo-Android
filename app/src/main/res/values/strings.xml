@@ -122,11 +122,11 @@
     <string name="delete_sub_category">Delete this sub category and any associated transactions?</string>
 
     <string name="negative_amount">The transaction amount must be positive</string>
-    <string name="enter_amount">Please enter an amount</string>
-    <string name="select_sub_category">Please select a sub category</string>
+    <string name="enter_amount">Enter an amount</string>
+    <string name="select_sub_category">Select a sub category</string>
     <string name="general_category_already_exists">General category already exists</string>
-    <string name="enter_category_name">Please enter a category name</string>
-    <string name="select_category_icon">Please select a category icon</string>
+    <string name="enter_category_name">Enter a category name</string>
+    <string name="select_category_icon">Select a category icon</string>
     <string name="no_transactions">No transactions</string>
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>

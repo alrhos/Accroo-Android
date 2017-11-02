@@ -50,7 +50,6 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
-
                         progressDialog.show();
 
                         String username = usernameField.getText().toString();
@@ -82,26 +81,16 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
 
     // TODO: implement logic
     private boolean isValidInput() {
+        if (usernameField.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (passwordField.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_password, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
-
-//    private void addListeners() {
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                if (isValidInput()) {
-//
-//                    progressDialog.show();
-//
-//                    String username = usernameField.getText().toString();
-//                    int passwordLength = passwordField.getText().length();
-//                    char[] password = new char[passwordLength];
-//                    passwordField.getText().getChars(0, passwordLength, password, 0);
-//
-//                    apiService.login(username, password);
-//                }
-//            }
-//        });
-//    }
 
     @Override
     public void onSuccess(int requestType) {

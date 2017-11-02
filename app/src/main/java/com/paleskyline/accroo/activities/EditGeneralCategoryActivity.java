@@ -92,9 +92,9 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
         if (requestType == ApiService.UPDATE_GENERAL_CATEGORY) {
-            Toast.makeText(getApplicationContext(), R.string.category_updated, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.category_updated, Toast.LENGTH_SHORT).show();
         } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY) {
-            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
         }
         finish();
     }

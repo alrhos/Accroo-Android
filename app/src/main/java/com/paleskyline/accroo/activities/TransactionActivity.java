@@ -291,11 +291,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             amountField.requestFocus();
             Toast.makeText(getApplicationContext(), R.string.transaction_added, Toast.LENGTH_SHORT).show();
         } else if (requestType == ApiService.UPDATE_TRANSACTION) {
-            Toast.makeText(getApplicationContext(), R.string.transaction_updated, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.transaction_updated, Toast.LENGTH_SHORT).show();
             finish();
         } else if (requestType == ApiService.DELETE_TRANSACTION) {
             // TODO: return to main activity
-            Toast.makeText(getApplicationContext(), R.string.transaction_deleted, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.transaction_deleted, Toast.LENGTH_SHORT).show();
             finish();
         }
     }

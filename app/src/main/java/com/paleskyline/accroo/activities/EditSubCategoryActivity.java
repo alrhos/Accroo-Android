@@ -123,9 +123,9 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
         if (requestType == ApiService.UPDATE_SUB_CATEGORY) {
-            Toast.makeText(getApplicationContext(), R.string.category_updated, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.category_updated, Toast.LENGTH_SHORT).show();
         } else if (requestType == ApiService.DELETE_SUB_CATEGORY) {
-            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
         }
         finish();
     }

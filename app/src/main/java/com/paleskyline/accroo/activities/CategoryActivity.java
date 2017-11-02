@@ -190,7 +190,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onError() {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_SHORT).show();
         relaunch();
     }
 
