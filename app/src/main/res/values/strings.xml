@@ -21,15 +21,14 @@
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
-    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://www.google.com">terms and conditions</a>
-        and <a href="https://www.google.com">privacy policy</a></string>
+    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://www.google.com"><b>terms and conditions</b></a> and <a href="https://www.google.com"><b>privacy policy</b></a></string>
 
 
 
     <string name="important">Important!</string>
     <string name="data_password_description">Your data password is used to encrypt information that
-        you enter into the app, such as transactions and categories. You should choose a password
-        that is different to your login password, though please note that unlike your login password,
+        you enter into the app, such as transactions and categories. It is strongly recommended that you choose a
+        data password that is different to your login password, though please note that unlike your login password,
         it is not possible to reset your data password if you forget it because it is never
         transmitted from your device.</string>
     <string name="password_warning">This password cannot be reset or recovered if you forget it.</string>

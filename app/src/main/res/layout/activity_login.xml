@@ -9,7 +9,7 @@
         android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:hint="@string/username"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:maxLength="254"
         android:layout_marginStart="16dp"
