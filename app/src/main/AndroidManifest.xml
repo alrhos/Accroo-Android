@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.paleskyline.navicash">
+    package="com.paleskyline.accroo">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -25,6 +25,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LaunchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -86,6 +87,10 @@
         <activity
             android:name=".activities.ChangeDataPasswordActivity"
             android:label="@string/title_activity_change_data_password"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
             android:screenOrientation="portrait" />
     </application>
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.paleskyline.navicash.activities.RegisterStageOneActivity">
+    tools:context="com.paleskyline.accroo.activities.RegisterStageOneActivity">
 
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
@@ -64,6 +64,7 @@
         android:layout_height="50dp"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
+        android:maxLength="254"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginEnd="16dp"
@@ -77,6 +78,7 @@
         android:layout_height="50dp"
         android:hint="@string/confirm_email"
         android:inputType="textEmailAddress"
+        android:maxLength="254"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginEnd="16dp"
@@ -91,6 +93,7 @@
         android:hint="@string/login_password"
         android:ems="10"
         android:inputType="textPassword"
+        android:maxLength="80"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginEnd="16dp"
@@ -105,6 +108,7 @@
         android:hint="@string/confirm_login_password"
         android:ems="10"
         android:inputType="textPassword"
+        android:maxLength="80"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginEnd="16dp"
@@ -116,18 +120,32 @@
         android:id="@+id/next"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorPrimary"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/rounded_button"
         android:elevation="0dp"
         android:text="@string/next"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_login_password" />
+
+    <TextView
+        android:id="@+id/accept_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="22dp"
+        android:textAppearance="@style/SubHeading"
+        android:textAlignment="center"
+        android:text="@string/agree_terms_privacy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/next" />
 
 </android.support.constraint.ConstraintLayout>

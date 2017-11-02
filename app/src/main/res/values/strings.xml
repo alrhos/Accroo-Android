@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Navicash</string>
+    <string name="app_name">Accroo</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -8,8 +8,12 @@
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="incorrect_password">Incorrect password</string>
+    <string name="incorrect_login_password">Incorrect login password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 80 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
@@ -17,13 +21,20 @@
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
+    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://www.google.com"><b>terms and conditions</b></a> and <a href="https://www.google.com"><b>privacy policy</b></a></string>
+
+
+
     <string name="important">Important!</string>
     <string name="data_password_description">Your data password is used to encrypt information that
-        you enter into the app, such as transactions and categories. You should choose a password
-        that is different to your login password, though please note that unlike your login password,
+        you enter into the app, such as transactions and categories. It is strongly recommended that you choose a
+        data password that is different to your login password, though please note that unlike your login password,
         it is not possible to reset your data password if you forget it because it is never
         transmitted from your device.</string>
     <string name="password_warning">This password cannot be reset or recovered if you forget it.</string>
+    <string name="reset_password_link">You will receive a link to reset your password.</string>
+    <string name="send_link">SEND LINK</string>
+    <string name="reset_link_sent">Password reset link sent</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -35,7 +46,9 @@
     <string name="title_activity_update_email">Update Email</string>
     <string name="title_activity_change_login_password">Update Login Password</string>
     <string name="title_activity_change_data_password">Update Data Password</string>
+    <string name="title_activity_forgot_password">Forgot Password</string>
 
+    <string name="activity_overview">Activity Overview</string>
     <string name="income">Income</string>
     <string name="expenses">Expenses</string>
     <string name="expense">Expense</string>
@@ -47,6 +60,7 @@
     <string name="categories">Categories</string>
     <string name="sub_category">Sub category</string>
     <string name="amount">Amount</string>
+    <string name="date">Date</string>
     <string name="description">Description (optional)</string>
 
     <string name="timeout_error">The connection timed out</string>
@@ -86,6 +100,7 @@
     <string name="change_data_password">Change data password</string>
     <string name="sign_out">Sign out</string>
     <string name="new_email">New email</string>
+    <string name="confirm_new_email">Confirm new email</string>
     <string name="confirm_login_password">Confirm login password</string>
     <string name="current_login_password">Current login password</string>
     <string name="new_login_password">New login password</string>
@@ -107,11 +122,11 @@
     <string name="delete_sub_category">Delete this sub category and any associated transactions?</string>
 
     <string name="negative_amount">The transaction amount must be positive</string>
-    <string name="enter_amount">Please enter an amount</string>
-    <string name="select_sub_category">Please select a sub category</string>
+    <string name="enter_amount">Enter an amount</string>
+    <string name="select_sub_category">Select a sub category</string>
     <string name="general_category_already_exists">General category already exists</string>
-    <string name="enter_category_name">Please enter a category name</string>
-    <string name="select_category_icon">Please select a category icon</string>
+    <string name="enter_category_name">Enter a category name</string>
+    <string name="select_category_icon">Select a category icon</string>
     <string name="no_transactions">No transactions</string>
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>

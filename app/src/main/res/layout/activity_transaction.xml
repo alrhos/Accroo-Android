@@ -67,8 +67,8 @@
         android:layout_marginRight="14dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="12dp"
-        android:textSize="16sp"
-        android:text="Date"
+        android:textAppearance="@style/Heading"
+        android:text="@string/date"
         android:inputType="date"
         android:focusable="false"
         android:cursorVisible="false"
@@ -87,7 +87,7 @@
         android:layout_marginRight="14dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="12dp"
-        android:textSize="16sp"
+        android:textAppearance="@style/Heading"
         android:text="@string/sub_category"
         android:maxLines="1"
         android:ellipsize="end"
@@ -163,24 +163,6 @@
         android:layout_marginEnd="8dp"
         android:tint="@android:color/black"/>
 
-    <Button
-        android:id="@+id/submit_transaction_button"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorPrimary"
-        android:elevation="0dp"
-        android:text="@string/submit"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
     <EditText
         android:id="@+id/add_transaction_amount"
         android:layout_width="0dp"
@@ -190,7 +172,7 @@
         android:layout_marginStart="14dp"
         android:layout_marginEnd="14dp"
         android:layout_marginTop="12dp"
-        android:textSize="16sp"
+        android:textAppearance="@style/Heading"
         android:maxLength="13"
         android:hint="@string/amount"
         android:inputType="numberDecimal"
@@ -213,10 +195,28 @@
         android:hint="@string/description"
         android:backgroundTint="@color/colorPrimary"
         android:inputType="text"
-        android:textSize="16sp"
+        android:textAppearance="@style/Heading"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintLeft_toRightOf="@+id/imageView4"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_transaction_date" />
+
+    <Button
+        android:id="@+id/submit_transaction_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/rounded_button"
+        android:elevation="0dp"
+        android:text="@string/submit"
+        android:textColor="@android:color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/add_transaction_description" />
 
 </android.support.constraint.ConstraintLayout>

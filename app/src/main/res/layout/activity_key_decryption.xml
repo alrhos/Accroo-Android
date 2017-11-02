@@ -3,25 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.paleskyline.navicash.activities.LoginActivity">
-
-    <Button
-        android:id="@+id/unlock_button"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/colorPrimary"
-        android:elevation="0dp"
-        android:text="@string/unlock"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+    tools:context="com.paleskyline.accroo.activities.LoginActivity">
 
     <EditText
         android:id="@+id/key_password"
@@ -36,5 +18,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/unlock_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/rounded_button"
+        android:elevation="0dp"
+        android:text="@string/sign_in_caps"
+        android:textColor="@android:color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/key_password" />
 
 </android.support.constraint.ConstraintLayout>
