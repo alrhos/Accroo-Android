@@ -47,34 +47,34 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TransactionActivity"
-            android:label="Add Transaction"
+            android:label="@string/title_activity_add_transaction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SelectSubCategoryActivity"
-            android:label="Select Sub Category"
+            android:label="@string/title_activity_select_subcategory"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CategoryActivity"
-            android:label="Add Category"
+            android:label="@string/title_activity_add_category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SelectIconActivity"
-            android:label="Select Icon"
+            android:label="@string/title_activity_select_icon"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EditGeneralCategoryActivity"
-            android:label="Edit General Category"
+            android:label="@string/title_activity_edit_category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SelectGeneralCategoryActivity"
-            android:label="Select General Category"
+            android:label="@string/title_activity_select_general_category"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EditSubCategoryActivity"
-            android:label="Edit Sub Category"
+            android:label="@string/title_activity_edit_category"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangeEmailActivity"

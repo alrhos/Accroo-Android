@@ -36,12 +36,15 @@
     <string name="send_link">SEND LINK</string>
     <string name="reset_link_sent">Password reset link sent</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_add_transaction">Add Transaction</string>
+    <string name="title_activity_edit_transaction">Edit Transaction</string>
+    <string name="title_activity_edit_category">Edit Category</string>
+    <string name="title_activity_add_category">Add Category</string>
+    <string name="title_activity_select_icon">Select Icon</string>
     <string name="title_activity_register">Register</string>
     <string name="title_activity_category_overview">CategoryOverviewActivity</string>
     <string name="title_activity_select_category">Select Category</string>
+    <string name="title_activity_select_subcategory">Select Sub Category</string>
     <string name="title_activity_select_general_category">Select General Category</string>
     <string name="title_activity_update_email">Update Email</string>
     <string name="title_activity_change_login_password">Update Login Password</string>

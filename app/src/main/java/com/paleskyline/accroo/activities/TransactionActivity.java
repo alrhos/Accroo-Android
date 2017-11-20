@@ -85,6 +85,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
                 editing = true;
 
+                setTitle(R.string.title_activity_edit_transaction);
+
                 amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
                 dateField.setText(existingTransaction.getDateString());
                 descriptionField.setText(existingTransaction.getDescription());

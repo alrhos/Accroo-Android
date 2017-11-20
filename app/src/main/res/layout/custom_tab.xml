@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="?attr/selectableItemBackground"
         android:layout_gravity="center_horizontal"
-        android:textSize="13dip"
+        android:textSize="13sp"
         android:textStyle="bold"
         android:textAllCaps="true"
         android:textColor="#ffffff"

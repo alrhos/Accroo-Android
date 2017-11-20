@@ -55,7 +55,4 @@
         android:paddingBottom="8dp">
     </LinearLayout>
 
-
-
-
 </android.support.constraint.ConstraintLayout>
