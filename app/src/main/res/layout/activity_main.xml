@@ -5,7 +5,8 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/AppTheme.AppBarOverlay"
+    android:fitsSystemWindows="true"
+
     tools:context="com.paleskyline.accroo.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -22,7 +23,7 @@
             android:layout_alignParentTop="true"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/main_tab_layout"

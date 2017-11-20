@@ -180,14 +180,14 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     public boolean onCreateOptionsMenu(Menu menu) {
         if (editing) {
             getMenuInflater().inflate(R.menu.edit_menu, menu);
-            for (int i = 0; i < menu.size(); i++) {
-                Drawable drawable = menu.getItem(i).getIcon();
-                if (drawable != null) {
-                    drawable.mutate();
+           // for (int i = 0; i < menu.size(); i++) {
+               // Drawable drawable = menu.getItem(i).getIcon();
+               // if (drawable != null) {
+                  //  drawable.mutate();
                     // amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                    drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_ATOP);
-                }
-            }
+                   // drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_ATOP);
+              //  }
+          //  }
         }
         return true;
     }
