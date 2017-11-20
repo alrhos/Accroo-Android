@@ -14,7 +14,7 @@
         android:textAppearance="@style/SubHeading"
         android:layout_toStartOf="@+id/sub_category_amount"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="85dp"
+        android:layout_marginStart="76dp"
         android:layout_marginEnd="8dp"/>
 
     <TextView
@@ -23,6 +23,6 @@
         android:id="@+id/sub_category_amount"
         android:textAppearance="@style/SubHeading"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginEnd="13dp" />
 
 </RelativeLayout>

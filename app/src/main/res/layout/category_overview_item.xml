@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/category_icon"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:srcCompat="@drawable/i0"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"

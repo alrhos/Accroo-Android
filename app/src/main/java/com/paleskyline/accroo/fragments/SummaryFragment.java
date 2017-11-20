@@ -194,7 +194,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
     @Override
     public void onGeneralCategoryClicked() {
         Transition transition = new ChangeBounds();
-        transition.setDuration(200);
+        transition.setDuration(150);
         TransitionManager.beginDelayedTransition(recyclerView, transition);
     }
 
