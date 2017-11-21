@@ -46,10 +46,6 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
             }
         }
 
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
     }
 
     @Override

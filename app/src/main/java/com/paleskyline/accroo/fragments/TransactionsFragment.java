@@ -16,14 +16,6 @@ import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.adapters.TransactionAdapter;
 import com.paleskyline.accroo.model.Transaction;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TransactionsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TransactionsFragment extends Fragment implements TransactionAdapter.AdapterInteractionListener {
 
     private TransactionAdapter transactionAdapter;
@@ -34,41 +26,10 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
 
     public TransactionsFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TransactionsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TransactionsFragment newInstance(String param1, String param2) {
-        TransactionsFragment fragment = new TransactionsFragment();
-        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // TODO: review data source handling - can probably be pushed to the adapter
-
-//        dataSource = new ArrayList<>();
-//        for (Transaction t : DataProvider.getInstance().getTransactions()) {
-//            dataSource.add(t);
-//        }
-//        System.out.println("DATA SOURCE SIZE: " + dataSource.size());
         transactionAdapter = new TransactionAdapter(getActivity(), this);
-
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -133,28 +94,13 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        System.out.println("TRANSACTION FRAG - ON ACTIVITY CREATED");
-        if (savedInstanceState != null) {
-
-        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        System.out.println("TRANSACTION FRAG - saving instance");
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface FragmentInteractionListener {
         void onTransactionSwipeRefresh();
         void onTransactionSelected(Transaction transaction);

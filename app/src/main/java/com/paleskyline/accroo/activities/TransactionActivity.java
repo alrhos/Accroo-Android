@@ -60,9 +60,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             setContentView(R.layout.activity_transaction);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.transaction_toolbar);
-//        setSupportActionBar(toolbar);
-
             amountField = (EditText) findViewById(R.id.add_transaction_amount);
             descriptionField = (EditText) findViewById(R.id.add_transaction_description);
             categoryField = (TextView) findViewById(R.id.add_transaction_category);
@@ -80,8 +77,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             existingTransaction = getIntent().getParcelableExtra("transaction");
 
             if (existingTransaction != null) {
-
-                // TODO: change tool bar header to edit transaction
 
                 editing = true;
 
@@ -182,14 +177,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     public boolean onCreateOptionsMenu(Menu menu) {
         if (editing) {
             getMenuInflater().inflate(R.menu.edit_menu, menu);
-           // for (int i = 0; i < menu.size(); i++) {
-               // Drawable drawable = menu.getItem(i).getIcon();
-               // if (drawable != null) {
-                  //  drawable.mutate();
-                    // amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                   // drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.white), PorterDuff.Mode.SRC_ATOP);
-              //  }
-          //  }
         }
         return true;
     }
@@ -254,8 +241,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 }).create().show();
     }
 
-    // TODO: implement amount regex and toast
-
     private boolean isValidAmount() {
         String amountString = amountField.getText().toString();
         if (amountString.length() > 0) {
@@ -296,7 +281,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             Toast.makeText(getApplicationContext(), R.string.transaction_updated, Toast.LENGTH_SHORT).show();
             finish();
         } else if (requestType == ApiService.DELETE_TRANSACTION) {
-            // TODO: return to main activity
             Toast.makeText(getApplicationContext(), R.string.transaction_deleted, Toast.LENGTH_SHORT).show();
             finish();
         }

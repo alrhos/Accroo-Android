@@ -50,7 +50,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getResources().getString(R.string.loading));
 
             apiService = new ApiService(this, getApplicationContext());
 
@@ -76,7 +76,10 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
      class PagerAdapter extends FragmentPagerAdapter {
 
-        String tabTitles[] = {"General Category", "Sub Category"};
+        String tabTitles[] = {
+                getResources().getString(R.string.general_category),
+                getResources().getString(R.string.sub_category)
+        };
         Context context;
 
         private PagerAdapter(FragmentManager fm, Context context) {
@@ -154,13 +157,6 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             subCategoryFragment.clearFields();
             Toast.makeText(getApplicationContext(), R.string.category_added, Toast.LENGTH_SHORT).show();
         }
-//        } else if (requestType == ApiService.UPDATE_GENERAL_CATEGORY || requestType == ApiService.UPDATE_SUB_CATEGORY) {
-//            Toast.makeText(getApplicationContext(), R.string.category_updated, Toast.LENGTH_SHORT).show();
-//            finish();
-//        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY || requestType == ApiService.DELETE_SUB_CATEGORY) {
-//            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
-//            finish();
-//        }
     }
 
 

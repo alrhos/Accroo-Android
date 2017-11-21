@@ -21,7 +21,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private AdapterInteractionListener adapterListener;
     private String[][] iconArray;
-   // private LayoutInflater inflater;
     private final int cols = 5;
     private int rows;
 

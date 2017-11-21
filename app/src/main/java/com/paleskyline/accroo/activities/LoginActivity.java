@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                 message = getResources().getString(R.string.timeout_error);
                 break;
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.incorrect_password);
+                message = getResources().getString(R.string.invalid_username_or_password);
                 break;
             default:
                 message = getResources().getString(R.string.general_error);

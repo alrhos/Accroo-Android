@@ -40,11 +40,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
     private ProgressDialog progressDialog;
-
     private ApiService apiService;
-
     private Date startDate, endDate;
-
     private FloatingActionButton fab;
 
     @Override
@@ -102,23 +99,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        System.out.println("ON MAIN ACTIVITY RESUME");
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        System.out.println("MAIN ACTIVITY STOPPED");
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
-
     @Override
     public void onRestart() {
         super.onRestart();
@@ -147,12 +127,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         startActivity(intent);
     }
 
-
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        super.onSaveInstanceState(savedInstanceState);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -162,12 +136,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        switch (item.getItemId()) {
-//            // TODO: convert to switch
-//        }
-//
         switch (item.getItemId()) {
             case R.id.change_email:
                 startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
@@ -185,18 +153,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-//        if (id == R.id.change_email) {
-//            startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
-//        } else if (id == R.id.change_login_password) {
-//            startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
-//        } else if (id == R.id.change_data_password) {
-//            startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
-//        } else if (id == R.id.sign_out) {
-//            apiService.logout();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
     }
 
     @Override

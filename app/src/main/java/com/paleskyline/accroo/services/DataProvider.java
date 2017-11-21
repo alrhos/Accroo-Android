@@ -40,18 +40,6 @@ public class DataProvider {
 
     }
 
-//    public static boolean isDataLoaded() {
-//        if (DataProvider.generalCategories == null) {
-//            return false;
-//        }
-//        if (DataProvider.subCategories == null) {
-//            return false;
-//        } if (DataProvider.transactions == null) {
-//            return false;
-//        }
-//        return true;
-//    }
-
     private static void sortData() {
 
         // Clear existing child objects

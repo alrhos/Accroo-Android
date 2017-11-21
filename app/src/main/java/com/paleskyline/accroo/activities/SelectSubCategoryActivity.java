@@ -22,17 +22,6 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             findViewById(R.id.category_overview_swipe_refresh).setEnabled(false);
         }
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        CategoryOverviewFragment categoryOverviewFragment = new CategoryOverviewFragment();
-//        fragmentTransaction.add(R.id.select_category_fragment, categoryOverviewFragment);
-//        fragmentTransaction.commit();
-
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.paleskyline.accroo.R;
+import com.paleskyline.accroo.other.Constants;
 import com.paleskyline.accroo.services.ApiService;
 
 public class ChangeDataPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -32,6 +33,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
             apiService = new ApiService(this, getApplicationContext());
             progressDialog = new ProgressDialog(ChangeDataPasswordActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.submitting));
+            progressDialog.setCancelable(false);
 
             currentDataPasswordField = (EditText) findViewById(R.id.current_data_password);
             newDataPasswordField = (EditText) findViewById(R.id.new_data_password);
@@ -41,12 +43,13 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
             updateDataPassword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (!isExistingPasswordValid()) {
+                        return;
+                    }
 
-                    // TODO: add validation login
-
-                    // Check new passwords are the same
-                    // Check new password is not the same
-                    // Check password strength etc.
+                    if (!isNewPasswordValid()) {
+                        return;
+                    }
 
                     progressDialog.show();
 
@@ -66,6 +69,34 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        return true;
+    }
+
+    private boolean isExistingPasswordValid() {
+        if (loginPasswordField.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_current_login_password, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (currentDataPasswordField.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_current_data_password, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isNewPasswordValid() {
+        if (newDataPasswordField.getText().length() < Constants.MIN_PASSWORD_LENGTH) {
+            Toast.makeText(getApplicationContext(), R.string.password_too_short, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (newDataPasswordField.getText().length() > Constants.MAX_PASSWORD_LENGTH) {
+            Toast.makeText(getApplicationContext(), R.string.password_too_long, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!newDataPasswordField.getText().toString().equals(confirmDataPasswordField.getText().toString())) {
+            Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -89,6 +120,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
                 apiService.updateDataPassword(loginPassword, newDataPassword);
             } else {
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
             }
         } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
@@ -104,7 +136,6 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         String message;
         switch (errorCode) {
             case ApiService.UNAUTHORIZED:
-                // TODO: change string to incorrect login password
                 message = getResources().getString(R.string.incorrect_login_password);
                 break;
             case ApiService.CONNECTION_ERROR:

@@ -42,9 +42,6 @@ public class RegisterStageOneActivity extends AppCompatActivity {
                 if (!isPasswordValid()) {
                     return;
                 }
-                if (!isPasswordBlacklisted()) {
-                    return;
-                }
 
                 // TODO: review password security here
 
@@ -91,11 +88,6 @@ public class RegisterStageOneActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
             return false;
         }
-        return true;
-    }
-
-    private boolean isPasswordBlacklisted() {
-        // TODO: add logic here
         return true;
     }
 

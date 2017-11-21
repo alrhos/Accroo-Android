@@ -83,7 +83,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             GeneralCategory generalCategory = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent());
 
-          //  String icon = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile();
             int iconId = context.getResources().getIdentifier("@drawable/" + generalCategory.getIconFile(), null, context.getPackageName());
             iv.setImageResource(iconId);
 
@@ -103,12 +102,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 amount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
             }
 
-            //
-
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println(((GeneralCategory) ((SubCategory) transaction.getParent()).getParent()).getIconFile());
                     adapterInteractionListener.onTransactionSelected(transaction);
                 }
             });

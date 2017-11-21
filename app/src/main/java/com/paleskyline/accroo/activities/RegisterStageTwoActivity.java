@@ -52,9 +52,6 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
                     if (!isPasswordValid()) {
                         return;
                     }
-                    if (!isPasswordBlacklisted()) {
-                        return;
-                    }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(RegisterStageTwoActivity.this);
                     builder.setMessage(R.string.password_warning)
@@ -110,11 +107,6 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
             Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
             return false;
         }
-        return true;
-    }
-
-    private boolean isPasswordBlacklisted() {
-        // TODO: add logic here
         return true;
     }
 

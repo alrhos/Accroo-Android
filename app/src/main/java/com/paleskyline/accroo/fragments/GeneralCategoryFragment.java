@@ -22,7 +22,6 @@ import com.paleskyline.accroo.services.InputService;
 public class GeneralCategoryFragment extends Fragment {
 
     private FragmentInteractionListener fragmentListener;
-
     private ImageView icon;
     private EditText categoryName;
     private RadioGroup radioGroup;
@@ -30,8 +29,7 @@ public class GeneralCategoryFragment extends Fragment {
     private RadioButton expenseRadioButton;
     private Button submit;
     private String iconName = "i0";
-    private final String defaultIcon = "i0";
-
+    private final static String DEFAULT_ICON = "i0";
     private GeneralCategory existingCategory;
     private boolean editing = false;
     private boolean editable = true;
@@ -41,7 +39,6 @@ public class GeneralCategoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -78,7 +75,7 @@ public class GeneralCategoryFragment extends Fragment {
                 expenseRadioButton.setChecked(true);
             }
 
-            submit.setText("SAVE");
+            submit.setText(getResources().getString(R.string.save));
         }
 
         icon.setOnClickListener(new View.OnClickListener() {
@@ -88,12 +85,9 @@ public class GeneralCategoryFragment extends Fragment {
             }
         });
 
-       // submit = (Button) fragmentView.findViewById(R.id.submit_general_category_button);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // TODO: add check to make sure icon has been selected
 
                 if (!isValidCategoryName()) {
                     return;
@@ -182,7 +176,7 @@ public class GeneralCategoryFragment extends Fragment {
     }
 
     private boolean isIconSelected() {
-        if (iconName.equals(defaultIcon)) {
+        if (iconName.equals(DEFAULT_ICON)) {
             Toast.makeText(getActivity(), R.string.select_category_icon, Toast.LENGTH_SHORT).show();
             return false;
         }

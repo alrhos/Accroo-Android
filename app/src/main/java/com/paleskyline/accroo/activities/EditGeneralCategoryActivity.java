@@ -20,11 +20,8 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
 
     private ProgressDialog progressDialog;
     private ApiService apiService;
-
     private GeneralCategoryFragment generalCategoryFragment;
-
     private GeneralCategory generalCategory;
-
     private final int ICON_REQUEST = 1;
 
     @Override
@@ -41,7 +38,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             generalCategory = getIntent().getParcelableExtra("generalCategory");
             progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage("Saving...");
+            progressDialog.setMessage(getResources().getString(R.string.saving));
         }
     }
 

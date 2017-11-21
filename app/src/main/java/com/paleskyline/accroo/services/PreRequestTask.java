@@ -37,13 +37,10 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private Transaction transaction;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
-
     private PreRequestOutcome preRequestOutcome;
     private Context context;
     private RequestCoordinator coordinator;
-
     private Object dataObject;
-
     private String username;
     private char[] password;
     private char[] newPassword;
@@ -145,8 +142,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     return true;
 
                 case ApiService.GET_DEFAULT_DATA:
-
-                    // TODO - Look up transaction id for date
 
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.GET,
                             RequestBuilder.CATEGORY, null, null, context));
@@ -323,12 +318,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                             RequestBuilder.FORGOT_PASSWORD, json, context));
 
                     return true;
-
-//                case ApiService.DELETE_REFRESH_TOKEN:
-//
-//                    requests.add(RequestBuilder.deleteRefreshToken(0, coordinator, context));
-//                    AuthManager.getInstance(context).clearSavedData();
-//                    return true;
 
                 case ApiService.UPDATE_EMAIL:
 

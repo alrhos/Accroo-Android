@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.paleskyline.accroo.R;
+import com.paleskyline.accroo.other.Constants;
 import com.paleskyline.accroo.services.ApiService;
 
 public class ChangeLoginPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -39,11 +40,10 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
             updatePasswordButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO: add validation login
 
-                    // Check new passwords are equal
-                    // Check new password is not the same
-                    // Length checks etc.
+                    if (!isPasswordValid()) {
+                        return;
+                    }
 
                     progressDialog.show();
 
@@ -65,6 +65,26 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        return true;
+    }
+
+    private boolean isPasswordValid() {
+        if (existingPasswordField.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_current_login_password, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (newPasswordField.getText().length() < Constants.MIN_PASSWORD_LENGTH) {
+            Toast.makeText(getApplicationContext(), R.string.password_too_short, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (newPasswordField.getText().length() > Constants.MAX_PASSWORD_LENGTH) {
+            Toast.makeText(getApplicationContext(), R.string.password_too_long, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!newPasswordField.getText().toString().equals(confirmNewPasswordField.getText().toString())) {
+            Toast.makeText(getApplicationContext(), R.string.password_mismatch, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

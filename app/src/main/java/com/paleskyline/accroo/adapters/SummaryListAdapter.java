@@ -27,17 +27,12 @@ import java.util.Locale;
 public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Object> dataSource;
-
     private final int SUMMARY = 0;
     private final int GENERAL_CATEGORY = 1;
-
     private Context context;
     private LayoutInflater inflater;
-
     private SummaryViewHolder summaryViewHolder;
-
     private AdapterInteractionListener adapterInteractionListener;
-
     private Date startDate, endDate;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -81,7 +76,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public GeneralCategoryViewHolder(View view) {
             super(view);
-            //View layout = view.findViewById(R.id.category_t);
             category = (TextView) view.findViewById(R.id.category_name);
             amount = (TextView) view.findViewById(R.id.category_amount);
             icon = (ImageView) view.findViewById(R.id.category_icon);

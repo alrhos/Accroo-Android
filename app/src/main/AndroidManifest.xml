@@ -78,7 +78,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangeEmailActivity"
-            android:label="@string/title_activity_update_email"
+            android:label="@string/title_activity_change_email"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangeLoginPasswordActivity"

@@ -141,26 +141,6 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         fragmentListener = null;
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        System.out.println("SUMMARY FRAG - ON ACTIVITY CREATED");
-//        if (savedInstanceState != null) {
-//            layoutManagerState = savedInstanceState.getParcelable("layoutManagerState");
-//            //layoutManager.onRestoreInstanceState(layoutManagerState);
-//            System.out.println("SUMMARY FRAG - there's some saved instance state");
-//
-//        }
-//    }
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        super.onSaveInstanceState(savedInstanceState);
-//        layoutManagerState = layoutManager.onSaveInstanceState();
-//        savedInstanceState.putParcelable("layoutManagerState", layoutManager.onSaveInstanceState());
-//        System.out.println("SUMMARY FRAG - saving instance");
-//    }
-
     public interface FragmentInteractionListener {
         void onSummarySwipeRefresh();
         void onStartDateUpdated(Date date);

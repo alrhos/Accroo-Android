@@ -25,7 +25,6 @@ import org.json.JSONObject;
 public class RequestBuilder {
 
     private final static String baseURL = "http://apidev.accroo.io:/";
-
     public final static String REFRESH_TOKEN = "token/refresh";
     public final static String ACCESS_TOKEN = "token/access";
     public final static String REGISTER = "register";
@@ -37,7 +36,6 @@ public class RequestBuilder {
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String SUB_CATEGORY = "category/sub";
     public final static String TRANSACTION = "transaction";
-
     protected final static int BASIC_AUTH = 0;
     protected final static int REFRESH_TOKEN_AUTH = 1;
     protected final static int ACCESS_TOKEN_AUTH = 2;
@@ -93,24 +91,6 @@ public class RequestBuilder {
                 errorListener, RestRequest.TOKEN, authValue, context);
     }
 
-
-//    public static RestRequest deleteRefreshToken(int index, RequestCoordinator coordinator,
-//                                                 Context context) throws Exception {
-//
-//
-//        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
-//
-//        String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
-//
-//        String url = baseURL + REFRESH_TOKEN;
-//
-//        return new RestRequest(Request.Method.DELETE, url, null, responseListener,
-//                errorListener, RestRequest.TOKEN, authValue, context);
-//
-//    }
-
-
     public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
                                               String endpoint, String parameters, JSONObject json,
                                               Context context) throws Exception {
@@ -129,7 +109,6 @@ public class RequestBuilder {
         return new RestRequest(method, url, json, responseListener, errorListener,
                 RestRequest.TOKEN, authValue, context);
     }
-
 
     public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
                                         String endpoint, JSONObject json,
@@ -152,37 +131,6 @@ public class RequestBuilder {
         }
         return 0;
     }
-
-
-    // TODO: see if code can be cleaned up
-//    private static String parseVolleyExceptionOld(VolleyError error) {
-//        error.printStackTrace();
-//        if (error instanceof AuthFailureError) {
-//            return RestRequest.UNAUTHORIZED;
-//        } else if (error instanceof TimeoutError) {
-//            return RestRequest.TIMEOUT_ERROR;
-//        } else if (error instanceof NoConnectionError) {
-//            return RestRequest.CONNECTION_ERROR;
-//        } else {
-//            try {
-//                NetworkResponse networkResponse = error.networkResponse;
-//                String serverMessage = new String(networkResponse.data);
-//                if (!serverMessage.isEmpty()) {
-//                    String jsonString = new String(networkResponse.data);
-//                    try {
-//                        JSONObject serverResponse = new JSONObject(jsonString);
-//                        return serverResponse.getString("message");
-//                    } catch (JSONException e) {
-//                        return RestRequest.GENERAL_ERROR;
-//                    }
-//                } else {
-//                    return RestRequest.GENERAL_ERROR;
-//                }
-//            } catch (Exception e) {
-//                return RestRequest.GENERAL_ERROR;
-//            }
-//        }
-//    }
 
     private static int parseVolleyException(VolleyError error) {
         error.printStackTrace();
@@ -211,9 +159,6 @@ public class RequestBuilder {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //int responseCode = getResponseCode(error);
-                //String errorMessage = parseVolleyExceptionOld(error);
-               // int errorCode = parseVolleyException(error);
                 coordinator.receiveError(authType, parseVolleyException(error));
             }
         };

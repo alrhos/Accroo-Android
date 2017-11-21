@@ -21,7 +21,6 @@ import com.paleskyline.accroo.services.InputService;
 public class SubCategoryFragment extends Fragment {
 
     private FragmentInteractionListener fragmentListener;
-
     private ImageView icon;
     private TextView generalCategoryName;
     private EditText subCategoryName;
@@ -62,7 +61,7 @@ public class SubCategoryFragment extends Fragment {
             icon.setImageResource(iconID);
             generalCategoryName.setText(generalCategory.getCategoryName());
             subCategoryName.setText(existingCategory.getCategoryName());
-            submit.setText("SAVE");
+            submit.setText(getResources().getString(R.string.save));
 
         }
 
