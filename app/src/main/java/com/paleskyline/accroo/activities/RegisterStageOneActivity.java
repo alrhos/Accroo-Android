@@ -50,7 +50,7 @@ public class RegisterStageOneActivity extends AppCompatActivity {
                 loginPassword.getText().getChars(0, loginPasswordLength, loginPwd, 0);
 
                 Intent intent = new Intent(getApplicationContext(), RegisterStageTwoActivity.class);
-                intent.putExtra("email", emailAddress.getText().toString());
+                intent.putExtra("email", emailAddress.getText().toString().trim());
                 intent.putExtra("loginPassword", loginPwd);
                 startActivity(intent);
             }

@@ -96,7 +96,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
                 this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
 
-                submitButton.setText("SAVE");
+                submitButton.setText(getResources().getString(R.string.save));
                 toggleEditing();
 
             } else {
@@ -245,7 +245,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         String amountString = amountField.getText().toString();
         if (amountString.length() > 0) {
             Double amount = Double.parseDouble(amountString);
-            if (amount < 0) {
+            if (amount <= 0) {
                 Toast.makeText(getApplicationContext(), R.string.negative_amount, Toast.LENGTH_SHORT).show();
                 return false;
             }

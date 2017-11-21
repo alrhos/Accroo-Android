@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                     if (isValidInput()) {
                         progressDialog.show();
 
-                        String username = usernameField.getText().toString();
+                        String username = usernameField.getText().toString().trim();
                         int passwordLength = passwordField.getText().length();
                         char[] password = new char[passwordLength];
                         passwordField.getText().getChars(0, passwordLength, password, 0);
