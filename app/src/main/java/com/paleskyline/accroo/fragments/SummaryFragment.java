@@ -171,11 +171,4 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    @Override
-    public void onGeneralCategoryClicked() {
-        Transition transition = new ChangeBounds();
-        transition.setDuration(150);
-        TransitionManager.beginDelayedTransition(recyclerView, transition);
-    }
-
 }

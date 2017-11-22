@@ -11,7 +11,7 @@
     <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="invalid_username_or_password">Invalid username or password</string>
-    <string name="enter_current_login_password">Enter you current login password</string>
+    <string name="enter_current_login_password">Enter your current login password</string>
     <string name="enter_current_data_password">Enter your current data password</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="incorrect_login_password">Incorrect login password</string>
@@ -25,7 +25,6 @@
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
     <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://www.google.com"><b>terms and conditions</b></a> and <a href="https://www.google.com"><b>privacy policy</b></a></string>
-
 
 
     <string name="important">Important!</string>
@@ -45,6 +44,7 @@
     <string name="title_activity_add_category">Add Category</string>
     <string name="title_activity_select_icon">Select Icon</string>
     <string name="title_activity_register">Register</string>
+    <string name="title_activity_about">About</string>
     <string name="title_activity_category_overview">CategoryOverviewActivity</string>
     <string name="title_activity_select_category">Select Category</string>
     <string name="title_activity_select_subcategory">Select Sub Category</string>
@@ -105,6 +105,7 @@
     <string name="change_login_password">Change login password</string>
     <string name="change_data_password">Change data password</string>
     <string name="sign_out">Sign out</string>
+    <string name="about">About</string>
     <string name="new_email">New email</string>
     <string name="confirm_new_email">Confirm new email</string>
     <string name="confirm_login_password">Confirm login password</string>
@@ -140,5 +141,10 @@
 
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>
+    <string name="terms_of_use">Terms of use</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="licenses">Licenses</string>
+    <string name="contact">Contact</string>
+    <string name="version">Version</string>
 
 </resources>

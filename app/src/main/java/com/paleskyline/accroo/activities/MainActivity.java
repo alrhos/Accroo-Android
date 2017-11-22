@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 apiService.logout();
                 relaunch();
                 return true;
+            case R.id.about:
+                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

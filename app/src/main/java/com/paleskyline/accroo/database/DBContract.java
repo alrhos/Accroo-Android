@@ -53,13 +53,13 @@ public final class DBContract {
             "('Transport', 'i6', 'Expense'), " +
             "('Pets', 'i18', 'Expense'), " +
             "('Health', 'i29', 'Expense'), " +
-            "('Miscellaneous Income', 'i9', 'Income'), " +
+       //     "('Miscellaneous Income', 'i9', 'Income'), " +
             "('Sport', 'i56', 'Expense'), " +
             "('Investments', 'i49', 'Income'), " +
             "('Holidays', 'i41', 'Expense'), " +
             "('Entertainment', 'i51', 'Expense'), " +
             "('Education', 'i34', 'Expense'), " +
-            "('Miscellaneous Expenses', 'i7', 'Expense'), " +
+       //     "('Miscellaneous Expenses', 'i7', 'Expense'), " +
             "('Accommodation', 'i21', 'Expense'), " +
             "('Personal', 'i27', 'Expense');";
 
@@ -69,18 +69,43 @@ public final class DBContract {
             SubCategory.COLUMN_CATEGORY_NAME + ", " +
             SubCategory.COLUMN_GENERAL_CATEGORY + ") VALUES " +
             "('Salary', 'Wages'), ('Groceries', 'Food and Drink'), " +
-            "('Takeaway', 'Food and Drink'), ('Textbooks', 'Education'), " +
-            "('Tuition fees', 'Education'), ('Concerts', 'Entertainment'), " +
-            "('Movies', 'Entertainment'), ('Going out', 'Entertainment'), " +
-            "('Dining out', 'Food and Drink'), ('Dentist', 'Health'), " +
+            "('Eating out', 'Food and Drink'), ('Car insurance', 'Transport'), " +
+            "('Petrol', 'Transport'), ('Public transport', 'Transport'), " +
+            "('Taxis', 'Transport'), ('Uber', 'Transport'), ('Vehicle maintenance', 'Transport'), " +
+            "('Pet supplies', 'Pets'), ('Vet expenses', 'Pets'), ('Dentist', 'Health'), " +
             "('GP appointments', 'Health'), ('Health insurance', 'Health'), " +
-            "('Medicine', 'Health'), ('Accommodation', 'Holidays'), " +
-            "('Transport', 'Holidays'), ('Travel insurance', 'Holidays'), " +
+            "('Medicine', 'Health'), ('Physio', 'Health'), " +
+            "('Gym membership', 'Sport'), ('Sports gear', 'Sport'), " +
             "('Bank account interest', 'Investments'), ('Shares', 'Investments'), " +
-            "('Clothing', 'Personal'), ('Living essentials', 'Personal'), " +
-            "('Personal grooming', 'Personal'), ('Subscriptions', 'Personal'), " +
-            "('Car insurance', 'Transport'), ('Petrol', 'Transport'), " +
-            "('Uber', 'Transport'), ('Vehicle maintenance', 'Transport');";
+            "('Accommodation', 'Holidays'), ('Transport', 'Holidays'), " +
+            "('Travel insurance', 'Holidays'), ('Activities', 'Holidays'), " +
+            "('Concerts', 'Entertainment'), ('Going out', 'Entertainment'), " +
+            "('Movies', 'Entertainment'), ('Tuition fees', 'Education'), " +
+            "('Learning materials', 'Education'), ('Electricity', 'Accommodation'), " +
+            "('Furniture', 'Accommodation'), ('Household goods', 'Accommodation'), " +
+            "('Home maintenance', 'Accommodation'), ('Internet', 'Accommodation'), " +
+            "('Water', 'Accommodation'), ('Rent', 'Accommodation'), " +
+            "('Mortgage', 'Accommodation'), ('Other income', 'Wages'), " +
+            "('House/contents insurance', 'Accommodation'), ('Clothing', 'Personal'), " +
+            "('Living essentials', 'Personal'), ('Personal grooming', 'Personal');";
+
+//                    "" +
+//                    "" +
+//                    "" +
+//                    "" +
+//                    "" +
+//                    "('Textbooks', 'Education'), " +
+//            "('Tuition fees', 'Education'), ('Concerts', 'Entertainment'), " +
+//            "('Movies', 'Entertainment'), ('Going out', 'Entertainment'), " +
+//            "('Dentist', 'Health'), " +
+//            "('GP appointments', 'Health'), ('Health insurance', 'Health'), " +
+//            "('Medicine', 'Health'), ('Accommodation', 'Holidays'), " +
+//            "('Transport', 'Holidays'), ('Travel insurance', 'Holidays'), " +
+//            "('Bank account interest', 'Investments'), ('Shares', 'Investments'), " +
+//            "('Clothing', 'Personal'), ('Living essentials', 'Personal'), " +
+//            "('Personal grooming', 'Personal'), ('Subscriptions', 'Personal'), " +
+//            "('Car insurance', 'Transport'), ('Petrol', 'Transport'), " +
+//            "('Uber', 'Transport'), ('Vehicle maintenance', 'Transport');";
 
     protected static final String POPULATE_ICON =
             "INSERT INTO " + Icon.TABLE_NAME + " (" +

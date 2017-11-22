@@ -49,7 +49,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public interface AdapterInteractionListener {
         void onStartDateClicked();
         void onEndDateClicked();
-        void onGeneralCategoryClicked();
     }
 
     class SummaryViewHolder extends RecyclerView.ViewHolder {
@@ -167,7 +166,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         } else {
                             vh2.details.setVisibility(View.VISIBLE);
                         }
-                        adapterInteractionListener.onGeneralCategoryClicked();
                         vh2.expanded = !vh2.expanded;
                     }
                 });
@@ -197,18 +195,14 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void refreshDataSource() {
-
         dataSource.clear();
         dataSource.add(new Summary(DataProvider.getRootCategories()));
-
         ArrayList<GeneralCategory> generalCategories = DataProvider.getGeneralCategories();
-
-        for (GeneralCategory generalCategory : generalCategories) {
-            dataSource.add(generalCategory);
-        }
-
+        dataSource.addAll(generalCategories);
         notifyDataSetChanged();
-
+//        for (GeneralCategory generalCategory : generalCategories) {
+//            dataSource.add(generalCategory);
+//        }
     }
 
     public void updateStartDate(Date date) {
