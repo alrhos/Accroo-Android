@@ -53,7 +53,7 @@ public class AboutActivity extends AppCompatActivity {
         licenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(getApplicationContext(), LicensesActivity.class));
             }
         });
 
