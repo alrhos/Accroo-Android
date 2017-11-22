@@ -146,5 +146,7 @@
     <string name="licenses">Licenses</string>
     <string name="contact">Contact</string>
     <string name="version">Version</string>
+    <string name="email_chooser">Contact via</string>
+    <string name="no_email_client">No email app available</string>
 
 </resources>
