@@ -166,13 +166,13 @@ public class Transaction implements Securable, Relationship, Parcelable {
         SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
 
         String transactionString = CryptoManager.getInstance().decrypt(payload);
-        JSONObject transactionData = new JSONObject(transactionString);
+        JSONObject transactionJson = new JSONObject(transactionString);
 
         this.id = json.getInt("id");
         this.subCategoryID = json.getInt("subCategoryID");
-        this.dateString = transactionData.getString("date");
-        this.amount = transactionData.getDouble("amount");
-        this.description = transactionData.getString("description");
+        this.dateString = transactionJson.getString("date");
+        this.amount = transactionJson.getDouble("amount");
+        this.description = transactionJson.getString("description");
     }
 
     @Override

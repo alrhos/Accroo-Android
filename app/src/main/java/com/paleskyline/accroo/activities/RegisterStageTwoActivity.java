@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.paleskyline.accroo.R;
+import com.paleskyline.accroo.model.Preferences;
 import com.paleskyline.accroo.model.User;
 import com.paleskyline.accroo.other.Constants;
 import com.paleskyline.accroo.services.ApiService;
@@ -77,8 +78,7 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
         int dataPasswordLength = dataPassword.getText().length();
         dataPwd = new char[dataPasswordLength];
         dataPassword.getText().getChars(0, dataPasswordLength, dataPwd, 0);
-        User user = new User(email, loginPwd, dataPwd);
-        // TODO: figure out how to also send preferences
+        User user = new User(email, loginPwd, dataPwd, new Preferences());
         apiService.createUser(user);
     }
 

@@ -13,6 +13,7 @@ public class User {
     private char[] loginPassword;
     private char[] dataPassword;
     private KeyPackage keyPackage;
+    private Preferences preferences;
 
     public User(String email, char[] loginPassword, KeyPackage keyPackage) {
         this.email = email;
@@ -20,10 +21,11 @@ public class User {
         this.keyPackage = keyPackage;
     }
 
-    public User(String email, char[] loginPassword, char[] dataPassword) {
+    public User(String email, char[] loginPassword, char[] dataPassword, Preferences preferences) {
         this.email = email;
         this.loginPassword = loginPassword;
         this.dataPassword = dataPassword;
+        this.preferences = preferences;
     }
 
     public User(String email, char[] loginPassword) {
@@ -67,6 +69,14 @@ public class User {
         this.keyPackage = keyPackage;
     }
 
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Preferences preferences) {
+        this.preferences = preferences;
+    }
+
     public void clearPasswords() {
         // TODO: clear password arrays
     }
@@ -77,22 +87,13 @@ public class User {
             json.put("email", email);
             json.put("password", String.copyValueOf(loginPassword));
             json.put("keyPackage", keyPackage.toJSON());
+            json.put("preferences", preferences.encrypt());
             // TODO: Wipe password array
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        System.out.println("USER REGO: " + json.toString());
         return json;
     }
-
-//    public JSONObject toJSONLogin() {
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("email", email);
-//            json.put("password", String.copyValueOf(loginPassword));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return json;
-//    }
 
 }

@@ -123,10 +123,10 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
         SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
         String categoryString = CryptoManager.getInstance().decrypt(payload);
-        JSONObject categoryData = new JSONObject(categoryString);
+        JSONObject categoryJson = new JSONObject(categoryString);
         this.id = json.getInt("id");
         this.generalCategoryID = json.getInt("generalCategoryID");
-        this.categoryName = categoryData.getString("categoryName");
+        this.categoryName = categoryJson.getString("categoryName");
     }
 
     @Override

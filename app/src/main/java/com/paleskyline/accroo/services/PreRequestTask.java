@@ -179,8 +179,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     }
 
                     // Shuffle items so that each user's categories are inserted in a different
-                    // order making it difficult for sysadmins to guess a certain category given
-                    // the cipher text length or order of records in db table.
+                    // order making it more difficult for sysadmins to guess a certain category
+                    // given the cipher text length or order of records in db table.
 
                     Collections.shuffle(generalCategories);
 

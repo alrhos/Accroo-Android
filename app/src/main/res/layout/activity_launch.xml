@@ -13,14 +13,13 @@
 
     <ImageView
         android:id="@+id/welcome_image"
-        android:layout_width="229dp"
-        android:layout_height="219dp"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:paddingTop="50dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/ic_launcher_test_round"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

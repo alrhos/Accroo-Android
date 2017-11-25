@@ -10,8 +10,6 @@ import java.io.UnsupportedEncodingException;
  */
 
 public interface Securable {
-
     JSONObject encrypt() throws JSONException;
     void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException;
-
 }
