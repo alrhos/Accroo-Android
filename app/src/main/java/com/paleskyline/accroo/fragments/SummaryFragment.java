@@ -67,7 +67,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
 
         View fragmentView = inflater.inflate(R.layout.fragment_summary, container, false);
 
-        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.summary_recycler_view);
+        recyclerView = fragmentView.findViewById(R.id.summary_recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(summaryListAdapter);
@@ -86,7 +86,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
             }
         });
 
-        swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.summary_swipe_refresh);
+        swipeRefreshLayout = fragmentView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {

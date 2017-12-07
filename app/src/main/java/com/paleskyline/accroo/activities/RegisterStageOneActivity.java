@@ -25,12 +25,12 @@ public class RegisterStageOneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_stage_one);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        emailAddress = (EditText) findViewById(R.id.email);
-        confirmEmailAddress = (EditText) findViewById(R.id.confirm_email);
-        loginPassword = (EditText) findViewById(R.id.login_password);
-        confirmLoginPassword = (EditText) findViewById(R.id.confirm_login_password);
-        next = (Button) findViewById(R.id.next);
-        agree = (TextView) findViewById(R.id.accept_terms);
+        emailAddress = findViewById(R.id.email);
+        confirmEmailAddress = findViewById(R.id.confirm_email);
+        loginPassword = findViewById(R.id.login_password);
+        confirmLoginPassword = findViewById(R.id.confirm_login_password);
+        next =  findViewById(R.id.next);
+        agree = findViewById(R.id.accept_terms);
         agree.setMovementMethod(LinkMovementMethod.getInstance());
 
         next.setOnClickListener(new View.OnClickListener() {

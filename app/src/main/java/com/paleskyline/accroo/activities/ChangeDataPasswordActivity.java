@@ -35,11 +35,11 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
             progressDialog.setMessage(getResources().getString(R.string.submitting));
             progressDialog.setCancelable(false);
 
-            currentDataPasswordField = (EditText) findViewById(R.id.current_data_password);
-            newDataPasswordField = (EditText) findViewById(R.id.new_data_password);
-            confirmDataPasswordField = (EditText) findViewById(R.id.confirm_data_password);
-            loginPasswordField = (EditText) findViewById(R.id.current_login_password);
-            updateDataPassword = (Button) findViewById(R.id.update_data_password_button);
+            currentDataPasswordField = findViewById(R.id.current_data_password);
+            newDataPasswordField = findViewById(R.id.new_data_password);
+            confirmDataPasswordField = findViewById(R.id.confirm_data_password);
+            loginPasswordField = findViewById(R.id.current_login_password);
+            updateDataPassword = findViewById(R.id.update_data_password_button);
             updateDataPassword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

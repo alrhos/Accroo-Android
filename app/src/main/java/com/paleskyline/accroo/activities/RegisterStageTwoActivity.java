@@ -43,9 +43,9 @@ public class RegisterStageTwoActivity extends AppCompatActivity implements ApiSe
             progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setCancelable(false);
 
-            dataPassword = (EditText) findViewById(R.id.data_password);
-            confirmDataPassword = (EditText) findViewById(R.id.confirm_data_password);
-            register = (Button) findViewById(R.id.register);
+            dataPassword = findViewById(R.id.data_password);
+            confirmDataPassword = findViewById(R.id.confirm_data_password);
+            register = findViewById(R.id.register);
 
             register.setOnClickListener(new View.OnClickListener() {
                 @Override

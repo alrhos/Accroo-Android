@@ -44,7 +44,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
         } else {
             setContentView(R.layout.activity_category);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.category_toolbar);
+            Toolbar toolbar = findViewById(R.id.category_toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -56,12 +56,12 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             CategoryActivity.PagerAdapter pagerAdapter = new CategoryActivity.PagerAdapter(getSupportFragmentManager(), CategoryActivity.this);
 
-            ViewPager viewPager = (ViewPager) findViewById(R.id.category_viewpager);
+            ViewPager viewPager = findViewById(R.id.category_viewpager);
             viewPager.setAdapter(pagerAdapter);
             viewPager.setCurrentItem(2);
 
             // Give the TabLayout the ViewPager
-            final TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tab_layout);
+            final TabLayout tabLayout = findViewById(R.id.category_tab_layout);
             tabLayout.setupWithViewPager(viewPager);
 
             // TODO: review if this is even needed
@@ -113,7 +113,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
         public View getTabView(int position) {
             View tab = LayoutInflater.from(CategoryActivity.this).inflate(R.layout.custom_tab, null);
-            TextView tv = (TextView) tab.findViewById(R.id.custom_text);
+            TextView tv = tab.findViewById(R.id.custom_text);
             tv.setText(tabTitles[position]);
             return tab;
         }

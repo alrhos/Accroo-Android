@@ -58,16 +58,16 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 startDate = new Date(getIntent().getLongExtra("startDate", -1));
                 endDate = new Date (getIntent().getLongExtra("endDate", -1));
 
-                Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+                Toolbar toolbar = findViewById(R.id.main_toolbar);
                 setSupportActionBar(toolbar);
 
                 PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
 
-                ViewPager viewPager = (ViewPager) findViewById(R.id.main_viewpager);
+                ViewPager viewPager = findViewById(R.id.main_viewpager);
                 viewPager.setAdapter(pagerAdapter);
 
                 // Give the TabLayout the ViewPager
-                final TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
+                final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
                 tabLayout.setupWithViewPager(viewPager);
 
                 // TODO: review if this is even needed
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                     tab.setCustomView(pagerAdapter.getTabView(i));
                 }
 
-                fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab = findViewById(R.id.fab);
 
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
         public View getTabView(int position) {
             View tab = LayoutInflater.from(MainActivity.this).inflate(R.layout.custom_tab, null);
-            TextView tv = (TextView) tab.findViewById(R.id.custom_text);
+            TextView tv = tab.findViewById(R.id.custom_text);
             tv.setText(tabTitles[position]);
             return tab;
         }

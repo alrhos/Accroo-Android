@@ -49,12 +49,12 @@ public class GeneralCategoryFragment extends Fragment {
 
         final View fragmentView = inflater.inflate(R.layout.fragment_general_category, container, false);
 
-        icon = (ImageView) fragmentView.findViewById(R.id.select_icon);
-        categoryName = (EditText) fragmentView.findViewById(R.id.general_category_name_field);
-        radioGroup = (RadioGroup) fragmentView.findViewById(R.id.root_category_type);
-        incomeRadioButton = (RadioButton) fragmentView.findViewById(R.id.income_category);
-        expenseRadioButton = (RadioButton) fragmentView.findViewById(R.id.expense_category);
-        submit = (Button) fragmentView.findViewById(R.id.submit_general_category_button);
+        icon = fragmentView.findViewById(R.id.select_icon);
+        categoryName = fragmentView.findViewById(R.id.general_category_name_field);
+        radioGroup = fragmentView.findViewById(R.id.root_category_type);
+        incomeRadioButton = fragmentView.findViewById(R.id.income_category);
+        expenseRadioButton = fragmentView.findViewById(R.id.expense_category);
+        submit = fragmentView.findViewById(R.id.submit_general_category_button);
 
         expenseRadioButton.setChecked(true);
 

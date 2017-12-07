@@ -25,7 +25,7 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
 
             iconAdapter = new IconAdapter(getApplicationContext(), this);
 
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.select_icon_recycler_view);
+            RecyclerView recyclerView = findViewById(R.id.select_icon_recycler_view);
             recyclerView.setHasFixedSize(false);
             recyclerView.setAdapter(iconAdapter);
 

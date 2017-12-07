@@ -28,8 +28,8 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
         } else {
             setContentView(R.layout.activity_key_decryption);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            keyPassword = (EditText) findViewById(R.id.key_password);
-            unlockButton = (Button) findViewById(R.id.unlock_button);
+            keyPassword = findViewById(R.id.key_password);
+            unlockButton = findViewById(R.id.unlock_button);
             unlockButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (isValidInput()) {

@@ -60,12 +60,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             setContentView(R.layout.activity_transaction);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            amountField = (EditText) findViewById(R.id.add_transaction_amount);
-            descriptionField = (EditText) findViewById(R.id.add_transaction_description);
-            categoryField = (TextView) findViewById(R.id.add_transaction_category);
-            dateField = (TextView) findViewById(R.id.add_transaction_date);
-            categoryIcon = (ImageView) findViewById(R.id.add_transaction_category_icon);
-            submitButton = (Button) findViewById(R.id.submit_transaction_button);
+            amountField = findViewById(R.id.add_transaction_amount);
+            descriptionField = findViewById(R.id.add_transaction_description);
+            categoryField = findViewById(R.id.add_transaction_category);
+            dateField = findViewById(R.id.add_transaction_date);
+            categoryIcon = findViewById(R.id.add_transaction_category_icon);
+            submitButton = findViewById(R.id.submit_transaction_button);
 
             progressDialog = new ProgressDialog(TransactionActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.submitting));

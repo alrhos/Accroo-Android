@@ -37,9 +37,9 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
                              Bundle savedInstanceState) {
 
         View fragmentView = inflater.inflate(R.layout.fragment_transactions, container, false);
-        emptyView = (TextView) fragmentView.findViewById(R.id.empty_view);
+        emptyView = fragmentView.findViewById(R.id.empty_view);
 
-        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.transaction_recycler_view);
+        recyclerView = fragmentView.findViewById(R.id.transaction_recycler_view);
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(transactionAdapter);
 
@@ -58,7 +58,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.transaction_swipe_refresh);
+        swipeRefreshLayout = fragmentView.findViewById(R.id.transaction_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 

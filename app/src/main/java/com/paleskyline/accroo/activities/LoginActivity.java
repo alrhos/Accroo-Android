@@ -35,10 +35,10 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
             setContentView(R.layout.activity_login);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            usernameField = (EditText) findViewById(R.id.email);
-            passwordField = (EditText) findViewById(R.id.password);
-            loginButton = (Button) findViewById(R.id.next);
-            forgotPassword = (TextView) findViewById(R.id.forgot_password);
+            usernameField = findViewById(R.id.email);
+            passwordField = findViewById(R.id.password);
+            loginButton = findViewById(R.id.next);
+            forgotPassword = findViewById(R.id.forgot_password);
 
             progressDialog = new ProgressDialog(LoginActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));

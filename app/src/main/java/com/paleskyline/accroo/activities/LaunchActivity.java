@@ -51,14 +51,14 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private void initLayout() {
         setContentView(R.layout.activity_launch);
 
-        Button login = (Button) findViewById(R.id.login);
+        Button login = findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
 
-        Button register = (Button) findViewById(R.id.register);
+        Button register = findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), RegisterStageOneActivity.class));
@@ -80,7 +80,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR) {
             setContentView(R.layout.activity_no_connection);
-            Button tryAgain = (Button) findViewById(R.id.try_again);
+            Button tryAgain = findViewById(R.id.try_again);
             tryAgain.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     autoLogin();

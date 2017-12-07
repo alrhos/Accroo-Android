@@ -39,9 +39,9 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
                              Bundle savedInstanceState) {
 
         View fragmentView = inflater.inflate(R.layout.fragment_category_overview, container, false);
-        emptyView = (TextView) fragmentView.findViewById(R.id.empty_view);
+        emptyView = fragmentView.findViewById(R.id.empty_view);
 
-        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.category_overview_recycler_view);
+        recyclerView = fragmentView.findViewById(R.id.category_overview_recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(categoryOverviewAdapter);
@@ -61,7 +61,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.category_overview_swipe_refresh);
+        swipeRefreshLayout = fragmentView.findViewById(R.id.category_overview_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

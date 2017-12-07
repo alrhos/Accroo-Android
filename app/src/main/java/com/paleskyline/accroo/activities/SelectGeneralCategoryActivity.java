@@ -31,14 +31,14 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
 
             generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
 
-            recyclerView = (RecyclerView) findViewById(R.id.general_category_recycler_view);
+            recyclerView = findViewById(R.id.general_category_recycler_view);
             recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(generalCategoryAdapter);
             layoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
 
-            emptyView = (TextView) findViewById(R.id.empty_view);
+            emptyView = findViewById(R.id.empty_view);
 
             if (generalCategoryAdapter.getItemCount() == 0) {
                 recyclerView.setVisibility(View.GONE);

@@ -32,10 +32,10 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
             progressDialog = new ProgressDialog(ChangeLoginPasswordActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-            existingPasswordField = (EditText) findViewById(R.id.confirm_login_password);
-            newPasswordField = (EditText) findViewById(R.id.new_login_password);
-            confirmNewPasswordField = (EditText) findViewById(R.id.confirm_new_login_password);
-            updatePasswordButton = (Button) findViewById(R.id.update_login_password_button);
+            existingPasswordField = findViewById(R.id.confirm_login_password);
+            newPasswordField = findViewById(R.id.new_login_password);
+            confirmNewPasswordField = findViewById(R.id.confirm_new_login_password);
+            updatePasswordButton = findViewById(R.id.update_login_password_button);
 
             updatePasswordButton.setOnClickListener(new View.OnClickListener() {
                 @Override

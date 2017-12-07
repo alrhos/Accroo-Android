@@ -1,6 +1,8 @@
 package com.paleskyline.accroo.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,8 +27,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
         setContentView(R.layout.activity_forgot_password);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        email = (EditText) findViewById(R.id.reset_email);
-        sendLink = (Button) findViewById(R.id.send_link);
+        email = findViewById(R.id.reset_email);
+        sendLink = findViewById(R.id.send_link);
 
         progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.loading));
@@ -57,7 +59,14 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
         email.setText("");
-        Toast.makeText(getApplicationContext(), R.string.reset_link_sent, Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPasswordActivity.this);
+        builder.setMessage(R.string.reset_link_sent)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                }).create().show();
     }
 
     @Override

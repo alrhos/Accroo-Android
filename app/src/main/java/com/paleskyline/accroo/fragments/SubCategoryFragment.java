@@ -45,10 +45,10 @@ public class SubCategoryFragment extends Fragment {
 
         final View fragmentView = inflater.inflate(R.layout.fragment_sub_category, container, false);
 
-        icon = (ImageView) fragmentView.findViewById(R.id.general_category_icon);
-        subCategoryName = (EditText) fragmentView.findViewById(R.id.sub_category_name);
-        generalCategoryName = (TextView) fragmentView.findViewById(R.id.general_category_name);
-        submit = (Button) fragmentView.findViewById(R.id.submit_sub_category_button);
+        icon = fragmentView.findViewById(R.id.general_category_icon);
+        subCategoryName = fragmentView.findViewById(R.id.sub_category_name);
+        generalCategoryName = fragmentView.findViewById(R.id.general_category_name);
+        submit = fragmentView.findViewById(R.id.submit_sub_category_button);
 
         existingCategory = getActivity().getIntent().getParcelableExtra("subCategory");
 
