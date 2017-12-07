@@ -6,5 +6,5 @@ package com.paleskyline.accroo.other;
 
 public class Constants {
     public static final int MIN_PASSWORD_LENGTH = 10;
-    public static final int MAX_PASSWORD_LENGTH = 80;
+    public static final int MAX_PASSWORD_LENGTH = 4096;
 }

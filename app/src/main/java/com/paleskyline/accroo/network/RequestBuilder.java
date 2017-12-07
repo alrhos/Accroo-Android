@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL = "http://apidev.accroo.io:/";
+    private final static String baseURL = "http://apidev.accroo.io/";
     public final static String REFRESH_TOKEN = "token/refresh";
     public final static String ACCESS_TOKEN = "token/access";
     public final static String REGISTER = "register";
@@ -133,7 +133,6 @@ public class RequestBuilder {
     }
 
     private static int parseVolleyException(VolleyError error) {
-        error.printStackTrace();
         if (error instanceof TimeoutError) {
             return ApiService.TIMEOUT_ERROR;
         } else if (error instanceof NoConnectionError) {
@@ -145,6 +144,8 @@ public class RequestBuilder {
             switch (statusCode) {
                 case 400:
                     return ApiService.INVALID_REQUEST;
+                case 409:
+                    return ApiService.CONFLICT;
                 case 429:
                     return ApiService.TOO_MANY_REQUESTS;
                 case 500:

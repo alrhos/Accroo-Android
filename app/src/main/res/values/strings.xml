@@ -18,7 +18,7 @@
     <string name="enter_password">Enter password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
-    <string name="password_too_long">Password can\'t exceed 80 characters</string>
+    <string name="password_too_long">Password can\'t exceed 4096 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
     <string name="enter_email">Enter email address</string>
     <string name="email_mismatch">Email addresses don\'t match</string>
@@ -71,7 +71,7 @@
     <string name="description">Description (optional)</string>
 
     <string name="timeout_error">The connection timed out</string>
-    <string name="connection_error">A connection could not be established</string>
+    <string name="connection_error">Couldn\'t connect to server</string>
     <string name="general_error">An error occurred</string>
     <string name="invalid_input">Invalid input provided</string>
     <string name="email_in_use">This email address is already being used</string>
