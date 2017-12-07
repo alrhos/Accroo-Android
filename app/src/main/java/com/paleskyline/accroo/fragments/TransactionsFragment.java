@@ -61,12 +61,10 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
         swipeRefreshLayout = fragmentView.findViewById(R.id.transaction_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
                 fragmentListener.onTransactionSwipeRefresh();
             }
-
         });
 
         transactionAdapter.refreshDataSource();
