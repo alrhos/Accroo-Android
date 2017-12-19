@@ -86,7 +86,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                     autoLogin();
                 }
             });
-        } else if (errorCode == ApiService.GENERIC_ERROR) {
+        } else {
             onError();
         }
     }
@@ -94,6 +94,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     @Override
     public void onError() {
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        apiService.logout();
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
