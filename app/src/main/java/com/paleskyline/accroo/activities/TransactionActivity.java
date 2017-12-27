@@ -28,7 +28,9 @@ import com.paleskyline.accroo.services.InputService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -36,7 +38,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private TextView categoryField, dateField;
     private ImageView categoryIcon;
     private Button submitButton;
-    private DatePickerDialog.OnDateSetListener date;
+    private DatePickerDialog.OnDateSetListener datePicker;
     private Calendar calendar;
     private Transaction newTransaction, existingTransaction;
     private int selectedSubCategoryID;
@@ -45,6 +47,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private boolean editing = false;
     private boolean editable = true;
     private ApiService apiService;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 setTitle(R.string.title_activity_edit_transaction);
 
                 amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
+                // TODO: change this to be locale specific
+                System.out.println("!!!!!!!!!!!!!!!!!  " + existingTransaction.getDateString());
                 dateField.setText(existingTransaction.getDateString());
                 descriptionField.setText(existingTransaction.getDescription());
 
@@ -97,8 +102,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 updateDate();
             }
 
-            date = new DatePickerDialog.OnDateSetListener() {
-                @Override
+            datePicker = new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                     calendar.set(Calendar.YEAR, year);
                     calendar.set(Calendar.MONTH, monthOfYear);
@@ -110,13 +114,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             dateField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new DatePickerDialog(TransactionActivity.this, date, calendar.get(Calendar.YEAR),
+                    new DatePickerDialog(TransactionActivity.this, datePicker, calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
 
                     InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     in.hideSoftInputFromWindow(dateField.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
-
             });
 
             categoryField.setOnClickListener(new View.OnClickListener() {
@@ -145,12 +148,14 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                     if (editing) {
                         existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
                         existingTransaction.setSubCategoryID(selectedSubCategoryID);
-                        existingTransaction.setDateString(dateField.getText().toString());
+                        existingTransaction.setDate(calendar.getTime());
+                       // existingTransaction.setDateString(dateField.getText().toString());
                         existingTransaction.setDescription(formattedDescription);
                         apiService.updateTransaction(existingTransaction);
                     } else {
                         newTransaction = new Transaction(selectedSubCategoryID,
-                                dateField.getText().toString(),
+                                calendar.getTime(),
+                             //   dateField.getText().toString(),
                                 Double.parseDouble(amountField.getText().toString()),
                                 formattedDescription);
                         apiService.createTransaction(newTransaction);
@@ -205,9 +210,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     private void updateDate() {
-        String dateFormat = "dd/MM/yyyy";
-        SimpleDateFormat df = new SimpleDateFormat(dateFormat, Locale.US);
-        dateField.setText(df.format(calendar.getTime()));
+        String dateString = dateFormat.format(calendar.getTime());
+        dateField.setText(dateString);
     }
 
     private void toggleEditing() {

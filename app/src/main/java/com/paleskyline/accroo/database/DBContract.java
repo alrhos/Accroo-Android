@@ -27,22 +27,28 @@ public final class DBContract {
     }
 
     protected static final String CREATE_GENERAL_CATEGORIES =
-            "DROP TABLE IF EXISTS " + GeneralCategory.TABLE_NAME + "; " +
             "CREATE TABLE " + GeneralCategory.TABLE_NAME + " (" +
             GeneralCategory.COLUMN_CATEGORY_NAME + " TEXT, " +
             GeneralCategory.COLUMN_CATEGORY_ICON + " TEXT, " +
             GeneralCategory.COLUMN_ROOT_CATEGORY + " TEXT);";
 
     protected static final String CREATE_SUB_CATEGORIES =
-            "DROP TABLE IF EXISTS " + SubCategory.TABLE_NAME + "; " +
             "CREATE TABLE " + SubCategory.TABLE_NAME + " (" +
             SubCategory.COLUMN_CATEGORY_NAME + " TEXT, " +
             SubCategory.COLUMN_GENERAL_CATEGORY + " TEXT);";
 
     protected static final String CREATE_ICONS =
-            "DROP TABLE IF EXISTS " + Icon.TABLE_NAME + "; " +
             "CREATE TABLE " + Icon.TABLE_NAME + " (" +
                     Icon.COLUMN_ICON_NAME + " TEXT);";
+
+    protected static final String DROP_GENERAL_CATEGORIES =
+            "DROP TABLE IF EXISTS " + GeneralCategory.TABLE_NAME + ";";
+
+    protected static final String DROP_SUB_CATEGORIES =
+            "DROP TABLE IF EXISTS " + SubCategory.TABLE_NAME + ";";
+
+    protected static final String DROP_ICONS =
+            "DROP TABLE IF EXISTS " + Icon.TABLE_NAME + ";";
 
     protected static final String POPULATE_GENERAL_CATEGORY =
             "INSERT INTO " + GeneralCategory.TABLE_NAME + " (" +

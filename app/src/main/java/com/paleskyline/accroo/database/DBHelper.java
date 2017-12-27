@@ -20,17 +20,20 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(DBContract.CREATE_GENERAL_CATEGORIES);
-        sqLiteDatabase.execSQL(DBContract.CREATE_SUB_CATEGORIES);
-        sqLiteDatabase.execSQL(DBContract.CREATE_ICONS);
-        sqLiteDatabase.execSQL(DBContract.POPULATE_GENERAL_CATEGORY);
-        sqLiteDatabase.execSQL(DBContract.POPULATE_SUB_CATEGORY);
-        sqLiteDatabase.execSQL(DBContract.POPULATE_ICON);
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(DBContract.CREATE_GENERAL_CATEGORIES);
+        db.execSQL(DBContract.CREATE_SUB_CATEGORIES);
+        db.execSQL(DBContract.CREATE_ICONS);
+        db.execSQL(DBContract.POPULATE_GENERAL_CATEGORY);
+        db.execSQL(DBContract.POPULATE_SUB_CATEGORY);
+        db.execSQL(DBContract.POPULATE_ICON);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(DBContract.DROP_GENERAL_CATEGORIES);
+        db.execSQL(DBContract.DROP_SUB_CATEGORIES);
+        db.execSQL(DBContract.DROP_ICONS);
         onCreate(db);
     }
 

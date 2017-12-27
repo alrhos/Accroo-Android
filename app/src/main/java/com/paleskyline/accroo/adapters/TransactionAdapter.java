@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 
 /**
@@ -33,7 +34,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ArrayList<Transaction> transactions;
     private LinkedHashMap<Date, ArrayList<Transaction>> groupedTransactions;
     private LayoutInflater inflater;
-    private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
+    // TODO: change this to make it locale specific
+    //private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
+    private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy", Locale.getDefault());
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
@@ -44,7 +47,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
-
         private TextView dateHeader;
 
         public TransactionViewHolder(View view) {
@@ -128,15 +130,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             adapterInteractionListener.onNonEmptyList();
             for (Transaction transaction : transactions) {
-                if (!groupedTransactions.containsKey(transaction.getDate())) {
-                    groupedTransactions.put(transaction.getDate(), null);
+                if (!groupedTransactions.containsKey(transaction.getAdjustedDate())) {
+                    groupedTransactions.put(transaction.getAdjustedDate(), null);
                 }
             }
 
             for (Date key : groupedTransactions.keySet()) {
                 ArrayList<Transaction> matches = new ArrayList<>();
                 for (Transaction transaction : transactions) {
-                    if (key.equals(transaction.getDate())) {
+                    if (key.equals(transaction.getAdjustedDate())) {
                         matches.add(transaction);
                     }
                 }
