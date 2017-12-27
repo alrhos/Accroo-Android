@@ -38,8 +38,8 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public GeneralCategoryViewHolder(View view) {
             super(view);
-            category = (TextView) view.findViewById(R.id.category_name);
-            icon = (ImageView) view.findViewById(R.id.category_icon);
+            category = view.findViewById(R.id.category_name);
+            icon = view.findViewById(R.id.category_icon);
         }
 
     }

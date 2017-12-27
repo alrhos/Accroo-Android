@@ -49,7 +49,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public TransactionViewHolder(View view) {
             super(view);
-            dateHeader = (TextView) view.findViewById(R.id.date_header_value);
+            dateHeader = view.findViewById(R.id.date_header_value);
         }
     }
 
@@ -72,28 +72,27 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String formattedDate = df.format(date);
         vh.dateHeader.setText(formattedDate);
 
-        LinearLayout ll = (LinearLayout) vh.itemView.findViewById(R.id.transaction_list_layout);
+        LinearLayout ll = vh.itemView.findViewById(R.id.transaction_list_layout);
         ll.removeAllViews();
 
         for (final Transaction transaction : groupedTransactions.get(date)) {
 
             View v = inflater.inflate(R.layout.transaction_list_details, null, false);
-
-            ImageView iv = (ImageView) v.findViewById(R.id.transaction_icon);
+            ImageView iv = v.findViewById(R.id.transaction_icon);
 
             GeneralCategory generalCategory = ((GeneralCategory) ((SubCategory) transaction.getParent()).getParent());
 
             int iconId = context.getResources().getIdentifier("@drawable/" + generalCategory.getIconFile(), null, context.getPackageName());
             iv.setImageResource(iconId);
 
-            TextView category = (TextView) v.findViewById(R.id.transaction_category_name);
+            TextView category = v.findViewById(R.id.transaction_category_name);
             String subCategoryName = ((SubCategory) transaction.getParent()).getCategoryName();
             category.setText(subCategoryName);
 
-            TextView description = (TextView) v.findViewById(R.id.transaction_category_description);
+            TextView description = v.findViewById(R.id.transaction_category_description);
             description.setText(transaction.getDescription());
 
-            TextView amount = (TextView) v.findViewById(R.id.transaction_category_amount);
+            TextView amount = v.findViewById(R.id.transaction_category_amount);
             amount.setText(transaction.getFullyFormattedAmount());
 
             if (generalCategory.getRootCategory().equals("Income")) {

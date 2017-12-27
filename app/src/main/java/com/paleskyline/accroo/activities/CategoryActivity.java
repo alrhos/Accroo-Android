@@ -30,9 +30,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     private GeneralCategoryFragment generalCategoryFragment;
     private SubCategoryFragment subCategoryFragment;
     private ProgressDialog progressDialog;
-
     private ApiService apiService;
-
     private final int ICON_REQUEST = 1;
     private final int GENERAL_CATEGORY_REQUEST = 2;
 
@@ -60,13 +58,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             viewPager.setAdapter(pagerAdapter);
             viewPager.setCurrentItem(2);
 
-            // Give the TabLayout the ViewPager
             final TabLayout tabLayout = findViewById(R.id.category_tab_layout);
             tabLayout.setupWithViewPager(viewPager);
 
-            // TODO: review if this is even needed
-
-            // Iterate over all tabs and set the custom view
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
                 tab.setCustomView(pagerAdapter.getTabView(i));

@@ -51,11 +51,11 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public IconViewHolder(View view) {
             super(view);
-            icon1 = (ImageView) view.findViewById(R.id.icon1);
-            icon2 = (ImageView) view.findViewById(R.id.icon2);
-            icon3 = (ImageView) view.findViewById(R.id.icon3);
-            icon4 = (ImageView) view.findViewById(R.id.icon4);
-            icon5 = (ImageView) view.findViewById(R.id.icon5);
+            icon1 = view.findViewById(R.id.icon1);
+            icon2 = view.findViewById(R.id.icon2);
+            icon3 = view.findViewById(R.id.icon3);
+            icon4 = view.findViewById(R.id.icon4);
+            icon5 = view.findViewById(R.id.icon5);
         }
 
     }
@@ -69,8 +69,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         IconViewHolder vh = (IconViewHolder) holder;
-
-        // TODO - review this to see if there's a cleaner way to to this.
 
         final int iconId1 = context.getResources().getIdentifier("@drawable/" + iconArray[0][position], null, context.getPackageName());
         final int iconId2 = context.getResources().getIdentifier("@drawable/" + iconArray[1][position], null, context.getPackageName());

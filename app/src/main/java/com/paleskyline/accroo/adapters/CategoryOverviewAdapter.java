@@ -49,8 +49,8 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public CategoryOverviewViewHolder(View view) {
             super(view);
-            categoryIcon = (ImageView) view.findViewById(R.id.category_icon);
-            generalCategory = (TextView) view.findViewById(R.id.category_name);
+            categoryIcon = view.findViewById(R.id.category_icon);
+            generalCategory = view.findViewById(R.id.category_name);
         }
     }
 
@@ -67,13 +67,13 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         vh.categoryIcon.setImageResource(iconId);
         vh.generalCategory.setText(gc.getCategoryName());
 
-        LinearLayout ll = (LinearLayout) vh.itemView.findViewById(R.id.category_overview_linear_layout);
+        LinearLayout ll = vh.itemView.findViewById(R.id.category_overview_linear_layout);
         ll.removeAllViews();
 
         for (final SubCategory sc : gc.getSubCategories()) {
             View v = inflater.inflate(R.layout.category_overview_subcategory_item, null, false);
 
-            TextView subCategory = (TextView) v.findViewById(R.id.category_overview_subcategory);
+            TextView subCategory = v.findViewById(R.id.category_overview_subcategory);
             subCategory.setText(sc.getCategoryName());
 
             v.setOnClickListener(new View.OnClickListener() {

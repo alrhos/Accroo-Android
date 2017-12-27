@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class SubCategory implements Securable, Relationship, Parcelable {
 
     private int id, generalCategoryID;
-    private String categoryName, generalCategoryName;//, categoryIcon;
+    private String categoryName, generalCategoryName;
     private GeneralCategory parent;
     private ArrayList<Transaction> transactions = new ArrayList<>();
 
@@ -99,13 +99,9 @@ public class SubCategory implements Securable, Relationship, Parcelable {
 
     @Override
     public JSONObject encrypt() throws JSONException {
-
         JSONObject categoryData = new JSONObject();
-
         categoryData.put("categoryName", categoryName);
-
         SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
-
         JSONObject json = new JSONObject();
 
         if (id != 0) {

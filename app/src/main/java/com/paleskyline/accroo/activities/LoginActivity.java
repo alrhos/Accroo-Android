@@ -13,9 +13,6 @@ import android.widget.Toast;
 import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.services.ApiService;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText usernameField, passwordField;
@@ -51,12 +48,10 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                 public void onClick(View view) {
                     if (isValidInput()) {
                         progressDialog.show();
-
                         String username = usernameField.getText().toString().trim();
                         int passwordLength = passwordField.getText().length();
                         char[] password = new char[passwordLength];
                         passwordField.getText().getChars(0, passwordLength, password, 0);
-
                         apiService.login(username, password);
                     }
                 }
@@ -78,8 +73,6 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         return true;
     }
 
-
-    // TODO: implement logic
     private boolean isValidInput() {
         if (usernameField.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();

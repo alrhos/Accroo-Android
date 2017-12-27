@@ -27,7 +27,7 @@ public class AuthManager {
     private static KeyStoreManager          keyStoreManager;
     private static SharedPreferences        sharedPreferences;
     private static SharedPreferences.Editor editor;
-    private static final String             APP = "com.paleskyline.navicash";
+    private static final String             APP = "com.paleskyline.accroo";
     public static final String              USERNAME_KEY = "usernameKey";
     public static final String              ENCRYPTION_KEY = "encryptionKey";
     public static final String              REFRESH_TOKEN_KEY = "refreshTokenKey";

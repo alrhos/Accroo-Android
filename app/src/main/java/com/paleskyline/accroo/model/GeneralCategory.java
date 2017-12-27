@@ -88,8 +88,6 @@ public class GeneralCategory implements Securable, Parcelable {
 
     @Override
     public JSONObject encrypt() throws JSONException {
-        System.out.println("THE ID IS: " + getId());
-        // TODO: Need to add section here to handle IDs for POST and PUT
         JSONObject categoryData = new JSONObject();
 
         categoryData.put("categoryName", categoryName);

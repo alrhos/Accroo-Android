@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "Navicash.db";
+    private static final String DATABASE_NAME = "Accroo.db";
     private static final int DATABASE_VERSION = 1;
     private SQLiteDatabase db;
 
@@ -30,8 +30,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        // TODO - review what needs to happen on upgrade
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        onCreate(db);
     }
 
     @Override

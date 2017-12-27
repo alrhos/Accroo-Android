@@ -9,10 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by oscar on 25/03/17.
@@ -22,16 +24,15 @@ public class Transaction implements Securable, Relationship, Parcelable {
 
     private int id;
     private int subCategoryID;
-//    private String subCategoryName;
-//    private String categoryIcon;
-//    private String rootCategoryType;
     private String dateString;
     private double amount;
     private String description = "";
     private SubCategory parent;
 
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+   // private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     public Transaction(int subCategoryID, String dateString, double amount, String description) {
         this.subCategoryID = subCategoryID;
@@ -94,30 +95,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
         this.description = description;
     }
 
-//    public String getSubCategoryName() {
-//        return subCategoryName;
-//    }
-//
-//    public void setSubCategoryName(String subCategoryName) {
-//        this.subCategoryName = subCategoryName;
-//    }
-
-//    public String getCategoryIcon() {
-//        return categoryIcon;
-//    }
-//
-//    public void setCategoryIcon(String categoryIcon) {
-//        this.categoryIcon = categoryIcon;
-//    }
-//
-//    public String getRootCategoryType() {
-//        return rootCategoryType;
-//    }
-//
-//    public void setRootCategoryType(String rootCategoryType) {
-//        this.rootCategoryType = rootCategoryType;
-//    }
-
     public Date getDate() {
         try {
             return dateFormat.parse(dateString);
@@ -139,7 +116,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
 
     @Override
     public JSONObject encrypt() throws JSONException {
-
         JSONObject transactionData = new JSONObject();
 
         transactionData.put("date", dateString);

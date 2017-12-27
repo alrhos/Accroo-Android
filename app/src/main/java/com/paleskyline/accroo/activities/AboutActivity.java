@@ -15,8 +15,8 @@ import com.paleskyline.accroo.R;
 public class AboutActivity extends AppCompatActivity {
 
     private TextView terms, privacyPolicy, licenses, contact, versionString;
-    private static final String TERMS_OF_USE = "https://www.google.com";
-    private static final String PRIVACY_POLICY = "https://www.youtube.com";
+    private static final String TERMS_OF_USE = "https://accroo.io/terms";
+    private static final String PRIVACY_POLICY = "https://accroo.io/privacy";
     private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     @Override

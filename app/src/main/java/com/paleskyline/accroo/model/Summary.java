@@ -8,8 +8,6 @@ import java.text.DecimalFormat;
 
 public class Summary {
 
-    private double income = 0;
-    private double expenses = 0;
     private RootCategory[] rootCategories;
     public static final String INCOME = "Income";
     public static final String EXPENSES = "Expense";
@@ -42,29 +40,4 @@ public class Summary {
         return "$" + df.format(income - expenses);
     }
 
-//    public Summary(double income, double expenses) {
-//        this.income = income;
-//        this.expenses = expenses;
-//    }
-
-//    public String getIncome() {
-////        double income = DataProvider.getInstance().getRootCategories()[0].getTransactionTotal();
-//        return "$" + df.format(income);
-//    }
-//
-//    public String getExpenses() {
-//     //   double expenses = DataProvider.getInstance().getRootCategories()[1].getTransactionTotal();
-//        return "$" + df.format(expenses);
-//    }
-//
-//    public String getSavings() {
-//     //   double income = DataProvider.getInstance().getRootCategories()[0].getTransactionTotal();
-//     //   double expenses = DataProvider.getInstance().getRootCategories()[1].getTransactionTotal();
-//        return "$" + df.format(income - expenses);
-//    }
-
-    @Override
-    public String toString() {
-        return "SUMMARY OBJECT";
-    }
 }

@@ -57,11 +57,11 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public SummaryViewHolder(View view) {
             super(view);
-            income = (TextView) view.findViewById(R.id.income_amount);
-            expenses = (TextView) view.findViewById(R.id.expenses_amount);
-            savings = (TextView) view.findViewById(R.id.savings_amount);
-            startDateView = (TextView) view.findViewById(R.id.start_date);
-            endDateView = (TextView) view.findViewById(R.id.end_date);
+            income = view.findViewById(R.id.income_amount);
+            expenses = view.findViewById(R.id.expenses_amount);
+            savings = view.findViewById(R.id.savings_amount);
+            startDateView = view.findViewById(R.id.start_date);
+            endDateView = view.findViewById(R.id.end_date);
         }
 
     }
@@ -75,10 +75,10 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public GeneralCategoryViewHolder(View view) {
             super(view);
-            category = (TextView) view.findViewById(R.id.category_name);
-            amount = (TextView) view.findViewById(R.id.category_amount);
-            icon = (ImageView) view.findViewById(R.id.category_icon);
-            details = (LinearLayout) view.findViewById(R.id.general_category_list_details);
+            category = view.findViewById(R.id.category_name);
+            amount = view.findViewById(R.id.category_amount);
+            icon = view.findViewById(R.id.category_icon);
+            details = view.findViewById(R.id.general_category_list_details);
         }
 
     }
@@ -128,7 +128,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                 });
 
-
                 break;
 
             case GENERAL_CATEGORY:
@@ -139,21 +138,21 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 int iconId = context.getResources().getIdentifier("@drawable/" + gc.getIconFile(), null, context.getPackageName());
                 vh2.icon.setImageResource(iconId);
 
-                LinearLayout ll = (LinearLayout) vh2.itemView.findViewById(R.id.general_category_list_details);
+                LinearLayout ll = vh2.itemView.findViewById(R.id.general_category_list_details);
                 ll.removeAllViews();
 
                 if (!gc.getSubCategories().isEmpty()) {
                     for (SubCategory sc : gc.getSubCategories()) {
                         View v = inflater.inflate(R.layout.sub_category_summary_item, null, false);
-                        TextView tv1 = (TextView) v.findViewById(R.id.sub_category_name);
+                        TextView tv1 = v.findViewById(R.id.sub_category_name);
                         tv1.setText(sc.getCategoryName());
-                        TextView tv2 = (TextView) v.findViewById(R.id.sub_category_amount);
+                        TextView tv2 = v.findViewById(R.id.sub_category_amount);
                         tv2.setText(sc.getFormattedTransactionTotal());
                         ll.addView(v);
                     }
                 } else {
                     View a = inflater.inflate(R.layout.sub_category_summary_item, null, false);
-                    TextView tv = (TextView) a.findViewById(R.id.sub_category_name);
+                    TextView tv = a.findViewById(R.id.sub_category_name);
                     tv.setText(R.string.no_sub_categories);
                     ll.addView(a);
                 }
@@ -190,7 +189,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 vh = new GeneralCategoryViewHolder(v2);
                 break;
         }
-
         return vh;
     }
 
@@ -200,9 +198,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ArrayList<GeneralCategory> generalCategories = DataProvider.getGeneralCategories();
         dataSource.addAll(generalCategories);
         notifyDataSetChanged();
-//        for (GeneralCategory generalCategory : generalCategories) {
-//            dataSource.add(generalCategory);
-//        }
     }
 
     public void updateStartDate(Date date) {

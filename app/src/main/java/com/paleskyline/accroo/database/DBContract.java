@@ -6,8 +6,6 @@ package com.paleskyline.accroo.database;
 
 public final class DBContract {
 
-    // TODO: review hardcoded string variables
-
     private DBContract() {}
 
     protected abstract class GeneralCategory {
@@ -29,17 +27,20 @@ public final class DBContract {
     }
 
     protected static final String CREATE_GENERAL_CATEGORIES =
+            "DROP TABLE IF EXISTS " + GeneralCategory.TABLE_NAME + "; " +
             "CREATE TABLE " + GeneralCategory.TABLE_NAME + " (" +
             GeneralCategory.COLUMN_CATEGORY_NAME + " TEXT, " +
             GeneralCategory.COLUMN_CATEGORY_ICON + " TEXT, " +
             GeneralCategory.COLUMN_ROOT_CATEGORY + " TEXT);";
 
     protected static final String CREATE_SUB_CATEGORIES =
+            "DROP TABLE IF EXISTS " + SubCategory.TABLE_NAME + "; " +
             "CREATE TABLE " + SubCategory.TABLE_NAME + " (" +
             SubCategory.COLUMN_CATEGORY_NAME + " TEXT, " +
             SubCategory.COLUMN_GENERAL_CATEGORY + " TEXT);";
 
     protected static final String CREATE_ICONS =
+            "DROP TABLE IF EXISTS " + Icon.TABLE_NAME + "; " +
             "CREATE TABLE " + Icon.TABLE_NAME + " (" +
                     Icon.COLUMN_ICON_NAME + " TEXT);";
 
@@ -53,13 +54,11 @@ public final class DBContract {
             "('Transport', 'i6', 'Expense'), " +
             "('Pets', 'i18', 'Expense'), " +
             "('Health', 'i29', 'Expense'), " +
-       //     "('Miscellaneous Income', 'i9', 'Income'), " +
             "('Sport', 'i56', 'Expense'), " +
             "('Investments', 'i49', 'Income'), " +
             "('Holidays', 'i41', 'Expense'), " +
             "('Entertainment', 'i51', 'Expense'), " +
             "('Education', 'i34', 'Expense'), " +
-       //     "('Miscellaneous Expenses', 'i7', 'Expense'), " +
             "('Accommodation', 'i21', 'Expense'), " +
             "('Personal', 'i27', 'Expense');";
 
@@ -88,24 +87,6 @@ public final class DBContract {
             "('Mortgage', 'Accommodation'), ('Other income', 'Wages'), " +
             "('House/contents insurance', 'Accommodation'), ('Clothing', 'Personal'), " +
             "('Living essentials', 'Personal'), ('Personal grooming', 'Personal');";
-
-//                    "" +
-//                    "" +
-//                    "" +
-//                    "" +
-//                    "" +
-//                    "('Textbooks', 'Education'), " +
-//            "('Tuition fees', 'Education'), ('Concerts', 'Entertainment'), " +
-//            "('Movies', 'Entertainment'), ('Going out', 'Entertainment'), " +
-//            "('Dentist', 'Health'), " +
-//            "('GP appointments', 'Health'), ('Health insurance', 'Health'), " +
-//            "('Medicine', 'Health'), ('Accommodation', 'Holidays'), " +
-//            "('Transport', 'Holidays'), ('Travel insurance', 'Holidays'), " +
-//            "('Bank account interest', 'Investments'), ('Shares', 'Investments'), " +
-//            "('Clothing', 'Personal'), ('Living essentials', 'Personal'), " +
-//            "('Personal grooming', 'Personal'), ('Subscriptions', 'Personal'), " +
-//            "('Car insurance', 'Transport'), ('Petrol', 'Transport'), " +
-//            "('Uber', 'Transport'), ('Vehicle maintenance', 'Transport');";
 
     protected static final String POPULATE_ICON =
             "INSERT INTO " + Icon.TABLE_NAME + " (" +

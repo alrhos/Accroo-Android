@@ -71,7 +71,6 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
         });
 
         categoryOverviewAdapter.refreshDataSource();
-
         return fragmentView;
     }
 

@@ -23,7 +23,6 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     private ApiService apiService;
     private ProgressDialog progressDialog;
     private SubCategory subCategory;
-
     private final int GENERAL_CATEGORY_REQUEST = 0;
 
     @Override

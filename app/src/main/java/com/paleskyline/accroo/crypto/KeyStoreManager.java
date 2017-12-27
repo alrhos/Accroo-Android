@@ -30,7 +30,7 @@ import javax.crypto.spec.GCMParameterSpec;
 public class KeyStoreManager {
 
     private KeyStore            keyStore;
-    private static final String ALIAS = "Navicash";
+    private static final String ALIAS = "Accroo";
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
     private static final String AES_MODE = "AES/GCM/NoPadding";
     private static final int    IV_LENGTH = 12;

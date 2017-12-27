@@ -24,7 +24,7 @@
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
-    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://www.google.com"><b>terms and conditions</b></a> and <a href="https://www.google.com"><b>privacy policy</b></a></string>
+    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://accroo.io/terms"><b>terms and conditions</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
 
 
     <string name="important">Important!</string>

@@ -66,13 +66,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 ViewPager viewPager = findViewById(R.id.main_viewpager);
                 viewPager.setAdapter(pagerAdapter);
 
-                // Give the TabLayout the ViewPager
                 final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
                 tabLayout.setupWithViewPager(viewPager);
 
-                // TODO: review if this is even needed
-
-                // Iterate over all tabs and set the custom view
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(i);
                     tab.setCustomView(pagerAdapter.getTabView(i));
@@ -115,11 +111,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     // TODO: review if this method is needed now that there's logic in the onCreate method to check for initialization
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        relaunch();
-    }
+//    @Override
+//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        relaunch();
+//    }
 
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
@@ -129,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -271,8 +266,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         intent.putExtra("subCategory", subCategory);
         startActivity(intent);
     }
-
-    // TODO: review order of operations here to ensure smooth refreshing status
 
     @Override
     public void onSuccess(int requestType) {

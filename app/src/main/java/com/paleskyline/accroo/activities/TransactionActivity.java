@@ -6,10 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +29,6 @@ import com.paleskyline.accroo.services.InputService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
-//import android.support.v7.app.AlertDialog;
 
 public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -79,7 +74,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             if (existingTransaction != null) {
 
                 editing = true;
-
                 setTitle(R.string.title_activity_edit_transaction);
 
                 amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
