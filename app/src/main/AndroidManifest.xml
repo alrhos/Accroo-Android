@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.paleskyline.accroo">
+    package="io.accroo.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,15 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name="io.accroo.android.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="io.accroo.android.activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.LaunchActivity"
+            android:name="io.accroo.android.activities.LaunchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -30,70 +30,70 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegisterStageOneActivity"
+            android:name="io.accroo.android.activities.RegisterStageOneActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.RegisterStageTwoActivity"
+            android:name="io.accroo.android.activities.RegisterStageTwoActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.KeyDecryptionActivity"
+            android:name="io.accroo.android.activities.KeyDecryptionActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.TransactionActivity"
+            android:name="io.accroo.android.activities.TransactionActivity"
             android:label="@string/title_activity_add_transaction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.SelectSubCategoryActivity"
+            android:name="io.accroo.android.activities.SelectSubCategoryActivity"
             android:label="@string/title_activity_select_subcategory"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CategoryActivity"
+            android:name="io.accroo.android.activities.CategoryActivity"
             android:label="@string/title_activity_add_category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.SelectIconActivity"
+            android:name="io.accroo.android.activities.SelectIconActivity"
             android:label="@string/title_activity_select_icon"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.EditGeneralCategoryActivity"
+            android:name="io.accroo.android.activities.EditGeneralCategoryActivity"
             android:label="@string/title_activity_edit_category"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.SelectGeneralCategoryActivity"
+            android:name="io.accroo.android.activities.SelectGeneralCategoryActivity"
             android:label="@string/title_activity_select_general_category"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.EditSubCategoryActivity"
+            android:name="io.accroo.android.activities.EditSubCategoryActivity"
             android:label="@string/title_activity_edit_category"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ChangeEmailActivity"
+            android:name="io.accroo.android.activities.ChangeEmailActivity"
             android:label="@string/title_activity_change_email"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ChangeLoginPasswordActivity"
+            android:name="io.accroo.android.activities.ChangeLoginPasswordActivity"
             android:label="@string/title_activity_change_login_password"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ChangeDataPasswordActivity"
+            android:name="io.accroo.android.activities.ChangeDataPasswordActivity"
             android:label="@string/title_activity_change_data_password"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ForgotPasswordActivity"
+            android:name="io.accroo.android.activities.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AboutActivity"
+            android:name="io.accroo.android.activities.AboutActivity"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.LicensesActivity"
+            android:name="io.accroo.android.activities.LicensesActivity"
             android:label="@string/title_activity_licenses"
             android:screenOrientation="portrait" />
     </application>

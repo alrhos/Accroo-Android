@@ -1,27 +1,15 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-
-        <!--<item name="android:statusBarColor">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorControlNormal">@color/colorPrimary</item>-->
-        <!--<item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>-->
-
-        <!--<item name="android:actionButtonStyle">@style/myActionButtonStyle</item>-->
-        <!--<item name="actionOverflowButtonStyle">@style/myActionButtonStyle</item>-->
-        <!--<item name="android:textColorPrimary">@color/white</item>-->
-        <!--<item name="actionButtonStyle">@style/myActionButtonStyle</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
@@ -39,7 +27,6 @@
         <item name="tabMode">scrollable</item>
     </style>
 
-    <!-- for text -->
     <style name="AppTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@android:color/black</item>
@@ -52,19 +39,7 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <!--testing smaller overflow icon sizes-->
-
-
-
     <style name="myActionButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
-        <!--<item name="android:minWidth">30dp</item>-->
-        <!--<item name="android:maxWidth">48dp</item>-->
-        <!--<item name="android:width">18dp</item>-->
-        <!--<item name="android:height">10dp</item>-->
-        <!--<item name="android:textColorSecondary">@android:color/white</item>-->
-        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
-        <!--<item name="android:textColor">@android:color/white</item>-->
-        <!--<item name="android:foregroundTint">@android:color/white</item>-->
         <item name="android:tint">@android:color/white</item>
     </style>
 
@@ -86,6 +61,5 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@android:color/tab_indicator_text</item>
     </style>
-
 
 </resources>

@@ -2,7 +2,6 @@
     <string name="app_name">Accroo</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
     <string name="email">Email</string>
     <string name="confirm_email">Confirm email</string>
     <string name="prompt_password">Password (optional)</string>

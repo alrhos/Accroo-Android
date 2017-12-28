@@ -8,7 +8,7 @@
     android:clipToPadding="false"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
-    tools:context="com.paleskyline.accroo.activities.LaunchActivity">
+    tools:context="io.accroo.android.activities.LaunchActivity">
 
 
     <ImageView

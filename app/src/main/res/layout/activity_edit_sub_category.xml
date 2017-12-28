@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.paleskyline.accroo.activities.EditSubCategoryActivity">
+    tools:context="io.accroo.android.activities.EditSubCategoryActivity">
 
     <fragment
-        android:name="com.paleskyline.accroo.fragments.SubCategoryFragment"
+        android:name="io.accroo.android.fragments.SubCategoryFragment"
         android:id="@+id/edit_sub_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

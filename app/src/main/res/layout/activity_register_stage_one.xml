@@ -4,59 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.paleskyline.accroo.activities.RegisterStageOneActivity">
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/registration_input"-->
-        <!--android:paddingTop="20dp"-->
-        <!--android:paddingBottom="50dp"-->
-        <!--android:orientation="vertical">-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/email"-->
-            <!--android:inputType="textEmailAddress"-->
-            <!--android:hint="Email address"/>-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/loginPassword"-->
-            <!--android:inputType="textPassword"-->
-            <!--android:hint="Login password"/>-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/loginPasswordConfirm"-->
-            <!--android:inputType="textPassword"-->
-            <!--android:hint="Confirm login password"/>-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/dataPassword"-->
-            <!--android:inputType="textPassword"-->
-            <!--android:hint="Data password"/>-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/dataPasswordConfirm"-->
-            <!--android:inputType="textPassword"-->
-            <!--android:hint="Confirm data password"/>-->
-
-    <!--</LinearLayout>-->
-
-    <!--<Button-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/registration_input"-->
-        <!--android:text="REGISTER"-->
-        <!--android:id="@+id/register_button" />-->
+    tools:context="io.accroo.android.activities.RegisterStageOneActivity">
 
     <EditText
         android:id="@+id/email"
