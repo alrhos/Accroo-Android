@@ -10,16 +10,9 @@ import org.json.JSONObject;
 public class User {
 
     private String email;
-    private char[] loginPassword;
-    private char[] dataPassword;
+    private char[] loginPassword, dataPassword;
     private KeyPackage keyPackage;
     private Preferences preferences;
-
-//    public User(String email, char[] loginPassword, KeyPackage keyPackage) {
-//        this.email = email;
-//        this.loginPassword = loginPassword;
-//        this.keyPackage = keyPackage;
-//    }
 
     public User(String email, char[] loginPassword, char[] dataPassword, Preferences preferences) {
         this.email = email;
@@ -27,11 +20,6 @@ public class User {
         this.dataPassword = dataPassword;
         this.preferences = preferences;
     }
-
-//    public User(String email, char[] loginPassword) {
-//        this.email = email;
-//        this.loginPassword = loginPassword;
-//    }
 
     public String getEmail() {
         return email;

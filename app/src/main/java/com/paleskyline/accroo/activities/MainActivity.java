@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 apiService = new ApiService(this, getApplicationContext());
             }
-
     }
 
     @Override
@@ -109,13 +108,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
     }
 
-    // TODO: review if this method is needed now that there's logic in the onCreate method to check for initialization
-
-//    @Override
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        relaunch();
-//    }
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        relaunch();
+    }
 
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);

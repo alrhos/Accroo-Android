@@ -14,6 +14,7 @@ import com.paleskyline.accroo.network.RestRequest;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -79,9 +80,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public boolean initializeKey(@NonNull char[] password) {
         try {
-            // TODO: review password security
             CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
             CryptoManager.getInstance().saveMasterKey(context);
+            Arrays.fill(password, '\u0000');
             return true;
         } catch (Exception e) {
             e.printStackTrace();

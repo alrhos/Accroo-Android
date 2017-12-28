@@ -35,7 +35,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SummaryViewHolder summaryViewHolder;
     private AdapterInteractionListener adapterInteractionListener;
     private Date startDate, endDate;
-    // TODO: need to change date locale
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     public SummaryListAdapter(Context context, Date startDate, Date endDate, AdapterInteractionListener adapterInteractionListener) {
@@ -104,7 +103,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
-
             case SUMMARY:
 
                 summaryViewHolder = (SummaryViewHolder) holder;
@@ -177,7 +175,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
         RecyclerView.ViewHolder vh = null;
         inflater = LayoutInflater.from(viewGroup.getContext());
 

@@ -73,7 +73,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             existingTransaction = getIntent().getParcelableExtra("transaction");
 
             if (existingTransaction != null) {
-
                 editing = true;
                 calendar.setTime(existingTransaction.getDate());
                 setTitle(R.string.title_activity_edit_transaction);
@@ -89,12 +88,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 categoryIcon.setImageResource(iconId);
                 String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
                 categoryField.setText(subCategoryName);
-
                 this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
-
                 submitButton.setText(getResources().getString(R.string.save));
                 toggleEditing();
-
             } else {
                 updateDate();
             }
@@ -130,7 +126,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             submitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (!isValidAmount()) {
                         return;
                     }

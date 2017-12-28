@@ -43,8 +43,6 @@ public class RegisterStageOneActivity extends AppCompatActivity {
                     return;
                 }
 
-                // TODO: review password security here
-
                 int loginPasswordLength = loginPassword.getText().length();
                 char[] loginPwd = new char[loginPasswordLength];
                 loginPassword.getText().getChars(0, loginPasswordLength, loginPwd, 0);

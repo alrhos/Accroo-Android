@@ -41,7 +41,6 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             relaunch();
         } else {
             setContentView(R.layout.activity_category);
-
             Toolbar toolbar = findViewById(R.id.category_toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -97,7 +96,6 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             }
 
             return null;
-
         }
 
         @Override

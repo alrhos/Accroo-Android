@@ -61,7 +61,6 @@ public class DataAccess {
         }
 
         close();
-
         return categories;
     }
 
@@ -92,7 +91,6 @@ public class DataAccess {
         }
 
         close();
-
         return categories;
     }
 
@@ -119,7 +117,6 @@ public class DataAccess {
         }
 
         close();
-
         return icons;
     }
 

@@ -29,8 +29,7 @@ import java.util.Collections;
 public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private ArrayList<RestRequest> requests;
-    private String startDate;
-    private String endDate;
+    private String startDate, endDate;
     private String uri;
     private int requestType;
     private JSONObject json;
@@ -41,10 +40,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private Context context;
     private RequestCoordinator coordinator;
     private Object dataObject;
-    private String username;
-    private char[] password;
-    private char[] newPassword;
-    private String newEmail;
+    private String username, newEmail;
+    private char[] password, newPassword;
 
     // TODO: also needs to take in model object to encrypt
 
@@ -187,16 +184,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     JSONArray generalCategoriesArray = new JSONArray();
 
                     for (GeneralCategory generalCategory : generalCategories) {
-
                         JSONArray subCategoriesArray = new JSONArray();
-
                         for (SubCategory subCategory : generalCategory.getSubCategories()) {
                             subCategoriesArray.put(subCategory.encrypt());
                         }
 
                         JSONObject category = generalCategory.encrypt();
                         category.put("subCategories", subCategoriesArray);
-
                         generalCategoriesArray.put(category);
                     }
 
@@ -368,7 +362,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
             }
 
         } catch (Exception e) {
-            // TODO: this exception should be logged somehow
             e.printStackTrace();
             return false;
         }

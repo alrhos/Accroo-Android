@@ -32,7 +32,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.adapterListener = adapterListener;
         this.icons = DataAccess.getInstance(context).getIcons();
         rows = icons.size() / cols;
-        // TODO - make sure icon count is divisible by 5
         iconArray = new String[cols][rows];
 
         int curr = 0;

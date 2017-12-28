@@ -144,19 +144,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", subCategoryID=" + subCategoryID +
-                ", date=" + date +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                ", decimalFormat=" + decimalFormat +
-                ", dateFormat=" + dateFormat +
-                '}';
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }

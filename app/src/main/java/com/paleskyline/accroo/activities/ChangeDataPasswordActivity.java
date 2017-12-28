@@ -13,13 +13,15 @@ import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.other.Constants;
 import com.paleskyline.accroo.services.ApiService;
 
+import java.util.Arrays;
+
 public class ChangeDataPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText currentDataPasswordField, newDataPasswordField, confirmDataPasswordField, loginPasswordField;
     private Button updateDataPassword;
     private ApiService apiService;
     private ProgressDialog progressDialog;
-    private char[] loginPassword;
+    private char[] loginPassword, dataPassword, newDataPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +58,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                     int loginPasswordLength = loginPasswordField.getText().length();
                     loginPassword = new char[loginPasswordLength];
                     loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
-
-                    // TODO: password security
-
                     apiService.getKeyPackage(loginPassword);
-
                 }
             });
         }
@@ -109,14 +107,12 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
     @Override
     public void onSuccess(int requestType) {
         if (requestType == ApiService.GET_KEY_PACKAGE) {
-
             int dataPasswordLength = currentDataPasswordField.getText().length();
-            char[] dataPassword = new char[dataPasswordLength];
+            dataPassword = new char[dataPasswordLength];
             currentDataPasswordField.getText().getChars(0, dataPasswordLength, dataPassword, 0);
-
             if (apiService.initializeKey(dataPassword)) {
                 int newDataPasswordLength = newDataPasswordField.getText().length();
-                char[] newDataPassword = new char[newDataPasswordLength];
+                newDataPassword = new char[newDataPasswordLength];
                 newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
                 apiService.updateDataPassword(loginPassword, newDataPassword);
             } else {
@@ -124,6 +120,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 Toast.makeText(getApplicationContext(), R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
             }
         } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
+            clearPasswords();
             progressDialog.dismiss();
             Toast.makeText(getApplicationContext(), R.string.data_password_updated, Toast.LENGTH_SHORT).show();
             finish();
@@ -152,9 +149,16 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
 
     @Override
     public void onError() {
+        clearPasswords();
         progressDialog.dismiss();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
+    }
+
+    private void clearPasswords() {
+        Arrays.fill(loginPassword, '\u0000');
+        Arrays.fill(dataPassword, '\u0000');
+        Arrays.fill(newDataPassword, '\u0000');
     }
 
 }

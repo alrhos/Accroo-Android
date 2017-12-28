@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.services.ApiService;
 
+import java.util.Arrays;
+
 public class KeyDecryptionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText keyPassword;
@@ -32,9 +34,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             unlockButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (isValidInput()) {
-
-                        // TODO: review password security
-
                         int passwordLength = keyPassword.length();
                         char[] password = new char[passwordLength];
                         keyPassword.getText().getChars(0, passwordLength, password, 0);
@@ -44,6 +43,8 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                         } else {
                             Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
                         }
+                        Arrays.fill(password, '\u0000');
+                        keyPassword.getText().clear();
                     }
                 }
             });
