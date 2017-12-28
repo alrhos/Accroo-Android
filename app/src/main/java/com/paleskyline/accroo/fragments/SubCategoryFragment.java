@@ -82,7 +82,6 @@ public class SubCategoryFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (!isGeneralCategorySelected()) {
                     return;
                 }
@@ -107,7 +106,6 @@ public class SubCategoryFragment extends Fragment {
         });
 
         return fragmentView;
-
     }
 
     @Override

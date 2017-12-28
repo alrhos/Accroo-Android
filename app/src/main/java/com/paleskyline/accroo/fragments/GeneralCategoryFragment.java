@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.model.GeneralCategory;
+import com.paleskyline.accroo.model.RootCategory;
 import com.paleskyline.accroo.services.DataProvider;
 import com.paleskyline.accroo.services.InputService;
 
@@ -69,9 +70,9 @@ public class GeneralCategoryFragment extends Fragment {
             categoryName.setText(existingCategory.getCategoryName());
             iconName = existingCategory.getIconFile();
 
-            if (existingCategory.getRootCategory().equals("Income")) {
+            if (existingCategory.getRootCategory().equals(RootCategory.INCOME)) {
                 incomeRadioButton.setChecked(true);
-            } else if (existingCategory.getRootCategory().equals("Expense")) {
+            } else if (existingCategory.getRootCategory().equals(RootCategory.EXPENSE)) {
                 expenseRadioButton.setChecked(true);
             }
 
@@ -103,9 +104,9 @@ public class GeneralCategoryFragment extends Fragment {
                 String rootCategory = "";
 
                 if (radioButtonIndex == 0) {
-                    rootCategory = "Income";
+                    rootCategory = RootCategory.INCOME;
                 } else if (radioButtonIndex == 1) {
-                    rootCategory = "Expense";
+                    rootCategory = RootCategory.EXPENSE;
                 }
 
                 String formattedName = InputService.capitaliseAndTrim(categoryName.getText().toString());

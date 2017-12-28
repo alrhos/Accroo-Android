@@ -90,7 +90,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void login(@NonNull final String username, @NonNull char[] password) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -100,14 +99,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                // TODO: double check that the handleFailedRequest is the right approach here
-                //handleFailedRequest(GET_REFRESH_TOKEN, errorMessage);
                 requestOutcome.onFailure(GET_REFRESH_TOKEN, errorCode);
             }
         };
 
         new PreRequestTask(GET_REFRESH_TOKEN, this, context, coordinator, username, password).execute();
-
     }
 
     public void logout() {
@@ -119,7 +115,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void forgotPassword(@NonNull String email) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -134,13 +129,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         new PreRequestTask(FORGOT_PASSWORD, this, context, coordinator, email).execute();
-
     }
 
     public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
-
         if (startDate.before(endDate)) {
-
             DataProvider.setStartDate(startDate);
             DataProvider.setEndDate(endDate);
 
@@ -153,7 +145,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
                 @Override
                 protected void onFailure(int errorCode) {
-                   // handleFailedRequest(GET_DEFAULT_DATA, errorMessage);
                     requestOutcome.onFailure(GET_DEFAULT_DATA, errorCode);
                 }
             };
@@ -162,11 +153,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         } else {
             requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
-
     }
 
     public void createUser(final User user) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -176,17 +165,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(CREATE_USER, errorMessage);
                 requestOutcome.onFailure(CREATE_USER, errorCode);
             }
         };
 
         new PreRequestTask(CREATE_USER, this, context, coordinator, user).execute();
-
     }
 
     public void createDefaultCategories() {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -196,17 +182,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(CREATE_DEFAULT_CATEGORIES, errorMessage);
                 requestOutcome.onFailure(CREATE_DEFAULT_CATEGORIES, errorCode);
             }
         };
 
         new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this, context, coordinator).execute();
-
     }
 
     public void createTransaction(final Transaction transaction) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -216,17 +199,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(CREATE_TRANSACTION, errorMessage);
                 requestOutcome.onFailure(CREATE_TRANSACTION, errorCode);
             }
         };
 
         new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, transaction).execute();
-
     }
 
     public void updateTransaction(final Transaction transaction) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -236,17 +216,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(UPDATE_TRANSACTION, errorMessage);
                 requestOutcome.onFailure(UPDATE_TRANSACTION, errorCode);
             }
         };
 
         new PreRequestTask(UPDATE_TRANSACTION, this, context, coordinator, transaction).execute();
-
     }
 
     public void deleteTransaction(final Transaction transaction) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -256,17 +233,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(DELETE_TRANSACTION, errorMessage);
                 requestOutcome.onFailure(DELETE_TRANSACTION, errorCode);
             }
         };
 
         new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, transaction).execute();
-
     }
 
     public void createGeneralCategory(final GeneralCategory generalCategory) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -276,17 +250,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(CREATE_GENERAL_CATEGORY, errorMessage);
                 requestOutcome.onFailure(CREATE_GENERAL_CATEGORY, errorCode);
             }
         };
 
         new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
-
     }
 
     public void updateGeneralCategory(final GeneralCategory generalCategory) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -296,17 +267,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(UPDATE_GENERAL_CATEGORY, errorMessage);
                 requestOutcome.onFailure(UPDATE_GENERAL_CATEGORY, errorCode);
             }
         };
 
         new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
-
     }
 
     public void deleteGeneralCategory(final GeneralCategory generalCategory) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -316,17 +284,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(DELETE_GENERAL_CATEGORY, errorMessage);
                 requestOutcome.onFailure(DELETE_GENERAL_CATEGORY, errorCode);
             }
         };
 
         new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
-
     }
 
     public void createSubCategory(final SubCategory subCategory) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -336,17 +301,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(CREATE_SUB_CATEGORY, errorMessage);
                 requestOutcome.onFailure(CREATE_SUB_CATEGORY, errorCode);
             }
         };
 
         new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
-
     }
 
     public void updateSubCategory(final SubCategory subCategory) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -356,17 +318,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(UPDATE_SUB_CATEGORY, errorMessage);
                 requestOutcome.onFailure(UPDATE_SUB_CATEGORY, errorCode);
             }
         };
 
         new PreRequestTask(UPDATE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
-
     }
 
     public void deleteSubCategory(final SubCategory subCategory) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -376,17 +335,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             @Override
             protected void onFailure(int errorCode) {
-                //handleFailedRequest(DELETE_SUB_CATEGORY, errorMessage);
                 requestOutcome.onFailure(DELETE_SUB_CATEGORY, errorCode);
             }
         };
 
         new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
-
     }
 
     public void updateEmail(final String newEmail, char[] password) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -401,11 +357,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, password, newEmail).execute();
-
     }
 
     public void updateLoginPassword(char[] currentPassword, char[] newPassword) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -420,11 +374,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         new PreRequestTask(UPDATE_LOGIN_PASSWORD, this, context, coordinator, currentPassword, newPassword).execute();
-
     }
 
     public void getKeyPackage(char[] loginPassword) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -439,16 +391,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, loginPassword).execute();
-
     }
 
     public void updateDataPassword(char[] loginPassword, char[] newDataPassword) {
-
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                //new PostRequestTask(UPDATE_DATA_PASSWORD, ApiService.this, context).execute(dataReceiver);
                 requestOutcome.onSuccess(UPDATE_DATA_PASSWORD);
             }
 
@@ -459,7 +408,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         new PreRequestTask(UPDATE_DATA_PASSWORD, this, context, coordinator, loginPassword, newDataPassword).execute();
-
     }
 
     @Override
@@ -468,7 +416,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             coordinator.addRequests(requests);
             coordinator.start();
         } catch (Exception e) {
-            // TODO: exception should be logged
             requestOutcome.onError();
         }
     }

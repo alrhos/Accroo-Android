@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.paleskyline.accroo.R;
 import com.paleskyline.accroo.model.GeneralCategory;
+import com.paleskyline.accroo.model.RootCategory;
 import com.paleskyline.accroo.model.SubCategory;
 import com.paleskyline.accroo.model.Summary;
 import com.paleskyline.accroo.services.DataProvider;
@@ -109,8 +110,8 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 summaryViewHolder = (SummaryViewHolder) holder;
                 Summary summary = (Summary) dataSource.get(position);
 
-                summaryViewHolder.income.setText(summary.getTotal(Summary.INCOME));
-                summaryViewHolder.expenses.setText(summary.getTotal(Summary.EXPENSES));
+                summaryViewHolder.income.setText(summary.getTotal(RootCategory.INCOME));
+                summaryViewHolder.expenses.setText(summary.getTotal(RootCategory.EXPENSE));
                 summaryViewHolder.savings.setText(summary.getSavings());
                 summaryViewHolder.startDateView.setText(dateFormat.format(startDate.getTime()));
                 summaryViewHolder.endDateView.setText(dateFormat.format(endDate.getTime()));

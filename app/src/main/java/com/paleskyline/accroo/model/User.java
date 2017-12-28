@@ -15,11 +15,11 @@ public class User {
     private KeyPackage keyPackage;
     private Preferences preferences;
 
-    public User(String email, char[] loginPassword, KeyPackage keyPackage) {
-        this.email = email;
-        this.loginPassword = loginPassword;
-        this.keyPackage = keyPackage;
-    }
+//    public User(String email, char[] loginPassword, KeyPackage keyPackage) {
+//        this.email = email;
+//        this.loginPassword = loginPassword;
+//        this.keyPackage = keyPackage;
+//    }
 
     public User(String email, char[] loginPassword, char[] dataPassword, Preferences preferences) {
         this.email = email;
@@ -28,10 +28,10 @@ public class User {
         this.preferences = preferences;
     }
 
-    public User(String email, char[] loginPassword) {
-        this.email = email;
-        this.loginPassword = loginPassword;
-    }
+//    public User(String email, char[] loginPassword) {
+//        this.email = email;
+//        this.loginPassword = loginPassword;
+//    }
 
     public String getEmail() {
         return email;
@@ -92,7 +92,6 @@ public class User {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println("USER REGO: " + json.toString());
         return json;
     }
 

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 public class RootCategory implements Parcelable {
 
+    public static final String INCOME = "Income";
+    public static final String EXPENSE = "Expense";
     private String categoryName;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
 

@@ -27,7 +27,6 @@ public class DataProvider {
     private static KeyPackage keyPackage;
     private static Date startDate, endDate;
 
-
     public static void loadData(ArrayList<GeneralCategory> generalCategories,
                                 ArrayList<SubCategory> subCategories,
                                 ArrayList<Transaction> transactions) {
@@ -37,11 +36,9 @@ public class DataProvider {
         DataProvider.transactions = transactions;
 
         sortData();
-
     }
 
     private static void sortData() {
-
         // Clear existing child objects
 
         for (GeneralCategory generalCategory : generalCategories) {
@@ -88,7 +85,6 @@ public class DataProvider {
 
         Collections.sort(generalCategories, new GeneralCategoryComparator());
         Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
-
     }
 
     public static RootCategory[] getRootCategories() {
@@ -120,7 +116,6 @@ public class DataProvider {
     }
 
     public static boolean checkDuplicateGeneralCategory(String categoryName) {
-
         ArrayList<String> categoryNames = new ArrayList<>();
 
         for (GeneralCategory generalCategory : generalCategories) {
@@ -132,11 +127,9 @@ public class DataProvider {
         }
 
         return false;
-
     }
 
     public static boolean checkDuplicateSubCategory(String categoryName) {
-
         ArrayList<String> categoryNames = new ArrayList<>();
 
         for (SubCategory subCategory : subCategories) {
@@ -148,7 +141,6 @@ public class DataProvider {
         }
 
         return false;
-
     }
 
     public static void addTransaction(Transaction transaction) {
@@ -161,13 +153,11 @@ public class DataProvider {
                     break;
                 }
             }
-
             Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
         }
     }
 
     public static void updateTransaction(Transaction transaction) {
-
         for (int i = 0; i < transactions.size(); i++) {
             if (transactions.get(i).getId() == transaction.getId()) {
                 if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
@@ -178,13 +168,11 @@ public class DataProvider {
                 break;
             }
         }
-
         sortData();
 
     }
 
     public static void deleteTransaction(Transaction transactionToDelete) {
-
         for (Transaction transaction : transactions) {
             if (transaction.getId() == transactionToDelete.getId()) {
                 transactions.remove(transaction);
@@ -215,14 +203,11 @@ public class DataProvider {
                 break;
             }
         }
-
         sortData();
     }
 
     public static void deleteGeneralCategory(GeneralCategory categoryToDelete) {
-
         Iterator<GeneralCategory> generalCategoryIterator = generalCategories.listIterator();
-
         while (generalCategoryIterator.hasNext()) {
             int generalCategoryID = generalCategoryIterator.next().getId();
             if (generalCategoryID == categoryToDelete.getId()) {
@@ -248,7 +233,6 @@ public class DataProvider {
                 break;
             }
         }
-
         sortData();
     }
 
@@ -264,14 +248,11 @@ public class DataProvider {
                 break;
             }
         }
-
         sortData();
     }
 
     public static void deleteSubCategory(SubCategory categoryToDelete) {
-
         Iterator<SubCategory> subCategoryIterator = subCategories.listIterator();
-
         while (subCategoryIterator.hasNext()) {
             int subCategoryID = subCategoryIterator.next().getId();
             if (subCategoryID == categoryToDelete.getId()) {
@@ -286,7 +267,6 @@ public class DataProvider {
                 break;
             }
         }
-
         sortData();
     }
 

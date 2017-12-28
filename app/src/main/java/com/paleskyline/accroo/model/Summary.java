@@ -9,8 +9,6 @@ import java.text.DecimalFormat;
 public class Summary {
 
     private RootCategory[] rootCategories;
-    public static final String INCOME = "Income";
-    public static final String EXPENSES = "Expense";
     private DecimalFormat df = new DecimalFormat("0.00");
 
     public Summary(RootCategory[] rootCategories) {
@@ -31,9 +29,9 @@ public class Summary {
         double income = 0;
         double expenses = 0;
         for (int i = 0; i < rootCategories.length; i++) {
-            if (rootCategories[i].getCategoryName().equals(INCOME)) {
+            if (rootCategories[i].getCategoryName().equals(RootCategory.INCOME)) {
                 income = rootCategories[i].getTransactionTotal();
-            } else if (rootCategories[i].getCategoryName().equals(EXPENSES)) {
+            } else if (rootCategories[i].getCategoryName().equals(RootCategory.EXPENSE)) {
                 expenses = rootCategories[i].getTransactionTotal();
             }
         }

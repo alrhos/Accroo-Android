@@ -67,7 +67,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         IconViewHolder vh = (IconViewHolder) holder;
 
         final int iconId1 = context.getResources().getIdentifier("@drawable/" + iconArray[0][position], null, context.getPackageName());
