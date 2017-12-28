@@ -36,6 +36,9 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
+    protected String getAuthType() {
+        return authType;
+    }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -43,11 +46,10 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     }
 
     protected void setAuthHeader(String authValue) {
-
-        // TODO: don't set auth header for requests that don't require authorization
-
         headerMap = new HashMap<>();
-        headerMap.put("Authorization", authType + " " + authValue);
+        if (authType != NONE) {
+            headerMap.put("Authorization", authType + " " + authValue);
+        }
     }
 
     protected Object clone() throws CloneNotSupportedException {

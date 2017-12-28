@@ -33,14 +33,10 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
     private int id;
-    private String username;
-
+    private String username, refreshToken, accessToken;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
     private ArrayList<Transaction> transactions = new ArrayList<>();
-
-    private String refreshToken, accessToken;
-
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome, Context context) {
 
@@ -87,7 +83,6 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
     @Override
     protected Boolean doInBackground(JSONObject[]... dataReceiver) {
-
         try {
             switch (requestType) {
 
@@ -249,7 +244,6 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
             }
         } catch (Exception e) {
-            // TODO: this exception should be logged somehow
             e.printStackTrace();
             return false;
         }
