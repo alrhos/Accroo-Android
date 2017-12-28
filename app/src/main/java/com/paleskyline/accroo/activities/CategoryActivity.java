@@ -146,6 +146,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
         if (requestType == ApiService.CREATE_GENERAL_CATEGORY) {
+            generalCategoryFragment.clearFields();
             Toast.makeText(getApplicationContext(), R.string.category_added, Toast.LENGTH_SHORT).show();
         } else if (requestType == ApiService.CREATE_SUB_CATEGORY) {
             subCategoryFragment.clearFields();

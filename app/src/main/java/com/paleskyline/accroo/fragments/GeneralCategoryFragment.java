@@ -189,4 +189,8 @@ public class GeneralCategoryFragment extends Fragment {
         void updateGeneralCategory(GeneralCategory generalCategory);
     }
 
+    public void clearFields() {
+        categoryName.setText("");
+    }
+
 }

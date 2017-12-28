@@ -34,9 +34,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ArrayList<Transaction> transactions;
     private LinkedHashMap<Date, ArrayList<Transaction>> groupedTransactions;
     private LayoutInflater inflater;
-    // TODO: change this to make it locale specific
-    //private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy");
-    private SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd, yyyy", Locale.getDefault());
+    private SimpleDateFormat df = new SimpleDateFormat("EEE dd, MMM yyyy", Locale.getDefault());
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
@@ -130,15 +128,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             adapterInteractionListener.onNonEmptyList();
             for (Transaction transaction : transactions) {
-                if (!groupedTransactions.containsKey(transaction.getAdjustedDate())) {
-                    groupedTransactions.put(transaction.getAdjustedDate(), null);
+                if (!groupedTransactions.containsKey(transaction.getDate())) {
+                    groupedTransactions.put(transaction.getDate(), null);
                 }
             }
 
             for (Date key : groupedTransactions.keySet()) {
                 ArrayList<Transaction> matches = new ArrayList<>();
                 for (Transaction transaction : transactions) {
-                    if (key.equals(transaction.getAdjustedDate())) {
+                    if (key.equals(transaction.getDate())) {
                         matches.add(transaction);
                     }
                 }

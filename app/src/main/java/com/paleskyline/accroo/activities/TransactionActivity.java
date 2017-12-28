@@ -28,9 +28,7 @@ import com.paleskyline.accroo.services.InputService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -47,7 +45,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private boolean editing = false;
     private boolean editable = true;
     private ApiService apiService;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +75,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             if (existingTransaction != null) {
 
                 editing = true;
+                calendar.setTime(existingTransaction.getDate());
                 setTitle(R.string.title_activity_edit_transaction);
 
                 amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
-                // TODO: change this to be locale specific
-                System.out.println("!!!!!!!!!!!!!!!!!  " + existingTransaction.getDateString());
-                dateField.setText(existingTransaction.getDateString());
+                dateField.setText(dateFormat.format(existingTransaction.getDate()));
                 descriptionField.setText(existingTransaction.getDescription());
 
                 String icon = ((GeneralCategory) ((SubCategory) existingTransaction.getParent()).getParent()).getIconFile();
@@ -149,13 +146,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
                         existingTransaction.setSubCategoryID(selectedSubCategoryID);
                         existingTransaction.setDate(calendar.getTime());
-                       // existingTransaction.setDateString(dateField.getText().toString());
                         existingTransaction.setDescription(formattedDescription);
                         apiService.updateTransaction(existingTransaction);
                     } else {
                         newTransaction = new Transaction(selectedSubCategoryID,
                                 calendar.getTime(),
-                             //   dateField.getText().toString(),
                                 Double.parseDouble(amountField.getText().toString()),
                                 formattedDescription);
                         apiService.createTransaction(newTransaction);

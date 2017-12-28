@@ -9,14 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by oscar on 25/03/17.
@@ -26,29 +23,12 @@ public class Transaction implements Securable, Relationship, Parcelable {
 
     private int id;
     private int subCategoryID;
-  //  private String dateString;
     private Date date;
     private double amount;
     private String description = "";
     private SubCategory parent;
-
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
- //   private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-  //  private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
-
-
-//    public Transaction(int subCategoryID, String dateString, double amount, String description) {
-//        this.subCategoryID = subCategoryID;
-//        this.dateString = dateString;
-//        this.amount = amount;
-//        if (description != null) {
-//            this.description = description;
-//        }
-//    }
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     public Transaction(int subCategoryID, Date date, double amount, String description) {
         this.subCategoryID = subCategoryID;
@@ -80,25 +60,17 @@ public class Transaction implements Securable, Relationship, Parcelable {
     }
 
     public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getDateString() {
-        return dateFormat.format(date);
-    }
-
-    public Date getAdjustedDate() {
         try {
-            String dateString = dateFormat.format(date);
-            return dateFormat.parse(dateString);
+            String adjustedDateString = dateFormat.format(date);
+            return dateFormat.parse(adjustedDateString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public double getAmount() {
@@ -139,8 +111,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
     public JSONObject encrypt() throws JSONException {
         JSONObject transactionData = new JSONObject();
 
-      //  transactionData.put("date", dateString);
-
         transactionData.put("date", date.getTime());
         transactionData.put("amount", amount);
         transactionData.put("description", description);
@@ -169,7 +139,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
         this.id = json.getInt("id");
         this.subCategoryID = json.getInt("subCategoryID");
         this.date = new Date(transactionJson.getLong("date"));
-    //    this.dateString = transactionJson.getString("date");
         this.amount = transactionJson.getDouble("amount");
         this.description = transactionJson.getString("description");
     }
@@ -179,7 +148,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
         return "Transaction{" +
                 "id=" + id +
                 ", subCategoryID=" + subCategoryID +
-            //    ", dateString='" + dateString + '\'' +
                 ", date=" + date +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
@@ -187,7 +155,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
                 ", dateFormat=" + dateFormat +
                 '}';
     }
-
 
     @Override
     public int describeContents() {
@@ -199,7 +166,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.subCategoryID);
         dest.writeSerializable(date);
-   //     dest.writeString(this.dateString);
         dest.writeDouble(this.amount);
         dest.writeString(this.description);
         dest.writeParcelable(this.parent, flags);
@@ -211,7 +177,6 @@ public class Transaction implements Securable, Relationship, Parcelable {
         this.id = in.readInt();
         this.subCategoryID = in.readInt();
         this.date = (Date) in.readSerializable();
-       // this.dateString = in.readString();
         this.amount = in.readDouble();
         this.description = in.readString();
         this.parent = in.readParcelable(SubCategory.class.getClassLoader());

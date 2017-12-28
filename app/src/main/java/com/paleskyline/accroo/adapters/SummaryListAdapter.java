@@ -35,7 +35,7 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private AdapterInteractionListener adapterInteractionListener;
     private Date startDate, endDate;
     // TODO: need to change date locale
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     public SummaryListAdapter(Context context, Date startDate, Date endDate, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;

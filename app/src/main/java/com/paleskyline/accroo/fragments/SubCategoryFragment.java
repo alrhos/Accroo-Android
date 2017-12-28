@@ -79,7 +79,6 @@ public class SubCategoryFragment extends Fragment {
             }
         });
 
-
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +103,6 @@ public class SubCategoryFragment extends Fragment {
                     System.out.println(subCategory.toString());
                     fragmentListener.createSubCategory(subCategory);
                 }
-
             }
         });
 
