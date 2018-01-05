@@ -45,7 +45,6 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
                 emptyView.setVisibility(View.VISIBLE);
             }
         }
-
     }
 
     @Override

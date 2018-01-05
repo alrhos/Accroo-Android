@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 public class DataAccess {
 
-    private SQLiteDatabase db;
-    private DBHelper dbHelper;
-    private Cursor cursor;
+    private SQLiteDatabase  db;
+    private DBHelper        dbHelper;
+    private Cursor          cursor;
 
     private static DataAccess instance = null;
 

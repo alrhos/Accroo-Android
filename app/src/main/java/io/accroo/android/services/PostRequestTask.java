@@ -3,7 +3,6 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import io.accroo.android.crypto.AuthManager;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.KeyPackage;
@@ -91,9 +90,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
                     accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
 
-                    AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
-                    AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
-                    AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
 
                     JSONObject keyData = dataReceiver[0][0].getJSONObject("keyPackage");
 
@@ -116,9 +115,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
                     accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
 
-                    AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
-                    AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
-                    AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
 
                     CryptoManager.getInstance().saveMasterKey(context);
 
@@ -223,7 +222,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_EMAIL:
 
-                    AuthManager.getInstance(context).saveEntry(AuthManager.USERNAME_KEY, username);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
                     return true;
 
                 case ApiService.UPDATE_LOGIN_PASSWORD:
@@ -231,8 +230,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     refreshToken = dataReceiver[0][0].getString("refreshToken");
                     accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
 
-                    AuthManager.getInstance(context).saveEntry(AuthManager.REFRESH_TOKEN_KEY, refreshToken);
-                    AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
 
                     return true;
 

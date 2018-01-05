@@ -11,7 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import io.accroo.android.crypto.AuthManager;
+import io.accroo.android.services.CredentialService;
 import io.accroo.android.services.ApiService;
 
 import org.json.JSONObject;
@@ -43,7 +43,7 @@ public class RequestBuilder {
     private RequestBuilder() {}
 
     protected static void updateRequestAccessToken(RestRequest restRequest, Context context) throws Exception {
-        String accessToken = AuthManager.getInstance(context).getEntry(AuthManager.ACCESS_TOKEN_KEY);
+        String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
         restRequest.setAuthHeader(accessToken);
     }
 
@@ -58,8 +58,6 @@ public class RequestBuilder {
         String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
         String url = baseURL + endpoint;
-
-        // TODO: password security
 
         return new RestRequest(method, url, json, responseListener,
                 errorListener, RestRequest.BASIC, authValue, context);
@@ -82,7 +80,7 @@ public class RequestBuilder {
 
         Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
 
-        String authValue = AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
 
         String url = baseURL + ACCESS_TOKEN;
 
@@ -103,7 +101,7 @@ public class RequestBuilder {
             url += parameters;
         }
 
-        String authValue = AuthManager.getInstance(context).getEntry(AuthManager.ACCESS_TOKEN_KEY);
+        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
 
         return new RestRequest(method, url, json, responseListener, errorListener,
                 RestRequest.TOKEN, authValue, context);

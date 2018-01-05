@@ -65,10 +65,6 @@ public class User {
         this.preferences = preferences;
     }
 
-    public void clearPasswords() {
-        // TODO: clear password arrays
-    }
-
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
         try {
@@ -76,7 +72,6 @@ public class User {
             json.put("password", String.copyValueOf(loginPassword));
             json.put("keyPackage", keyPackage.toJSON());
             json.put("preferences", preferences.encrypt());
-            // TODO: Wipe password array
         } catch (JSONException e) {
             e.printStackTrace();
         }

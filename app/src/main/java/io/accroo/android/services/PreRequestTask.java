@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
-import io.accroo.android.crypto.AuthManager;
+
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.GeneralCategory;
@@ -29,7 +29,6 @@ import java.util.Collections;
 public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private ArrayList<RestRequest> requests;
-    private String startDate, endDate;
     private String uri;
     private int requestType;
     private JSONObject json;
@@ -42,8 +41,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private Object dataObject;
     private String username, newEmail;
     private char[] password, newPassword;
-
-    // TODO: also needs to take in model object to encrypt
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
                           RequestCoordinator coordinator) {
@@ -134,8 +131,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
                             null, RequestBuilder.REFRESH_TOKEN, username, password, context));
 
-                    // TODO: password security
-
                     return true;
 
                 case ApiService.GET_DEFAULT_DATA:
@@ -156,8 +151,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.REGISTER, user.toJSON(), context));
-
-                    // TODO: review password security here - probably need to clear user object
 
                     return true;
 
@@ -315,7 +308,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_EMAIL:
 
-                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     json = new JSONObject();
                     json.put("email", newEmail);
@@ -327,9 +320,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_LOGIN_PASSWORD:
 
-                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
-
-                    // TODO: password security
+                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     json = new JSONObject();
                     json.put("password", String.copyValueOf(newPassword));
@@ -341,7 +332,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_KEY_PACKAGE:
 
-                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
                             null, RequestBuilder.DATA_PASSWORD, username, password, context));
@@ -350,7 +341,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_DATA_PASSWORD:
 
-                    username = AuthManager.getInstance(context).getEntry(AuthManager.USERNAME_KEY);
+                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     KeyPackage newKeyPackage = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
 
@@ -370,7 +361,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean success) {
-        // TODO: could override passwords here
         if (success) {
             preRequestOutcome.onPreRequestTaskSuccess(requests.toArray(new RestRequest[requests.size()]));
         } else {

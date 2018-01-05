@@ -9,20 +9,20 @@ public final class DBContract {
     private DBContract() {}
 
     protected abstract class GeneralCategory {
-        protected static final String TABLE_NAME = "GeneralCategory";
+        protected static final String TABLE_NAME =           "GeneralCategory";
         protected static final String COLUMN_CATEGORY_NAME = "CategoryName";
         protected static final String COLUMN_CATEGORY_ICON = "CategoryIcon";
         protected static final String COLUMN_ROOT_CATEGORY = "RootCategory";
     }
 
     protected abstract class SubCategory {
-        protected static final String TABLE_NAME = "SubCategory";
-        protected static final String COLUMN_CATEGORY_NAME = "CategoryName";
+        protected static final String TABLE_NAME =              "SubCategory";
+        protected static final String COLUMN_CATEGORY_NAME =    "CategoryName";
         protected static final String COLUMN_GENERAL_CATEGORY = "GeneralCategory";
     }
 
     protected abstract class Icon {
-        protected static final String TABLE_NAME = "Icon";
+        protected static final String TABLE_NAME =       "Icon";
         protected static final String COLUMN_ICON_NAME = "Name";
     }
 

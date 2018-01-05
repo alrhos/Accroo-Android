@@ -25,9 +25,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!LaunchActivity.initialized) {
-            Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            relaunch();
         } else {
             setContentView(R.layout.activity_login);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,6 +83,12 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         return true;
     }
 
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
@@ -116,9 +120,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
     public void onError() {
         progressDialog.dismiss();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        relaunch();
     }
 
 }

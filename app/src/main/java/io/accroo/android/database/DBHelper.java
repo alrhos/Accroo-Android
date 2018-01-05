@@ -12,7 +12,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "Accroo.db";
     private static final int DATABASE_VERSION = 1;
-    private SQLiteDatabase db;
+    private SQLiteDatabase                      db;
 
     protected DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,7 +41,5 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         super.onDowngrade(db, oldVersion, newVersion);
     }
-
-
 
 }

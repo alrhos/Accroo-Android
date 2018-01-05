@@ -55,6 +55,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
         return true;
     }
 
+    private void relaunch() {
+        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
@@ -90,9 +96,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
     public void onError() {
         progressDialog.dismiss();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        relaunch();
     }
 
 }

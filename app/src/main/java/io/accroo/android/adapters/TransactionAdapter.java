@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
+import io.accroo.android.model.RootCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.services.DataProvider;
@@ -76,7 +77,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ll.removeAllViews();
 
         for (final Transaction transaction : groupedTransactions.get(date)) {
-
             View v = inflater.inflate(R.layout.transaction_list_details, null, false);
             ImageView iv = v.findViewById(R.id.transaction_icon);
 
@@ -95,9 +95,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TextView amount = v.findViewById(R.id.transaction_category_amount);
             amount.setText(transaction.getFullyFormattedAmount());
 
-            if (generalCategory.getRootCategory().equals("Income")) {
+            if (generalCategory.getRootCategory().equals(RootCategory.INCOME)) {
                 amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-            } else {
+            } else if (generalCategory.getRootCategory().equals(RootCategory.EXPENSE)) {
                 amount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
             }
 
@@ -119,7 +119,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void refreshDataSource() {
-
         groupedTransactions.clear();
         transactions = DataProvider.getTransactions();
 
@@ -142,7 +141,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
                 groupedTransactions.put(key, matches);
             }
-
             notifyDataSetChanged();
         }
     }

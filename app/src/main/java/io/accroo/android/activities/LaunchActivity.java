@@ -93,8 +93,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onError() {
-        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         apiService.logout();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

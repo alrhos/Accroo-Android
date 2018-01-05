@@ -1,4 +1,4 @@
-package io.accroo.android.crypto;
+package io.accroo.android.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,48 +17,45 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import io.accroo.android.crypto.KeyStoreManager;
+
 /**
  * Created by oscar on 5/03/17.
  */
 
-public class AuthManager {
+public class CredentialService {
 
-    private static AuthManager              instance = null;
+    private static CredentialService        instance = null;
     private static KeyStoreManager          keyStoreManager;
     private static SharedPreferences        sharedPreferences;
     private static SharedPreferences.Editor editor;
-    private static final String             APP = "com.paleskyline.accroo";
+    private static final String             APP = "io.accroo.android";
     public static final String              USERNAME_KEY = "usernameKey";
     public static final String              ENCRYPTION_KEY = "encryptionKey";
     public static final String              REFRESH_TOKEN_KEY = "refreshTokenKey";
     public static final String              ACCESS_TOKEN_KEY = "accessTokenKey";
 
-    private AuthManager() throws KeyStoreException, NoSuchAlgorithmException,
+    private CredentialService() throws KeyStoreException, NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException,
             IOException, CertificateException, NoSuchPaddingException {
 
         keyStoreManager = new KeyStoreManager();
     }
 
-    public static AuthManager getInstance(Context context) throws Exception {
+    public static CredentialService getInstance(Context context) throws Exception {
         if (instance == null) {
             try {
-                instance = new AuthManager();
+                instance = new CredentialService();
             } catch (KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException |
                     InvalidAlgorithmParameterException | IOException | CertificateException |
                     NoSuchPaddingException e) {
-                // TODO: review error logging
                 e.printStackTrace();
-                // TODO: review exception that is thrown here
                 throw new Exception("The KeyStore could not be initialized");
             }
         }
         sharedPreferences = context.getSharedPreferences(APP, Context.MODE_PRIVATE);
         return instance;
     }
-
-
-    // TODO: consider another method which takes char[] instead of string.
 
     public void saveEntry(String key, String value) throws Exception {
         try {
@@ -69,10 +66,8 @@ public class AuthManager {
         } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
                 KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
                 IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
-            // TODO: review error logging
             e.printStackTrace();
-            // TODO: review exception that is thrown here
-            throw new Exception("The value could not be encrypted");
+            throw new Exception(key + " could not be encrypted");
         }
     }
 
@@ -87,10 +82,8 @@ public class AuthManager {
                 KeyStoreException | InvalidKeyException | IllegalBlockSizeException |
                 BadPaddingException | UnsupportedEncodingException |
                 InvalidAlgorithmParameterException e) {
-            // TODO: review error logging
             e.printStackTrace();
-            // TODO: review exception that is thrown here
-            throw new Exception("The value could not be decrypted");
+            throw new Exception(key + " could not be decrypted");
         }
     }
 
@@ -99,6 +92,5 @@ public class AuthManager {
         editor.clear();
         editor.apply();
     }
-
 
 }

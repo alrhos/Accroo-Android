@@ -44,7 +44,6 @@ public class KeyStoreManager {
         keyStore.load(null);
 
         if (!keyStore.containsAlias(ALIAS)) {
-
             KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
                     ANDROID_KEY_STORE);
 
@@ -77,8 +76,6 @@ public class KeyStoreManager {
 
         System.arraycopy(iv, 0, record, 0, 12);
         System.arraycopy(cipherText, 0, record, 12, cipherText.length);
-
-        // TODO: Consider overwriting the cipherText array at this point.
 
         return Base64.encodeToString(record, Base64.NO_WRAP);
     }

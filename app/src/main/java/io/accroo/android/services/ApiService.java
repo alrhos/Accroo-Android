@@ -3,7 +3,6 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import io.accroo.android.crypto.AuthManager;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
@@ -23,38 +22,38 @@ import java.util.Date;
 
 public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequestTask.PostRequestOutcome {
 
-    public final static int GET_DEFAULT_DATA = 0;
-    public final static int CREATE_USER = 1;
+    public final static int GET_DEFAULT_DATA =          0;
+    public final static int CREATE_USER =               1;
     public final static int CREATE_DEFAULT_CATEGORIES = 2;
-    public final static int CREATE_TRANSACTION = 3;
-    public final static int UPDATE_TRANSACTION = 4;
-    public final static int DELETE_TRANSACTION = 5;
-    public final static int GET_REFRESH_TOKEN = 6;
-    public final static int CREATE_GENERAL_CATEGORY = 7;
-    public final static int UPDATE_GENERAL_CATEGORY = 8;
-    public final static int DELETE_GENERAL_CATEGORY = 9;
-    public final static int CREATE_SUB_CATEGORY = 10;
-    public final static int UPDATE_SUB_CATEGORY = 11;
-    public final static int DELETE_SUB_CATEGORY = 12;
-    public final static int FORGOT_PASSWORD = 13;
-    public final static int UPDATE_EMAIL = 14;
-    public final static int UPDATE_LOGIN_PASSWORD = 15;
-    public final static int GET_KEY_PACKAGE = 16;
-    public final static int UPDATE_DATA_PASSWORD = 17;
+    public final static int CREATE_TRANSACTION =        3;
+    public final static int UPDATE_TRANSACTION =        4;
+    public final static int DELETE_TRANSACTION =        5;
+    public final static int GET_REFRESH_TOKEN =         6;
+    public final static int CREATE_GENERAL_CATEGORY =   7;
+    public final static int UPDATE_GENERAL_CATEGORY =   8;
+    public final static int DELETE_GENERAL_CATEGORY =   9;
+    public final static int CREATE_SUB_CATEGORY =       10;
+    public final static int UPDATE_SUB_CATEGORY =       11;
+    public final static int DELETE_SUB_CATEGORY =       12;
+    public final static int FORGOT_PASSWORD =           13;
+    public final static int UPDATE_EMAIL =              14;
+    public final static int UPDATE_LOGIN_PASSWORD =     15;
+    public final static int GET_KEY_PACKAGE =           16;
+    public final static int UPDATE_DATA_PASSWORD =      17;
 
-    public final static int GENERIC_ERROR = 1000;
-    public final static int TIMEOUT_ERROR = 1001;
-    public final static int CONNECTION_ERROR = 1002;
-    public final static int UNAUTHORIZED = 1003;
-    public final static int CONFLICT = 1004;
-    public final static int TOO_MANY_REQUESTS = 1005;
-    public final static int INVALID_REQUEST = 1006;
-    public final static int INVALID_DATE_RANGE = 1007;
+    public final static int GENERIC_ERROR =             1000;
+    public final static int TIMEOUT_ERROR =             1001;
+    public final static int CONNECTION_ERROR =          1002;
+    public final static int UNAUTHORIZED =              1003;
+    public final static int CONFLICT =                  1004;
+    public final static int TOO_MANY_REQUESTS =         1005;
+    public final static int INVALID_REQUEST =           1006;
+    public final static int INVALID_DATE_RANGE =        1007;
 
-    private RequestOutcome requestOutcome;
-    private Context context;
-    private RequestCoordinator coordinator;
-    private JSONObject[] dataReceiver;
+    private RequestOutcome                              requestOutcome;
+    private Context                                     context;
+    private RequestCoordinator                          coordinator;
+    private JSONObject[]                                dataReceiver;
 
     public ApiService(RequestOutcome requestOutcome, Context context) {
         this.requestOutcome = requestOutcome;
@@ -70,7 +69,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public boolean userLoggedIn() {
         try {
-            AuthManager.getInstance(context).getEntry(AuthManager.REFRESH_TOKEN_KEY);
+            CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
             CryptoManager.getInstance().initMasterKey(context);
             return true;
         } catch (Exception e) {
@@ -109,7 +108,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public void logout() {
         try {
-            AuthManager.getInstance(context).clearSavedData();
+            CredentialService.getInstance(context).clearSavedData();
         } catch (Exception e) {
             e.printStackTrace();
         }

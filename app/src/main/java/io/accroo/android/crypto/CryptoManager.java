@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import io.accroo.android.model.KeyPackage;
 import io.accroo.android.model.SecurePayload;
+import io.accroo.android.services.CredentialService;
 
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
@@ -120,7 +121,7 @@ public class CryptoManager {
     }
 
     public KeyPackage encryptMasterKey(char[] password, Context context) throws Exception {
-        byte[] secretKeyBytes = decode(AuthManager.getInstance(context).getEntry(AuthManager.ENCRYPTION_KEY));
+        byte[] secretKeyBytes = decode(CredentialService.getInstance(context).getEntry(CredentialService.ENCRYPTION_KEY));
         KeyPackage keyPackage = generateKeyPackage(secretKeyBytes, password);
         Arrays.fill(password, '\u0000');
         return keyPackage;
@@ -151,11 +152,11 @@ public class CryptoManager {
     }
 
     public void saveMasterKey(Context context) throws Exception {
-        AuthManager.getInstance(context).saveEntry(AuthManager.ENCRYPTION_KEY, encode(masterKey));
+        CredentialService.getInstance(context).saveEntry(CredentialService.ENCRYPTION_KEY, encode(masterKey));
     }
 
     public void initMasterKey(Context context) throws Exception {
-        byte[] secretKeyBytes = decode(AuthManager.getInstance(context).getEntry(AuthManager.ENCRYPTION_KEY));
+        byte[] secretKeyBytes = decode(CredentialService.getInstance(context).getEntry(CredentialService.ENCRYPTION_KEY));
         secretBox = new SecretBox(secretKeyBytes);
     }
 

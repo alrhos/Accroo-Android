@@ -2,7 +2,7 @@ package io.accroo.android.network;
 
 import android.content.Context;
 
-import io.accroo.android.crypto.AuthManager;
+import io.accroo.android.services.CredentialService;
 import io.accroo.android.services.ApiService;
 
 import org.json.JSONObject;
@@ -56,7 +56,7 @@ public abstract class RequestCoordinator {
 
     protected void receiveAccessToken(String accessToken) {
         try {
-            AuthManager.getInstance(context).saveEntry(AuthManager.ACCESS_TOKEN_KEY, accessToken);
+            CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
             retry();
         } catch (Exception e) {
             abort(ApiService.GENERIC_ERROR);
