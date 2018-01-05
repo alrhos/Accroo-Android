@@ -33,7 +33,7 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         this.authType = authType;
         this.context = context;
         setAuthHeader(authValue);
-        setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        setRetryPolicy(new DefaultRetryPolicy(30000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     protected String getAuthType() {
