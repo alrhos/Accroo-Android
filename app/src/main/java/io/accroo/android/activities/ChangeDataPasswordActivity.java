@@ -114,7 +114,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 int newDataPasswordLength = newDataPasswordField.getText().length();
                 newDataPassword = new char[newDataPasswordLength];
                 newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
-                apiService.updateDataPassword(loginPassword, newDataPassword);
+                apiService.updatePassword(loginPassword, newDataPassword);
             } else {
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();

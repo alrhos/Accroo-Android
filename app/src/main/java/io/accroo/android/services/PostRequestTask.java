@@ -32,7 +32,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
     private int id;
-    private String username, refreshToken, accessToken;
+    //private String username, refreshToken, accessToken;
+    private String username, deviceToken;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
     private ArrayList<Transaction> transactions = new ArrayList<>();
@@ -87,12 +88,15 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.GET_REFRESH_TOKEN:
 
-                    refreshToken = dataReceiver[0][0].getString("refreshToken");
-                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
+//                    refreshToken = dataReceiver[0][0].getString("refreshToken");
+//                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
+
+                    deviceToken = dataReceiver[0][0].getString("deviceToken");
 
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
 
                     JSONObject keyData = dataReceiver[0][0].getJSONObject("keyPackage");
 
@@ -112,12 +116,14 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                 case ApiService.CREATE_USER:
 
                     username = ((User) dataObject).getEmail();
-                    refreshToken = dataReceiver[0][0].getString("refreshToken");
-                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
+                    deviceToken = dataReceiver[0][0].getString("deviceToken");
+//                    refreshToken = dataReceiver[0][0].getString("refreshToken");
+//                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
 
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
+                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
 
                     CryptoManager.getInstance().saveMasterKey(context);
 
@@ -225,15 +231,15 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
                     return true;
 
-                case ApiService.UPDATE_LOGIN_PASSWORD:
-
-                    refreshToken = dataReceiver[0][0].getString("refreshToken");
-                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
-
-                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
-
-                    return true;
+//                case ApiService.UPDATE_LOGIN_PASSWORD:
+//
+//                    refreshToken = dataReceiver[0][0].getString("refreshToken");
+//                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");
+//
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, refreshToken);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken);
+//
+//                    return true;
 
                 case ApiService.GET_KEY_PACKAGE:
 

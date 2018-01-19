@@ -135,9 +135,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_DEFAULT_DATA:
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.GET,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.GET,
                             RequestBuilder.CATEGORY, null, null, context));
-                    requests.add(RequestBuilder.accessTokenAuth(1, coordinator, Request.Method.GET,
+                    requests.add(RequestBuilder.deviceTokenAuth(1, coordinator, Request.Method.GET,
                             RequestBuilder.TRANSACTION, null, null, context));
 
                     return true;
@@ -190,7 +190,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     JSONObject categories = new JSONObject();
                     categories.put("categories", generalCategoriesArray);
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.CATEGORY, null, categories, context));
 
                     return true;
@@ -199,7 +199,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     json = ((Transaction) dataObject).encrypt();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.TRANSACTION, null, json, context));
 
                     return true;
@@ -212,7 +212,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
                             uri, null, json, context));
 
                     return true;
@@ -223,7 +223,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
 
                     return true;
@@ -232,7 +232,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     json = ((GeneralCategory) dataObject).encrypt();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.GENERAL_CATEGORY, null, json, context));
 
                     return true;
@@ -245,7 +245,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
                             uri, null, json, context));
 
                     return true;
@@ -256,7 +256,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
 
                     return true;
@@ -265,7 +265,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     json = ((SubCategory) dataObject).encrypt();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.SUB_CATEGORY, null, json, context));
 
                     return true;
@@ -278,7 +278,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.PUT,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
                             uri, null, json, context));
 
                     return true;
@@ -289,7 +289,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
 
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.DELETE,
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, null, context));
 
                     return true;
@@ -335,7 +335,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.DATA_PASSWORD, username, password, context));
+                            null, RequestBuilder.ENCRYPTION_KEY, username, password, context));
 
                     return true;
 
@@ -346,7 +346,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     KeyPackage newKeyPackage = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-                            newKeyPackage.toJSON(), RequestBuilder.DATA_PASSWORD, username, password, context));
+                            newKeyPackage.toJSON(), RequestBuilder.ENCRYPTION_KEY, username, password, context));
 
                     return true;
 

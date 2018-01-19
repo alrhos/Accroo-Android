@@ -52,8 +52,8 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         }
     }
 
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+//    protected Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
 
 }

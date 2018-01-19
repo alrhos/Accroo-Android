@@ -35,11 +35,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_SUB_CATEGORY =       10;
     public final static int UPDATE_SUB_CATEGORY =       11;
     public final static int DELETE_SUB_CATEGORY =       12;
-    public final static int FORGOT_PASSWORD =           13;
-    public final static int UPDATE_EMAIL =              14;
-    public final static int UPDATE_LOGIN_PASSWORD =     15;
-    public final static int GET_KEY_PACKAGE =           16;
-    public final static int UPDATE_DATA_PASSWORD =      17;
+ //   public final static int FORGOT_PASSWORD =           13;
+    public final static int UPDATE_EMAIL =              13;
+ //   public final static int UPDATE_LOGIN_PASSWORD =     15;
+    public final static int GET_KEY_PACKAGE =           14;
+    public final static int UPDATE_PASSWORD =      15;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -69,7 +69,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public boolean userLoggedIn() {
         try {
-            CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
             CryptoManager.getInstance().initMasterKey(context);
             return true;
         } catch (Exception e) {
@@ -114,22 +114,22 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void forgotPassword(@NonNull String email) {
-        dataReceiver = new JSONObject[1];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                requestOutcome.onSuccess(FORGOT_PASSWORD);
-            }
-
-            @Override
-            protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(FORGOT_PASSWORD, errorCode);
-            }
-        };
-
-        new PreRequestTask(FORGOT_PASSWORD, this, context, coordinator, email).execute();
-    }
+//    public void forgotPassword(@NonNull String email) {
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//                requestOutcome.onSuccess(FORGOT_PASSWORD);
+//            }
+//
+//            @Override
+//            protected void onFailure(int errorCode) {
+//                requestOutcome.onFailure(FORGOT_PASSWORD, errorCode);
+//            }
+//        };
+//
+//        new PreRequestTask(FORGOT_PASSWORD, this, context, coordinator, email).execute();
+//    }
 
     public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
         if (startDate.before(endDate)) {
@@ -359,22 +359,22 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, password, newEmail).execute();
     }
 
-    public void updateLoginPassword(char[] currentPassword, char[] newPassword) {
-        dataReceiver = new JSONObject[1];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                new PostRequestTask(UPDATE_LOGIN_PASSWORD, ApiService.this, context).execute(dataReceiver);
-            }
-
-            @Override
-            protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(UPDATE_LOGIN_PASSWORD, errorCode);
-            }
-        };
-
-        new PreRequestTask(UPDATE_LOGIN_PASSWORD, this, context, coordinator, currentPassword, newPassword).execute();
-    }
+//    public void updateLoginPassword(char[] currentPassword, char[] newPassword) {
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//                new PostRequestTask(UPDATE_LOGIN_PASSWORD, ApiService.this, context).execute(dataReceiver);
+//            }
+//
+//            @Override
+//            protected void onFailure(int errorCode) {
+//                requestOutcome.onFailure(UPDATE_LOGIN_PASSWORD, errorCode);
+//            }
+//        };
+//
+//        new PreRequestTask(UPDATE_LOGIN_PASSWORD, this, context, coordinator, currentPassword, newPassword).execute();
+//    }
 
     public void getKeyPackage(char[] loginPassword) {
         dataReceiver = new JSONObject[1];
@@ -393,21 +393,21 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, loginPassword).execute();
     }
 
-    public void updateDataPassword(char[] loginPassword, char[] newDataPassword) {
+    public void updatePassword(char[] loginPassword, char[] newDataPassword) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                requestOutcome.onSuccess(UPDATE_DATA_PASSWORD);
+                requestOutcome.onSuccess(UPDATE_PASSWORD);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(UPDATE_DATA_PASSWORD, errorCode);
+                requestOutcome.onFailure(UPDATE_PASSWORD, errorCode);
             }
         };
 
-        new PreRequestTask(UPDATE_DATA_PASSWORD, this, context, coordinator, loginPassword, newDataPassword).execute();
+        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, loginPassword, newDataPassword).execute();
     }
 
     @Override
