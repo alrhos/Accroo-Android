@@ -1,11 +1,9 @@
 package io.accroo.android.activities;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,44 +12,55 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.services.ApiService;
 
-public class ForgotPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+public class LoginStageOneActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private EditText email;
-    private Button sendLink;
+    private EditText usernameField;
+    private Button next;
     private ProgressDialog progressDialog;
     private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_login_stage_one);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        email = findViewById(R.id.reset_email);
-        sendLink = findViewById(R.id.send_link);
+            usernameField = findViewById(R.id.email);
+            next = findViewById(R.id.next);
 
-        progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.loading));
-        progressDialog.setCancelable(false);
+            progressDialog = new ProgressDialog(LoginStageOneActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setCancelable(false);
 
-        apiService = new ApiService(this, getApplicationContext());
+            apiService = new ApiService(this, getApplicationContext());
 
-        sendLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (email.getText().length() > 0) {
-                    progressDialog.show();
-                   // apiService.forgotPassword(email.getText().toString());
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isValidInput()) {
+                        progressDialog.show();
+                        String username = usernameField.getText().toString().trim();
+                        apiService.getLoginCode(username);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        return true;
+    }
+
+    private boolean isValidInput() {
+        if (usernameField.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -64,15 +73,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        email.setText("");
-        AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPasswordActivity.this);
-        builder.setMessage(R.string.reset_link_sent)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                }).create().show();
+        Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -85,6 +87,9 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
                 break;
             case ApiService.TIMEOUT_ERROR:
                 message = getResources().getString(R.string.timeout_error);
+                break;
+            case ApiService.UNAUTHORIZED:
+                message = getResources().getString(R.string.invalid_username_or_password);
                 break;
             default:
                 message = getResources().getString(R.string.general_error);
@@ -100,3 +105,4 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
     }
 
 }
+

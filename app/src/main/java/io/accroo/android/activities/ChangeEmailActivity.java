@@ -34,7 +34,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
 
             emailAddress = findViewById(R.id.new_email);
             confirmEmailAddress = findViewById(R.id.confirm_new_email);
-            loginPassword = findViewById(R.id.confirm_login_password);
+            loginPassword = findViewById(R.id.confirm_password);
             updateEmailButton = findViewById(R.id.update_email_button);
             updateEmailButton.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -86,7 +86,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
         try {
             switch (requestType) {
 
-                case ApiService.GET_REFRESH_TOKEN:
+                case ApiService.GET_DEVICE_TOKEN:
 
 //                    refreshToken = dataReceiver[0][0].getString("refreshToken");
 //                    accessToken = dataReceiver[0][0].getJSONObject("accessToken").getString("token");

@@ -23,7 +23,8 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL = "https://apidev23.accroo.io/";
+    private final static String baseURL = "http://apidev23.accroo.io/";
+    public final static String LOGIN_TOKEN = "token/login";
     public final static String DEVICE_TOKEN = "token/device";
  //   public final static String ACCESS_TOKEN = "token/access";
     public final static String REGISTER = "register";
@@ -36,7 +37,7 @@ public class RequestBuilder {
     public final static String SUB_CATEGORY = "category/sub";
     public final static String TRANSACTION = "transaction";
     protected final static int BASIC_AUTH = 0;
-    protected final static int DEVICE_TOKEN_AUTH = 2;
+    protected final static int DEVICE_TOKEN_AUTH = 1;
   //  protected final static int REFRESH_TOKEN_AUTH = 1;
  //   protected final static int ACCESS_TOKEN_AUTH = 2;
     protected final static int NO_AUTH = 2;

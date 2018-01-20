@@ -54,14 +54,14 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         Button login = findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginStageOneActivity.class));
             }
         });
 
         Button register = findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), RegisterStageOneActivity.class));
+                startActivity(new Intent(getApplicationContext(), RegistrationActivity.class));
             }
         });
     }

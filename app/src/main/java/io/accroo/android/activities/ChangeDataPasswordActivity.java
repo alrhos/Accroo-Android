@@ -117,13 +117,13 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 apiService.updatePassword(loginPassword, newDataPassword);
             } else {
                 progressDialog.dismiss();
-                Toast.makeText(getApplicationContext(), R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
             }
-        } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
-            clearPasswords();
-            progressDialog.dismiss();
-            Toast.makeText(getApplicationContext(), R.string.data_password_updated, Toast.LENGTH_SHORT).show();
-            finish();
+//        } else if (requestType == ApiService.UPDATE_DATA_PASSWORD) {
+//            clearPasswords();
+//            progressDialog.dismiss();
+//            Toast.makeText(getApplicationContext(), R.string.data_password_updated, Toast.LENGTH_SHORT).show();
+//            finish();
         }
     }
 
@@ -133,7 +133,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
         String message;
         switch (errorCode) {
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.incorrect_login_password);
+                message = getResources().getString(R.string.incorrect_password);
                 break;
             case ApiService.CONNECTION_ERROR:
                 message = getResources().getString(R.string.connection_error);

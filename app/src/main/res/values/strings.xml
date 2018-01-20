@@ -13,7 +13,6 @@
     <string name="enter_current_login_password">Enter your current login password</string>
     <string name="enter_current_data_password">Enter your current data password</string>
     <string name="incorrect_password">Incorrect password</string>
-    <string name="incorrect_login_password">Incorrect login password</string>
     <string name="enter_password">Enter password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
@@ -32,7 +31,7 @@
         data password that is different to your login password, though please note that unlike your login password,
         it is not possible to reset your data password if you forget it because it is never
         transmitted from your device.</string>
-    <string name="password_warning">This password cannot be reset or recovered if you forget it.</string>
+    <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
     <string name="reset_password_link">You will receive a link to reset your password.</string>
     <string name="send_link">SEND LINK</string>
     <string name="reset_link_sent">Password reset link sent</string>
@@ -97,33 +96,25 @@
     <string name="register">REGISTER</string>
     <string name="update">UPDATE</string>
     <string name="username">Username</string>
-    <string name="login_password">Login password</string>
-    <string name="data_password">Data password</string>
-    <string name="confirm_data_password">Confirm data password</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="unlock">UNLOCK</string>
     <string name="settings">Settings</string>
     <string name="change_email">Change email</string>
-    <string name="change_login_password">Change login password</string>
-    <string name="change_data_password">Change data password</string>
+    <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
     <string name="about">About</string>
     <string name="new_email">New email</string>
     <string name="confirm_new_email">Confirm new email</string>
-    <string name="confirm_login_password">Confirm login password</string>
-    <string name="current_login_password">Current login password</string>
-    <string name="new_login_password">New login password</string>
-    <string name="confirm_new_login_password">Confirm new login password</string>
-    <string name="current_data_password">Current data password</string>
-    <string name="new_data_password">New data password</string>
-    <string name="confirm_new_data_password">Confirm new data password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
     <string name="submitting">Submitting...</string>
     <string name="loading">Loading...</string>
     <string name="saving">Saving...</string>
     <string name="signing_out">Signing out...</string>
     <string name="email_updated">Email address updated</string>
-    <string name="login_password_updated">Login password updated</string>
-    <string name="data_password_updated">Data password updated</string>
-    <string name="incorrect_data_password">Incorrect data password</string>
+    <string name="password_updated">Password updated</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="delete_transaction">Delete this transaction?</string>
@@ -217,5 +208,7 @@
             </body>
         </html>]]>
     </string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="title_activity_login_stage_one">LoginStageOneActivity</string>
 
 </resources>

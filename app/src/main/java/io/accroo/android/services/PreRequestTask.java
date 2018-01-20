@@ -92,6 +92,18 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     }
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+                          RequestCoordinator coordinator, String username) {
+
+        this.requestType = requestType;
+        this.preRequestOutcome = preRequestOutcome;
+        this.context = context;
+        this.coordinator = coordinator;
+        this.username = username;
+        requests = new ArrayList<>();
+
+    }
+
+    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
                           RequestCoordinator coordinator, char[] password) {
 
         this.requestType = requestType;
@@ -126,10 +138,20 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         try {
             switch (requestType) {
 
-                case ApiService.GET_REFRESH_TOKEN:
+                case ApiService.GET_LOGIN_CODE:
+
+                    json = new JSONObject();
+                    json.put("email", username);
+
+                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.LOGIN_TOKEN, json, context));
+
+                    return true;
+
+                case ApiService.GET_DEVICE_TOKEN:
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.REFRESH_TOKEN, username, password, context));
+                            null, RequestBuilder.DEVICE_TOKEN, username, password, context));
 
                     return true;
 
@@ -146,7 +168,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     User user = (User) dataObject;
 
-                    KeyPackage keyPackage = CryptoManager.getInstance().generateNewKey(user.getDataPassword());
+                    KeyPackage keyPackage = CryptoManager.getInstance().generateNewKey(user.getPassword());
                     user.setKeyPackage(keyPackage);
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
@@ -294,17 +316,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.FORGOT_PASSWORD:
-
-                    username = (String) dataObject;
-
-                    json = new JSONObject();
-                    json.put("email", username);
-
-                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.FORGOT_PASSWORD, json, context));
-
-                    return true;
+//                case ApiService.FORGOT_PASSWORD:
+//
+//                    username = (String) dataObject;
+//
+//                    json = new JSONObject();
+//                    json.put("email", username);
+//
+//                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.FORGOT_PASSWORD, json, context));
+//
+//                    return true;
 
                 case ApiService.UPDATE_EMAIL:
 
@@ -318,17 +340,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.UPDATE_LOGIN_PASSWORD:
-
-                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
-
-                    json = new JSONObject();
-                    json.put("password", String.copyValueOf(newPassword));
-
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-                            json, RequestBuilder.LOGIN_PASSWORD, username, password, context));
-
-                    return true;
+//                case ApiService.UPDATE_LOGIN_PASSWORD:
+//
+//                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
+//
+//                    json = new JSONObject();
+//                    json.put("password", String.copyValueOf(newPassword));
+//
+//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
+//                            json, RequestBuilder.LOGIN_PASSWORD, username, password, context));
+//
+//                    return true;
 
                 case ApiService.GET_KEY_PACKAGE:
 
@@ -339,7 +361,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.UPDATE_DATA_PASSWORD:
+                case ApiService.UPDATE_PASSWORD:
 
                     username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 

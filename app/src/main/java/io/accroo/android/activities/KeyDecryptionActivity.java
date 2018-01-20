@@ -39,7 +39,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                         if (apiService.initializeKey(password)) {
                             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                         } else {
-                            Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_password, Toast.LENGTH_SHORT).show();
                         }
                         Arrays.fill(password, '\u0000');
                         keyPassword.getText().clear();

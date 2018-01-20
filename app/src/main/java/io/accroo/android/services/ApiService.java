@@ -28,7 +28,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_TRANSACTION =        3;
     public final static int UPDATE_TRANSACTION =        4;
     public final static int DELETE_TRANSACTION =        5;
-    public final static int GET_REFRESH_TOKEN =         6;
+    public final static int GET_DEVICE_TOKEN =          6;
     public final static int CREATE_GENERAL_CATEGORY =   7;
     public final static int UPDATE_GENERAL_CATEGORY =   8;
     public final static int DELETE_GENERAL_CATEGORY =   9;
@@ -39,7 +39,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_EMAIL =              13;
  //   public final static int UPDATE_LOGIN_PASSWORD =     15;
     public final static int GET_KEY_PACKAGE =           14;
-    public final static int UPDATE_PASSWORD =      15;
+    public final static int UPDATE_PASSWORD =           15;
+    public final static int GET_LOGIN_CODE  =           16;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -89,22 +90,41 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
+    public void getLoginCode(@NonNull String username) {
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(GET_LOGIN_CODE);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(GET_LOGIN_CODE, errorCode);
+            }
+        };
+
+        new PreRequestTask(GET_LOGIN_CODE, this, context, coordinator, username).execute();
+    }
+
     public void login(@NonNull final String username, @NonNull char[] password) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_REFRESH_TOKEN, ApiService.this, context, username).execute(dataReceiver);
+                new PostRequestTask(GET_DEVICE_TOKEN, ApiService.this, context, username).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(GET_REFRESH_TOKEN, errorCode);
+                requestOutcome.onFailure(GET_DEVICE_TOKEN, errorCode);
             }
         };
 
-        new PreRequestTask(GET_REFRESH_TOKEN, this, context, coordinator, username, password).execute();
+        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, username, password).execute();
     }
+
+    // TODO: this should also fire request to invalidate device token
 
     public void logout() {
         try {

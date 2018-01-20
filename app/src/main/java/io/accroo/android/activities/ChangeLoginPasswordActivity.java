@@ -32,10 +32,10 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
             progressDialog = new ProgressDialog(ChangeLoginPasswordActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.submitting));
 
-            existingPasswordField = findViewById(R.id.confirm_login_password);
-            newPasswordField = findViewById(R.id.new_login_password);
-            confirmNewPasswordField = findViewById(R.id.confirm_new_login_password);
-            updatePasswordButton = findViewById(R.id.update_login_password_button);
+            existingPasswordField = findViewById(R.id.confirm_password);
+            newPasswordField = findViewById(R.id.new_password);
+            confirmNewPasswordField = findViewById(R.id.confirm_new_password);
+            updatePasswordButton = findViewById(R.id.update_password_button);
 
             updatePasswordButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -55,7 +55,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
                     char[] newPassword = new char[newPasswordLength];
                     newPasswordField.getText().getChars(0, newPasswordLength, newPassword, 0);
 
-                    apiService.updateLoginPassword(currentPassword, newPassword);
+                  //  apiService.updateLoginPassword(currentPassword, newPassword);
 
                 }
             });
@@ -124,7 +124,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.login_password_updated, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
         finish();
     }
 

@@ -35,10 +35,10 @@
         app:layout_constraintTop_toBottomOf="@+id/new_email" />
 
     <EditText
-        android:id="@+id/confirm_login_password"
+        android:id="@+id/confirm_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/login_password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:maxLength="80"
         android:layout_marginTop="13dp"
@@ -64,6 +64,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/confirm_login_password" />
+        app:layout_constraintTop_toBottomOf="@+id/confirm_password" />
 
 </android.support.constraint.ConstraintLayout>
