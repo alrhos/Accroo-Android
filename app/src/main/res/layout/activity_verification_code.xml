@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.accroo.android.activities.LoginStageTwoActivity">
+    tools:context="io.accroo.android.activities.VerificationCodeActivity">
 
     <TextView
         android:id="@+id/login_code_text"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_code_text" />
 
     <Button
-        android:id="@+id/next"
+        android:id="@+id/submit"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
@@ -45,7 +45,7 @@
         android:layout_marginTop="28dp"
         android:background="@drawable/rounded_button"
         android:elevation="0dp"
-        android:text="@string/sign_in_caps"
+        android:text="@string/submit"
         android:textColor="@android:color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

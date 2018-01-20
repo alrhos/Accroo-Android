@@ -41,7 +41,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
  //   public final static int UPDATE_LOGIN_PASSWORD =     15;
     public final static int GET_KEY_PACKAGE =           14;
     public final static int UPDATE_PASSWORD =           15;
-    public final static int GET_LOGIN_CODE  =           16;
+    public final static int GET_VERIFICATION_CODE =     16;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -98,19 +98,19 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                requestOutcome.onSuccess(GET_LOGIN_CODE);
+                requestOutcome.onSuccess(GET_VERIFICATION_CODE);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(GET_LOGIN_CODE, errorCode);
+                requestOutcome.onFailure(GET_VERIFICATION_CODE, errorCode);
             }
         };
 
         requestVariables.clear();
         requestVariables.put("username", username);
 
-        new PreRequestTask(GET_LOGIN_CODE, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(GET_VERIFICATION_CODE, this, context, coordinator, requestVariables).execute();
     }
 
     public void login(@NonNull final String username, @NonNull String loginCode) {

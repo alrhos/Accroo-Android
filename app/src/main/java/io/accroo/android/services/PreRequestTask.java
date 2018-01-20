@@ -154,13 +154,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         try {
             switch (requestType) {
 
-                case ApiService.GET_LOGIN_CODE:
+                case ApiService.GET_VERIFICATION_CODE:
 
                     json = new JSONObject();
                     json.put("email", requestVariables.get("username"));
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.LOGIN_TOKEN, json, context));
+                            RequestBuilder.VERIFICATION_TOKEN, json, context));
 
                     return true;
 

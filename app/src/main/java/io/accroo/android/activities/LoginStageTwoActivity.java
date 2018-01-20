@@ -60,7 +60,7 @@ public class LoginStageTwoActivity extends AppCompatActivity implements ApiServi
 
     private boolean isValidInput() {
         if (loginCodeField.getText().length() != 8) {
-            Toast.makeText(getApplicationContext(), R.string.invalid_login_code, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.invalid_verification_code, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -91,7 +91,7 @@ public class LoginStageTwoActivity extends AppCompatActivity implements ApiServi
                 message = getResources().getString(R.string.timeout_error);
                 break;
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.incorrect_login_code);
+                message = getResources().getString(R.string.incorrect_verification_code);
                 break;
             default:
                 message = getResources().getString(R.string.general_error);

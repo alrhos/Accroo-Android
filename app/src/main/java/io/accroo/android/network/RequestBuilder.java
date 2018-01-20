@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public class RequestBuilder {
 
     private final static String baseURL = "http://apidev23.accroo.io/";
-    public final static String LOGIN_TOKEN = "token/login";
+    public final static String VERIFICATION_TOKEN = "token/verification";
     public final static String DEVICE_TOKEN = "token/device";
  //   public final static String ACCESS_TOKEN = "token/access";
     public final static String REGISTER = "register";

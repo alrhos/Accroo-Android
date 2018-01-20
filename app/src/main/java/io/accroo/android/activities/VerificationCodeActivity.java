@@ -2,8 +2,9 @@ package io.accroo.android.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,10 +13,15 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.services.ApiService;
 
-public class LoginStageOneActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+public class VerificationCodeActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private EditText usernameField;
-    private Button next;
+    public static final int LOGIN = 1;
+    public static final int UPDATE_EMAIL = 2;
+    public static final int UPDATE_PASSWORD = 3;
+
+    private int action;
+    private EditText loginCodeField;
+    private Button submit;
     private ProgressDialog progressDialog;
     private ApiService apiService;
     private String username;
@@ -26,25 +32,48 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
         if (!LaunchActivity.initialized) {
             relaunch();
         } else {
-            setContentView(R.layout.activity_login_stage_one);
+            setContentView(R.layout.activity_verification_code);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            usernameField = findViewById(R.id.email);
-            next = findViewById(R.id.next);
+            action = getIntent().getIntExtra("action", 0);
+            username = getIntent().getStringExtra("email");
 
-            progressDialog = new ProgressDialog(LoginStageOneActivity.this);
+            submit = findViewById(R.id.submit);
+
+            switch (action) {
+                case LOGIN:
+                    submit.setText(R.string.next);
+                    break;
+                case UPDATE_EMAIL:
+                    submit.setText(R.string.submit);
+                    break;
+                case UPDATE_PASSWORD:
+                    submit.setText(R.string.submit);
+                    break;
+            }
+
+            loginCodeField = findViewById(R.id.login_code);
+
+            progressDialog = new ProgressDialog(VerificationCodeActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
 
-            next.setOnClickListener(new View.OnClickListener() {
+            submit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
                         progressDialog.show();
-                        username = usernameField.getText().toString().trim();
-                        apiService.getLoginCode(username);
+                        switch (action) {
+                            case LOGIN:
+                                apiService.login(username, loginCodeField.getText().toString());
+                                break;
+                            case UPDATE_EMAIL:
+                                break;
+                            case UPDATE_PASSWORD:
+                                break;
+                        }
                     }
                 }
             });
@@ -58,8 +87,8 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
     }
 
     private boolean isValidInput() {
-        if (usernameField.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+        if (loginCodeField.getText().length() != 8) {
+            Toast.makeText(getApplicationContext(), R.string.invalid_verification_code, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -74,11 +103,17 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        //Intent intent = new Intent(getApplicationContext(), LoginStageTwoActivity.class);
-        Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
-        intent.putExtra("action", VerificationCodeActivity.LOGIN);
-        intent.putExtra("email", username);
-        startActivity(intent);
+        switch (action) {
+            case LOGIN:
+                startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+                break;
+            case UPDATE_EMAIL:
+                startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
+                break;
+            case UPDATE_PASSWORD:
+                startActivity(new Intent(getApplicationContext(), ChangePasswordActivity.class));
+                break;
+        }
     }
 
     @Override
@@ -93,7 +128,7 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
                 message = getResources().getString(R.string.timeout_error);
                 break;
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.invalid_username_or_password);
+                message = getResources().getString(R.string.incorrect_verification_code);
                 break;
             default:
                 message = getResources().getString(R.string.general_error);
@@ -109,4 +144,3 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
     }
 
 }
-
