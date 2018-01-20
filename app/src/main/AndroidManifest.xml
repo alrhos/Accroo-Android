@@ -14,7 +14,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.VerificationCodeActivity"
             android:label="@string/title_activity_login"

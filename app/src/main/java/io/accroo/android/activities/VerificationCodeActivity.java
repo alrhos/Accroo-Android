@@ -24,7 +24,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     private Button submit;
     private ProgressDialog progressDialog;
     private ApiService apiService;
-    private String username;
+    private String username, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             action = getIntent().getIntExtra("action", 0);
-            username = getIntent().getStringExtra("email");
+            username = getIntent().getStringExtra("username");
+            email = getIntent().getStringExtra("email");
+
+            apiService = new ApiService(this, getApplicationContext());
+            apiService.getLoginCode(username);
 
             submit = findViewById(R.id.submit);
 
@@ -58,8 +62,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setCancelable(false);
 
-            apiService = new ApiService(this, getApplicationContext());
-
             submit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -70,6 +72,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                                 apiService.login(username, loginCodeField.getText().toString());
                                 break;
                             case UPDATE_EMAIL:
+                                apiService.updateEmail(email, loginCodeField.getText().toString());
                                 break;
                             case UPDATE_PASSWORD:
                                 break;
@@ -102,17 +105,21 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     @Override
     public void onSuccess(int requestType) {
-        progressDialog.dismiss();
-        switch (action) {
-            case LOGIN:
-                startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
-                break;
-            case UPDATE_EMAIL:
-                startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
-                break;
-            case UPDATE_PASSWORD:
-                startActivity(new Intent(getApplicationContext(), ChangePasswordActivity.class));
-                break;
+        if (requestType != ApiService.GET_VERIFICATION_CODE) {
+            progressDialog.dismiss();
+            switch (action) {
+                case LOGIN:
+                    startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+                    break;
+                case UPDATE_EMAIL:
+                    Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    break;
+                case UPDATE_PASSWORD:
+                    Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    break;
+            }
         }
     }
 

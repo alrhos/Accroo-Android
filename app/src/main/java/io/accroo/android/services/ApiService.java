@@ -93,7 +93,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void getLoginCode(@NonNull String username) {
+    public void getLoginCode(String username) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -108,7 +108,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         requestVariables.clear();
-        requestVariables.put("username", username);
+        if (username != null) {
+            requestVariables.put("username", username);
+        } else {
+            try {
+                requestVariables.put("username", CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY));
+            } catch (Exception e) {
+                requestOutcome.onFailure(GET_VERIFICATION_CODE, GENERIC_ERROR);
+            }
+        }
 
         new PreRequestTask(GET_VERIFICATION_CODE, this, context, coordinator, requestVariables).execute();
     }
@@ -440,7 +448,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //        new PreRequestTask(UPDATE_LOGIN_PASSWORD, this, context, coordinator, currentPassword, newPassword).execute();
 //    }
 
-    public void getKeyPackage(String loginCode) {
+    public void getKeyPackage() {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -454,10 +462,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("loginCode", loginCode);
-
-        new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, null).execute();
     }
 
 //    public void updatePassword(String loginCode, char[] newPassword) {

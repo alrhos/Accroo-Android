@@ -12,13 +12,10 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.services.ApiService;
 
-public class LoginStageOneActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+public class LoginStageOneActivity extends AppCompatActivity {
 
     private EditText usernameField;
     private Button next;
-    private ProgressDialog progressDialog;
-    private ApiService apiService;
-    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +29,14 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
             usernameField = findViewById(R.id.email);
             next = findViewById(R.id.next);
 
-            progressDialog = new ProgressDialog(LoginStageOneActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
-            progressDialog.setCancelable(false);
-
-            apiService = new ApiService(this, getApplicationContext());
-
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
-                        progressDialog.show();
-                        username = usernameField.getText().toString().trim();
-                        apiService.getLoginCode(username);
+                        Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
+                        intent.putExtra("action", VerificationCodeActivity.LOGIN);
+                        intent.putExtra("username", usernameField.getText().toString().trim());
+                        startActivity(intent);
                     }
                 }
             });
@@ -69,43 +61,6 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-    }
-
-    @Override
-    public void onSuccess(int requestType) {
-        progressDialog.dismiss();
-        //Intent intent = new Intent(getApplicationContext(), LoginStageTwoActivity.class);
-        Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
-        intent.putExtra("action", VerificationCodeActivity.LOGIN);
-        intent.putExtra("email", username);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onFailure(int requestType, int errorCode) {
-        progressDialog.dismiss();
-        String message;
-        switch (errorCode) {
-            case ApiService.CONNECTION_ERROR:
-                message = getResources().getString(R.string.connection_error);
-                break;
-            case ApiService.TIMEOUT_ERROR:
-                message = getResources().getString(R.string.timeout_error);
-                break;
-            case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.invalid_username_or_password);
-                break;
-            default:
-                message = getResources().getString(R.string.general_error);
-        }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onError() {
-        progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-        relaunch();
     }
 
 }

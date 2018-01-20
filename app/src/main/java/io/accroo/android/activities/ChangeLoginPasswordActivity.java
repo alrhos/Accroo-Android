@@ -70,7 +70,7 @@ public class ChangeLoginPasswordActivity extends AppCompatActivity implements Ap
 
     private boolean isPasswordValid() {
         if (existingPasswordField.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.enter_current_login_password, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.enter_current_password, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (newPasswordField.getText().length() < Constants.MIN_PASSWORD_LENGTH) {

@@ -11,6 +11,7 @@
         android:layout_height="50dp"
         android:hint="@string/password"
         android:ems="10"
+        android:maxLength="256"
         android:inputType="textPassword"
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"

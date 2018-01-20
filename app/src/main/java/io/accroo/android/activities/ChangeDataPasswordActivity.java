@@ -72,7 +72,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
 
     private boolean isExistingPasswordValid() {
         if (loginPasswordField.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.enter_current_login_password, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.enter_current_password, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (currentDataPasswordField.getText().length() == 0) {

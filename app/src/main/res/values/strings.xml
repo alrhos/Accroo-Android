@@ -8,7 +8,7 @@
     <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="invalid_username_or_password">Invalid username or password</string>
-    <string name="enter_current_login_password">Enter your current login password</string>
+    <string name="enter_current_password">Enter your current password</string>
     <string name="enter_current_data_password">Enter your current data password</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="enter_password">Enter password</string>
@@ -30,7 +30,7 @@
         it is not possible to reset your data password if you forget it because it is never
         transmitted from your device.</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
-    <string name="verification_code_description">A verification code was just sent to your email. Please enter it below to continue.</string>
+    <string name="verification_code_description">A verification code has been sent to your email. Please enter it below to continue.</string>
 
     <string name="title_activity_add_transaction">Add Transaction</string>
     <string name="title_activity_edit_transaction">Edit Transaction</string>
