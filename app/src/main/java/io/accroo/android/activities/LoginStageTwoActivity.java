@@ -2,8 +2,8 @@ package io.accroo.android.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,9 +12,9 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.services.ApiService;
 
-public class LoginStageOneActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+public class LoginStageTwoActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private EditText usernameField;
+    private EditText loginCodeField;
     private Button next;
     private ProgressDialog progressDialog;
     private ApiService apiService;
@@ -26,13 +26,15 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
         if (!LaunchActivity.initialized) {
             relaunch();
         } else {
-            setContentView(R.layout.activity_login_stage_one);
+            setContentView(R.layout.activity_login_stage_two);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            usernameField = findViewById(R.id.email);
+            username = getIntent().getStringExtra("email");
+
+            loginCodeField = findViewById(R.id.login_code);
             next = findViewById(R.id.next);
 
-            progressDialog = new ProgressDialog(LoginStageOneActivity.this);
+            progressDialog = new ProgressDialog(LoginStageTwoActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setCancelable(false);
 
@@ -43,8 +45,7 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
                 public void onClick(View view) {
                     if (isValidInput()) {
                         progressDialog.show();
-                        username = usernameField.getText().toString().trim();
-                        apiService.getLoginCode(username);
+                        apiService.login(username, loginCodeField.getText().toString());
                     }
                 }
             });
@@ -58,8 +59,8 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
     }
 
     private boolean isValidInput() {
-        if (usernameField.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+        if (loginCodeField.getText().length() != 8) {
+            Toast.makeText(getApplicationContext(), R.string.invalid_login_code, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -74,8 +75,7 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
     @Override
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
-        Intent intent = new Intent(getApplicationContext(), LoginStageTwoActivity.class);
-        intent.putExtra("email", username);
+        Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
         startActivity(intent);
     }
 
@@ -91,7 +91,7 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
                 message = getResources().getString(R.string.timeout_error);
                 break;
             case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.invalid_username_or_password);
+                message = getResources().getString(R.string.incorrect_login_code);
                 break;
             default:
                 message = getResources().getString(R.string.general_error);
@@ -105,6 +105,4 @@ public class LoginStageOneActivity extends AppCompatActivity implements ApiServi
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
-
 }
-

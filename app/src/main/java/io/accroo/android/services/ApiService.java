@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.
@@ -55,10 +56,12 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     private Context                                     context;
     private RequestCoordinator                          coordinator;
     private JSONObject[]                                dataReceiver;
+    private HashMap<String, Object>                     requestVariables;
 
     public ApiService(RequestOutcome requestOutcome, Context context) {
         this.requestOutcome = requestOutcome;
         this.context = context;
+        this.requestVariables = new HashMap<>();
     }
 
     public interface RequestOutcome {
@@ -104,10 +107,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(GET_LOGIN_CODE, this, context, coordinator, username).execute();
+        requestVariables.clear();
+        requestVariables.put("username", username);
+
+        new PreRequestTask(GET_LOGIN_CODE, this, context, coordinator, requestVariables).execute();
     }
 
-    public void login(@NonNull final String username, @NonNull char[] password) {
+    public void login(@NonNull final String username, @NonNull String loginCode) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -121,7 +127,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, username, password).execute();
+        requestVariables.clear();
+        requestVariables.put("username", username);
+        requestVariables.put("loginCode", loginCode);
+
+        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, requestVariables).execute();
     }
 
     // TODO: this should also fire request to invalidate device token
@@ -169,7 +179,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 }
             };
 
-            new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator).execute();
+            new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator, null).execute();
         } else {
             requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
@@ -189,7 +199,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(CREATE_USER, this, context, coordinator, user).execute();
+        requestVariables.clear();
+        requestVariables.put("user", user);
+
+        new PreRequestTask(CREATE_USER, this, context, coordinator, requestVariables).execute();
     }
 
     public void createDefaultCategories() {
@@ -206,7 +219,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this, context, coordinator).execute();
+        new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this, context, coordinator, null).execute();
     }
 
     public void createTransaction(final Transaction transaction) {
@@ -223,7 +236,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, transaction).execute();
+        requestVariables.clear();
+        requestVariables.put("transaction", transaction);
+
+        new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, requestVariables).execute();
     }
 
     public void updateTransaction(final Transaction transaction) {
@@ -240,7 +256,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(UPDATE_TRANSACTION, this, context, coordinator, transaction).execute();
+        requestVariables.clear();
+        requestVariables.put("transaction", transaction);
+
+        new PreRequestTask(UPDATE_TRANSACTION, this, context, coordinator, requestVariables).execute();
     }
 
     public void deleteTransaction(final Transaction transaction) {
@@ -257,7 +276,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, transaction).execute();
+        requestVariables.clear();
+        requestVariables.put("transaction", transaction);
+
+        new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, requestVariables).execute();
     }
 
     public void createGeneralCategory(final GeneralCategory generalCategory) {
@@ -274,7 +296,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
+        requestVariables.clear();
+        requestVariables.put("generalCategory", generalCategory);
+
+        new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, requestVariables).execute();
     }
 
     public void updateGeneralCategory(final GeneralCategory generalCategory) {
@@ -291,7 +316,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
+        requestVariables.clear();
+        requestVariables.put("generalCategory", generalCategory);
+
+        new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, requestVariables).execute();
     }
 
     public void deleteGeneralCategory(final GeneralCategory generalCategory) {
@@ -308,7 +336,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, generalCategory).execute();
+        requestVariables.clear();
+        requestVariables.put("generalCategory", generalCategory);
+
+        new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, requestVariables).execute();
     }
 
     public void createSubCategory(final SubCategory subCategory) {
@@ -325,7 +356,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
+        requestVariables.clear();
+        requestVariables.put("subCategory", subCategory);
+
+        new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, requestVariables).execute();
     }
 
     public void updateSubCategory(final SubCategory subCategory) {
@@ -342,7 +376,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(UPDATE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
+        requestVariables.clear();
+        requestVariables.put("subCategory", subCategory);
+
+        new PreRequestTask(UPDATE_SUB_CATEGORY, this, context, coordinator, requestVariables).execute();
     }
 
     public void deleteSubCategory(final SubCategory subCategory) {
@@ -359,10 +396,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, subCategory).execute();
+        requestVariables.clear();
+        requestVariables.put("subCategory", subCategory);
+
+        new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, requestVariables).execute();
     }
 
-    public void updateEmail(final String newEmail, char[] password) {
+    public void updateEmail(final String newEmail, String loginCode) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -376,7 +416,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, password, newEmail).execute();
+        requestVariables.clear();
+        requestVariables.put("newEmail", newEmail);
+        requestVariables.put("loginCode", loginCode);
+
+        new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, requestVariables).execute();
     }
 
 //    public void updateLoginPassword(char[] currentPassword, char[] newPassword) {
@@ -396,7 +440,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //        new PreRequestTask(UPDATE_LOGIN_PASSWORD, this, context, coordinator, currentPassword, newPassword).execute();
 //    }
 
-    public void getKeyPackage(char[] loginPassword) {
+    public void getKeyPackage(String loginCode) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -410,25 +454,34 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, loginPassword).execute();
+        requestVariables.clear();
+        requestVariables.put("loginCode", loginCode);
+
+        new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, requestVariables).execute();
     }
 
-    public void updatePassword(char[] loginPassword, char[] newDataPassword) {
-        dataReceiver = new JSONObject[1];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                requestOutcome.onSuccess(UPDATE_PASSWORD);
-            }
-
-            @Override
-            protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(UPDATE_PASSWORD, errorCode);
-            }
-        };
-
-        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, loginPassword, newDataPassword).execute();
-    }
+//    public void updatePassword(String loginCode, char[] newPassword) {
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//                requestOutcome.onSuccess(UPDATE_PASSWORD);
+//            }
+//
+//            @Override
+//            protected void onFailure(int errorCode) {
+//                requestOutcome.onFailure(UPDATE_PASSWORD, errorCode);
+//            }
+//        };
+//
+//        requestVariables.clear();
+//        requestVariables.put("loginCode", loginCode);
+//        requestVariables.put("newPassword", newPassword);
+//
+//        // TODO: clear password array after use
+//
+//        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, requestVariables).execute();
+//    }
 
     @Override
     public void onPreRequestTaskSuccess(RestRequest... requests) {

@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.
@@ -29,6 +30,7 @@ import java.util.Collections;
 public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private ArrayList<RestRequest> requests;
+    private HashMap<String, Object> requestVariables;
     private String uri;
     private int requestType;
     private JSONObject json;
@@ -38,95 +40,109 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private PreRequestOutcome preRequestOutcome;
     private Context context;
     private RequestCoordinator coordinator;
-    private Object dataObject;
+ //   private Object dataObject;
     private String username, newEmail;
-    private char[] password, newPassword;
+    private String loginCode;
+    private char[] newPassword;
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator) {
+                          RequestCoordinator coordinator, HashMap<String, Object> requestVariables) {
 
         this.requestType = requestType;
         this.preRequestOutcome = preRequestOutcome;
         this.context = context;
         this.coordinator = coordinator;
         requests = new ArrayList<>();
-
+        this.requestVariables = requestVariables;
     }
 
-    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator, String username, char[] password) {
 
-        this.requestType = requestType;
-        this.preRequestOutcome = preRequestOutcome;
-        this.context = context;
-        this.coordinator = coordinator;
-        this.username = username;
-        this.password = password;
-        requests = new ArrayList<>();
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        requests = new ArrayList<>();
+//
+//    }
+//
+//
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator, String username, String loginCode) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        this.username = username;
+//        this.loginCode = loginCode;
+//        requests = new ArrayList<>();
+//
+//    }
 
-    }
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator, String password, String newEmail) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        this.password = password;
+//        this.newEmail = newEmail;
+//        requests = new ArrayList<>();
+//
+//    }
 
-    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator, char[] password, String newEmail) {
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator, Object dataObject) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        this.dataObject = dataObject;
+//        requests = new ArrayList<>();
+//
+//    }
+//
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator, String username) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        this.username = username;
+//        requests = new ArrayList<>();
+//
+//    }
+//
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator, String loginCode) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        this.loginCode = loginCode;
+//        requests = new ArrayList<>();
+//
+//    }
 
-        this.requestType = requestType;
-        this.preRequestOutcome = preRequestOutcome;
-        this.context = context;
-        this.coordinator = coordinator;
-        this.password = password;
-        this.newEmail = newEmail;
-        requests = new ArrayList<>();
-
-    }
-
-    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator, Object dataObject) {
-
-        this.requestType = requestType;
-        this.preRequestOutcome = preRequestOutcome;
-        this.context = context;
-        this.coordinator = coordinator;
-        this.dataObject = dataObject;
-        requests = new ArrayList<>();
-
-    }
-
-    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator, String username) {
-
-        this.requestType = requestType;
-        this.preRequestOutcome = preRequestOutcome;
-        this.context = context;
-        this.coordinator = coordinator;
-        this.username = username;
-        requests = new ArrayList<>();
-
-    }
-
-    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator, char[] password) {
-
-        this.requestType = requestType;
-        this.preRequestOutcome = preRequestOutcome;
-        this.context = context;
-        this.coordinator = coordinator;
-        this.password = password;
-        requests = new ArrayList<>();
-
-    }
-
-    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
-                          RequestCoordinator coordinator, char[] password, char[] newPassword) {
-
-        this.requestType = requestType;
-        this.preRequestOutcome = preRequestOutcome;
-        this.context = context;
-        this.coordinator = coordinator;
-        this.password = password;
-        this.newPassword = newPassword;
-        requests = new ArrayList<>();
-
-    }
+//    public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
+//                          RequestCoordinator coordinator, char[] password, char[] newPassword) {
+//
+//        this.requestType = requestType;
+//        this.preRequestOutcome = preRequestOutcome;
+//        this.context = context;
+//        this.coordinator = coordinator;
+//        this.password = password;
+//        this.newPassword = newPassword;
+//        requests = new ArrayList<>();
+//
+//    }
 
     public interface PreRequestOutcome {
         void onPreRequestTaskSuccess(RestRequest... requests);
@@ -141,7 +157,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.GET_LOGIN_CODE:
 
                     json = new JSONObject();
-                    json.put("email", username);
+                    json.put("email", requestVariables.get("username"));
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.LOGIN_TOKEN, json, context));
@@ -150,8 +166,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_DEVICE_TOKEN:
 
+                    username = (String) requestVariables.get("username");
+                    loginCode = (String) requestVariables.get("loginCode");
+
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.DEVICE_TOKEN, username, password, context));
+                            null, RequestBuilder.DEVICE_TOKEN, username, loginCode, context));
 
                     return true;
 
@@ -166,10 +185,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_USER:
 
-                    User user = (User) dataObject;
+                    User user = (User) requestVariables.get("user");
 
                     KeyPackage keyPackage = CryptoManager.getInstance().generateNewKey(user.getPassword());
                     user.setKeyPackage(keyPackage);
+
+                    System.out.println("===============================================");
+                    System.out.println(user.toJSON());
+
+                    // TODO: password security - clear user password array
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.REGISTER, user.toJSON(), context));
@@ -181,6 +205,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     ArrayList<GeneralCategory> generalCategories = DataAccess.getInstance(context).getGeneralCategories();
                     ArrayList<SubCategory> subCategories = DataAccess.getInstance(context).getSubCategories();
 
+                    // Shuffle items so that each user's categories are inserted in a different
+                    // order making it more difficult for sysadmins to guess a certain category
+                    // given the cipher text length or order of records in db table.
+
+                    Collections.shuffle(generalCategories);
+                    Collections.shuffle(subCategories);
+
                     for (SubCategory subCategory : subCategories) {
                         for (GeneralCategory generalCategory : generalCategories) {
                             if (subCategory.getGeneralCategoryName().equals(generalCategory.getCategoryName())) {
@@ -189,12 +220,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                             }
                         }
                     }
-
-                    // Shuffle items so that each user's categories are inserted in a different
-                    // order making it more difficult for sysadmins to guess a certain category
-                    // given the cipher text length or order of records in db table.
-
-                    Collections.shuffle(generalCategories);
 
                     JSONArray generalCategoriesArray = new JSONArray();
 
@@ -219,7 +244,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_TRANSACTION:
 
-                    json = ((Transaction) dataObject).encrypt();
+                    json = ((Transaction) requestVariables.get("transaction")).encrypt();
+
+                  //  json = ((Transaction) dataObject).encrypt();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.TRANSACTION, null, json, context));
@@ -228,10 +255,12 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_TRANSACTION:
 
-                    transaction = (Transaction) dataObject;
+                   // transaction = (Transaction) dataObject;
 
+                  //  json = transaction.encrypt();
+
+                    transaction = (Transaction) requestVariables.get("transaction");
                     json = transaction.encrypt();
-
                     uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
@@ -241,7 +270,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.DELETE_TRANSACTION:
 
-                    transaction = (Transaction) dataObject;
+                  //  transaction = (Transaction) dataObject;
+
+                    transaction = (Transaction) requestVariables.get("transaction");
 
                     uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
 
@@ -252,7 +283,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_GENERAL_CATEGORY:
 
-                    json = ((GeneralCategory) dataObject).encrypt();
+                    //json = ((GeneralCategory) dataObject).encrypt();
+
+                    json = ((GeneralCategory) requestVariables.get("generalCategory")).encrypt();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.GENERAL_CATEGORY, null, json, context));
@@ -261,9 +294,14 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
 
-                    generalCategory = (GeneralCategory) dataObject;
+                   // generalCategory = (GeneralCategory) dataObject;
 
+                  //  json = generalCategory.encrypt();
+                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
                     json = generalCategory.encrypt();
+
+
+                    //json = ((GeneralCategory) requestVariables.get("generalCategory")).encrypt();
 
                     uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
 
@@ -274,7 +312,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.DELETE_GENERAL_CATEGORY:
 
-                    generalCategory = (GeneralCategory) dataObject;
+                    //generalCategory = (GeneralCategory) dataObject;
+                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
 
                     uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
 
@@ -285,7 +324,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_SUB_CATEGORY:
 
-                    json = ((SubCategory) dataObject).encrypt();
+                    //json = ((SubCategory) dataObject).encrypt();
+
+                    json = ((SubCategory) requestVariables.get("subCategory")).encrypt();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.SUB_CATEGORY, null, json, context));
@@ -294,8 +335,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_SUB_CATEGORY:
 
-                    subCategory = (SubCategory) dataObject;
+                   // subCategory = (SubCategory) dataObject;
 
+                   // json = subCategory.encrypt();
+
+                    subCategory = (SubCategory) requestVariables.get("subCategory");
                     json = subCategory.encrypt();
 
                     uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
@@ -307,7 +351,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.DELETE_SUB_CATEGORY:
 
-                    subCategory = (SubCategory) dataObject;
+                   // subCategory = (SubCategory) dataObject;
+
+                    subCategory = (SubCategory) requestVariables.get("subCategory");
 
                     uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
 
@@ -330,13 +376,16 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_EMAIL:
 
+                    newEmail = (String) requestVariables.get("newEmail");
+                    loginCode = (String) requestVariables.get("loginCode");
+
                     username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     json = new JSONObject();
                     json.put("email", newEmail);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-                            json, RequestBuilder.EMAIL, username, password, context));
+                            json, RequestBuilder.EMAIL, username, loginCode, context));
 
                     return true;
 
@@ -354,21 +403,26 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_KEY_PACKAGE:
 
+                    loginCode = (String) requestVariables.get("loginCode");
+
                     username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.ENCRYPTION_KEY, username, password, context));
+                            null, RequestBuilder.ENCRYPTION_KEY, username, loginCode, context));
 
                     return true;
 
                 case ApiService.UPDATE_PASSWORD:
+
+                    loginCode = (String) requestVariables.get("loginCode");
+                    newPassword = (char[]) requestVariables.get("newPassword");
 
                     username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
                     KeyPackage newKeyPackage = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
 
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-                            newKeyPackage.toJSON(), RequestBuilder.ENCRYPTION_KEY, username, password, context));
+                            newKeyPackage.toJSON(), RequestBuilder.ENCRYPTION_KEY, username, loginCode, context));
 
                     return true;
 

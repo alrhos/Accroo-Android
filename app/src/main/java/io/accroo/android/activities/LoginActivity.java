@@ -46,11 +46,11 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                 public void onClick(View view) {
                     if (isValidInput()) {
                         progressDialog.show();
-                        String username = usernameField.getText().toString().trim();
-                        int passwordLength = passwordField.getText().length();
-                        char[] password = new char[passwordLength];
-                        passwordField.getText().getChars(0, passwordLength, password, 0);
-                        apiService.login(username, password);
+//                        String username = usernameField.getText().toString().trim();
+//                        int passwordLength = passwordField.getText().length();
+//                        char[] password = new char[passwordLength];
+//                        passwordField.getText().getChars(0, passwordLength, password, 0);
+//                        apiService.login(username, password);
                     }
                 }
             });

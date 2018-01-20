@@ -48,12 +48,12 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
 
                     progressDialog.show();
 
-                    String newEmail = emailAddress.getText().toString().trim();
-                    int passwordLength = loginPassword.getText().length();
-                    char[] password = new char[passwordLength];
-                    loginPassword.getText().getChars(0, passwordLength, password, 0);
-
-                    apiService.updateEmail(newEmail, password);
+//                    String newEmail = emailAddress.getText().toString().trim();
+//                    int passwordLength = loginPassword.getText().length();
+//                    char[] password = new char[passwordLength];
+//                    loginPassword.getText().getChars(0, passwordLength, password, 0);
+//
+//                    apiService.updateEmail(newEmail, password);
                 }
             });
         }

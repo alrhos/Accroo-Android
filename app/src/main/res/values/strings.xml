@@ -4,8 +4,6 @@
 
     <string name="email">Email</string>
     <string name="confirm_email">Confirm email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -32,9 +30,7 @@
         it is not possible to reset your data password if you forget it because it is never
         transmitted from your device.</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
-    <string name="reset_password_link">You will receive a link to reset your password.</string>
-    <string name="send_link">SEND LINK</string>
-    <string name="reset_link_sent">Password reset link sent</string>
+    <string name="login_code_description">A login code was just sent to your email. Please enter it below to login to your account.</string>
 
     <string name="title_activity_add_transaction">Add Transaction</string>
     <string name="title_activity_edit_transaction">Edit Transaction</string>
@@ -49,6 +45,7 @@
     <string name="title_activity_select_subcategory">Select Sub Category</string>
     <string name="title_activity_select_general_category">Select General Category</string>
     <string name="title_activity_change_email">Change Email</string>
+    <string name="title_activity_change_password">Change password</string>
     <string name="title_activity_change_login_password">Change Login Password</string>
     <string name="title_activity_change_data_password">Change Data Password</string>
     <string name="title_activity_forgot_password">Forgot Password</string>
@@ -97,6 +94,7 @@
     <string name="update">UPDATE</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="login_code">Login code</string>
     <string name="confirm_password">Confirm password</string>
     <string name="unlock">UNLOCK</string>
     <string name="settings">Settings</string>
@@ -130,6 +128,8 @@
     <string name="no_transactions">No transactions</string>
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>
+    <string name="invalid_login_code">The login code is 8 characters</string>
+    <string name="incorrect_login_code">Incorrect login code</string>
 
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>

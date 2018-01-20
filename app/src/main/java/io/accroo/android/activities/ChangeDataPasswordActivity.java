@@ -55,10 +55,10 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
 
                     progressDialog.show();
 
-                    int loginPasswordLength = loginPasswordField.getText().length();
-                    loginPassword = new char[loginPasswordLength];
-                    loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
-                    apiService.getKeyPackage(loginPassword);
+//                    int loginPasswordLength = loginPasswordField.getText().length();
+//                    loginPassword = new char[loginPasswordLength];
+//                    loginPasswordField.getText().getChars(0, loginPasswordLength, loginPassword, 0);
+//                    apiService.getKeyPackage(loginPassword);
                 }
             });
         }
@@ -114,7 +114,7 @@ public class ChangeDataPasswordActivity extends AppCompatActivity implements Api
                 int newDataPasswordLength = newDataPasswordField.getText().length();
                 newDataPassword = new char[newDataPasswordLength];
                 newDataPasswordField.getText().getChars(0, newDataPasswordLength, newDataPassword, 0);
-                apiService.updatePassword(loginPassword, newDataPassword);
+             //   apiService.updatePassword(loginPassword, newDataPassword);
             } else {
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();

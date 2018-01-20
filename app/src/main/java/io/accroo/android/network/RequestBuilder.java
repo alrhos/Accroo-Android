@@ -51,12 +51,12 @@ public class RequestBuilder {
 
     public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
                                         int method, JSONObject json, String endpoint,
-                                        String username, char[] password, Context context) {
+                                        String username, String password, Context context) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, BASIC_AUTH);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String credentials = username + ":" + String.copyValueOf(password);
+        String credentials = username + ":" + password;
         String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
         String url = baseURL + endpoint;
@@ -97,7 +97,7 @@ public class RequestBuilder {
                                               Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, DEVICE_TOKEN_AUTH);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + endpoint;
 
@@ -116,7 +116,7 @@ public class RequestBuilder {
                                         Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, NO_AUTH);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + endpoint;
 
@@ -155,8 +155,7 @@ public class RequestBuilder {
         return ApiService.GENERIC_ERROR;
     }
 
-    private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator,
-                                                              final int authType) {
+    private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator) {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

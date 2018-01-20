@@ -132,9 +132,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             case R.id.change_email:
                 startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
                 return true;
-            case R.id.change_login_password:
-                startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
-                return true;
             case R.id.change_data_password:
                 startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
                 return true;
