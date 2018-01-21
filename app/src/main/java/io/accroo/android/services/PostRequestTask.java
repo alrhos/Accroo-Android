@@ -129,9 +129,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.CREATE_DEFAULT_CATEGORIES:
-
-                    return true;
+//                case ApiService.CREATE_DEFAULT_CATEGORIES:
+//
+//                    return true;
 
                 case ApiService.GET_DEFAULT_DATA:
 
@@ -245,6 +245,12 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                     JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
                     DataProvider.setKeyPackage(new KeyPackage(json));
+                    return true;
+
+                case ApiService.UPDATE_PASSWORD:
+
+                    deviceToken = dataReceiver[0][0].getString("deviceToken");
+                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
                     return true;
 
             }

@@ -33,8 +33,6 @@ public class CredentialService {
     public static final String              USERNAME_KEY = "usernameKey";
     public static final String              ENCRYPTION_KEY = "encryptionKey";
     public static final String              DEVICE_TOKEN_KEY = "deviceTokenKey";
- //   public static final String              REFRESH_TOKEN_KEY = "refreshTokenKey";
-  //  public static final String              ACCESS_TOKEN_KEY = "accessTokenKey";
 
     private CredentialService() throws KeyStoreException, NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException,

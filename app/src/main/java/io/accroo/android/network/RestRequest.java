@@ -36,10 +36,6 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         setRetryPolicy(new DefaultRetryPolicy(30000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-    protected String getAuthType() {
-        return authType;
-    }
-
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         return headerMap;
@@ -51,9 +47,5 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
             headerMap.put("Authorization", authType + " " + authValue);
         }
     }
-
-//    protected Object clone() throws CloneNotSupportedException {
-//        return super.clone();
-//    }
 
 }

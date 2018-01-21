@@ -103,26 +103,31 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
         // TODO: Passwords should probably be cleared here
+        Arrays.fill(currentPwd, '\u0000');
+       // Arrays.fill(newPwd, '\u0000');
     }
 
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        String message;
-        switch (errorCode) {
-            case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.incorrect_password);
-                break;
-            case ApiService.CONNECTION_ERROR:
-                message = getResources().getString(R.string.connection_error);
-                break;
-            case ApiService.TIMEOUT_ERROR:
-                message = getResources().getString(R.string.timeout_error);
-                break;
-            default:
-                message = getResources().getString(R.string.general_error);
+        if (errorCode == ApiService.UNAUTHORIZED) {
+            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
+            apiService.logout();
+            relaunch();
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

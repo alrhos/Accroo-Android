@@ -77,8 +77,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
                             })
                             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                }
+                                public void onClick(DialogInterface dialogInterface, int i) {}
                             }).create().show();
                 }
             });

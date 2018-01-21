@@ -13,7 +13,6 @@ import io.accroo.android.network.RestRequest;
 
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -85,7 +84,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         try {
             CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
             CryptoManager.getInstance().saveMasterKey(context);
-            Arrays.fill(password, '\u0000');
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,7 +216,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_DEFAULT_CATEGORIES, ApiService.this, context).execute(dataReceiver);
+                requestOutcome.onSuccess(CREATE_DEFAULT_CATEGORIES);
+                //new PostRequestTask(CREATE_DEFAULT_CATEGORIES, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
@@ -470,7 +469,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                requestOutcome.onSuccess(UPDATE_PASSWORD);
+                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context).execute(dataReceiver);
             }
 
             @Override
@@ -482,8 +481,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         requestVariables.clear();
         requestVariables.put("loginCode", loginCode);
         requestVariables.put("newPassword", newPassword);
-
-        // TODO: clear password array after use
 
         new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, requestVariables).execute();
     }

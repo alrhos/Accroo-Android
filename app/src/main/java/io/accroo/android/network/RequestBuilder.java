@@ -26,28 +26,15 @@ public class RequestBuilder {
     private final static String baseURL = "http://apidev23.accroo.io/";
     public final static String VERIFICATION_TOKEN = "token/verification";
     public final static String DEVICE_TOKEN = "token/device";
- //   public final static String ACCESS_TOKEN = "token/access";
     public final static String REGISTER = "register";
     public final static String EMAIL = "email";
-  //  public final static String LOGIN_PASSWORD = "password";
- //   public final static String FORGOT_PASSWORD = "password/forgot";
     public final static String ENCRYPTION_KEY = "key";
     public final static String CATEGORY = "category";
     public final static String GENERAL_CATEGORY = "category/general";
     public final static String SUB_CATEGORY = "category/sub";
     public final static String TRANSACTION = "transaction";
-    protected final static int BASIC_AUTH = 0;
-    protected final static int DEVICE_TOKEN_AUTH = 1;
-  //  protected final static int REFRESH_TOKEN_AUTH = 1;
- //   protected final static int ACCESS_TOKEN_AUTH = 2;
-    protected final static int NO_AUTH = 2;
 
     private RequestBuilder() {}
-
-//    protected static void updateRequestAccessToken(RestRequest restRequest, Context context) throws Exception {
-//        String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//        restRequest.setAuthHeader(accessToken);
-//    }
 
     public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
                                         int method, JSONObject json, String endpoint,
@@ -64,31 +51,6 @@ public class RequestBuilder {
         return new RestRequest(method, url, json, responseListener,
                 errorListener, RestRequest.BASIC, authValue, context);
     }
-
-//    protected static RestRequest getAccessToken(final RequestCoordinator coordinator,
-//                                                final Context context) throws Exception {
-//
-//        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    String accessToken = response.getString("token");
-//                    coordinator.receiveAccessToken(accessToken);
-//                } catch (Exception e) {
-//                    coordinator.abort(ApiService.GENERIC_ERROR);
-//                }
-//            }
-//        };
-//
-//        Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
-//
-//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
-//
-//        String url = baseURL + ACCESS_TOKEN;
-//
-//        return new RestRequest(Request.Method.POST, url, null, responseListener,
-//                errorListener, RestRequest.TOKEN, authValue, context);
-//    }
 
     // TODO: review parameters variable
 
@@ -160,7 +122,6 @@ public class RequestBuilder {
             @Override
             public void onErrorResponse(VolleyError error) {
                 coordinator.abort(parseVolleyException(error));
-                //coordinator.receiveError(authType, parseVolleyException(error));
             }
         };
         return errorListener;
