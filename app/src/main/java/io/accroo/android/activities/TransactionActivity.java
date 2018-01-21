@@ -290,8 +290,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
                     break;
-                case ApiService.INVALID_DATE_RANGE:
-                    message = getResources().getString(R.string.invalid_date_range);
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
                     break;
                 default:
                     message = getResources().getString(R.string.general_error);

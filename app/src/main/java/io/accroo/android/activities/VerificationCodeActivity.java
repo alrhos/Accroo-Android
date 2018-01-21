@@ -153,6 +153,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 case ApiService.UNAUTHORIZED:
                     message = getResources().getString(R.string.incorrect_verification_code);
                     break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
                 default:
                     message = getResources().getString(R.string.general_error);
             }

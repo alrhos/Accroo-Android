@@ -144,6 +144,9 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             case ApiService.TIMEOUT_ERROR:
                 message = getResources().getString(R.string.timeout_error);
                 break;
+            case ApiService.TOO_MANY_REQUESTS:
+                message = getResources().getString(R.string.too_many_requests);
+                break;
             case ApiService.CONFLICT:
                 message = getResources().getString(R.string.email_in_use);
                 break;

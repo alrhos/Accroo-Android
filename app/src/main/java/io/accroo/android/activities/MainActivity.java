@@ -310,6 +310,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
                     break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
                 case ApiService.INVALID_DATE_RANGE:
                     message = getResources().getString(R.string.invalid_date_range);
                     break;
