@@ -1,6 +1,5 @@
 package io.accroo.android.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.accroo.android.R;
-import io.accroo.android.services.ApiService;
 
 public class ChangeEmailActivity extends AppCompatActivity {
 

@@ -23,15 +23,13 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
     public static final String TOKEN = "Bearer";
     public static final String NONE = "None";
     private Map<String, String> headerMap;
-    private Context context;
 
     protected RestRequest(int method, String url, JSONObject json, Response.Listener<JSONObject>
                           responseListener, Response.ErrorListener errorListener, String authType,
-                          String authValue, Context context) {
+                          String authValue) {
 
         super(method, url, json, responseListener, errorListener);
         this.authType = authType;
-        this.context = context;
         setAuthHeader(authValue);
         setRetryPolicy(new DefaultRetryPolicy(30000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }

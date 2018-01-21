@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Arrays;
-
 import io.accroo.android.R;
 import io.accroo.android.other.Constants;
 import io.accroo.android.services.ApiService;
@@ -52,7 +50,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                     apiService.getKeyPackage();
                 }
             });
-
         }
     }
 
@@ -102,9 +99,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
         } else {
             Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
-        // TODO: Passwords should probably be cleared here
-        Arrays.fill(currentPwd, '\u0000');
-       // Arrays.fill(newPwd, '\u0000');
     }
 
     @Override
@@ -132,15 +126,9 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
 
     @Override
     public void onError() {
-       // clearPasswords();
         progressDialog.dismiss();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
-    }
-
-    private void clearPasswords() {
-        Arrays.fill(currentPwd, '\u0000');
-        Arrays.fill(newPwd, '\u0000');
     }
 
 }

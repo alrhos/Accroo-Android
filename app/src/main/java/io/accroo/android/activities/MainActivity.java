@@ -327,26 +327,4 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         relaunch();
     }
 
-    class RefreshFragmentContents extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            if (summaryFragment != null) {
-                summaryFragment.refreshAdapter();
-            }
-            if (transactionsFragment != null) {
-                transactionsFragment.refreshAdapter();
-            }
-            if (categoryOverviewFragment != null) {
-                categoryOverviewFragment.refreshAdapter();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void param) {
-            hideRefreshing();
-        }
-    }
-
 }

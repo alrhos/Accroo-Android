@@ -38,7 +38,7 @@ public class RequestBuilder {
 
     public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
                                         int method, JSONObject json, String endpoint,
-                                        String username, String password, Context context) {
+                                        String username, String password) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
@@ -49,33 +49,24 @@ public class RequestBuilder {
         String url = baseURL + endpoint;
 
         return new RestRequest(method, url, json, responseListener,
-                errorListener, RestRequest.BASIC, authValue, context);
+                errorListener, RestRequest.BASIC, authValue);
     }
 
-    // TODO: review parameters variable
-
     public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,
-                                              String endpoint, String parameters, JSONObject json,
-                                              Context context) throws Exception {
+                                              String endpoint, JSONObject json, Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + endpoint;
-
-        if (parameters != null) {
-            url += parameters;
-        }
-
         String authValue = CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
 
         return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.TOKEN, authValue, context);
+                RestRequest.TOKEN, authValue);
     }
 
     public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
-                                        String endpoint, JSONObject json,
-                                        Context context) throws Exception {
+                                        String endpoint, JSONObject json) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
@@ -83,7 +74,7 @@ public class RequestBuilder {
         String url = baseURL + endpoint;
 
         return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.NONE, null, context);
+                RestRequest.NONE, null);
     }
 
     private static int getResponseCode(VolleyError error) {
