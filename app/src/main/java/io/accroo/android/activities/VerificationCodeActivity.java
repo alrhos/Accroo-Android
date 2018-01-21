@@ -52,11 +52,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                     submit.setText(R.string.next);
                     break;
                 case UPDATE_EMAIL:
-                    this.getSupportActionBar().setTitle(R.string.change_email);
+                    this.getSupportActionBar().setTitle(R.string.title_activity_change_email);
                     submit.setText(R.string.submit);
                     break;
                 case UPDATE_PASSWORD:
-                    this.getSupportActionBar().setTitle(R.string.change_password);
+                    this.getSupportActionBar().setTitle(R.string.title_activity_change_password);
                     submit.setText(R.string.submit);
                     break;
             }

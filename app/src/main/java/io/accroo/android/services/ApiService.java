@@ -53,12 +53,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     private Context                                     context;
     private RequestCoordinator                          coordinator;
     private JSONObject[]                                dataReceiver;
-    private HashMap<String, Object>                     requestVariables;
+    private HashMap<String, Object>                     preRequestVariables;
+    private HashMap<String, Object>                     postRequestVariables;
 
     public ApiService(RequestOutcome requestOutcome, Context context) {
         this.requestOutcome = requestOutcome;
         this.context = context;
-        this.requestVariables = new HashMap<>();
+        this.preRequestVariables = new HashMap<>();
+        this.postRequestVariables = new HashMap<>();
     }
 
     public interface RequestOutcome {
@@ -102,18 +104,19 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
+        preRequestVariables.clear();
+
         if (username != null) {
-            requestVariables.put("username", username);
+            preRequestVariables.put("username", username);
         } else {
             try {
-                requestVariables.put("username", CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY));
+                preRequestVariables.put("username", CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY));
             } catch (Exception e) {
                 requestOutcome.onFailure(GET_VERIFICATION_CODE, GENERIC_ERROR);
             }
         }
 
-        new PreRequestTask(GET_VERIFICATION_CODE, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(GET_VERIFICATION_CODE, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void login(@NonNull final String username, @NonNull String loginCode) {
@@ -121,7 +124,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_DEVICE_TOKEN, ApiService.this, context, username).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("username", username);
+                new PostRequestTask(GET_DEVICE_TOKEN, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -130,11 +135,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("username", username);
-        requestVariables.put("loginCode", loginCode);
+        preRequestVariables.clear();
+        preRequestVariables.put("username", username);
+        preRequestVariables.put("loginCode", loginCode);
 
-        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void logout() {
@@ -154,7 +159,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
                 @Override
                 protected void onSuccess() {
-                    new PostRequestTask(GET_DEFAULT_DATA, ApiService.this, context, startDate, endDate).execute(dataReceiver);
+                    postRequestVariables.clear();
+                    postRequestVariables.put("startDate", startDate);
+                    postRequestVariables.put("endDate", endDate);
+                    new PostRequestTask(GET_DEFAULT_DATA, ApiService.this, context, postRequestVariables).execute(dataReceiver);
                 }
 
                 @Override
@@ -174,7 +182,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_USER, ApiService.this, context, user).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("user", user);
+                new PostRequestTask(CREATE_USER, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -183,10 +193,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("user", user);
+        preRequestVariables.clear();
+        preRequestVariables.put("user", user);
 
-        new PreRequestTask(CREATE_USER, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(CREATE_USER, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void createDefaultCategories() {
@@ -211,7 +221,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context, transaction).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("transaction", transaction);
+                new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -220,10 +232,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("transaction", transaction);
+        preRequestVariables.clear();
+        preRequestVariables.put("transaction", transaction);
 
-        new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void updateTransaction(final Transaction transaction) {
@@ -231,7 +243,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context, transaction).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("transaction", transaction);
+                new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -240,10 +254,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("transaction", transaction);
+        preRequestVariables.clear();
+        preRequestVariables.put("transaction", transaction);
 
-        new PreRequestTask(UPDATE_TRANSACTION, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(UPDATE_TRANSACTION, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void deleteTransaction(final Transaction transaction) {
@@ -251,7 +265,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(DELETE_TRANSACTION, ApiService.this, context, transaction).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("transaction", transaction);
+                new PostRequestTask(DELETE_TRANSACTION, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -260,10 +276,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("transaction", transaction);
+        preRequestVariables.clear();
+        preRequestVariables.put("transaction", transaction);
 
-        new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void createGeneralCategory(final GeneralCategory generalCategory) {
@@ -271,7 +287,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_GENERAL_CATEGORY, ApiService.this, context, generalCategory).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("generalCategory", generalCategory);
+                new PostRequestTask(CREATE_GENERAL_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -280,10 +298,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("generalCategory", generalCategory);
+        preRequestVariables.clear();
+        preRequestVariables.put("generalCategory", generalCategory);
 
-        new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void updateGeneralCategory(final GeneralCategory generalCategory) {
@@ -291,7 +309,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_GENERAL_CATEGORY, ApiService.this, context, generalCategory).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("generalCategory", generalCategory);
+                new PostRequestTask(UPDATE_GENERAL_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -300,10 +320,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("generalCategory", generalCategory);
+        preRequestVariables.clear();
+        preRequestVariables.put("generalCategory", generalCategory);
 
-        new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void deleteGeneralCategory(final GeneralCategory generalCategory) {
@@ -311,7 +331,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(DELETE_GENERAL_CATEGORY, ApiService.this, context, generalCategory).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("generalCategory", generalCategory);
+                new PostRequestTask(DELETE_GENERAL_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -320,10 +342,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("generalCategory", generalCategory);
+        preRequestVariables.clear();
+        preRequestVariables.put("generalCategory", generalCategory);
 
-        new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void createSubCategory(final SubCategory subCategory) {
@@ -331,7 +353,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context, subCategory).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("subCategory", subCategory);
+                new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -340,10 +364,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("subCategory", subCategory);
+        preRequestVariables.clear();
+        preRequestVariables.put("subCategory", subCategory);
 
-        new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void updateSubCategory(final SubCategory subCategory) {
@@ -351,7 +375,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_SUB_CATEGORY, ApiService.this, context, subCategory).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("subCategory", subCategory);
+                new PostRequestTask(UPDATE_SUB_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -360,10 +386,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("subCategory", subCategory);
+        preRequestVariables.clear();
+        preRequestVariables.put("subCategory", subCategory);
 
-        new PreRequestTask(UPDATE_SUB_CATEGORY, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(UPDATE_SUB_CATEGORY, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void deleteSubCategory(final SubCategory subCategory) {
@@ -371,7 +397,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(DELETE_SUB_CATEGORY, ApiService.this, context, subCategory).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("subCategory", subCategory);
+                new PostRequestTask(DELETE_SUB_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -380,10 +408,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("subCategory", subCategory);
+        preRequestVariables.clear();
+        preRequestVariables.put("subCategory", subCategory);
 
-        new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void updateEmail(final String newEmail, String loginCode) {
@@ -391,7 +419,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_EMAIL, ApiService.this, context, newEmail).execute(dataReceiver);
+                postRequestVariables.clear();
+                postRequestVariables.put("newEmail", newEmail);
+                new PostRequestTask(UPDATE_EMAIL, ApiService.this, context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -400,11 +430,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("newEmail", newEmail);
-        requestVariables.put("loginCode", loginCode);
+        preRequestVariables.clear();
+        preRequestVariables.put("newEmail", newEmail);
+        preRequestVariables.put("loginCode", loginCode);
 
-        new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, preRequestVariables).execute();
     }
 
     public void getKeyPackage() {
@@ -412,7 +442,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_KEY_PACKAGE, ApiService.this, context).execute(dataReceiver);
+                new PostRequestTask(GET_KEY_PACKAGE, ApiService.this, context, null).execute(dataReceiver);
             }
 
             @Override
@@ -429,7 +459,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context).execute(dataReceiver);
+                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context, null).execute(dataReceiver);
             }
 
             @Override
@@ -438,11 +468,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        requestVariables.clear();
-        requestVariables.put("loginCode", loginCode);
-        requestVariables.put("newPassword", newPassword);
+        preRequestVariables.clear();
+        preRequestVariables.put("loginCode", loginCode);
+        preRequestVariables.put("newPassword", newPassword);
 
-        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, requestVariables).execute();
+        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, preRequestVariables).execute();
     }
 
     @Override
