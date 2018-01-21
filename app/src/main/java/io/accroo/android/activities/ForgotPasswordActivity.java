@@ -65,7 +65,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements ApiServ
     public void onSuccess(int requestType) {
         progressDialog.dismiss();
         email.setText("");
-        AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPasswordActivity.this);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPasswordActivity.this);
 //        builder.setMessage(R.string.reset_link_sent)
 //                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 //                    @Override

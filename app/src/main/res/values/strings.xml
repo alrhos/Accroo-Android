@@ -130,7 +130,7 @@
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>
     <string name="invalid_verification_code">The verification code is 8 characters</string>
-    <string name="incorrect_verification_code">Incorrect verification code</string>
+    <string name="incorrect_verification_code">Incorrect or expired verification code</string>
 
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>
@@ -209,7 +209,5 @@
             </body>
         </html>]]>
     </string>
-    <string name="title_activity_registration">RegistrationActivity</string>
-    <string name="title_activity_login_stage_one">LoginStageOneActivity</string>
 
 </resources>

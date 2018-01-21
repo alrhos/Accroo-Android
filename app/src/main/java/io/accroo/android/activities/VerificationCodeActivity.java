@@ -1,6 +1,8 @@
 package io.accroo.android.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     private ProgressDialog progressDialog;
     private ApiService apiService;
     private String username, email;
+    private char[] password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");
             email = getIntent().getStringExtra("email");
+            password = getIntent().getCharArrayExtra("password");
 
             apiService = new ApiService(this, getApplicationContext());
             apiService.getLoginCode(username);
@@ -49,9 +53,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                     submit.setText(R.string.next);
                     break;
                 case UPDATE_EMAIL:
+                    this.getSupportActionBar().setTitle(R.string.change_email);
                     submit.setText(R.string.submit);
                     break;
                 case UPDATE_PASSWORD:
+                    this.getSupportActionBar().setTitle(R.string.change_password);
                     submit.setText(R.string.submit);
                     break;
             }
@@ -75,6 +81,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                                 apiService.updateEmail(email, loginCodeField.getText().toString());
                                 break;
                             case UPDATE_PASSWORD:
+                                apiService.updatePassword(password, loginCodeField.getText().toString());
                                 break;
                         }
                     }
@@ -126,21 +133,32 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        String message;
-        switch (errorCode) {
-            case ApiService.CONNECTION_ERROR:
-                message = getResources().getString(R.string.connection_error);
-                break;
-            case ApiService.TIMEOUT_ERROR:
-                message = getResources().getString(R.string.timeout_error);
-                break;
-            case ApiService.UNAUTHORIZED:
-                message = getResources().getString(R.string.incorrect_verification_code);
-                break;
-            default:
-                message = getResources().getString(R.string.general_error);
+        if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
+            builder.setMessage(R.string.email_in_use)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    }).create().show();
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                case ApiService.UNAUTHORIZED:
+                    message = getResources().getString(R.string.incorrect_verification_code);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

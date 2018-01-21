@@ -465,28 +465,28 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, null).execute();
     }
 
-//    public void updatePassword(String loginCode, char[] newPassword) {
-//        dataReceiver = new JSONObject[1];
-//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-//            @Override
-//            protected void onSuccess() {
-//                requestOutcome.onSuccess(UPDATE_PASSWORD);
-//            }
-//
-//            @Override
-//            protected void onFailure(int errorCode) {
-//                requestOutcome.onFailure(UPDATE_PASSWORD, errorCode);
-//            }
-//        };
-//
-//        requestVariables.clear();
-//        requestVariables.put("loginCode", loginCode);
-//        requestVariables.put("newPassword", newPassword);
-//
-//        // TODO: clear password array after use
-//
-//        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, requestVariables).execute();
-//    }
+    public void updatePassword(char[] newPassword, String loginCode) {
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(UPDATE_PASSWORD);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(UPDATE_PASSWORD, errorCode);
+            }
+        };
+
+        requestVariables.clear();
+        requestVariables.put("loginCode", loginCode);
+        requestVariables.put("newPassword", newPassword);
+
+        // TODO: clear password array after use
+
+        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, requestVariables).execute();
+    }
 
     @Override
     public void onPreRequestTaskSuccess(RestRequest... requests) {

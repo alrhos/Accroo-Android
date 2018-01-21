@@ -403,12 +403,10 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_KEY_PACKAGE:
 
-                    loginCode = (String) requestVariables.get("loginCode");
-
                     username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
 
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.ENCRYPTION_KEY, username, loginCode, context));
+                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.ENCRYPTION_KEY, null, null, context));
 
                     return true;
 

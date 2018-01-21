@@ -86,20 +86,23 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
 
     @Override
     public void onSuccess(int requestType) {
-        // Check that current password is correct
-
+        progressDialog.dismiss();
         int currentPasswordLength = currentPassword.getText().length();
         currentPwd = new char[currentPasswordLength];
         currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
 
         if (apiService.initializeKey(currentPwd)) {
-
+            int newPasswordLength = newPassword.getText().length();
+            newPwd = new char[newPasswordLength];
+            newPassword.getText().getChars(0, newPasswordLength, newPwd, 0);
+            Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
+            intent.putExtra("action", VerificationCodeActivity.UPDATE_PASSWORD);
+            intent.putExtra("password", newPwd);
+            startActivity(intent);
         } else {
-            progressDialog.dismiss();
             Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
-
-
+        // TODO: Passwords should probably be cleared here
     }
 
     @Override
