@@ -58,6 +58,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.GET_DEVICE_TOKEN:
 
+                    username = (String) requestVariables.get("username");
                     deviceToken = dataReceiver[0][0].getString("deviceToken");
 
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
