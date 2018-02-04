@@ -22,7 +22,7 @@ import java.util.Locale;
 public class Transaction implements Securable, Relationship, Parcelable {
 
     private int id;
-    private int subCategoryID;
+    private int subCategoryId;
     private Date date;
     private double amount;
     private String description = "";
@@ -30,8 +30,8 @@ public class Transaction implements Securable, Relationship, Parcelable {
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public Transaction(int subCategoryID, Date date, double amount, String description) {
-        this.subCategoryID = subCategoryID;
+    public Transaction(int subCategoryId, Date date, double amount, String description) {
+        this.subCategoryId = subCategoryId;
         this.date = date;
         this.amount = amount;
         if (description != null) {
@@ -51,12 +51,12 @@ public class Transaction implements Securable, Relationship, Parcelable {
         this.id = id;
     }
 
-    public int getSubCategoryID() {
-        return subCategoryID;
+    public int getSubCategoryId() {
+        return subCategoryId;
     }
 
-    public void setSubCategoryID(int subCategoryID) {
-        this.subCategoryID = subCategoryID;
+    public void setSubCategoryId(int subCategoryId) {
+        this.subCategoryId = subCategoryId;
     }
 
     public Date getDate() {
@@ -122,7 +122,7 @@ public class Transaction implements Securable, Relationship, Parcelable {
             json.put("id", id);
         }
 
-        json.put("subCategoryID", subCategoryID);
+        json.put("subCategoryId", subCategoryId);
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
 
@@ -137,7 +137,7 @@ public class Transaction implements Securable, Relationship, Parcelable {
         JSONObject transactionJson = new JSONObject(transactionString);
 
         this.id = json.getInt("id");
-        this.subCategoryID = json.getInt("subCategoryID");
+        this.subCategoryId = json.getInt("subCategoryId");
         this.date = new Date(transactionJson.getLong("date"));
         this.amount = transactionJson.getDouble("amount");
         this.description = transactionJson.getString("description");
@@ -151,7 +151,7 @@ public class Transaction implements Securable, Relationship, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
-        dest.writeInt(this.subCategoryID);
+        dest.writeInt(this.subCategoryId);
         dest.writeSerializable(date);
         dest.writeDouble(this.amount);
         dest.writeString(this.description);
@@ -162,7 +162,7 @@ public class Transaction implements Securable, Relationship, Parcelable {
 
     protected Transaction(Parcel in) {
         this.id = in.readInt();
-        this.subCategoryID = in.readInt();
+        this.subCategoryId = in.readInt();
         this.date = (Date) in.readSerializable();
         this.amount = in.readDouble();
         this.description = in.readString();

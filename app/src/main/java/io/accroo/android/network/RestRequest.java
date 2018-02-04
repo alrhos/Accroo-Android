@@ -1,7 +1,5 @@
 package io.accroo.android.network;
 
-import android.content.Context;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
@@ -31,7 +29,7 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
         super(method, url, json, responseListener, errorListener);
         this.authType = authType;
         setAuthHeader(authValue);
-        setRetryPolicy(new DefaultRetryPolicy(30000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     @Override
