@@ -16,7 +16,7 @@
     <string name="enter_email">Enter email address</string>
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="error_field_required">This field is required</string>
-    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://accroo.io/terms"><b>terms and conditions</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
+    <string name="agree_terms_privacy">By creating an account, you agree to the\n<a href="https://accroo.io/terms"><b>terms of use</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
     <string name="important">Important!</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
     <string name="verification_code_description">A verification code has been sent to your email. Please enter it below to continue.</string>

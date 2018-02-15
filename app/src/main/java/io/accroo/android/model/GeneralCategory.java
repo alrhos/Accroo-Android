@@ -119,17 +119,6 @@ public class GeneralCategory implements Securable, Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "GeneralCategory{" +
-                "id=" + id +
-                ", categoryName='" + categoryName + '\'' +
-                ", rootCategory='" + rootCategory + '\'' +
-                ", iconFile='" + iconFile + '\'' +
-                '}';
-    }
-
-
-    @Override
     public int describeContents() {
         return 0;
     }

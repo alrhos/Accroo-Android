@@ -23,16 +23,16 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL = "https://apidev03.accroo.io/";
+    private final static String baseURL =           "https://api.accroo.io/";
     public final static String VERIFICATION_TOKEN = "token/verification";
-    public final static String DEVICE_TOKEN = "token/device";
-    public final static String REGISTER = "register";
-    public final static String EMAIL = "email";
-    public final static String ENCRYPTION_KEY = "key";
-    public final static String CATEGORY = "category";
-    public final static String GENERAL_CATEGORY = "category/general";
-    public final static String SUB_CATEGORY = "category/sub";
-    public final static String TRANSACTION = "transaction";
+    public final static String DEVICE_TOKEN =       "token/device";
+    public final static String REGISTER =           "register";
+    public final static String EMAIL =              "email";
+    public final static String ENCRYPTION_KEY =     "key";
+    public final static String CATEGORY =           "category";
+    public final static String GENERAL_CATEGORY =   "category/general";
+    public final static String SUB_CATEGORY =       "category/sub";
+    public final static String TRANSACTION =        "transaction";
 
     private RequestBuilder() {}
 

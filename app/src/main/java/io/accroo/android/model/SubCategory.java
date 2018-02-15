@@ -126,17 +126,6 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "SubCategory{" +
-                "id=" + id +
-                ", generalCategoryId=" + generalCategoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", generalCategoryName='" + generalCategoryName + '\'' +
-                ", df=" + df +
-                '}';
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }

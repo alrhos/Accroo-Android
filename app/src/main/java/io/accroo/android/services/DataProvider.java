@@ -40,7 +40,6 @@ public class DataProvider {
 
     private static void sortData() {
         // Clear existing child objects
-
         for (GeneralCategory generalCategory : generalCategories) {
             generalCategory.getSubCategories().clear();
         }

@@ -141,15 +141,4 @@ public class KeyPackage implements Parcelable {
         }
     };
 
-    @Override
-    public String toString() {
-        return "KeyPackage{" +
-                "encryptedMasterKey='" + encryptedMasterKey + '\'' +
-                ", nonce='" + nonce + '\'' +
-                ", salt='" + salt + '\'' +
-                ", algorithm=" + algorithm +
-                ", opslimit=" + opslimit +
-                ", memlimit=" + memlimit +
-                '}';
-    }
 }
