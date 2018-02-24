@@ -1,12 +1,7 @@
 package io.accroo.android.network;
 
 import android.content.Context;
-
-import io.accroo.android.services.CredentialService;
-import io.accroo.android.services.ApiService;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
