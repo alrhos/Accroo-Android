@@ -10,14 +10,13 @@ import org.json.JSONObject;
 public class User {
 
     private String email;
-    private char[] loginPassword, dataPassword;
+    private char[] password;
     private KeyPackage keyPackage;
     private Preferences preferences;
 
-    public User(String email, char[] loginPassword, char[] dataPassword, Preferences preferences) {
+    public User(String email, char[] password, Preferences preferences) {
         this.email = email;
-        this.loginPassword = loginPassword;
-        this.dataPassword = dataPassword;
+        this.password = password;
         this.preferences = preferences;
     }
 
@@ -29,24 +28,12 @@ public class User {
         this.email = email;
     }
 
-    public char[] getLoginPassword() {
-        return loginPassword;
+    public char[] getPassword() {
+        return password;
     }
 
-    public void setLoginPasswordPassword(char[] password) {
-        this.loginPassword = password;
-    }
-
-    public void setLoginPassword(char[] loginPassword) {
-        this.loginPassword = loginPassword;
-    }
-
-    public char[] getDataPassword() {
-        return dataPassword;
-    }
-
-    public void setDataPassword(char[] dataPassword) {
-        this.dataPassword = dataPassword;
+    public void setPassword(char[] password) {
+        this.password = password;
     }
 
     public KeyPackage getKeyPackage() {
@@ -69,7 +56,6 @@ public class User {
         JSONObject json = new JSONObject();
         try {
             json.put("email", email);
-            json.put("password", String.copyValueOf(loginPassword));
             json.put("keyPackage", keyPackage.toJSON());
             json.put("preferences", preferences.encrypt());
         } catch (JSONException e) {

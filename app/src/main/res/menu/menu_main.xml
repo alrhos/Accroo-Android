@@ -9,13 +9,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/change_login_password"
-        android:title="@string/change_login_password"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/change_data_password"
-        android:title="@string/change_data_password"
+        android:id="@+id/change_password"
+        android:title="@string/change_password"
         app:showAsAction="never" />
 
     <item

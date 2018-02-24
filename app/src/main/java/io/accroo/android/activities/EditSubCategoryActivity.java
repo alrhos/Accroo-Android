@@ -145,6 +145,9 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
                     break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
                 default:
                     message = getResources().getString(R.string.general_error);
             }

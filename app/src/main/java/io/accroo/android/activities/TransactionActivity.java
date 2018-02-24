@@ -88,7 +88,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 categoryIcon.setImageResource(iconId);
                 String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
                 categoryField.setText(subCategoryName);
-                this.selectedSubCategoryID = existingTransaction.getSubCategoryID();
+                this.selectedSubCategoryID = existingTransaction.getSubCategoryId();
                 submitButton.setText(getResources().getString(R.string.save));
                 toggleEditing();
             } else {
@@ -139,7 +139,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
                     if (editing) {
                         existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
-                        existingTransaction.setSubCategoryID(selectedSubCategoryID);
+                        existingTransaction.setSubCategoryId(selectedSubCategoryID);
                         existingTransaction.setDate(calendar.getTime());
                         existingTransaction.setDescription(formattedDescription);
                         apiService.updateTransaction(existingTransaction);
@@ -290,8 +290,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
                     break;
-                case ApiService.INVALID_DATE_RANGE:
-                    message = getResources().getString(R.string.invalid_date_range);
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
                     break;
                 default:
                     message = getResources().getString(R.string.general_error);

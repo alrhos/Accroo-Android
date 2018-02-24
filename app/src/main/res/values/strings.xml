@@ -1,42 +1,27 @@
 <resources>
     <string name="app_name">Accroo</string>
-    <string name="title_activity_login">Sign in</string>
 
     <string name="email">Email</string>
     <string name="confirm_email">Confirm email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="invalid_username_or_password">Invalid username or password</string>
-    <string name="enter_current_login_password">Enter your current login password</string>
-    <string name="enter_current_data_password">Enter your current data password</string>
+    <string name="enter_current_password">Enter your current password</string>
     <string name="incorrect_password">Incorrect password</string>
-    <string name="incorrect_login_password">Incorrect login password</string>
     <string name="enter_password">Enter password</string>
-    <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 4096 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
     <string name="enter_email">Enter email address</string>
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="error_field_required">This field is required</string>
-    <string name="title_activity_key_decryption">KeyDecryptionActivity</string>
-    <string name="agree_terms_privacy">By creating an account, you are agreeing to our\n<a href="https://accroo.io/terms"><b>terms and conditions</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
-
-
+    <string name="agree_terms_privacy">By creating an account, you agree to the\n<a href="https://accroo.io/terms"><b>terms of use</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
     <string name="important">Important!</string>
-    <string name="data_password_description">Your data password is used to encrypt information that
-        you enter into the app, such as transactions and categories. It is strongly recommended that you choose a
-        data password that is different to your login password, though please note that unlike your login password,
-        it is not possible to reset your data password if you forget it because it is never
-        transmitted from your device.</string>
-    <string name="password_warning">This password cannot be reset or recovered if you forget it.</string>
-    <string name="reset_password_link">You will receive a link to reset your password.</string>
-    <string name="send_link">SEND LINK</string>
-    <string name="reset_link_sent">Password reset link sent</string>
+    <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
+    <string name="verification_code_description">A verification code has been sent to your email. Please enter it below to continue.</string>
 
+    <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_transaction">Add Transaction</string>
     <string name="title_activity_edit_transaction">Edit Transaction</string>
     <string name="title_activity_edit_category">Edit Category</string>
@@ -45,14 +30,12 @@
     <string name="title_activity_register">Register</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_licenses">Licenses</string>
-    <string name="title_activity_category_overview">CategoryOverviewActivity</string>
     <string name="title_activity_select_category">Select Category</string>
     <string name="title_activity_select_subcategory">Select Sub Category</string>
     <string name="title_activity_select_general_category">Select General Category</string>
     <string name="title_activity_change_email">Change Email</string>
-    <string name="title_activity_change_login_password">Change Login Password</string>
-    <string name="title_activity_change_data_password">Change Data Password</string>
-    <string name="title_activity_forgot_password">Forgot Password</string>
+    <string name="title_activity_change_password">Change Password</string>
+    <string name="title_activity_account_verification">Account Verification</string>
 
     <string name="activity_overview">Activity Overview</string>
     <string name="income">Income</string>
@@ -72,6 +55,7 @@
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">Couldn\'t connect to server</string>
     <string name="general_error">An error occurred</string>
+    <string name="too_many_requests">Please try again in a moment</string>
     <string name="invalid_input">Invalid input provided</string>
     <string name="email_in_use">This email address is already being used</string>
     <string name="no_category">This category does not exist</string>
@@ -79,14 +63,12 @@
     <string name="invalid_date_range">Invalid date range</string>
     <string name="select_general_category">Select a general category</string>
     <string name="category_exists">Category already exists</string>
-
     <string name="transaction_added">Transaction added</string>
     <string name="transaction_updated">Transaction updated</string>
     <string name="transaction_deleted">Transaction deleted</string>
     <string name="category_added">Category added</string>
     <string name="category_updated">Category updated</string>
     <string name="category_deleted">Category deleted</string>
-
     <string name="submit">SUBMIT</string>
     <string name="next">NEXT</string>
     <string name="save">SAVE</string>
@@ -97,39 +79,31 @@
     <string name="register">REGISTER</string>
     <string name="update">UPDATE</string>
     <string name="username">Username</string>
-    <string name="login_password">Login password</string>
-    <string name="data_password">Data password</string>
-    <string name="confirm_data_password">Confirm data password</string>
+    <string name="password">Password</string>
+    <string name="verification_code">Verification code</string>
+    <string name="confirm_password">Confirm password</string>
     <string name="unlock">UNLOCK</string>
     <string name="settings">Settings</string>
     <string name="change_email">Change email</string>
-    <string name="change_login_password">Change login password</string>
-    <string name="change_data_password">Change data password</string>
+    <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
     <string name="about">About</string>
     <string name="new_email">New email</string>
     <string name="confirm_new_email">Confirm new email</string>
-    <string name="confirm_login_password">Confirm login password</string>
-    <string name="current_login_password">Current login password</string>
-    <string name="new_login_password">New login password</string>
-    <string name="confirm_new_login_password">Confirm new login password</string>
-    <string name="current_data_password">Current data password</string>
-    <string name="new_data_password">New data password</string>
-    <string name="confirm_new_data_password">Confirm new data password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
     <string name="submitting">Submitting...</string>
     <string name="loading">Loading...</string>
     <string name="saving">Saving...</string>
     <string name="signing_out">Signing out...</string>
     <string name="email_updated">Email address updated</string>
-    <string name="login_password_updated">Login password updated</string>
-    <string name="data_password_updated">Data password updated</string>
-    <string name="incorrect_data_password">Incorrect data password</string>
+    <string name="password_updated">Password updated</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="delete_transaction">Delete this transaction?</string>
     <string name="delete_general_category">Delete this general category and any associated sub categories and transactions?</string>
     <string name="delete_sub_category">Delete this sub category and any associated transactions?</string>
-
     <string name="negative_amount">The transaction amount must be positive</string>
     <string name="enter_amount">Enter an amount</string>
     <string name="select_sub_category">Select a sub category</string>
@@ -139,7 +113,8 @@
     <string name="no_transactions">No transactions</string>
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>
-
+    <string name="invalid_verification_code">The verification code is 8 characters</string>
+    <string name="incorrect_verification_code">Incorrect or expired verification code</string>
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>
     <string name="terms_of_use">Terms of use</string>

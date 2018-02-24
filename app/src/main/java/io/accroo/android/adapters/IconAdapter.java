@@ -27,7 +27,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<String> icons;
 
     public IconAdapter(Context context , AdapterInteractionListener adapterListener) {
-
         this.context = context;
         this.adapterListener = adapterListener;
         this.icons = DataAccess.getInstance(context).getIcons();
@@ -41,7 +40,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 curr++;
             }
         }
-
     }
 
     class IconViewHolder extends RecyclerView.ViewHolder {

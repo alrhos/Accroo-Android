@@ -61,7 +61,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         Button register = findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), RegisterStageOneActivity.class));
+                startActivity(new Intent(getApplicationContext(), RegistrationActivity.class));
             }
         });
     }
@@ -78,7 +78,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     public void onFailure(int requestType, int errorCode) {
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
-        } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR) {
+        } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
+                errorCode == ApiService.TOO_MANY_REQUESTS) {
             setContentView(R.layout.activity_no_connection);
             Button tryAgain = findViewById(R.id.try_again);
             tryAgain.setOnClickListener(new View.OnClickListener() {

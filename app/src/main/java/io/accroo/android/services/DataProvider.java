@@ -40,7 +40,6 @@ public class DataProvider {
 
     private static void sortData() {
         // Clear existing child objects
-
         for (GeneralCategory generalCategory : generalCategories) {
             generalCategory.getSubCategories().clear();
         }
@@ -55,7 +54,7 @@ public class DataProvider {
 
         for (Transaction transaction : transactions) {
             for (SubCategory subCategory : subCategories) {
-                if (transaction.getSubCategoryID() == subCategory.getId()) {
+                if (transaction.getSubCategoryId() == subCategory.getId()) {
                     transaction.setParent(subCategory);
                     subCategory.getTransactions().add(transaction);
                     break;
@@ -65,7 +64,7 @@ public class DataProvider {
 
         for (SubCategory subCategory : subCategories) {
             for (GeneralCategory generalCategory : generalCategories) {
-                if (subCategory.getGeneralCategoryID() == generalCategory.getId()) {
+                if (subCategory.getGeneralCategoryId() == generalCategory.getId()) {
                     subCategory.setParent(generalCategory);
                     generalCategory.getSubCategories().add(subCategory);
                     break;
@@ -147,7 +146,7 @@ public class DataProvider {
         if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
             transactions.add(transaction);
             for (SubCategory subCategory : subCategories) {
-                if (transaction.getSubCategoryID() == subCategory.getId()) {
+                if (transaction.getSubCategoryId() == subCategory.getId()) {
                     transaction.setParent(subCategory);
                     subCategory.getTransactions().add(transaction);
                     break;

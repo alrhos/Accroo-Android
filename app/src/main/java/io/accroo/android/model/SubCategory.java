@@ -18,16 +18,16 @@ import java.util.ArrayList;
 
 public class SubCategory implements Securable, Relationship, Parcelable {
 
-    private int id, generalCategoryID;
+    private int id, generalCategoryId;
     private String categoryName, generalCategoryName;
     private GeneralCategory parent;
     private ArrayList<Transaction> transactions = new ArrayList<>();
 
     private DecimalFormat df = new DecimalFormat("0.00");
 
-    public SubCategory(String categoryName, int generalCategoryID) {
+    public SubCategory(String categoryName, int generalCategoryId) {
         this.categoryName = categoryName;
-        this.generalCategoryID = generalCategoryID;
+        this.generalCategoryId = generalCategoryId;
     }
 
     public SubCategory(String categoryName, String generalCategoryName) {
@@ -47,12 +47,12 @@ public class SubCategory implements Securable, Relationship, Parcelable {
         this.id = id;
     }
 
-    public int getGeneralCategoryID() {
-        return generalCategoryID;
+    public int getGeneralCategoryId() {
+        return generalCategoryId;
     }
 
-    public void setGeneralCategoryID(int generalCategoryID) {
-        this.generalCategoryID = generalCategoryID;
+    public void setGeneralCategoryId(int generalCategoryId) {
+        this.generalCategoryId = generalCategoryId;
     }
 
     public String getCategoryName() {
@@ -108,7 +108,7 @@ public class SubCategory implements Securable, Relationship, Parcelable {
             json.put("id", id);
         }
 
-        json.put("generalCategoryID", generalCategoryID);
+        json.put("generalCategoryId", generalCategoryId);
         json.put("data", payload.getData());
         json.put("nonce", payload.getNonce());
 
@@ -121,19 +121,8 @@ public class SubCategory implements Securable, Relationship, Parcelable {
         String categoryString = CryptoManager.getInstance().decrypt(payload);
         JSONObject categoryJson = new JSONObject(categoryString);
         this.id = json.getInt("id");
-        this.generalCategoryID = json.getInt("generalCategoryID");
+        this.generalCategoryId = json.getInt("generalCategoryId");
         this.categoryName = categoryJson.getString("categoryName");
-    }
-
-    @Override
-    public String toString() {
-        return "SubCategory{" +
-                "id=" + id +
-                ", generalCategoryID=" + generalCategoryID +
-                ", categoryName='" + categoryName + '\'' +
-                ", generalCategoryName='" + generalCategoryName + '\'' +
-                ", df=" + df +
-                '}';
     }
 
     @Override
@@ -144,7 +133,7 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
-        dest.writeInt(this.generalCategoryID);
+        dest.writeInt(this.generalCategoryId);
         dest.writeString(this.categoryName);
         dest.writeParcelable(this.parent, flags);
         dest.writeSerializable(this.df);
@@ -152,7 +141,7 @@ public class SubCategory implements Securable, Relationship, Parcelable {
 
     protected SubCategory(Parcel in) {
         this.id = in.readInt();
-        this.generalCategoryID = in.readInt();
+        this.generalCategoryId = in.readInt();
         this.categoryName = in.readString();
         this.parent = in.readParcelable(GeneralCategory.class.getClassLoader());
         this.df = (DecimalFormat) in.readSerializable();

@@ -11,8 +11,6 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.services.ApiService;
 
-import java.util.Arrays;
-
 public class KeyDecryptionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText keyPassword;
@@ -35,14 +33,12 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                         int passwordLength = keyPassword.length();
                         char[] password = new char[passwordLength];
                         keyPassword.getText().getChars(0, passwordLength, password, 0);
-
                         if (apiService.initializeKey(password)) {
+                            keyPassword.getText().clear();
                             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                         } else {
-                            Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_data_password, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_password, Toast.LENGTH_SHORT).show();
                         }
-                        Arrays.fill(password, '\u0000');
-                        keyPassword.getText().clear();
                     }
                 }
             });

@@ -6,7 +6,6 @@ import android.util.Base64;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
@@ -23,101 +22,58 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL = "https://apidev23.accroo.io/";
-    public final static String REFRESH_TOKEN = "token/refresh";
-    public final static String ACCESS_TOKEN = "token/access";
-    public final static String REGISTER = "register";
-    public final static String EMAIL = "email";
-    public final static String LOGIN_PASSWORD = "password";
-    public final static String FORGOT_PASSWORD = "password/forgot";
-    public final static String DATA_PASSWORD = "key";
-    public final static String CATEGORY = "category";
-    public final static String GENERAL_CATEGORY = "category/general";
-    public final static String SUB_CATEGORY = "category/sub";
-    public final static String TRANSACTION = "transaction";
-    protected final static int BASIC_AUTH = 0;
-    protected final static int REFRESH_TOKEN_AUTH = 1;
-    protected final static int ACCESS_TOKEN_AUTH = 2;
-    protected final static int NO_AUTH = 3;
+    private final static String baseURL =           "https://api.accroo.io/";
+    public final static String VERIFICATION_TOKEN = "token/verification";
+    public final static String DEVICE_TOKEN =       "token/device";
+    public final static String REGISTER =           "register";
+    public final static String EMAIL =              "email";
+    public final static String ENCRYPTION_KEY =     "key";
+    public final static String CATEGORY =           "category";
+    public final static String GENERAL_CATEGORY =   "category/general";
+    public final static String SUB_CATEGORY =       "category/sub";
+    public final static String TRANSACTION =        "transaction";
 
     private RequestBuilder() {}
 
-    protected static void updateRequestAccessToken(RestRequest restRequest, Context context) throws Exception {
-        String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-        restRequest.setAuthHeader(accessToken);
-    }
-
     public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
                                         int method, JSONObject json, String endpoint,
-                                        String username, char[] password, Context context) {
+                                        String username, String password) {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, BASIC_AUTH);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String credentials = username + ":" + String.copyValueOf(password);
+        String credentials = username + ":" + password;
         String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
         String url = baseURL + endpoint;
 
         return new RestRequest(method, url, json, responseListener,
-                errorListener, RestRequest.BASIC, authValue, context);
+                errorListener, RestRequest.BASIC, authValue);
     }
 
-    protected static RestRequest getAccessToken(final RequestCoordinator coordinator,
-                                                final Context context) throws Exception {
-
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String accessToken = response.getString("token");
-                    coordinator.receiveAccessToken(accessToken);
-                } catch (Exception e) {
-                    coordinator.abort(ApiService.GENERIC_ERROR);
-                }
-            }
-        };
-
-        Response.ErrorListener errorListener = createErrorListener(coordinator, REFRESH_TOKEN_AUTH);
-
-        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
-
-        String url = baseURL + ACCESS_TOKEN;
-
-        return new RestRequest(Request.Method.POST, url, null, responseListener,
-                errorListener, RestRequest.TOKEN, authValue, context);
-    }
-
-    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
-                                              String endpoint, String parameters, JSONObject json,
-                                              Context context) throws Exception {
+    public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,
+                                              String endpoint, JSONObject json, Context context) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, ACCESS_TOKEN_AUTH);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + endpoint;
-
-        if (parameters != null) {
-            url += parameters;
-        }
-
-        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
 
         return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.TOKEN, authValue, context);
+                RestRequest.TOKEN, authValue);
     }
 
     public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
-                                        String endpoint, JSONObject json,
-                                        Context context) throws Exception {
+                                        String endpoint, JSONObject json) throws Exception {
 
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator, NO_AUTH);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + endpoint;
 
         return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.NONE, null, context);
+                RestRequest.NONE, null);
     }
 
     private static int getResponseCode(VolleyError error) {
@@ -151,12 +107,11 @@ public class RequestBuilder {
         return ApiService.GENERIC_ERROR;
     }
 
-    private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator,
-                                                              final int authType) {
+    private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator) {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                coordinator.receiveError(authType, parseVolleyException(error));
+                coordinator.abort(parseVolleyException(error));
             }
         };
         return errorListener;

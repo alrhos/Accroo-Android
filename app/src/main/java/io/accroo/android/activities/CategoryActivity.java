@@ -152,7 +152,6 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
         }
     }
 
-
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
@@ -168,6 +167,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
                     break;
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
+                    break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
                     break;
                 default:
                     message = getResources().getString(R.string.general_error);

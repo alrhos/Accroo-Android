@@ -132,11 +132,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             case R.id.change_email:
                 startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
                 return true;
-            case R.id.change_login_password:
-                startActivity(new Intent(getApplicationContext(), ChangeLoginPasswordActivity.class));
-                return true;
-            case R.id.change_data_password:
-                startActivity(new Intent(getApplicationContext(), ChangeDataPasswordActivity.class));
+            case R.id.change_password:
+                startActivity(new Intent(getApplicationContext(), ChangePasswordActivity.class));
                 return true;
             case R.id.sign_out:
                 apiService.logout();
@@ -264,6 +261,18 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         startActivity(intent);
     }
 
+    private void hideRefreshing() {
+        if (summaryFragment != null) {
+            summaryFragment.setRefreshStatus(false);
+        }
+        if (transactionsFragment != null) {
+            transactionsFragment.setRefreshStatus(false);
+        }
+        if (categoryOverviewFragment != null) {
+            categoryOverviewFragment.setRefreshStatus(false);
+        }
+    }
+
     @Override
     public void onSuccess(int requestType) {
         hideRefreshing();
@@ -285,18 +294,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         }
     }
 
-    private void hideRefreshing() {
-        if (summaryFragment != null) {
-            summaryFragment.setRefreshStatus(false);
-        }
-        if (transactionsFragment != null) {
-            transactionsFragment.setRefreshStatus(false);
-        }
-        if (categoryOverviewFragment != null) {
-            categoryOverviewFragment.setRefreshStatus(false);
-        }
-    }
-
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
@@ -313,6 +310,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 case ApiService.TIMEOUT_ERROR:
                     message = getResources().getString(R.string.timeout_error);
                     break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
                 case ApiService.INVALID_DATE_RANGE:
                     message = getResources().getString(R.string.invalid_date_range);
                     break;
@@ -328,28 +328,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         hideRefreshing();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
-    }
-
-    class RefreshFragmentContents extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            if (summaryFragment != null) {
-                summaryFragment.refreshAdapter();
-            }
-            if (transactionsFragment != null) {
-                transactionsFragment.refreshAdapter();
-            }
-            if (categoryOverviewFragment != null) {
-                categoryOverviewFragment.refreshAdapter();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void param) {
-            hideRefreshing();
-        }
     }
 
 }

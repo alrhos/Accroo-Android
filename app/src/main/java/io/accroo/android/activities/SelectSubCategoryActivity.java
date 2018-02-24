@@ -38,7 +38,7 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
 
     @Override
     public void onGeneralCategoryClicked(GeneralCategory generalCategory) {
-        Toast.makeText(getApplicationContext(), "Select a sub category", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.select_sub_category, Toast.LENGTH_SHORT).show();
     }
 
     @Override
