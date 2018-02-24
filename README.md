@@ -2,6 +2,10 @@
 
 Accroo is a simple budgeting app that makes it easy to keep track of your income and expenses. Unlike other budgeting apps, Accroo is designed from the ground up to put user privacy first and ensures that your information remains completely private to you at all times. All of the information you enter into the app is encrypted on your device with a key that is never shared with anyone. This ensures that no one else, not even Accroo, can access your information.
 
+
+<a href='https://play.google.com/store/apps/details?id=io.accroo.android&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' style="max-width:10%"/></a>
+
+
 FAQs
 
 <i>Why can't you send me a link to reset my password if I forget it?</i>
