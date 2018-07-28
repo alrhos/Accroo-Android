@@ -20,3 +20,7 @@ It doesn't. Accroo is free for everyone.
 Credits
 
 Icons by Icons8: https://icons8.com/
+
+## Contributing
+
+Interested in contributing? Please drop me an email at: support@accroo.io
