@@ -48,7 +48,6 @@
         android:layout_marginTop="12dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unlock_button"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/unlock_button" />
 
 </android.support.constraint.ConstraintLayout>

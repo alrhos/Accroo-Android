@@ -2,13 +2,16 @@ package io.accroo.android.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
@@ -19,10 +22,12 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     public static final int LOGIN = 1;
     public static final int UPDATE_EMAIL = 2;
     public static final int UPDATE_PASSWORD = 3;
+    private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     private int action;
     private EditText loginCodeField;
     private Button submit;
+    private TextView noCode;
     private ProgressDialog progressDialog;
     private ApiService apiService;
     private String username, email;
@@ -62,6 +67,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             }
 
             loginCodeField = findViewById(R.id.login_code);
+            noCode = findViewById(R.id.not_receiving_codes);
 
             progressDialog = new ProgressDialog(VerificationCodeActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
@@ -83,6 +89,19 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                                 apiService.updatePassword(password, loginCodeField.getText().toString());
                                 break;
                         }
+                    }
+                }
+            });
+
+            noCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
+                    try {
+                        startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

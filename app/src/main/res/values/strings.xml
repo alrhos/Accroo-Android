@@ -6,6 +6,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="login_required">Login required</string>
     <string name="error_invalid_email">This email address is invalid</string>
+    <string name="not_receiving_codes">Not receiving codes?</string>
     <string name="invalid_username_or_password">Invalid username or password</string>
     <string name="enter_current_password">Enter your current password</string>
     <string name="incorrect_password">Incorrect password</string>
