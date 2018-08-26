@@ -10,6 +10,7 @@
     <string name="enter_current_password">Enter your current password</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="enter_password">Enter password</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 4096 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
@@ -122,6 +123,7 @@
     <string name="licenses">Licenses</string>
     <string name="contact">Contact</string>
     <string name="version">Version</string>
+    <string name="accroo_support_email">support@accroo.io</string>
     <string name="email_chooser">Contact via</string>
     <string name="no_email_client">No email app available</string>
 

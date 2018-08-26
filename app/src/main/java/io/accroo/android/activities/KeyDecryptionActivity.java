@@ -1,11 +1,14 @@
 package io.accroo.android.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
@@ -15,7 +18,9 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
 
     private EditText keyPassword;
     private Button unlockButton;
+    private TextView forgotPassword;
     private ApiService apiService;
+    private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             keyPassword = findViewById(R.id.key_password);
             unlockButton = findViewById(R.id.unlock_button);
+            forgotPassword = findViewById(R.id.forgot_password_link);
             unlockButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (isValidInput()) {
@@ -39,6 +45,19 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                         } else {
                             Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_password, Toast.LENGTH_SHORT).show();
                         }
+                    }
+                }
+            });
+
+            forgotPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Forgot password");
+                    try {
+                        startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -62,4 +62,10 @@
         <item name="android:textColor">@android:color/tab_indicator_text</item>
     </style>
 
+    <style name="HelpLink">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
