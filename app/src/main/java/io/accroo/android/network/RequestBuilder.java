@@ -102,6 +102,14 @@ public class RequestBuilder {
                     return ApiService.TOO_MANY_REQUESTS;
                 case 500:
                     return ApiService.GENERIC_ERROR;
+                case 521:
+                    return ApiService.CONNECTION_ERROR;
+                case 522:
+                    return ApiService.TIMEOUT_ERROR;
+                case 523:
+                    return ApiService.CONNECTION_ERROR;
+                case 524:
+                    return ApiService.TIMEOUT_ERROR;
             }
         }
         return ApiService.GENERIC_ERROR;
