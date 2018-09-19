@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
 public class VerificationCodeActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -151,7 +152,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

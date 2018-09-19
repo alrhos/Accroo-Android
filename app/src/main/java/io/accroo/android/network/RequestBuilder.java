@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL =           "https://api.accroo.io/";
+    private final static String baseURL =           "https://dev.accroo.io/";
     public final static String VERIFICATION_TOKEN = "token/verification";
     public final static String DEVICE_TOKEN =       "token/device";
     public final static String REGISTER =           "register";
@@ -103,7 +103,7 @@ public class RequestBuilder {
                 case 500:
                     return ApiService.GENERIC_ERROR;
                 case 521:
-                    return ApiService.CONNECTION_ERROR;
+                    return ApiService.ORIGIN_UNAVAILABLE;
                 case 522:
                     return ApiService.TIMEOUT_ERROR;
                 case 523:

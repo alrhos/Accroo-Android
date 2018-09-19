@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
 import java.util.Calendar;
@@ -79,7 +80,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
-                errorCode == ApiService.TOO_MANY_REQUESTS) {
+                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+                MaintenanceDialog.show(this);
+            }
             setContentView(R.layout.activity_no_connection);
             Button tryAgain = findViewById(R.id.try_again);
             tryAgain.setOnClickListener(new View.OnClickListener() {

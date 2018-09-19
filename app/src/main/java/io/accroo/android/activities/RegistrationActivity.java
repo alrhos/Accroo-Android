@@ -17,6 +17,7 @@ import io.accroo.android.R;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.User;
 import io.accroo.android.other.Constants;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
 public class RegistrationActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -136,24 +137,28 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        String message;
-        switch (errorCode) {
-            case ApiService.CONNECTION_ERROR:
-                message = getResources().getString(R.string.connection_error);
-                break;
-            case ApiService.TIMEOUT_ERROR:
-                message = getResources().getString(R.string.timeout_error);
-                break;
-            case ApiService.TOO_MANY_REQUESTS:
-                message = getResources().getString(R.string.too_many_requests);
-                break;
-            case ApiService.CONFLICT:
-                message = getResources().getString(R.string.email_in_use);
-                break;
-            default:
-                message = getResources().getString(R.string.general_error);
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
+                case ApiService.CONFLICT:
+                    message = getResources().getString(R.string.email_in_use);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
