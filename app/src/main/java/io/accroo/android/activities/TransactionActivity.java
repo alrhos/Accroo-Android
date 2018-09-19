@@ -23,6 +23,7 @@ import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 import io.accroo.android.services.InputService;
 
@@ -277,7 +278,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();

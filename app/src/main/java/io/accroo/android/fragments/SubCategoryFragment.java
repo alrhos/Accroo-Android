@@ -99,7 +99,6 @@ public class SubCategoryFragment extends Fragment {
                 } else {
                     System.out.println(generalCategory.toString());
                     SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
-                    System.out.println(subCategory.toString());
                     fragmentListener.createSubCategory(subCategory);
                 }
             }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.fragments.GeneralCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
 public class EditGeneralCategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
@@ -99,7 +100,9 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
