@@ -121,16 +121,20 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ICON_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                int iconID = data.getIntExtra("iconID", 0);
-                String iconName = data.getStringExtra("iconName");
-                generalCategoryFragment.updateIcon(iconID, iconName);
-            }
-        } else if (requestCode == GENERAL_CATEGORY_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
-                subCategoryFragment.setGeneralCategory(generalCategory);
+        if (generalCategoryFragment == null || subCategoryFragment == null) {
+            relaunch();
+        } else {
+            if (requestCode == ICON_REQUEST) {
+                if (resultCode == RESULT_OK) {
+                    int iconID = data.getIntExtra("iconID", 0);
+                    String iconName = data.getStringExtra("iconName");
+                    generalCategoryFragment.updateIcon(iconID, iconName);
+                }
+            } else if (requestCode == GENERAL_CATEGORY_REQUEST) {
+                if (resultCode == RESULT_OK) {
+                    GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
+                    subCategoryFragment.setGeneralCategory(generalCategory);
+                }
             }
         }
     }
