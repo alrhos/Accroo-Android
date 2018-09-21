@@ -55,7 +55,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             relaunch();
         } else {
             setContentView(R.layout.activity_transaction);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             amountField = findViewById(R.id.add_transaction_amount);
             descriptionField = findViewById(R.id.add_transaction_description);
@@ -190,12 +192,16 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
-                this.selectedSubCategoryID = subCategory.getId();
-                String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
-                int iconId = getApplicationContext().getResources().getIdentifier(
-                        "@drawable/" + icon, null, getApplicationContext().getPackageName());
-                categoryIcon.setImageResource(iconId);
-                categoryField.setText(subCategory.getCategoryName());
+                // Crash reports suggest that there are instances where subCategory can be null
+                // so adding this check to prevent null pointer exceptions.
+                if (subCategory != null) {
+                    this.selectedSubCategoryID = subCategory.getId();
+                    String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
+                    int iconId = getApplicationContext().getResources().getIdentifier(
+                            "@drawable/" + icon, null, getApplicationContext().getPackageName());
+                    categoryIcon.setImageResource(iconId);
+                    categoryField.setText(subCategory.getCategoryName());
+                }
             }
         }
     }
