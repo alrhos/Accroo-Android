@@ -21,7 +21,9 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
             relaunch();
         } else {
             setContentView(R.layout.activity_select_icon);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             iconAdapter = new IconAdapter(getApplicationContext(), this);
 

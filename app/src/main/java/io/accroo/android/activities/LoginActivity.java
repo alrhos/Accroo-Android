@@ -22,7 +22,9 @@ public class LoginActivity extends AppCompatActivity {
             relaunch();
         } else {
             setContentView(R.layout.activity_login_stage_one);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             usernameField = findViewById(R.id.email);
             next = findViewById(R.id.next);

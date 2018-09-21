@@ -41,7 +41,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             relaunch();
         } else {
             setContentView(R.layout.activity_verification_code);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");

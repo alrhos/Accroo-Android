@@ -27,7 +27,9 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
             relaunch();
         } else {
             setContentView(R.layout.activity_select_general_category);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
 

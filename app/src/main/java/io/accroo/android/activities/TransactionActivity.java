@@ -192,8 +192,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
-                // Crash reports suggest that there are instances where subCategory can be null
-                // so adding this check to prevent null pointer exceptions.
+                // Crash reports suggest that there are instances where subCategory can be null.
+                // Not sure how this can occur so adding this check to prevent potential null pointer exceptions.
                 if (subCategory != null) {
                     this.selectedSubCategoryID = subCategory.getId();
                     String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();

@@ -22,7 +22,9 @@ public class ChangeEmailActivity extends AppCompatActivity {
             relaunch();
         } else {
             setContentView(R.layout.activity_change_email);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             emailAddress = findViewById(R.id.new_email);
             confirmEmailAddress = findViewById(R.id.confirm_new_email);

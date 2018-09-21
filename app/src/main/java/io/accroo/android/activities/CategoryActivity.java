@@ -44,7 +44,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             setContentView(R.layout.activity_category);
             Toolbar toolbar = findViewById(R.id.category_toolbar);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
             progressDialog.setCancelable(false);

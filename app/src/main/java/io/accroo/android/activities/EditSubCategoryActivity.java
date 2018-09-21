@@ -33,7 +33,9 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             relaunch();
         } else {
             setContentView(R.layout.activity_edit_sub_category);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
             apiService = new ApiService(this, getApplicationContext());
             subCategoryFragment = (SubCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_sub_category);
             subCategoryFragment.toggleEditing();

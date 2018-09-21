@@ -29,7 +29,9 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             relaunch();
         } else {
             setContentView(R.layout.activity_change_password);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             apiService = new ApiService(this, getApplicationContext());
             progressDialog = new ProgressDialog(ChangePasswordActivity.this);

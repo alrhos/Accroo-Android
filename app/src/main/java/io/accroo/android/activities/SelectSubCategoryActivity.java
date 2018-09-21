@@ -19,7 +19,9 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
             relaunch();
         } else {
             setContentView(R.layout.activity_select_sub_category);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
             findViewById(R.id.category_overview_swipe_refresh).setEnabled(false);
         }
     }

@@ -36,7 +36,9 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             relaunch();
         } else {
             setContentView(R.layout.activity_registration);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             emailAddress = findViewById(R.id.email);
             confirmEmailAddress = findViewById(R.id.confirm_email);

@@ -14,7 +14,9 @@ public class LicensesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_licenses);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         webView = findViewById(R.id.licenses_view);
         webView.loadData(getResources().getString(R.string.licenses_info), "text/html", null);
     }

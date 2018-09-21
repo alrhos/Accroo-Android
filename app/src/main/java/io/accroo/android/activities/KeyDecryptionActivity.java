@@ -29,7 +29,9 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             relaunch();
         } else {
             setContentView(R.layout.activity_key_decryption);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
             keyPassword = findViewById(R.id.key_password);
             unlockButton = findViewById(R.id.unlock_button);
             forgotPassword = findViewById(R.id.forgot_password_link);

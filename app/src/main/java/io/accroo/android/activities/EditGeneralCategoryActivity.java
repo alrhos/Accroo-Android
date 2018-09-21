@@ -32,7 +32,9 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             relaunch();
         } else {
             setContentView(R.layout.activity_edit_general_category);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
             apiService = new ApiService(this, getApplicationContext());
             generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
             generalCategoryFragment.toggleEditing();
