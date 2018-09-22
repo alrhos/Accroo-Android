@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -59,6 +61,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
             amountField = findViewById(R.id.add_transaction_amount);
             descriptionField = findViewById(R.id.add_transaction_description);
             categoryField = findViewById(R.id.add_transaction_category);
@@ -96,7 +100,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 toggleEditing();
             } else {
                 updateDate();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
                 }
@@ -122,6 +125,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             categoryField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    }
                     Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
                     startActivityForResult(intent, SUB_CATEGORY_REQUEST);
                 }
