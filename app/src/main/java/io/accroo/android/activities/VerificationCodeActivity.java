@@ -56,6 +56,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             apiService = new ApiService(this, getApplicationContext());
             apiService.getLoginCode(username);
 
+            Utils.showSoftKeyboard(VerificationCodeActivity.this);
+
             submit = findViewById(R.id.submit);
 
             switch (action) {
@@ -122,6 +124,13 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(VerificationCodeActivity.this);
@@ -148,6 +157,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             switch (action) {
                 case LOGIN:
                     startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
                     break;
                 case UPDATE_EMAIL:
                     Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();

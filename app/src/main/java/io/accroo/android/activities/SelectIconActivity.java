@@ -42,6 +42,12 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -56,6 +62,7 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
         data.putExtra("iconName", iconName);
         setResult(RESULT_OK, data);
         finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
 }

@@ -83,6 +83,13 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(KeyDecryptionActivity.this);

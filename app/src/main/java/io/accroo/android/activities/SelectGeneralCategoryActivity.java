@@ -55,6 +55,12 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -67,6 +73,7 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
         data.putExtra("generalCategory", generalCategory);
         setResult(RESULT_OK, data);
         finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
 }

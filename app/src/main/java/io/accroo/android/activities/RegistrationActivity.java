@@ -96,6 +96,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(RegistrationActivity.this);

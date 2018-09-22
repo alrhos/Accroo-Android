@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtra("action", VerificationCodeActivity.LOGIN);
                         intent.putExtra("username", usernameField.getText().toString().trim());
                         startActivity(intent);
+                        overridePendingTransition(R.anim.enter, R.anim.exit);
                     }
                 }
             });
@@ -54,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(LoginActivity.this);

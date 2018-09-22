@@ -176,6 +176,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(TransactionActivity.this);
@@ -197,7 +198,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");

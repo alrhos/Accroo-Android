@@ -53,6 +53,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(EditSubCategoryActivity.this);
@@ -93,6 +94,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     public void selectGeneralCategory() {
         Intent intent = new Intent(getApplicationContext(), SelectGeneralCategoryActivity.class);
         startActivityForResult(intent, GENERAL_CATEGORY_REQUEST);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     private void deleteSubCategory() {

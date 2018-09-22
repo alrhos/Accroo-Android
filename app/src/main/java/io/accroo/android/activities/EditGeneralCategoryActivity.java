@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewDebug;
 import android.widget.Toast;
 
 import io.accroo.android.R;
@@ -52,6 +53,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(EditGeneralCategoryActivity.this);
@@ -144,6 +146,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     public void onIconClicked() {
         Intent intent = new Intent(getApplicationContext(), SelectIconActivity.class);
         startActivityForResult(intent, ICON_REQUEST);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     @Override

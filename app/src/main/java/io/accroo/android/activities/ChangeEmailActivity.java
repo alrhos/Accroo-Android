@@ -42,6 +42,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
                     intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
                     intent.putExtra("email", emailAddress.getText().toString());
                     startActivity(intent);
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
 
@@ -55,6 +56,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(ChangeEmailActivity.this);

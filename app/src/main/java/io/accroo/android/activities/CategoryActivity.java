@@ -200,6 +200,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void onIconClicked() {
         Intent intent = new Intent(getApplicationContext(), SelectIconActivity.class);
         startActivityForResult(intent, ICON_REQUEST);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     @Override
@@ -228,6 +229,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void selectGeneralCategory() {
         Intent intent = new Intent(getApplicationContext(), SelectGeneralCategoryActivity.class);
         startActivityForResult(intent, GENERAL_CATEGORY_REQUEST);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
 }

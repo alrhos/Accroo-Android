@@ -83,6 +83,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
         return true;
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(ChangePasswordActivity.this);
@@ -109,6 +110,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             intent.putExtra("action", VerificationCodeActivity.UPDATE_PASSWORD);
             intent.putExtra("password", newPwd);
             startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
             Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
