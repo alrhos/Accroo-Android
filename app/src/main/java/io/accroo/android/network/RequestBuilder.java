@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL =           "https://dev.accroo.io/";
+    private final static String baseURL =           "https://api.accroo.io/";
     public final static String VERIFICATION_TOKEN = "token/verification";
     public final static String DEVICE_TOKEN =       "token/device";
     public final static String REGISTER =           "register";
