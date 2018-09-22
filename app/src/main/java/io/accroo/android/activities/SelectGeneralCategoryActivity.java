@@ -34,7 +34,6 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
             generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
 
             recyclerView = findViewById(R.id.general_category_recycler_view);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(generalCategoryAdapter);
             layoutManager = new LinearLayoutManager(getApplicationContext());

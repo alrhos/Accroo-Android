@@ -65,7 +65,6 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         View fragmentView = inflater.inflate(R.layout.fragment_summary, container, false);
 
         recyclerView = fragmentView.findViewById(R.id.summary_recycler_view);
-        recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(summaryListAdapter);
         layoutManager = new LinearLayoutManager(requireActivity());

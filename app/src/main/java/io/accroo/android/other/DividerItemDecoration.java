@@ -3,6 +3,7 @@ package io.accroo.android.other;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,7 +17,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
     public DividerItemDecoration(Context context) {
-        mDivider = context.getResources().getDrawable(R.drawable.line_divider);
+        mDivider = ResourcesCompat.getDrawable(context.getResources(), R.drawable.line_divider, null);
     }
 
     @Override

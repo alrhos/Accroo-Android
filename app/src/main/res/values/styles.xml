@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimaryLight</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
