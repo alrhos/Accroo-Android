@@ -15,6 +15,7 @@ import io.accroo.android.fragments.SubCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class EditSubCategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
@@ -50,6 +51,11 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(EditSubCategoryActivity.this);
     }
 
     @Override

@@ -18,6 +18,7 @@ import io.accroo.android.model.Preferences;
 import io.accroo.android.model.User;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class RegistrationActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -64,6 +65,8 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
                         return;
                     }
 
+                    Utils.hideSoftKeyboard(RegistrationActivity.this);
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
                     builder.setMessage(R.string.password_warning)
                             .setTitle(R.string.important)
@@ -91,6 +94,11 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(RegistrationActivity.this);
     }
 
     private boolean isEmailValid() {

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,10 +44,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-            }
+            Utils.showSoftKeyboard(LoginActivity.this);
         }
     }
 
@@ -54,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(LoginActivity.this);
     }
 
     private boolean isValidInput() {

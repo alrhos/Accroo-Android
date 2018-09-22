@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.Utils;
 
 public class ChangeEmailActivity extends AppCompatActivity {
 
@@ -44,10 +45,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
                 }
             });
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-            }
+            Utils.showSoftKeyboard(ChangeEmailActivity.this);
         }
     }
 
@@ -55,6 +53,11 @@ public class ChangeEmailActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(ChangeEmailActivity.this);
     }
 
     private void relaunch() {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class KeyDecryptionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -38,10 +39,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             unlockButton = findViewById(R.id.unlock_button);
             forgotPassword = findViewById(R.id.forgot_password_link);
 
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-            }
+            Utils.showSoftKeyboard(KeyDecryptionActivity.this);
 
             unlockButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
@@ -50,9 +48,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                         char[] password = new char[passwordLength];
                         keyPassword.getText().getChars(0, passwordLength, password, 0);
                         if (apiService.initializeKey(password)) {
-                            if (imm != null) {
-                                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                            }
+                            Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
                             keyPassword.getText().clear();
                             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                         } else {
@@ -65,9 +61,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             forgotPassword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                    }
+                    Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Forgot password");
                     try {
@@ -87,6 +81,11 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
     }
 
     private boolean isValidInput() {

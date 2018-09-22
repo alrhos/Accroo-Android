@@ -14,6 +14,7 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class ChangePasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -56,10 +57,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                 }
             });
 
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-            }
+            Utils.showSoftKeyboard(ChangePasswordActivity.this);
         }
     }
 
@@ -83,6 +81,11 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(ChangePasswordActivity.this);
     }
 
     private void relaunch() {

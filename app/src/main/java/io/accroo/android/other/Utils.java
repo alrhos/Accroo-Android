@@ -1,8 +1,11 @@
 package io.accroo.android.other;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.Comparator;
 import java.util.Currency;
@@ -51,5 +54,21 @@ public class Utils {
     }
 
     // fab.setImageBitmap(Utils.textAsBitmap(Utils.getCurrencySymbol("EUR"), 40, Color.WHITE));
+
+    public static void hideSoftKeyboard(Activity activity) {
+        final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            if (activity.getCurrentFocus() != null) {
+                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            }
+        }
+    }
+
+    public static void showSoftKeyboard(Activity activity) {
+        final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        }
+    }
 
 }

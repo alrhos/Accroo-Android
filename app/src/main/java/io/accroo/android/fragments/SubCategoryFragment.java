@@ -97,7 +97,6 @@ public class SubCategoryFragment extends Fragment {
                     existingCategory.setGeneralCategoryId(generalCategory.getId());
                     fragmentListener.updateSubCategory(existingCategory);
                 } else {
-                    System.out.println(generalCategory.toString());
                     SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
                     fragmentListener.createSubCategory(subCategory);
                 }

@@ -8,11 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -26,6 +24,7 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 import io.accroo.android.services.InputService;
 
@@ -61,7 +60,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+           // final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
             amountField = findViewById(R.id.add_transaction_amount);
             descriptionField = findViewById(R.id.add_transaction_description);
@@ -100,9 +99,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 toggleEditing();
             } else {
                 updateDate();
-                if (imm != null) {
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                }
+                Utils.showSoftKeyboard(TransactionActivity.this);
             }
 
             datePicker = new DatePickerDialog.OnDateSetListener() {
@@ -125,11 +122,10 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             categoryField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                    }
+                    Utils.hideSoftKeyboard(TransactionActivity.this);
                     Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
                     startActivityForResult(intent, SUB_CATEGORY_REQUEST);
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
 
@@ -180,6 +176,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         return true;
     }
 
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(TransactionActivity.this);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -196,6 +197,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");

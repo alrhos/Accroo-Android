@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import io.accroo.android.R;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class VerificationCodeActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -82,10 +83,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                        }
+                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                         progressDialog.show();
                         switch (action) {
                             case LOGIN:
@@ -105,10 +103,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             noCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                    }
+                    Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
                     try {
@@ -125,6 +120,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
     }
 
     private boolean isValidInput() {
