@@ -29,7 +29,7 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        transactionAdapter = new TransactionAdapter(getActivity(), this);
+        transactionAdapter = new TransactionAdapter(requireActivity(), this);
     }
 
     @Override
@@ -55,11 +55,11 @@ public class TransactionsFragment extends Fragment implements TransactionAdapter
             }
         });
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(requireActivity());
         recyclerView.setLayoutManager(llm);
 
         swipeRefreshLayout = fragmentView.findViewById(R.id.transaction_swipe_refresh);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

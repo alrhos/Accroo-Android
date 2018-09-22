@@ -50,14 +50,14 @@ public class SubCategoryFragment extends Fragment {
         generalCategoryName = fragmentView.findViewById(R.id.general_category_name);
         submit = fragmentView.findViewById(R.id.submit_sub_category_button);
 
-        existingCategory = getActivity().getIntent().getParcelableExtra("subCategory");
+        existingCategory = requireActivity().getIntent().getParcelableExtra("subCategory");
 
         if (existingCategory != null) {
 
             editing = true;
             generalCategory = ((GeneralCategory) existingCategory.getParent());
-            int iconID = getActivity().getResources().getIdentifier("@drawable/" +
-                            generalCategory.getIconFile(), null, getActivity().getPackageName());
+            int iconID = requireActivity().getResources().getIdentifier("@drawable/" +
+                            generalCategory.getIconFile(), null, requireActivity().getPackageName());
             icon.setImageResource(iconID);
             generalCategoryName.setText(generalCategory.getCategoryName());
             subCategoryName.setText(existingCategory.getCategoryName());
@@ -127,8 +127,8 @@ public class SubCategoryFragment extends Fragment {
     public void setGeneralCategory(GeneralCategory generalCategory) {
         this.generalCategory = generalCategory;
         generalCategoryName.setText(generalCategory.getCategoryName());
-        int iconId = getActivity().getResources().getIdentifier("@drawable/" +
-                generalCategory.getIconFile(), null, getActivity().getPackageName());
+        int iconId = requireActivity().getResources().getIdentifier("@drawable/" +
+                generalCategory.getIconFile(), null, requireActivity().getPackageName());
         icon.setImageResource(iconId);
     }
 
@@ -142,13 +142,13 @@ public class SubCategoryFragment extends Fragment {
         if (generalCategory != null) {
             return true;
         }
-        Toast.makeText(getActivity(), R.string.select_general_category, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireActivity(), R.string.select_general_category, Toast.LENGTH_SHORT).show();
         return false;
     }
 
     private boolean isValidSubCategory() {
         if (subCategoryName.getText().toString().length() == 0) {
-            Toast.makeText(getActivity(), R.string.enter_category_name, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), R.string.enter_category_name, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -156,7 +156,7 @@ public class SubCategoryFragment extends Fragment {
 
         if (!editing) {
             if (DataProvider.checkDuplicateSubCategory(category)) {
-                Toast.makeText(getActivity(), R.string.category_exists, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), R.string.category_exists, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

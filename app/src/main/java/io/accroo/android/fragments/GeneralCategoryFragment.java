@@ -59,13 +59,13 @@ public class GeneralCategoryFragment extends Fragment {
 
         expenseRadioButton.setChecked(true);
 
-        existingCategory = getActivity().getIntent().getParcelableExtra("generalCategory");
+        existingCategory = requireActivity().getIntent().getParcelableExtra("generalCategory");
 
         if (existingCategory != null) {
 
             editing = true;
-            int iconID = getActivity().getResources().getIdentifier("@drawable/" + existingCategory.getIconFile(),
-                    null, getActivity().getPackageName());
+            int iconID = requireActivity().getResources().getIdentifier("@drawable/" + existingCategory.getIconFile(),
+                    null, requireActivity().getPackageName());
             icon.setImageResource(iconID);
             categoryName.setText(existingCategory.getCategoryName());
             iconName = existingCategory.getIconFile();
@@ -166,19 +166,19 @@ public class GeneralCategoryFragment extends Fragment {
             if (!editing) {
                 String category = InputService.capitaliseAndTrim(categoryName.getText().toString());
                 if (DataProvider.checkDuplicateGeneralCategory(category)) {
-                    Toast.makeText(getActivity(), R.string.general_category_already_exists, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), R.string.general_category_already_exists, Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
             return true;
         }
-        Toast.makeText(getActivity(), R.string.enter_category_name, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireActivity(), R.string.enter_category_name, Toast.LENGTH_SHORT).show();
         return false;
     }
 
     private boolean isIconSelected() {
         if (iconName.equals(DEFAULT_ICON)) {
-            Toast.makeText(getActivity(), R.string.select_category_icon, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), R.string.select_category_icon, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
