@@ -1,6 +1,5 @@
 package io.accroo.android.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
-    private ProgressDialog progressDialog;
     private ApiService apiService;
     private Date startDate, endDate;
     private FloatingActionButton fab;
@@ -51,9 +49,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 relaunch();
             } else {
                 setContentView(R.layout.activity_main);
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage(getResources().getString(R.string.signing_out));
-                progressDialog.setCancelable(false);
 
                 startDate = new Date(getIntent().getLongExtra("startDate", -1));
                 endDate = new Date (getIntent().getLongExtra("endDate", -1));
@@ -71,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(i);
-                    tab.setCustomView(pagerAdapter.getTabView(i));
+                    if (tab != null) {
+                        tab.setCustomView(pagerAdapter.getTabView(i));
+                    }
                 }
 
                 fab = findViewById(R.id.fab);

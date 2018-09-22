@@ -65,7 +65,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
-                tab.setCustomView(pagerAdapter.getTabView(i));
+                if (tab != null) {
+                    tab.setCustomView(pagerAdapter.getTabView(i));
+                }
             }
         }
     }

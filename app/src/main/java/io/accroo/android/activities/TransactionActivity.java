@@ -96,6 +96,10 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 toggleEditing();
             } else {
                 updateDate();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+                }
             }
 
             datePicker = new DatePickerDialog.OnDateSetListener() {
@@ -112,9 +116,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 public void onClick(View view) {
                     new DatePickerDialog(TransactionActivity.this, datePicker, calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-
-                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    in.hideSoftInputFromWindow(dateField.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
             });
 

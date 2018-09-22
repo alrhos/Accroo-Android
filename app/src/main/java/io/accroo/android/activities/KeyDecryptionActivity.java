@@ -1,11 +1,13 @@
 package io.accroo.android.activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +37,12 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             keyPassword = findViewById(R.id.key_password);
             unlockButton = findViewById(R.id.unlock_button);
             forgotPassword = findViewById(R.id.forgot_password_link);
+
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            }
+
             unlockButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (isValidInput()) {
@@ -42,6 +50,9 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                         char[] password = new char[passwordLength];
                         keyPassword.getText().getChars(0, passwordLength, password, 0);
                         if (apiService.initializeKey(password)) {
+                            if (imm != null) {
+                                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                            }
                             keyPassword.getText().clear();
                             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                         } else {
@@ -54,6 +65,9 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             forgotPassword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    }
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Forgot password");
                     try {
@@ -65,6 +79,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             });
 
             apiService = new ApiService(this, getApplicationContext());
+
         }
     }
 

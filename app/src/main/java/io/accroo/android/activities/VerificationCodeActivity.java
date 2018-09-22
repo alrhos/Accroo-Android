@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,6 +82,10 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                        }
                         progressDialog.show();
                         switch (action) {
                             case LOGIN:
@@ -99,6 +105,10 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             noCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    }
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
                     try {
