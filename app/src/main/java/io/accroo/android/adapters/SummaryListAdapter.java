@@ -104,7 +104,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case SUMMARY:
-
                 summaryViewHolder = (SummaryViewHolder) holder;
                 Summary summary = (Summary) dataSource.get(position);
 
@@ -162,8 +161,12 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     public void onClick(View v) {
                         if (vh2.expanded) {
                             vh2.details.setVisibility(View.GONE);
+                            vh2.category.setTextAppearance(R.style.Heading);
+                            vh2.amount.setTextAppearance(R.style.Heading);
                         } else {
                             vh2.details.setVisibility(View.VISIBLE);
+                            vh2.category.setTextAppearance(R.style.BoldSubHeading);
+                            vh2.amount.setTextAppearance(R.style.BoldSubHeading);
                         }
                         vh2.expanded = !vh2.expanded;
                     }

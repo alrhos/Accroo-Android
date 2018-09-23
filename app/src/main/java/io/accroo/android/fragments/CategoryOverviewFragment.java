@@ -2,6 +2,7 @@ package io.accroo.android.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,11 +32,11 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        categoryOverviewAdapter = new CategoryOverviewAdapter(getActivity(), this);
+        categoryOverviewAdapter = new CategoryOverviewAdapter(requireActivity(), this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View fragmentView = inflater.inflate(R.layout.fragment_category_overview, container, false);
@@ -58,11 +59,11 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
             }
         });
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(requireActivity());
         recyclerView.setLayoutManager(llm);
 
         swipeRefreshLayout = fragmentView.findViewById(R.id.category_overview_swipe_refresh);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

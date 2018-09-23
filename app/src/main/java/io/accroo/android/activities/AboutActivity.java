@@ -23,7 +23,9 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         terms = findViewById(R.id.terms);
         privacyPolicy = findViewById(R.id.privacy_policy);
         licenses = findViewById(R.id.licenses);

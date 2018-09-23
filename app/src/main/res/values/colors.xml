@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#B2DFDB</color>
     <color name="colorAccent">#FF5252</color>
     <color name="colorAccentLight">#FFCDD2</color>
+    <color name="colorAccentSecondary">#512DA8</color>
     <color name="lightGrey">#AAAAAA</color>
     <color name="paleGrey">#F5F5F5</color>
     <color name="white">#FFFFFF</color>

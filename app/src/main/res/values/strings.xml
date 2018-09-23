@@ -58,6 +58,8 @@
     <string name="connection_error">Couldn\'t connect to server</string>
     <string name="general_error">An error occurred</string>
     <string name="too_many_requests">Please try again in a moment</string>
+    <string name="maintenance_title">Down for maintenance</string>
+    <string name="maintenance_message">Accroo is temporarily down for maintenance but should be back again soon. Please try again later.</string>
     <string name="invalid_input">Invalid input provided</string>
     <string name="email_in_use">This email address is already being used</string>
     <string name="no_category">This category does not exist</string>

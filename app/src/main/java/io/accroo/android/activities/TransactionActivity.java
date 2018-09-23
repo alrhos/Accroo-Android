@@ -23,6 +23,8 @@ import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 import io.accroo.android.services.InputService;
 
@@ -54,7 +56,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             relaunch();
         } else {
             setContentView(R.layout.activity_transaction);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
+           // final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
             amountField = findViewById(R.id.add_transaction_amount);
             descriptionField = findViewById(R.id.add_transaction_description);
@@ -93,6 +99,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 toggleEditing();
             } else {
                 updateDate();
+                Utils.showSoftKeyboard(TransactionActivity.this);
             }
 
             datePicker = new DatePickerDialog.OnDateSetListener() {
@@ -109,17 +116,16 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 public void onClick(View view) {
                     new DatePickerDialog(TransactionActivity.this, datePicker, calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-
-                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    in.hideSoftInputFromWindow(dateField.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 }
             });
 
             categoryField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.hideSoftKeyboard(TransactionActivity.this);
                     Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
                     startActivityForResult(intent, SUB_CATEGORY_REQUEST);
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
 
@@ -171,6 +177,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(TransactionActivity.this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_resource:
@@ -189,12 +201,16 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
-                this.selectedSubCategoryID = subCategory.getId();
-                String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
-                int iconId = getApplicationContext().getResources().getIdentifier(
-                        "@drawable/" + icon, null, getApplicationContext().getPackageName());
-                categoryIcon.setImageResource(iconId);
-                categoryField.setText(subCategory.getCategoryName());
+                // Crash reports suggest that there are instances where subCategory can be null.
+                // Not sure how this can occur so adding this check to prevent potential null pointer exceptions.
+                if (subCategory != null) {
+                    this.selectedSubCategoryID = subCategory.getId();
+                    String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
+                    int iconId = getApplicationContext().getResources().getIdentifier(
+                            "@drawable/" + icon, null, getApplicationContext().getPackageName());
+                    categoryIcon.setImageResource(iconId);
+                    categoryField.setText(subCategory.getCategoryName());
+                }
             }
         }
     }
@@ -277,7 +293,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();

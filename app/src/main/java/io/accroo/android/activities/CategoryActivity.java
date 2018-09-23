@@ -21,6 +21,7 @@ import io.accroo.android.fragments.GeneralCategoryFragment;
 import io.accroo.android.fragments.SubCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
 
@@ -43,7 +44,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             setContentView(R.layout.activity_category);
             Toolbar toolbar = findViewById(R.id.category_toolbar);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
             progressDialog.setCancelable(false);
@@ -62,7 +65,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
-                tab.setCustomView(pagerAdapter.getTabView(i));
+                if (tab != null) {
+                    tab.setCustomView(pagerAdapter.getTabView(i));
+                }
             }
         }
     }
@@ -120,16 +125,20 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ICON_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                int iconID = data.getIntExtra("iconID", 0);
-                String iconName = data.getStringExtra("iconName");
-                generalCategoryFragment.updateIcon(iconID, iconName);
-            }
-        } else if (requestCode == GENERAL_CATEGORY_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
-                subCategoryFragment.setGeneralCategory(generalCategory);
+        if (generalCategoryFragment == null || subCategoryFragment == null) {
+            relaunch();
+        } else {
+            if (requestCode == ICON_REQUEST) {
+                if (resultCode == RESULT_OK) {
+                    int iconID = data.getIntExtra("iconID", 0);
+                    String iconName = data.getStringExtra("iconName");
+                    generalCategoryFragment.updateIcon(iconID, iconName);
+                }
+            } else if (requestCode == GENERAL_CATEGORY_REQUEST) {
+                if (resultCode == RESULT_OK) {
+                    GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
+                    subCategoryFragment.setGeneralCategory(generalCategory);
+                }
             }
         }
     }
@@ -155,7 +164,9 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
@@ -189,6 +200,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void onIconClicked() {
         Intent intent = new Intent(getApplicationContext(), SelectIconActivity.class);
         startActivityForResult(intent, ICON_REQUEST);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     @Override
@@ -217,6 +229,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void selectGeneralCategory() {
         Intent intent = new Intent(getApplicationContext(), SelectGeneralCategoryActivity.class);
         startActivityForResult(intent, GENERAL_CATEGORY_REQUEST);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
 }

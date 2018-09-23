@@ -3,6 +3,7 @@ package io.accroo.android.fragments;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -52,12 +53,12 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
             this.startDate = new Date(getArguments().getLong(START_DATE));
             this.endDate = new Date(getArguments().getLong(END_DATE));
         }
-        summaryListAdapter = new SummaryListAdapter(getActivity(), startDate, endDate, this);
+        summaryListAdapter = new SummaryListAdapter(requireActivity(), startDate, endDate, this);
         calendar = Calendar.getInstance();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
@@ -65,10 +66,9 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         View fragmentView = inflater.inflate(R.layout.fragment_summary, container, false);
 
         recyclerView = fragmentView.findViewById(R.id.summary_recycler_view);
-        recyclerView.addItemDecoration(new DividerItemDecoration(fragmentView.getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(summaryListAdapter);
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(requireActivity());
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -84,7 +84,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         });
 
         swipeRefreshLayout = fragmentView.findViewById(R.id.summary_swipe_refresh);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -157,14 +157,14 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
     @Override
     public void onStartDateClicked() {
         calendar.setTime(startDate);
-        new DatePickerDialog(getActivity(), startDatePicker, calendar.get(Calendar.YEAR),
+        new DatePickerDialog(requireActivity(), startDatePicker, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     @Override
     public void onEndDateClicked() {
         calendar.setTime(endDate);
-        new DatePickerDialog(getActivity(), endDatePicker, calendar.get(Calendar.YEAR),
+        new DatePickerDialog(requireActivity(), endDatePicker, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 

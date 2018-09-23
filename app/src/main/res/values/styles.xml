@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimaryLight</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -55,6 +56,11 @@
     <style name="SubHeading">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">#BF000000</item>
+    </style>
+
+    <style name="BoldSubHeading">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="SmallFont">

@@ -27,12 +27,13 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
             relaunch();
         } else {
             setContentView(R.layout.activity_select_general_category);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             generalCategoryAdapter = new GeneralCategoryAdapter(getApplicationContext(), this);
 
             recyclerView = findViewById(R.id.general_category_recycler_view);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(generalCategoryAdapter);
             layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -53,6 +54,12 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -65,6 +72,7 @@ public class SelectGeneralCategoryActivity extends AppCompatActivity implements 
         data.putExtra("generalCategory", generalCategory);
         setResult(RESULT_OK, data);
         finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
 }

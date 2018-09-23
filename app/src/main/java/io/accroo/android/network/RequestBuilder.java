@@ -103,7 +103,7 @@ public class RequestBuilder {
                 case 500:
                     return ApiService.GENERIC_ERROR;
                 case 521:
-                    return ApiService.CONNECTION_ERROR;
+                    return ApiService.ORIGIN_UNAVAILABLE;
                 case 522:
                     return ApiService.TIMEOUT_ERROR;
                 case 523:

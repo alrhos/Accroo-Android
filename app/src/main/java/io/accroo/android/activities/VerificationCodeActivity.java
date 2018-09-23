@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class VerificationCodeActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -40,7 +44,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             relaunch();
         } else {
             setContentView(R.layout.activity_verification_code);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");
@@ -49,6 +55,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
             apiService = new ApiService(this, getApplicationContext());
             apiService.getLoginCode(username);
+
+            Utils.showSoftKeyboard(VerificationCodeActivity.this);
 
             submit = findViewById(R.id.submit);
 
@@ -77,6 +85,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
+                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                         progressDialog.show();
                         switch (action) {
                             case LOGIN:
@@ -96,6 +105,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             noCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
                     try {
@@ -112,6 +122,18 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
     }
 
     private boolean isValidInput() {
@@ -135,6 +157,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             switch (action) {
                 case LOGIN:
                     startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
                     break;
                 case UPDATE_EMAIL:
                     Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
@@ -151,7 +174,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

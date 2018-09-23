@@ -21,7 +21,9 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
             relaunch();
         } else {
             setContentView(R.layout.activity_select_icon);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             iconAdapter = new IconAdapter(getApplicationContext(), this);
 
@@ -40,6 +42,12 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -54,6 +62,7 @@ public class SelectIconActivity extends AppCompatActivity implements IconAdapter
         data.putExtra("iconName", iconName);
         setResult(RESULT_OK, data);
         finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
 }

@@ -1,6 +1,5 @@
 package io.accroo.android.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +16,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import io.accroo.android.fragments.TransactionsFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
 import java.util.Date;
@@ -38,10 +42,14 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private SummaryFragment summaryFragment;
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
-    private ProgressDialog progressDialog;
     private ApiService apiService;
     private Date startDate, endDate;
     private FloatingActionButton fab;
+    private final int[] fabColorArray = {
+                                            R.color.colorAccent,
+                                            R.color.colorAccent,
+                                            R.color.colorAccentSecondary
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +58,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 relaunch();
             } else {
                 setContentView(R.layout.activity_main);
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage(getResources().getString(R.string.signing_out));
-                progressDialog.setCancelable(false);
 
                 startDate = new Date(getIntent().getLongExtra("startDate", -1));
                 endDate = new Date (getIntent().getLongExtra("endDate", -1));
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
 
-                ViewPager viewPager = findViewById(R.id.main_viewpager);
+                final ViewPager viewPager = findViewById(R.id.main_viewpager);
                 viewPager.setAdapter(pagerAdapter);
 
                 final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
@@ -70,8 +75,24 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(i);
-                    tab.setCustomView(pagerAdapter.getTabView(i));
+                    if (tab != null) {
+                        tab.setCustomView(pagerAdapter.getTabView(i));
+                    }
                 }
+
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        viewPager.setCurrentItem(tab.getPosition());
+                        animateFab(tab.getPosition());
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {}
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {}
+                });
 
                 fab = findViewById(R.id.fab);
 
@@ -91,6 +112,37 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 apiService = new ApiService(this, getApplicationContext());
             }
+    }
+
+    protected void animateFab(final int position) {
+        fab.clearAnimation();
+        // Scale down animation
+        ScaleAnimation shrink =  new ScaleAnimation(1f, 0.2f, 1f, 0.2f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        shrink.setDuration(150);     // animation duration in milliseconds
+        shrink.setInterpolator(new DecelerateInterpolator());
+        shrink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // Change FAB color and icon
+                //fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position]));
+                fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position], getApplicationContext().getTheme()));
+
+                // Scale up animation
+                ScaleAnimation expand =  new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                expand.setDuration(100);     // animation duration in milliseconds
+                expand.setInterpolator(new AccelerateInterpolator());
+                fab.startAnimation(expand);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        fab.startAnimation(shrink);
     }
 
     @Override
@@ -296,7 +348,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();

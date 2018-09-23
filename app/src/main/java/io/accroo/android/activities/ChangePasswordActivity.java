@@ -1,16 +1,20 @@
 package io.accroo.android.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import io.accroo.android.R;
 import io.accroo.android.other.Constants;
+import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class ChangePasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -28,7 +32,9 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             relaunch();
         } else {
             setContentView(R.layout.activity_change_password);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             apiService = new ApiService(this, getApplicationContext());
             progressDialog = new ProgressDialog(ChangePasswordActivity.this);
@@ -50,6 +56,8 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                     apiService.getKeyPackage();
                 }
             });
+
+            Utils.showSoftKeyboard(ChangePasswordActivity.this);
         }
     }
 
@@ -75,6 +83,12 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
         return true;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(ChangePasswordActivity.this);
+    }
+
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -96,6 +110,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             intent.putExtra("action", VerificationCodeActivity.UPDATE_PASSWORD);
             intent.putExtra("password", newPwd);
             startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
             Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
@@ -104,7 +119,9 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();

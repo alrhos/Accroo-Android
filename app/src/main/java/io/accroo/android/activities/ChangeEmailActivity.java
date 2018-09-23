@@ -1,14 +1,17 @@
 package io.accroo.android.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.Utils;
 
 public class ChangeEmailActivity extends AppCompatActivity {
 
@@ -22,7 +25,9 @@ public class ChangeEmailActivity extends AppCompatActivity {
             relaunch();
         } else {
             setContentView(R.layout.activity_change_email);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             emailAddress = findViewById(R.id.new_email);
             confirmEmailAddress = findViewById(R.id.confirm_new_email);
@@ -37,8 +42,11 @@ public class ChangeEmailActivity extends AppCompatActivity {
                     intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
                     intent.putExtra("email", emailAddress.getText().toString());
                     startActivity(intent);
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
+
+            Utils.showSoftKeyboard(ChangeEmailActivity.this);
         }
     }
 
@@ -46,6 +54,12 @@ public class ChangeEmailActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(ChangeEmailActivity.this);
     }
 
     private void relaunch() {

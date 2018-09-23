@@ -19,7 +19,9 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
             relaunch();
         } else {
             setContentView(R.layout.activity_select_sub_category);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
             findViewById(R.id.category_overview_swipe_refresh).setEnabled(false);
         }
     }
@@ -28,6 +30,12 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
     private void relaunch() {
@@ -52,12 +60,12 @@ public class SelectSubCategoryActivity extends AppCompatActivity implements Cate
         data.putExtra("subCategory", subCategory);
         setResult(RESULT_OK, data);
         finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
     @Override
     public void hideFab() {
         // Not invoked
-
     }
 
     @Override
