@@ -31,7 +31,15 @@ public class CredentialService {
     private static SharedPreferences.Editor editor;
     private static final String             APP = "io.accroo.android";
     public static final String              USERNAME_KEY = "usernameKey";
+    public static final String              USER_ID_KEY = "userId";
+    public static final String              REFRESH_TOKEN_KEY = "refreshToken";
+    public static final String              REFRESH_TOKEN_EXPIRY_KEY = "refreshTokenExpiry";
+    public static final String              ACCESS_TOKEN_KEY = "accessToken";
+    public static final String              ACCESS_TOKEN_EXPIRY_KEY = "accessTokenExpiry";
     public static final String              ENCRYPTION_KEY = "encryptionKey";
+
+
+    // TODO: remove
     public static final String              DEVICE_TOKEN_KEY = "deviceTokenKey";
 
     private CredentialService() throws KeyStoreException, NoSuchAlgorithmException,

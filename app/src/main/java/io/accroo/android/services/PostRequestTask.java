@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import io.accroo.android.crypto.CryptoManager;
+import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.LoginSession;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.model.User;
+import io.accroo.android.other.GsonUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,6 +29,8 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     private PostRequestOutcome postRequestOutcome;
     private Context context;
     private Date startDate, endDate;
+    private Account account;
+    private LoginSession loginSession;
     private Transaction transaction;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
@@ -85,6 +90,26 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
                     CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
                     CryptoManager.getInstance().saveMasterKey(context);
+                    return true;
+
+                case ApiService.CREATE_ACCOUNT:
+
+                    return true;
+
+                case ApiService.LOGIN:
+
+                    account = (Account) requestVariables.get("account");
+                    loginSession = (LoginSession) GsonUtil.getInstance().fromJson(dataReceiver[0][0],
+                            LoginSession.class);
+
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, account.getEmail());
+                    // TODO: determine how to handle int storage as CredentialService methods currently only support strings
+                    //CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, loginSession.getUserId());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, loginSession.getRefreshToken().getToken());
+                    //CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, loginSession.getRefreshToken().getExpiresIn());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, loginSession.getAccessToken().getToken());
+                    //CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, loginSession.getAccessToken().getExpiresIn());
+
                     return true;
 
                 case ApiService.GET_DEFAULT_DATA:

@@ -30,6 +30,11 @@ public abstract class RequestCoordinator {
         }
     }
 
+    public void verifyTokenValidity() {
+        // Check if the current access token is valid (with a fairly generous buffer)
+        // and request a new one if it's expired or close to expiring.
+    }
+
     public void start() {
         if (!requests.isEmpty()) {
             for (RestRequest request : requests) {

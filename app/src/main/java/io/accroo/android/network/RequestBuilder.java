@@ -22,16 +22,18 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static String baseURL =           "https://api.accroo.io/";
-    public final static String VERIFICATION_TOKEN = "token/verification";
-    public final static String DEVICE_TOKEN =       "token/device";
-    public final static String REGISTER =           "register";
-    public final static String EMAIL =              "email";
-    public final static String ENCRYPTION_KEY =     "key";
-    public final static String CATEGORY =           "category";
-    public final static String GENERAL_CATEGORY =   "category/general";
-    public final static String SUB_CATEGORY =       "category/sub";
-    public final static String TRANSACTION =        "transaction";
+    private final static int userId =               1; // TODO: set the correct userId
+    private final static String baseURL =           "http://192.168.1.15/v1/";
+    public final static String ACCOUNT =            "auth/accounts";
+    public final static String EMAIL =              "auth/accounts/email";
+    public final static String VERIFICATION_TOKEN = "auth/verification-tokens";
+    public final static String REFRESH_TOKEN =      "auth/refresh-tokens";
+    public final static String ACCESS_TOKEN =       "auth/access-tokens";
+    public final static String ENCRYPTION_KEY =     "users/" + userId + "/key";
+    public final static String CATEGORY =           "users/" + userId + "/categories";
+    public final static String GENERAL_CATEGORY =   "users/" + userId + "/categories/general";
+    public final static String SUB_CATEGORY =       "users/" + userId + "/categories/sub";
+    public final static String TRANSACTION =        "users/" + userId + "/transactions";
 
     private RequestBuilder() {}
 

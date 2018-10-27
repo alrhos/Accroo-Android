@@ -39,7 +39,7 @@ public class RestRequest extends JsonObjectRequest implements Cloneable {
 
     protected void setAuthHeader(String authValue) {
         headerMap = new HashMap<>();
-        if (authType != NONE) {
+        if (!authType.equals(NONE)) {
             headerMap.put("Authorization", authType + " " + authValue);
         }
     }

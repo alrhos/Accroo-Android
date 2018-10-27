@@ -7,6 +7,7 @@ import com.android.volley.Request;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
+import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.KeyPackage;
 import io.accroo.android.model.SubCategory;
@@ -15,6 +16,7 @@ import io.accroo.android.model.User;
 import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.network.RestRequest;
+import io.accroo.android.other.GsonUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +36,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private String uri;
     private int requestType;
     private JSONObject json;
+    private Account account;
     private Transaction transaction;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
@@ -77,11 +80,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_DEVICE_TOKEN:
 
-                    username = (String) requestVariables.get("username");
-                    loginCode = (String) requestVariables.get("loginCode");
-
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.DEVICE_TOKEN, username, loginCode));
+//                    username = (String) requestVariables.get("username");
+//                    loginCode = (String) requestVariables.get("loginCode");
+//
+//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
+//                            null, RequestBuilder.DEVICE_TOKEN, username, loginCode));
 
                     return true;
 
@@ -102,7 +105,26 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     user.setKeyPackage(keyPackage);
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.REGISTER, user.toJSON()));
+                            RequestBuilder.ACCOUNT, user.toJSON()));
+
+                    return true;
+
+                case ApiService.CREATE_ACCOUNT:
+
+                    account = (Account) requestVariables.get("account");
+
+                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
+                            RequestBuilder.ACCOUNT, GsonUtil.getInstance().toJson(account)));
+
+                    return true;
+
+                case ApiService.LOGIN:
+
+                    account = (Account) requestVariables.get("account");
+
+                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
+                            null, RequestBuilder.REFRESH_TOKEN, account.getEmail(),
+                            account.getVerificationToken()));
 
                     return true;
 

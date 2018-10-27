@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.model.Account;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.User;
 import io.accroo.android.other.Constants;
@@ -28,7 +29,9 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     private Button register;
     private ProgressDialog progressDialog;
     private ApiService apiService;
+    private Account account;
     private char[] pwd;
+    private boolean displayPasswordWarning = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,27 +70,38 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
 
                     Utils.hideSoftKeyboard(RegistrationActivity.this);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
-                    builder.setMessage(R.string.password_warning)
-                            .setTitle(R.string.important)
-                            .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    progressDialog.show();
-                                    int passwordLength = password.getText().length();
-                                    pwd = new char[passwordLength];
-                                    password.getText().getChars(0, passwordLength, pwd, 0);
-                                    User user = new User(emailAddress.getText().toString(), pwd, new Preferences());
-                                    apiService.createUser(user);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {}
-                            }).create().show();
+                    if(displayPasswordWarning) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                        builder.setMessage(R.string.password_warning)
+                                .setTitle(R.string.important)
+                                .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        createAccount();
+//                                        progressDialog.show();
+//                                        int passwordLength = password.getText().length();
+//                                        pwd = new char[passwordLength];
+//                                        password.getText().getChars(0, passwordLength, pwd, 0);
+//                                        User user = new User(emailAddress.getText().toString(), pwd, new Preferences());
+//                                        apiService.createUser(user);
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {}
+                                }).create().show();
+                    } else {
+                        createAccount();
+                    }
                 }
             });
         }
+    }
+
+    private void createAccount() {
+        progressDialog.show();
+        account = new Account(emailAddress.getText().toString());
+        apiService.createAccount(account);
     }
 
     @Override
@@ -138,11 +152,16 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.CREATE_USER) {
-            apiService.createDefaultCategories();
-        } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
-            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+        if (requestType == ApiService.CREATE_ACCOUNT) {
+            apiService.login(account);
         }
+
+
+//        if (requestType == ApiService.CREATE_USER) {
+//            apiService.createDefaultCategories();
+//        } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
+//            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+//        }
     }
 
     @Override

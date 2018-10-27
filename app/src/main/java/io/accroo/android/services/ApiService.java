@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import io.accroo.android.crypto.CryptoManager;
+import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
@@ -39,6 +40,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int GET_KEY_PACKAGE =           14;
     public final static int UPDATE_PASSWORD =           15;
     public final static int GET_VERIFICATION_CODE =     16;
+    public final static int CREATE_ACCOUNT =            17;
+    public final static int LOGIN =                     18;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -120,28 +123,52 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         new PreRequestTask(GET_VERIFICATION_CODE, this, context, coordinator, preRequestVariables).execute();
     }
 
-    public void login(@NonNull final String username, @NonNull String loginCode) {
+    public void login(final Account account) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
                 postRequestVariables.clear();
-                postRequestVariables.put("username", username);
-                new PostRequestTask(GET_DEVICE_TOKEN, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                postRequestVariables.put("account", account);
+                new PostRequestTask(LOGIN, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(GET_DEVICE_TOKEN, errorCode);
+                requestOutcome.onFailure(LOGIN, errorCode);
             }
         };
 
         preRequestVariables.clear();
-        preRequestVariables.put("username", username);
-        preRequestVariables.put("loginCode", loginCode);
+        preRequestVariables.put("account", account);
 
-        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, preRequestVariables).execute();
+        new PreRequestTask(LOGIN, this, context, coordinator,
+                preRequestVariables).execute();
     }
+
+//    public void login(@NonNull final String username, @NonNull String loginCode) {
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//                postRequestVariables.clear();
+//                postRequestVariables.put("username", username);
+//                new PostRequestTask(GET_DEVICE_TOKEN, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+//            }
+//
+//            @Override
+//            protected void onFailure(int errorCode) {
+//                requestOutcome.onFailure(GET_DEVICE_TOKEN, errorCode);
+//            }
+//        };
+//
+//        preRequestVariables.clear();
+//        preRequestVariables.put("username", username);
+//        preRequestVariables.put("loginCode", loginCode);
+//
+//        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, preRequestVariables).execute();
+//    }
 
     public void logout() {
         try {
@@ -178,27 +205,52 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void createUser(final User user) {
+    public void createAccount(final Account account) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
                 postRequestVariables.clear();
-                postRequestVariables.put("user", user);
-                new PostRequestTask(CREATE_USER, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                postRequestVariables.put("account", account);
+                new PostRequestTask(CREATE_ACCOUNT, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(CREATE_USER, errorCode);
+                requestOutcome.onFailure(CREATE_ACCOUNT, errorCode);
             }
         };
 
         preRequestVariables.clear();
-        preRequestVariables.put("user", user);
+        preRequestVariables.put("account", account);
 
-        new PreRequestTask(CREATE_USER, this, context, coordinator, preRequestVariables).execute();
+        new PreRequestTask(CREATE_ACCOUNT, this, context, coordinator,
+                preRequestVariables).execute();
     }
+
+
+//    public void createUser(final User user) {
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//                postRequestVariables.clear();
+//                postRequestVariables.put("user", user);
+//                new PostRequestTask(CREATE_USER, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+//            }
+//
+//            @Override
+//            protected void onFailure(int errorCode) {
+//                requestOutcome.onFailure(CREATE_USER, errorCode);
+//            }
+//        };
+//
+//        preRequestVariables.clear();
+//        preRequestVariables.put("user", user);
+//
+//        new PreRequestTask(CREATE_USER, this, context, coordinator, preRequestVariables).execute();
+//    }
 
     public void createDefaultCategories() {
         dataReceiver = new JSONObject[1];
