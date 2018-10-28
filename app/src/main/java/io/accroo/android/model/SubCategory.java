@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by oscar on 24/03/17.
  */
 
-public class SubCategory implements Securable, Relationship, Parcelable {
+public class SubCategory implements OldSecurable, Relationship, Parcelable {
 
     private int id, generalCategoryId;
     private String categoryName, generalCategoryName;

@@ -78,6 +78,21 @@ public class CredentialService {
         }
     }
 
+    public void saveEntry(String key, long value) throws Exception {
+        try {
+            String valueString = String.valueOf(value);
+            String encryptedValue = keyStoreManager.encrypt(valueString);
+            editor = sharedPreferences.edit();
+            editor.putString(key, encryptedValue);
+            editor.apply();
+        } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
+                KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
+                IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
+            e.printStackTrace();
+            throw new Exception(key + " could not be encrypted");
+        }
+    }
+
     public String getEntry(String key) throws Exception {
         try {
             String encryptedValue = sharedPreferences.getString(key, null);

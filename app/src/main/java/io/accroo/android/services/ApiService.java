@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
+import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.model.User;
@@ -42,6 +43,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int GET_VERIFICATION_CODE =     16;
     public final static int CREATE_ACCOUNT =            17;
     public final static int LOGIN =                     18;
+    public final static int UPDATE_PREFERENCES =        19;
+    public final static int UPDATE_KEY =                20;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -210,10 +213,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("account", account);
-                new PostRequestTask(CREATE_ACCOUNT, ApiService.this, context,
-                        postRequestVariables).execute(dataReceiver);
+                requestOutcome.onSuccess(CREATE_ACCOUNT);
             }
 
             @Override
@@ -226,6 +226,48 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.put("account", account);
 
         new PreRequestTask(CREATE_ACCOUNT, this, context, coordinator,
+                preRequestVariables).execute();
+    }
+
+    public void updateKey(final char[] password) {
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(UPDATE_KEY, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("password", password);
+
+        new PreRequestTask(UPDATE_KEY, this, context, coordinator,
+                preRequestVariables).execute();
+    }
+
+    public void updatePreferences(final Preferences preferences) {
+        dataReceiver = new JSONObject[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(UPDATE_PREFERENCES);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(UPDATE_PREFERENCES, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("preferences", preferences);
+
+        new PreRequestTask(UPDATE_PREFERENCES, this, context, coordinator,
                 preRequestVariables).execute();
     }
 

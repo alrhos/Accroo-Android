@@ -8,8 +8,10 @@ import com.android.volley.Request;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.Account;
+import io.accroo.android.model.EncryptedPreferences;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.model.User;
@@ -37,6 +39,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private int requestType;
     private JSONObject json;
     private Account account;
+    private Preferences preferences;
     private Transaction transaction;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
@@ -45,6 +48,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private RequestCoordinator coordinator;
     private String username, newEmail;
     private String loginCode;
+    private char[] password;
     private char[] newPassword;
 
     public PreRequestTask(int requestType, PreRequestOutcome preRequestOutcome, Context context,
@@ -125,6 +129,21 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
                             null, RequestBuilder.REFRESH_TOKEN, account.getEmail(),
                             account.getVerificationToken()));
+
+                    return true;
+
+                case ApiService.UPDATE_KEY:
+
+                    password = (char[]) requestVariables.get("password");
+
+                    return true;
+
+                case ApiService.UPDATE_PREFERENCES:
+
+                    preferences = (Preferences) requestVariables.get("preferences");
+                    json = GsonUtil.getInstance().toJson(preferences.encrypt());
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
+                            Request.Method.PUT, RequestBuilder.PREFERENCES, json, context));
 
                     return true;
 

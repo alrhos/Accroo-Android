@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by oscar on 4/03/17.
  */
 
-public class GeneralCategory implements Securable, Parcelable {
+public class GeneralCategory implements OldSecurable, Parcelable {
 
     private int id;
     private String categoryName, rootCategory, iconFile;

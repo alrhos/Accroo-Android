@@ -89,7 +89,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                         progressDialog.show();
                         switch (action) {
                             case LOGIN:
-                                apiService.login(username, loginCodeField.getText().toString());
+                                //apiService.login(username, loginCodeField.getText().toString());
                                 break;
                             case UPDATE_EMAIL:
                                 apiService.updateEmail(email, loginCodeField.getText().toString());

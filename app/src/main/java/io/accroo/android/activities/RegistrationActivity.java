@@ -77,6 +77,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
                                 .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        displayPasswordWarning = false;
                                         createAccount();
 //                                        progressDialog.show();
 //                                        int passwordLength = password.getText().length();
@@ -154,6 +155,17 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     public void onSuccess(int requestType) {
         if (requestType == ApiService.CREATE_ACCOUNT) {
             apiService.login(account);
+        } else if (requestType == ApiService.LOGIN) {
+            int passwordLength = password.getText().length();
+            pwd = new char[passwordLength];
+            password.getText().getChars(0, passwordLength, pwd, 0);
+            //apiService.updateKey(char[] password);
+        } else if (requestType == ApiService.UPDATE_KEY) {
+            apiService.updatePreferences(new Preferences());
+        } else if (requestType == ApiService.UPDATE_PREFERENCES) {
+            apiService.createDefaultCategories();
+        } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
+            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
         }
 
 

@@ -7,8 +7,8 @@ android {
         applicationId "io.accroo.android"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -34,5 +34,6 @@ dependencies {
     implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:1.0.7'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'joda-time:joda-time:2.10.1'
     testImplementation 'junit:junit:4.12'
 }

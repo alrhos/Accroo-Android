@@ -13,12 +13,14 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.model.User;
 import io.accroo.android.other.GsonUtil;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 
 /**
  * Created by oscar on 4/07/17.
@@ -92,23 +94,21 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     CryptoManager.getInstance().saveMasterKey(context);
                     return true;
 
-                case ApiService.CREATE_ACCOUNT:
-
-                    return true;
-
                 case ApiService.LOGIN:
 
                     account = (Account) requestVariables.get("account");
                     loginSession = (LoginSession) GsonUtil.getInstance().fromJson(dataReceiver[0][0],
                             LoginSession.class);
 
+                    DateTime refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
+                    DateTime accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
+
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, account.getEmail());
-                    // TODO: determine how to handle int storage as CredentialService methods currently only support strings
-                    //CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, loginSession.getUserId());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, loginSession.getUserId());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, loginSession.getRefreshToken().getToken());
-                    //CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, loginSession.getRefreshToken().getExpiresIn());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, loginSession.getAccessToken().getToken());
-                    //CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, loginSession.getAccessToken().getExpiresIn());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, accessTokenExpiry.toString());
 
                     return true;
 

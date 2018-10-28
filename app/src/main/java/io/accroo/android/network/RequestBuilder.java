@@ -30,6 +30,7 @@ public class RequestBuilder {
     public final static String REFRESH_TOKEN =      "auth/refresh-tokens";
     public final static String ACCESS_TOKEN =       "auth/access-tokens";
     public final static String ENCRYPTION_KEY =     "users/" + userId + "/key";
+    public final static String PREFERENCES =        "users/" + userId + "/preferences";
     public final static String CATEGORY =           "users/" + userId + "/categories";
     public final static String GENERAL_CATEGORY =   "users/" + userId + "/categories/general";
     public final static String SUB_CATEGORY =       "users/" + userId + "/categories/sub";
@@ -51,6 +52,23 @@ public class RequestBuilder {
 
         return new RestRequest(method, url, json, responseListener,
                 errorListener, RestRequest.BASIC, authValue);
+    }
+
+    public static RestRequest refreshTokenAuth() {
+        return null;
+    }
+
+    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
+                                              String endpoint, JSONObject json,
+                                              Context context) throws Exception {
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
+
+        String url = baseURL + endpoint;
+        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+
+        return new RestRequest(method, url, json, responseListener, errorListener,
+                RestRequest.TOKEN, authValue);
     }
 
     public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,

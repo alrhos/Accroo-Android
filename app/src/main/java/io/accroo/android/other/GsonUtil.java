@@ -30,8 +30,8 @@ public class GsonUtil {
         }
     }
 
-    public Object fromJson(JSONObject json, Class classType) {
-        return gson.fromJson(json.toString(), classType);
+    public Object fromJson(JSONObject json, Class className) {
+        return gson.fromJson(json.toString(), className);
     }
 
 }

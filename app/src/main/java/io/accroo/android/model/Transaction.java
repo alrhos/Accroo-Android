@@ -19,7 +19,7 @@ import java.util.Locale;
  * Created by oscar on 25/03/17.
  */
 
-public class Transaction implements Securable, Relationship, Parcelable {
+public class Transaction implements OldSecurable, Relationship, Parcelable {
 
     private int id;
     private int subCategoryId;

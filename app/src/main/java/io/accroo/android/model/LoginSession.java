@@ -1,9 +1,11 @@
 package io.accroo.android.model;
 
+import com.google.gson.annotations.Expose;
+
 public class LoginSession {
-    private int userId;
-    private RefreshToken refreshToken;
-    private AccessToken accessToken;
+    @Expose private int userId;
+    @Expose private RefreshToken refreshToken;
+    @Expose private AccessToken accessToken;
 
     public LoginSession(int userId, RefreshToken refreshToken, AccessToken accessToken) {
         this.userId = userId;

@@ -1,12 +1,14 @@
 package io.accroo.android.model;
 
-public class AccessToken {
-    private String token;
-    private long expiresIn;
+import com.google.gson.annotations.Expose;
 
-    public AccessToken(String token, long expiresIn) {
+public class AccessToken {
+    @Expose private String token;
+    @Expose private String expiresAt;
+
+    public AccessToken(String token, String expiresAt) {
         this.token = token;
-        this.expiresIn = expiresIn;
+        this.expiresAt = expiresAt;
     }
 
     public String getToken() {
@@ -17,12 +19,12 @@ public class AccessToken {
         this.token = token;
     }
 
-    public long getExpiresIn() {
-        return expiresIn;
+    public String getExpiresAt() {
+        return expiresAt;
     }
 
-    public void setExpiresIn(long expiresIn) {
-        this.expiresIn = expiresIn;
+    public void setExpiresAt(String expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
 }
