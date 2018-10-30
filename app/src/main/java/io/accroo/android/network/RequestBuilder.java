@@ -22,19 +22,18 @@ import org.json.JSONObject;
 
 public class RequestBuilder {
 
-    private final static int userId =               1; // TODO: set the correct userId
     private final static String baseURL =           "http://192.168.1.15/v1/";
     public final static String ACCOUNT =            "auth/accounts";
     public final static String EMAIL =              "auth/accounts/email";
     public final static String VERIFICATION_TOKEN = "auth/verification-tokens";
     public final static String REFRESH_TOKEN =      "auth/refresh-tokens";
     public final static String ACCESS_TOKEN =       "auth/access-tokens";
-    public final static String ENCRYPTION_KEY =     "users/" + userId + "/key";
-    public final static String PREFERENCES =        "users/" + userId + "/preferences";
-    public final static String CATEGORY =           "users/" + userId + "/categories";
-    public final static String GENERAL_CATEGORY =   "users/" + userId + "/categories/general";
-    public final static String SUB_CATEGORY =       "users/" + userId + "/categories/sub";
-    public final static String TRANSACTION =        "users/" + userId + "/transactions";
+    public final static String ENCRYPTION_KEY =     "users/<userId>/keys";
+    public final static String PREFERENCES =        "users/<userId>/preferences";
+    public final static String CATEGORY =           "users/<userId>/categories";
+    public final static String GENERAL_CATEGORY =   "users/<userId>/categories/general";
+    public final static String SUB_CATEGORY =       "users/<userId>/categories/sub";
+    public final static String TRANSACTION =        "users/<userId>/transactions";
 
     private RequestBuilder() {}
 
@@ -59,12 +58,13 @@ public class RequestBuilder {
     }
 
     public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
-                                              String endpoint, JSONObject json,
+                                              String endpoint, String userId, JSONObject json,
                                               Context context) throws Exception {
         Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
         String url = baseURL + endpoint;
+        url = url.replace("<userId>", userId);
         String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
 
         return new RestRequest(method, url, json, responseListener, errorListener,

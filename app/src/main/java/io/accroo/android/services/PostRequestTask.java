@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.Key;
 import io.accroo.android.model.LoginSession;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
@@ -79,9 +79,9 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                     int memlimit = keyData.getInt("memlimit");
                     int opslimit = keyData.getInt("opslimit");
 
-                    KeyPackage keyPackage = new KeyPackage(key, nonce, salt, algorithm, opslimit, memlimit);
+                    Key keyPackage = new Key(key, nonce, salt, algorithm, opslimit, memlimit);
 
-                    DataProvider.setKeyPackage(keyPackage);
+                    DataProvider.setKey(keyPackage);
                     return true;
 
                 case ApiService.CREATE_USER:
@@ -216,7 +216,7 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
                 case ApiService.GET_KEY_PACKAGE:
 
                     JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
-                    DataProvider.setKeyPackage(new KeyPackage(json));
+                    DataProvider.setKey(new Key(json));
                     return true;
 
                 case ApiService.UPDATE_PASSWORD:

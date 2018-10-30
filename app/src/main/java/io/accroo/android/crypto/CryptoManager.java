@@ -3,7 +3,7 @@ package io.accroo.android.crypto;
 import android.content.Context;
 import android.util.Base64;
 
-import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.Key;
 import io.accroo.android.model.SecurePayload;
 import io.accroo.android.services.CredentialService;
 
@@ -72,7 +72,7 @@ public class CryptoManager {
         return Base64.decode(value, Base64.NO_WRAP);
     }
 
-    private KeyPackage generateKeyPackage(byte[] key, char[] password) {
+    private Key generateKeyPackage(byte[] key, char[] password) {
         byte[] passwordBytes = passwordToByteArray(password);
 
         // Derive key from password byte array
@@ -102,7 +102,7 @@ public class CryptoManager {
         String encodedNonce = encode(nonce);
         String encodedSalt = encode(salt);
 
-        KeyPackage keyPackage = new KeyPackage(encodedMasterKey, encodedNonce,
+        Key keyPackage = new Key(encodedMasterKey, encodedNonce,
                 encodedSalt, algorithm, opslimit, memlimit);
 
         Arrays.fill(password, '\u0000');
@@ -112,35 +112,35 @@ public class CryptoManager {
         return keyPackage;
     }
 
-    public KeyPackage generateNewKey(char[] password) {
+    public Key generateNewKey(char[] password) {
         masterKey = random.randomBytes(SodiumConstants.SECRETKEY_BYTES);
         secretBox = new SecretBox(masterKey);
-        KeyPackage keyPackage = generateKeyPackage(masterKey, password);
+        Key key = generateKeyPackage(masterKey, password);
         Arrays.fill(password, '\u0000');
-        return keyPackage;
+        return key;
     }
 
-    public KeyPackage encryptMasterKey(char[] password, Context context) throws Exception {
+    public Key encryptMasterKey(char[] password, Context context) throws Exception {
         byte[] secretKeyBytes = decode(CredentialService.getInstance(context).getEntry(CredentialService.ENCRYPTION_KEY));
-        KeyPackage keyPackage = generateKeyPackage(secretKeyBytes, password);
+        Key key = generateKeyPackage(secretKeyBytes, password);
         Arrays.fill(password, '\u0000');
-        return keyPackage;
+        return key;
     }
 
-    public void decryptMasterKey(char[] password, KeyPackage keyPackage) {
+    public void decryptMasterKey(char[] password, Key key) {
         byte[] passwordBytes = passwordToByteArray(password);
         byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
 
-        byte[] salt = decode(keyPackage.getSalt());
-        int algorithm = keyPackage.getAlgorithm();
-        int opslimit = keyPackage.getOpslimit();
-        int memlimit = keyPackage.getMemlimit();
+        byte[] salt = decode(key.getSalt());
+        int algorithm = key.getAlgorithm();
+        int opslimit = key.getOpslimit();
+        int memlimit = key.getMemlimit();
 
         Sodium.crypto_pwhash(dataPasswordKey, dataPasswordKey.length, passwordBytes,
                 passwordBytes.length, salt, opslimit, memlimit, algorithm);
 
-        byte[] nonce = decode(keyPackage.getNonce());
-        byte[] encryptedMasterKey = decode(keyPackage.getEncryptedMasterKey());
+        byte[] nonce = decode(key.getNonce());
+        byte[] encryptedMasterKey = decode(key.getEncryptedKey());
 
         SecretBox box = new SecretBox(dataPasswordKey);
         this.masterKey = box.decrypt(nonce, encryptedMasterKey);

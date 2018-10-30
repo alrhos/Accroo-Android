@@ -8,9 +8,8 @@ import com.android.volley.Request;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.Account;
-import io.accroo.android.model.EncryptedPreferences;
 import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.Key;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
@@ -37,6 +36,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private HashMap<String, Object> requestVariables;
     private String uri;
     private int requestType;
+    private String userId;
     private JSONObject json;
     private Account account;
     private Preferences preferences;
@@ -58,8 +58,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         this.preRequestOutcome = preRequestOutcome;
         this.context = context;
         this.coordinator = coordinator;
-        requests = new ArrayList<>();
         this.requestVariables = requestVariables;
+        requests = new ArrayList<>();
     }
 
     public interface PreRequestOutcome {
@@ -105,8 +105,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     User user = (User) requestVariables.get("user");
 
-                    KeyPackage keyPackage = CryptoManager.getInstance().generateNewKey(user.getPassword());
-                    user.setKeyPackage(keyPackage);
+                    Key key = CryptoManager.getInstance().generateNewKey(user.getPassword());
+                    user.setKey(key);
 
                     requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
                             RequestBuilder.ACCOUNT, user.toJSON()));
@@ -132,18 +132,32 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.UPDATE_KEY:
+                case ApiService.CREATE_KEY:
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     password = (char[]) requestVariables.get("password");
+                    key = CryptoManager.getInstance().generateNewKey(password);
+                    CryptoManager.getInstance().saveMasterKey(context);
+
+                    json = GsonUtil.getInstance().toJson(key);
+                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
+                            Request.Method.PUT, RequestBuilder.ENCRYPTION_KEY, userId, json, context));
 
                     return true;
 
+//                case ApiService.UPDATE_KEY:
+//
+//                    password = (char[]) requestVariables.get("password");
+//
+//                    return true;
+
                 case ApiService.UPDATE_PREFERENCES:
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     preferences = (Preferences) requestVariables.get("preferences");
                     json = GsonUtil.getInstance().toJson(preferences.encrypt());
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
-                            Request.Method.PUT, RequestBuilder.PREFERENCES, json, context));
+                            Request.Method.PUT, RequestBuilder.PREFERENCES, userId, json, context));
 
                     return true;
 
@@ -152,7 +166,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     ArrayList<GeneralCategory> generalCategories = DataAccess.getInstance(context).getGeneralCategories();
                     ArrayList<SubCategory> subCategories = DataAccess.getInstance(context).getSubCategories();
 
-                    // Shuffle items so that each user's categories are inserted in a different
+                    // Shuffle items so that each user's categories are inserted in a random
                     // order making it more difficult for sysadmins to guess a certain category
                     // given the cipher text length or order of records in db table.
 
@@ -298,17 +312,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.UPDATE_PASSWORD:
-
-                    loginCode = (String) requestVariables.get("loginCode");
-                    newPassword = (char[]) requestVariables.get("newPassword");
-                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
-                    KeyPackage newKeyPackage = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
-
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-                            newKeyPackage.toJSON(), RequestBuilder.ENCRYPTION_KEY, username, loginCode));
-
-                    return true;
+//                case ApiService.UPDATE_PASSWORD:
+//
+//                    loginCode = (String) requestVariables.get("loginCode");
+//                    newPassword = (char[]) requestVariables.get("newPassword");
+//                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
+//                    Key newKey = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
+//
+//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
+//                            newKey.toJSON(), RequestBuilder.ENCRYPTION_KEY, username, loginCode));
+//
+//                    return true;
 
             }
 

@@ -2,7 +2,7 @@ package io.accroo.android.services;
 
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.GeneralCategoryComparator;
-import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.Key;
 import io.accroo.android.model.RootCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.SubCategoryComparator;
@@ -24,7 +24,7 @@ public class DataProvider {
     private static ArrayList<SubCategory> subCategories = new ArrayList<>();
     private static ArrayList<Transaction> transactions = new ArrayList<>();
     private static RootCategory[] rootCategories;
-    private static KeyPackage keyPackage;
+    private static Key key;
     private static Date startDate, endDate;
 
     public static void loadData(ArrayList<GeneralCategory> generalCategories,
@@ -94,12 +94,12 @@ public class DataProvider {
         return generalCategories;
     }
 
-    public static void setKeyPackage(KeyPackage keyPackage) {
-        DataProvider.keyPackage = keyPackage;
+    public static void setKey(Key key) {
+        DataProvider.key = key;
     }
 
-    public static KeyPackage getKeyPackage() {
-        return keyPackage;
+    public static Key getKey() {
+        return key;
     }
 
     public static void setStartDate(Date startDate) {

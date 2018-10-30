@@ -9,7 +9,6 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
-import io.accroo.android.model.User;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.network.RestRequest;
 
@@ -45,6 +44,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int LOGIN =                     18;
     public final static int UPDATE_PREFERENCES =        19;
     public final static int UPDATE_KEY =                20;
+    public final static int CREATE_KEY =                21;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -88,7 +88,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public boolean initializeKey(@NonNull char[] password) {
         try {
-            CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKeyPackage());
+            CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKey());
             CryptoManager.getInstance().saveMasterKey(context);
             return true;
         } catch (Exception e) {
@@ -229,26 +229,47 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 preRequestVariables).execute();
     }
 
-    public void updateKey(final char[] password) {
+    public void createKey(final char[] password) {
         dataReceiver = new JSONObject[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-
+                requestOutcome.onSuccess(CREATE_KEY);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(UPDATE_KEY, errorCode);
+                requestOutcome.onFailure(CREATE_KEY, errorCode);
             }
         };
 
         preRequestVariables.clear();
         preRequestVariables.put("password", password);
 
-        new PreRequestTask(UPDATE_KEY, this, context, coordinator,
+        new PreRequestTask(CREATE_KEY, this, context, coordinator,
                 preRequestVariables).execute();
     }
+
+//    public void updateKey(final char[] password) {
+//        dataReceiver = new JSONObject[1];
+//        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+//            @Override
+//            protected void onSuccess() {
+//
+//            }
+//
+//            @Override
+//            protected void onFailure(int errorCode) {
+//                requestOutcome.onFailure(UPDATE_KEY, errorCode);
+//            }
+//        };
+//
+//        preRequestVariables.clear();
+//        preRequestVariables.put("password", password);
+//
+//        new PreRequestTask(UPDATE_KEY, this, context, coordinator,
+//                preRequestVariables).execute();
+//    }
 
     public void updatePreferences(final Preferences preferences) {
         dataReceiver = new JSONObject[1];

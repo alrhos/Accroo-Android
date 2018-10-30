@@ -159,8 +159,8 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             int passwordLength = password.getText().length();
             pwd = new char[passwordLength];
             password.getText().getChars(0, passwordLength, pwd, 0);
-            //apiService.updateKey(char[] password);
-        } else if (requestType == ApiService.UPDATE_KEY) {
+            apiService.createKey(pwd);
+        } else if (requestType == ApiService.CREATE_KEY) {
             apiService.updatePreferences(new Preferences());
         } else if (requestType == ApiService.UPDATE_PREFERENCES) {
             apiService.createDefaultCategories();
