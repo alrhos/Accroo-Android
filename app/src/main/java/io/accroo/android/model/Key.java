@@ -33,16 +33,16 @@ public class Key implements Parcelable {
 
     }
 
-    public Key(JSONObject json) throws JSONException {
-
-        this.encryptedKey = json.getString("key");
-        this.nonce = json.getString("nonce");
-        this.salt = json.getString("salt");
-        this.algorithm = json.getInt("algorithm");
-        this.opslimit = json.getInt("opslimit");
-        this.memlimit = json.getInt("memlimit");
-
-    }
+//    public Key(JSONObject json) throws JSONException {
+//
+//        this.encryptedKey = json.getString("key");
+//        this.nonce = json.getString("nonce");
+//        this.salt = json.getString("salt");
+//        this.algorithm = json.getInt("algorithm");
+//        this.opslimit = json.getInt("opslimit");
+//        this.memlimit = json.getInt("memlimit");
+//
+//    }
 
     public String getEncryptedKey() {
         return encryptedKey;

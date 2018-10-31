@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import io.accroo.android.model.DefaultGeneralCategory;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 
@@ -32,7 +33,7 @@ public class DataAccess {
         dbHelper = new DBHelper(context);
     }
 
-    public ArrayList<GeneralCategory> getGeneralCategories() {
+    public ArrayList<DefaultGeneralCategory> getDefaultGeneralCategories() {
         db = dbHelper.getReadableDatabase();
         String[] columns = {
             DBContract.GeneralCategory.COLUMN_CATEGORY_NAME,
@@ -50,10 +51,10 @@ public class DataAccess {
             null
         );
 
-        ArrayList<GeneralCategory> categories = new ArrayList<>();
+        ArrayList<DefaultGeneralCategory> categories = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            categories.add(new GeneralCategory(
+            categories.add(new DefaultGeneralCategory(
                 cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_NAME)),
                 cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_ROOT_CATEGORY)),
                 cursor.getString(cursor.getColumnIndexOrThrow(DBContract.GeneralCategory.COLUMN_CATEGORY_ICON))
@@ -64,7 +65,7 @@ public class DataAccess {
         return categories;
     }
 
-    public ArrayList<SubCategory> getSubCategories() {
+    public ArrayList<SubCategory> getDefaultSubCategories() {
         db = dbHelper.getReadableDatabase();
         String[] columns = {
             DBContract.SubCategory.COLUMN_CATEGORY_NAME,

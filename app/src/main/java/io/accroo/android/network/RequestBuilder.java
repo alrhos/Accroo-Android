@@ -71,6 +71,21 @@ public class RequestBuilder {
                 RestRequest.TOKEN, authValue);
     }
 
+    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
+                                              String endpoint, String userId, String json,
+                                              Context context) throws Exception {
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
+
+        String url = baseURL + endpoint;
+        url = url.replace("<userId>", userId);
+        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+        JSONObject jsonObject = new JSONObject(json);
+
+        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
+                RestRequest.TOKEN, authValue);
+    }
+
     public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,
                                               String endpoint, JSONObject json, Context context) throws Exception {
 
@@ -93,6 +108,19 @@ public class RequestBuilder {
         String url = baseURL + endpoint;
 
         return new RestRequest(method, url, json, responseListener, errorListener,
+                RestRequest.NONE, null);
+    }
+
+    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
+                                     String endpoint, String json) throws Exception {
+
+        Response.Listener<JSONObject> responseListener = createResponseListener(index, coordinator);
+        Response.ErrorListener errorListener = createErrorListener(coordinator);
+
+        String url = baseURL + endpoint;
+        JSONObject jsonObject = new JSONObject(json);
+
+        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
                 RestRequest.NONE, null);
     }
 

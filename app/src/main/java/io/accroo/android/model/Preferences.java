@@ -33,8 +33,8 @@ public class Preferences {
     }
 
     public EncryptedPreferences encrypt() {
-        JSONObject preferencesJson = GsonUtil.getInstance().toJson(this);
-        SecurePayload securePayload = CryptoManager.getInstance().encrypt(preferencesJson.toString());
+        String preferencesJson = GsonUtil.getInstance().toJson(this);
+        SecurePayload securePayload = CryptoManager.getInstance().encrypt(preferencesJson);
         return new EncryptedPreferences(securePayload.getData(), securePayload.getNonce());
     }
 

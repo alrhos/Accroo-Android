@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.Account;
+import io.accroo.android.model.DefaultGeneralCategory;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.Preferences;
@@ -38,6 +39,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private int requestType;
     private String userId;
     private JSONObject json;
+    // TODO: rename this to json after removing JSONObject
+    private String jsonString;
     private Account account;
     private Preferences preferences;
     private Transaction transaction;
@@ -139,9 +142,10 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     key = CryptoManager.getInstance().generateNewKey(password);
                     CryptoManager.getInstance().saveMasterKey(context);
 
-                    json = GsonUtil.getInstance().toJson(key);
+                    jsonString = GsonUtil.getInstance().toJson(key);
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
-                            Request.Method.PUT, RequestBuilder.ENCRYPTION_KEY, userId, json, context));
+                            Request.Method.PUT, RequestBuilder.ENCRYPTION_KEY, userId,
+                            jsonString, context));
 
                     return true;
 
@@ -155,16 +159,16 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     preferences = (Preferences) requestVariables.get("preferences");
-                    json = GsonUtil.getInstance().toJson(preferences.encrypt());
+                    jsonString = GsonUtil.getInstance().toJson(preferences.encrypt());
                     requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
-                            Request.Method.PUT, RequestBuilder.PREFERENCES, userId, json, context));
+                            Request.Method.PUT, RequestBuilder.PREFERENCES, userId, jsonString, context));
 
                     return true;
 
                 case ApiService.CREATE_DEFAULT_CATEGORIES:
 
-                    ArrayList<GeneralCategory> generalCategories = DataAccess.getInstance(context).getGeneralCategories();
-                    ArrayList<SubCategory> subCategories = DataAccess.getInstance(context).getSubCategories();
+                    ArrayList<DefaultGeneralCategory> generalCategories = DataAccess.getInstance(context).getDefaultGeneralCategories();
+                    ArrayList<SubCategory> subCategories = DataAccess.getInstance(context).getDefaultSubCategories();
 
                     // Shuffle items so that each user's categories are inserted in a random
                     // order making it more difficult for sysadmins to guess a certain category
@@ -174,7 +178,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     Collections.shuffle(subCategories);
 
                     for (SubCategory subCategory : subCategories) {
-                        for (GeneralCategory generalCategory : generalCategories) {
+                        for (DefaultGeneralCategory generalCategory : generalCategories) {
                             if (subCategory.getGeneralCategoryName().equals(generalCategory.getCategoryName())) {
                                 generalCategory.getSubCategories().add(subCategory);
                                 break;
@@ -182,26 +186,28 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                         }
                     }
 
-                    JSONArray generalCategoriesArray = new JSONArray();
+                    jsonString = GsonUtil.getInstance().toJson(generalCategories);
 
-                    for (GeneralCategory generalCategory : generalCategories) {
-                        JSONArray subCategoriesArray = new JSONArray();
-                        for (SubCategory subCategory : generalCategory.getSubCategories()) {
-                            subCategoriesArray.put(subCategory.encrypt());
-                        }
+//                    JSONArray generalCategoriesArray = new JSONArray();
+//
+//                    for (DefaultGeneralCategory generalCategory : generalCategories) {
+//                        JSONArray subCategoriesArray = new JSONArray();
+//                        for (SubCategory subCategory : generalCategory.getSubCategories()) {
+//                            subCategoriesArray.put(subCategory.encrypt());
+//                        }
+//
+//                        JSONObject category = generalCategory.encrypt();
+//                        category.put("subCategories", subCategoriesArray);
+//                        generalCategoriesArray.put(category);
+//                    }
+//
+//                    JSONObject categories = new JSONObject();
+//                    categories.put("categories", generalCategoriesArray);
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.CATEGORY, categories, context));
 
-                        JSONObject category = generalCategory.encrypt();
-                        category.put("subCategories", subCategoriesArray);
-                        generalCategoriesArray.put(category);
-                    }
-
-                    JSONObject categories = new JSONObject();
-                    categories.put("categories", generalCategoriesArray);
-
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.CATEGORY, categories, context));
-
-                    return true;
+//                    return true;
 
                 case ApiService.CREATE_TRANSACTION:
 
@@ -234,20 +240,20 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_GENERAL_CATEGORY:
 
-                    json = ((GeneralCategory) requestVariables.get("generalCategory")).encrypt();
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.GENERAL_CATEGORY, json, context));
+//                    json = ((GeneralCategory) requestVariables.get("generalCategory")).encrypt();
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.GENERAL_CATEGORY, json, context));
 
                     return true;
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
 
-                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-                    json = generalCategory.encrypt();
-                    uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
-
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
-                            uri, json, context));
+//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+//                    json = generalCategory.encrypt();
+//                    uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
+//                            uri, json, context));
 
                     return true;
 
@@ -263,21 +269,21 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_SUB_CATEGORY:
 
-                    json = ((SubCategory) requestVariables.get("subCategory")).encrypt();
-
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.SUB_CATEGORY, json, context));
+//                    json = ((SubCategory) requestVariables.get("subCategory")).encrypt();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.SUB_CATEGORY, json, context));
 
                     return true;
 
                 case ApiService.UPDATE_SUB_CATEGORY:
 
-                    subCategory = (SubCategory) requestVariables.get("subCategory");
-                    json = subCategory.encrypt();
-                    uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
-
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
-                            uri, json, context));
+//                    subCategory = (SubCategory) requestVariables.get("subCategory");
+//                    json = subCategory.encrypt();
+//                    uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
+//                            uri, json, context));
 
                     return true;
 
