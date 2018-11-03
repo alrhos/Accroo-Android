@@ -3,6 +3,8 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.android.volley.toolbox.JsonRequest;
+
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
@@ -59,7 +61,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     private RequestOutcome                              requestOutcome;
     private Context                                     context;
     private RequestCoordinator                          coordinator;
-    private JSONObject[]                                dataReceiver;
+    private String[]                                    dataReceiver;
     private HashMap<String, Object>                     preRequestVariables;
     private HashMap<String, Object>                     postRequestVariables;
 
@@ -98,7 +100,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void getLoginCode(String username) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -127,7 +129,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void login(final Account account) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -186,7 +188,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             DataProvider.setStartDate(startDate);
             DataProvider.setEndDate(endDate);
 
-            dataReceiver = new JSONObject[2];
+            dataReceiver = new String[2];
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
                 @Override
                 protected void onSuccess() {
@@ -209,7 +211,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void createAccount(final Account account) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -230,7 +232,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void createKey(final char[] password) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -272,7 +274,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //    }
 
     public void updatePreferences(final Preferences preferences) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -316,7 +318,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //    }
 
     public void createDefaultCategories() {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -333,7 +335,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void createTransaction(final Transaction transaction) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -355,7 +357,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void updateTransaction(final Transaction transaction) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -377,7 +379,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void deleteTransaction(final Transaction transaction) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -399,7 +401,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void createGeneralCategory(final GeneralCategory generalCategory) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -421,7 +423,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void updateGeneralCategory(final GeneralCategory generalCategory) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -443,7 +445,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void deleteGeneralCategory(final GeneralCategory generalCategory) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -465,7 +467,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void createSubCategory(final SubCategory subCategory) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -487,7 +489,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void updateSubCategory(final SubCategory subCategory) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -509,7 +511,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void deleteSubCategory(final SubCategory subCategory) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -531,7 +533,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void updateEmail(final String newEmail, String loginCode) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -554,7 +556,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void getKeyPackage() {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -571,7 +573,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void updatePassword(char[] newPassword, String loginCode) {
-        dataReceiver = new JSONObject[1];
+        dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
@@ -592,7 +594,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     @Override
-    public void onPreRequestTaskSuccess(RestRequest... requests) {
+    public void onPreRequestTaskSuccess(JsonRequest... requests) {
         try {
             coordinator.addRequests(requests);
             coordinator.start();

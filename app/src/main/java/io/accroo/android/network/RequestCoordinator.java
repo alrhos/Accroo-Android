@@ -1,6 +1,10 @@
 package io.accroo.android.network;
 
 import android.content.Context;
+
+import com.android.volley.toolbox.JsonRequest;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
@@ -13,18 +17,18 @@ public abstract class RequestCoordinator {
     private int doneCount = 0;
     private Context context;
     private Object tag;
-    private ArrayList<RestRequest> requests;
-    private JSONObject[] dataReceiver;
+    private ArrayList<JsonRequest> requests;
+    private String[] dataReceiver;
 
-    public RequestCoordinator(Context context, Object tag, JSONObject[] dataReceiver) {
+    public RequestCoordinator(Context context, Object tag, String[] dataReceiver) {
         this.context = context;
         this.tag = tag;
         this.dataReceiver = dataReceiver;
         requests = new ArrayList<>();
     }
 
-    public void addRequests(RestRequest... requests) throws Exception {
-        for (RestRequest request : requests) {
+    public void addRequests(JsonRequest... requests) throws Exception {
+        for (JsonRequest request : requests) {
             request.setTag(tag);
             this.requests.add(request);
         }
@@ -37,14 +41,22 @@ public abstract class RequestCoordinator {
 
     public void start() {
         if (!requests.isEmpty()) {
-            for (RestRequest request : requests) {
+            for (JsonRequest request : requests) {
                 RequestDispatcher.getInstance(context).addRequest(request);
             }
         }
     }
 
     protected synchronized void done(int index, JSONObject data) {
-        dataReceiver[index] = data;
+        dataReceiver[index] = data.toString();
+        doneCount++;
+        if (doneCount == requests.size()) {
+            onSuccess();
+        }
+    }
+
+    protected synchronized void done(int index, JSONArray data) {
+        dataReceiver[index] = data.toString();
         doneCount++;
         if (doneCount == requests.size()) {
             onSuccess();

@@ -52,10 +52,16 @@ public class DefaultGeneralCategory {
         this.subCategories = subCategories;
     }
 
-    public EncryptedGeneralCategory encrypt() {
+    public EncryptedDefaultGeneralCategory encrypt() {
         String categoryJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
-        return new EncryptedGeneralCategory(securePayload.getData(), securePayload.getNonce());
+        EncryptedDefaultGeneralCategory generalCategory = new EncryptedDefaultGeneralCategory(
+                securePayload.getData(), securePayload.getNonce());
+        for (DefaultSubCategory subCategory: this.subCategories) {
+            generalCategory.getSubCategories().add(subCategory.encrypt());
+        }
+        return generalCategory;
+        //return new EncryptedGeneralCategory(securePayload.getData(), securePayload.getNonce());
     }
 
 }

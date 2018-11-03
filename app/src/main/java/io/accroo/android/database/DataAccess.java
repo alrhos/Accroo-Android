@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import io.accroo.android.model.DefaultGeneralCategory;
+import io.accroo.android.model.DefaultSubCategory;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 
@@ -65,7 +66,7 @@ public class DataAccess {
         return categories;
     }
 
-    public ArrayList<SubCategory> getDefaultSubCategories() {
+    public ArrayList<DefaultSubCategory> getDefaultSubCategories() {
         db = dbHelper.getReadableDatabase();
         String[] columns = {
             DBContract.SubCategory.COLUMN_CATEGORY_NAME,
@@ -82,10 +83,10 @@ public class DataAccess {
             null
         );
 
-        ArrayList<SubCategory> categories = new ArrayList<>();
+        ArrayList<DefaultSubCategory> categories = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            categories.add(new SubCategory(
+            categories.add(new DefaultSubCategory(
                 cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_CATEGORY_NAME)),
                 cursor.getString(cursor.getColumnIndexOrThrow(DBContract.SubCategory.COLUMN_GENERAL_CATEGORY))
             ));

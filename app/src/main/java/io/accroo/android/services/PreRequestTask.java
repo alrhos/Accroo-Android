@@ -4,11 +4,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.android.volley.Request;
+import com.android.volley.toolbox.JsonRequest;
+import com.google.gson.Gson;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.DefaultGeneralCategory;
+import io.accroo.android.model.DefaultSubCategory;
+import io.accroo.android.model.EncryptedDefaultGeneralCategory;
+import io.accroo.android.model.EncryptedPreferences;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.Preferences;
@@ -33,16 +38,18 @@ import java.util.HashMap;
 
 public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
-    private ArrayList<RestRequest> requests;
+    private ArrayList<JsonRequest> requests;
     private HashMap<String, Object> requestVariables;
     private String uri;
     private int requestType;
     private String userId;
+    private String accessToken;
     private JSONObject json;
     // TODO: rename this to json after removing JSONObject
     private String jsonString;
     private Account account;
     private Preferences preferences;
+    private EncryptedPreferences encryptedPreferences;
     private Transaction transaction;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
@@ -66,7 +73,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     }
 
     public interface PreRequestOutcome {
-        void onPreRequestTaskSuccess(RestRequest... requests);
+        void onPreRequestTaskSuccess(JsonRequest... requests);
         void onPreRequestTaskFailure();
     }
 
@@ -98,7 +105,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.GET_DEFAULT_DATA:
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.GET,
-                            RequestBuilder.CATEGORY, null, context));
+                            RequestBuilder.CATEGORIES, null, context));
                     requests.add(RequestBuilder.deviceTokenAuth(1, coordinator, Request.Method.GET,
                             RequestBuilder.TRANSACTION, null, context));
 
@@ -119,19 +126,23 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.CREATE_ACCOUNT:
 
                     account = (Account) requestVariables.get("account");
+                    requests.add(RequestBuilder.postAccount(0, coordinator,
+                            GsonUtil.getInstance().toJson(account)));
 
-                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.ACCOUNT, GsonUtil.getInstance().toJson(account)));
+//                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.ACCOUNT, GsonUtil.getInstance().toJson(account)));
 
                     return true;
 
                 case ApiService.LOGIN:
 
                     account = (Account) requestVariables.get("account");
+                    requests.add(RequestBuilder.postRefreshToken(0, coordinator,
+                            account.getEmail(), account.getVerificationToken()));
 
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-                            null, RequestBuilder.REFRESH_TOKEN, account.getEmail(),
-                            account.getVerificationToken()));
+//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
+//                            null, RequestBuilder.REFRESH_TOKEN, account.getEmail(),
+//                            account.getVerificationToken()));
 
                     return true;
 
@@ -141,11 +152,14 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     password = (char[]) requestVariables.get("password");
                     key = CryptoManager.getInstance().generateNewKey(password);
                     CryptoManager.getInstance().saveMasterKey(context);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.putKey(0, coordinator,
+                            GsonUtil.getInstance().toJson(key), userId, accessToken));
 
-                    jsonString = GsonUtil.getInstance().toJson(key);
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
-                            Request.Method.PUT, RequestBuilder.ENCRYPTION_KEY, userId,
-                            jsonString, context));
+//                    jsonString = GsonUtil.getInstance().toJson(key);
+//                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
+//                            Request.Method.PUT, RequestBuilder.ENCRYPTION_KEY, userId,
+//                            jsonString, context));
 
                     return true;
 
@@ -159,16 +173,16 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     preferences = (Preferences) requestVariables.get("preferences");
-                    jsonString = GsonUtil.getInstance().toJson(preferences.encrypt());
-                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
-                            Request.Method.PUT, RequestBuilder.PREFERENCES, userId, jsonString, context));
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.putPreferences(0, coordinator,
+                            GsonUtil.getInstance().toJson(preferences.encrypt()), userId, accessToken));
 
                     return true;
 
                 case ApiService.CREATE_DEFAULT_CATEGORIES:
 
                     ArrayList<DefaultGeneralCategory> generalCategories = DataAccess.getInstance(context).getDefaultGeneralCategories();
-                    ArrayList<SubCategory> subCategories = DataAccess.getInstance(context).getDefaultSubCategories();
+                    ArrayList<DefaultSubCategory> subCategories = DataAccess.getInstance(context).getDefaultSubCategories();
 
                     // Shuffle items so that each user's categories are inserted in a random
                     // order making it more difficult for sysadmins to guess a certain category
@@ -177,7 +191,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     Collections.shuffle(generalCategories);
                     Collections.shuffle(subCategories);
 
-                    for (SubCategory subCategory : subCategories) {
+                    for (DefaultSubCategory subCategory : subCategories) {
                         for (DefaultGeneralCategory generalCategory : generalCategories) {
                             if (subCategory.getGeneralCategoryName().equals(generalCategory.getCategoryName())) {
                                 generalCategory.getSubCategories().add(subCategory);
@@ -186,7 +200,18 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                         }
                     }
 
-                    jsonString = GsonUtil.getInstance().toJson(generalCategories);
+                    ArrayList<EncryptedDefaultGeneralCategory> encryptedCategories = new ArrayList<>();
+                    for (DefaultGeneralCategory category: generalCategories) {
+                        encryptedCategories.add(category.encrypt());
+                    }
+
+                    jsonString = GsonUtil.getInstance().toJson(encryptedCategories);
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.postDefaultCategories(0, coordinator, jsonString,
+                            userId, accessToken));
+//                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.CATEGORIES, userId, jsonString, context));
 
 //                    JSONArray generalCategoriesArray = new JSONArray();
 //
@@ -207,7 +232,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
 //                            RequestBuilder.CATEGORY, categories, context));
 
-//                    return true;
+                    return true;
 
                 case ApiService.CREATE_TRANSACTION:
 
@@ -342,7 +367,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         if (success) {
-            preRequestOutcome.onPreRequestTaskSuccess(requests.toArray(new RestRequest[requests.size()]));
+            preRequestOutcome.onPreRequestTaskSuccess(requests.toArray(new JsonRequest[requests.size()]));
         } else {
             preRequestOutcome.onPreRequestTaskFailure();
         }

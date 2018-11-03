@@ -2,8 +2,6 @@ package io.accroo.android.model;
 
 import com.google.gson.annotations.Expose;
 
-import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 
 import io.accroo.android.crypto.CryptoManager;

@@ -80,29 +80,29 @@ public class SubCategoryFragment extends Fragment {
             }
         });
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isGeneralCategorySelected()) {
-                    return;
-                }
-
-                if (!isValidSubCategory()) {
-                    return;
-                }
-
-                String formattedName = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
-
-                if (editing) {
-                    existingCategory.setCategoryName(formattedName);
-                    existingCategory.setGeneralCategoryId(generalCategory.getId());
-                    fragmentListener.updateSubCategory(existingCategory);
-                } else {
-                    SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
-                    fragmentListener.createSubCategory(subCategory);
-                }
-            }
-        });
+//        submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!isGeneralCategorySelected()) {
+//                    return;
+//                }
+//
+//                if (!isValidSubCategory()) {
+//                    return;
+//                }
+//
+//                String formattedName = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
+//
+//                if (editing) {
+//                    existingCategory.setCategoryName(formattedName);
+//                    existingCategory.setGeneralCategoryId(generalCategory.getId());
+//                    fragmentListener.updateSubCategory(existingCategory);
+//                } else {
+//                    SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
+//                    fragmentListener.createSubCategory(subCategory);
+//                }
+//            }
+//        });
 
         return fragmentView;
     }

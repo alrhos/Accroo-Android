@@ -26,7 +26,7 @@ import java.util.HashMap;
  * Created by oscar on 4/07/17.
  */
 
-public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
+public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
     private PostRequestOutcome postRequestOutcome;
     private Context context;
@@ -59,39 +59,39 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(JSONObject[]... dataReceiver) {
+    protected Boolean doInBackground(String[]... dataReceiver) {
         try {
             switch (requestType) {
 
                 case ApiService.GET_DEVICE_TOKEN:
 
-                    username = (String) requestVariables.get("username");
-                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-
-                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
-
-                    JSONObject keyData = dataReceiver[0][0].getJSONObject("keyPackage");
-                    String key = keyData.getString("key");
-                    String nonce = keyData.getString("nonce");
-                    String salt = keyData.getString("salt");
-                    int algorithm = keyData.getInt("algorithm");
-                    int memlimit = keyData.getInt("memlimit");
-                    int opslimit = keyData.getInt("opslimit");
-
-                    Key keyPackage = new Key(key, nonce, salt, algorithm, opslimit, memlimit);
-
-                    DataProvider.setKey(keyPackage);
+//                    username = (String) requestVariables.get("username");
+//                    deviceToken = dataReceiver[0][0].getString("deviceToken");
+//
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+//
+//                    JSONObject keyData = dataReceiver[0][0].getJSONObject("keyPackage");
+//                    String key = keyData.getString("key");
+//                    String nonce = keyData.getString("nonce");
+//                    String salt = keyData.getString("salt");
+//                    int algorithm = keyData.getInt("algorithm");
+//                    int memlimit = keyData.getInt("memlimit");
+//                    int opslimit = keyData.getInt("opslimit");
+//
+//                    Key keyPackage = new Key(key, nonce, salt, algorithm, opslimit, memlimit);
+//
+//                    DataProvider.setKey(keyPackage);
                     return true;
 
                 case ApiService.CREATE_USER:
 
-                    username = ((User) requestVariables.get("user")).getEmail();
-                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-
-                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
-                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
-                    CryptoManager.getInstance().saveMasterKey(context);
+//                    username = ((User) requestVariables.get("user")).getEmail();
+//                    deviceToken = dataReceiver[0][0].getString("deviceToken");
+//
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+//                    CryptoManager.getInstance().saveMasterKey(context);
                     return true;
 
                 case ApiService.LOGIN:
@@ -114,45 +114,45 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.GET_DEFAULT_DATA:
 
-                    JSONArray generalCategoriesArray = dataReceiver[0][0].getJSONArray("categories");
-
-                    startDate = (Date) requestVariables.get("startDate");
-                    endDate = (Date) requestVariables.get("endDate");
-
-                    for (int i = 0; i < generalCategoriesArray.length(); i++) {
-                        JSONObject gc = generalCategoriesArray.getJSONObject(i);
-                        GeneralCategory generalCategory = new GeneralCategory(gc);
-                        JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
-
-                        for (int j = 0; j < linkedSubCategories.length(); j++) {
-                            JSONObject sc = linkedSubCategories.getJSONObject(j);
-                            SubCategory subCategory = new SubCategory(sc);
-                            subCategories.add(subCategory);
-                        }
-
-                        generalCategories.add(generalCategory);
-                    }
-
-                    JSONArray transactionsArray = dataReceiver[0][1].getJSONArray("transactions");
-
-                    for (int k = 0; k < transactionsArray.length(); k++) {
-                        JSONObject t = transactionsArray.getJSONObject(k);
-                        Transaction transaction = new Transaction(t);
-
-                        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
-                            transactions.add(transaction);
-                        }
-                    }
-
-                    DataProvider.loadData(generalCategories, subCategories, transactions);
+//                    JSONArray generalCategoriesArray = dataReceiver[0][0].getJSONArray("categories");
+//
+//                    startDate = (Date) requestVariables.get("startDate");
+//                    endDate = (Date) requestVariables.get("endDate");
+//
+//                    for (int i = 0; i < generalCategoriesArray.length(); i++) {
+//                        JSONObject gc = generalCategoriesArray.getJSONObject(i);
+//                        GeneralCategory generalCategory = new GeneralCategory(gc);
+//                        JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
+//
+//                        for (int j = 0; j < linkedSubCategories.length(); j++) {
+//                            JSONObject sc = linkedSubCategories.getJSONObject(j);
+//                            SubCategory subCategory = new SubCategory(sc);
+//                            subCategories.add(subCategory);
+//                        }
+//
+//                        generalCategories.add(generalCategory);
+//                    }
+//
+//                    JSONArray transactionsArray = dataReceiver[0][1].getJSONArray("transactions");
+//
+//                    for (int k = 0; k < transactionsArray.length(); k++) {
+//                        JSONObject t = transactionsArray.getJSONObject(k);
+//                        Transaction transaction = new Transaction(t);
+//
+//                        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+//                            transactions.add(transaction);
+//                        }
+//                    }
+//
+//                    DataProvider.loadData(generalCategories, subCategories, transactions);
                     return true;
 
                 case ApiService.CREATE_TRANSACTION:
 
-                    id = dataReceiver[0][0].getInt("transactionID");
-                    transaction = (Transaction) requestVariables.get("transaction");
-                    transaction.setId(id);
-                    DataProvider.addTransaction(transaction);
+//                    id = dataReceiver[0][0].getInt("transactionID");
+//                    transaction = (Transaction) requestVariables.get("transaction");
+//                    transaction.setId(id);
+//                    DataProvider.addTransaction(transaction);
                     return true;
 
                 case ApiService.UPDATE_TRANSACTION:
@@ -169,10 +169,10 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.CREATE_GENERAL_CATEGORY:
 
-                    id = dataReceiver[0][0].getInt("generalCategoryID");
-                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-                    generalCategory.setId(id);
-                    DataProvider.addGeneralCategory(generalCategory);
+//                    id = dataReceiver[0][0].getInt("generalCategoryID");
+//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+//                    generalCategory.setId(id);
+//                    DataProvider.addGeneralCategory(generalCategory);
                     return true;
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
@@ -189,10 +189,10 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.CREATE_SUB_CATEGORY:
 
-                    id = dataReceiver[0][0].getInt("subCategoryID");
-                    subCategory = (SubCategory) requestVariables.get("subCategory");
-                    subCategory.setId(id);
-                    DataProvider.addSubCategory(subCategory);
+//                    id = dataReceiver[0][0].getInt("subCategoryID");
+//                    subCategory = (SubCategory) requestVariables.get("subCategory");
+//                    subCategory.setId(id);
+//                    DataProvider.addSubCategory(subCategory);
                     return true;
 
                 case ApiService.UPDATE_SUB_CATEGORY:
@@ -215,14 +215,14 @@ public class PostRequestTask extends AsyncTask<JSONObject[], Boolean, Boolean> {
 
                 case ApiService.GET_KEY_PACKAGE:
 
-                    JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
-                    DataProvider.setKey(new Key(json));
+//                    JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
+//                    DataProvider.setKey(new Key(json));
                     return true;
 
                 case ApiService.UPDATE_PASSWORD:
 
-                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+//                    deviceToken = dataReceiver[0][0].getString("deviceToken");
+//                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
                     return true;
 
             }

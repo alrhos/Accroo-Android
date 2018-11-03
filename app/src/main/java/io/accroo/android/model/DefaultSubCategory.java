@@ -31,10 +31,10 @@ public class DefaultSubCategory {
         this.generalCategoryName = generalCategoryName;
     }
 
-    public EncryptedSubCategory encrypt() {
+    public EncryptedDefaultSubCategory encrypt() {
         String categoryJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
-        return new EncryptedSubCategory(securePayload.getData(), securePayload.getNonce());
+        return new EncryptedDefaultSubCategory(securePayload.getData(), securePayload.getNonce());
     }
 
 }
