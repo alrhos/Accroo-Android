@@ -79,12 +79,27 @@ public class RequestBuilder {
         return request;
     }
 
+    protected static JsonObjectRequest postAccessToken(final RequestCoordinator coordinator,
+                                                       final String refreshToken) {
+        String url = baseURL + ACCESS_TOKEN;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
+                createAccessTokenResponseListener(coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + refreshToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
     public static JsonObjectRequest putKey(int index, final RequestCoordinator coordinator,
                                            String json, String userId, final String accessToken) throws JSONException {
         String url = baseURL + ENCRYPTION_KEY;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
-        System.out.println(object.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -103,7 +118,6 @@ public class RequestBuilder {
         String url = baseURL + PREFERENCES;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
-        System.out.println(object.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -122,10 +136,42 @@ public class RequestBuilder {
                                                          final String accessToken) throws JSONException {
         String url = baseURL + CATEGORIES;
         url = url.replace("<userId>", userId);
-        System.out.println(json);
         JSONArray jsonArray = new JSONArray(json);
-        System.out.println(jsonArray.toString());
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, jsonArray,
+                createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonArrayRequest getTransactions(int index, final  RequestCoordinator coordinator,
+                                                   String userId, final String accessToken) {
+        String url = baseURL + TRANSACTION;
+        url = url.replace("<userId>", userId);
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonArrayRequest getCategories(int index, final  RequestCoordinator coordinator,
+                                                   String userId, final String accessToken) {
+        String url = baseURL + CATEGORIES;
+        url = url.replace("<userId>", userId);
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
             public Map<String, String> getHeaders() {
@@ -276,7 +322,7 @@ public class RequestBuilder {
     }
 
     private static Response.ErrorListener createErrorListener(final RequestCoordinator coordinator) {
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
+        return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println("AN ERROR OCCURRED");
@@ -284,21 +330,29 @@ public class RequestBuilder {
                 coordinator.abort(parseVolleyException(error));
             }
         };
-        return errorListener;
+    }
+
+    private static Response.Listener<JSONObject> createAccessTokenResponseListener(final RequestCoordinator coordinator) {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                coordinator.updateAccessToken(response);
+                coordinator.submitRequests();
+            }
+        };
     }
 
     private static Response.Listener<JSONObject> createJsonObjectResponseListener(final int index, final RequestCoordinator coordinator) {
-        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+        return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 coordinator.done(index, response);
             }
         };
-        return responseListener;
     }
 
     private static Response.Listener<JSONArray> createJsonArrayResponseListener(final int index, final RequestCoordinator coordinator) {
-        Response.Listener<JSONArray> responseListener = new Response.Listener<JSONArray>() {
+        return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 System.out.println("ARRAY REQUEST SUCCESS");
@@ -306,7 +360,6 @@ public class RequestBuilder {
                 coordinator.done(index, response);
             }
         };
-        return responseListener;
     }
 
 }

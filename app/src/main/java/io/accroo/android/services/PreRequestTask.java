@@ -104,10 +104,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_DEFAULT_DATA:
 
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.GET,
-                            RequestBuilder.CATEGORIES, null, context));
-                    requests.add(RequestBuilder.deviceTokenAuth(1, coordinator, Request.Method.GET,
-                            RequestBuilder.TRANSACTION, null, context));
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.GET,
+//                            RequestBuilder.CATEGORIES, null, context));
+//                    requests.add(RequestBuilder.deviceTokenAuth(1, coordinator, Request.Method.GET,
+//                            RequestBuilder.TRANSACTION, null, context));
+
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.getTransactions(0, coordinator, userId, accessToken));
+                    requests.add(RequestBuilder.getCategories(0, coordinator, userId, accessToken));
 
                     return true;
 

@@ -187,7 +187,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         if (startDate.before(endDate)) {
             DataProvider.setStartDate(startDate);
             DataProvider.setEndDate(endDate);
-
             dataReceiver = new String[2];
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
                 @Override
@@ -195,7 +194,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     postRequestVariables.clear();
                     postRequestVariables.put("startDate", startDate);
                     postRequestVariables.put("endDate", endDate);
-                    new PostRequestTask(GET_DEFAULT_DATA, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                    new PostRequestTask(GET_DEFAULT_DATA, ApiService.this,
+                            context, postRequestVariables).execute(dataReceiver);
                 }
 
                 @Override
@@ -203,8 +203,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     requestOutcome.onFailure(GET_DEFAULT_DATA, errorCode);
                 }
             };
-
-            new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator, null).execute();
+            new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator,
+                    null).execute();
         } else {
             requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
