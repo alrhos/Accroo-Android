@@ -83,11 +83,8 @@ public class RequestBuilder {
                                            String json, String userId, final String accessToken) throws JSONException {
         String url = baseURL + ENCRYPTION_KEY;
         url = url.replace("<userId>", userId);
-        System.out.println(json);
         JSONObject object = new JSONObject(json);
-
         System.out.println(object.toString());
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -105,13 +102,8 @@ public class RequestBuilder {
                                            String json, String userId, final String accessToken) throws JSONException {
         String url = baseURL + PREFERENCES;
         url = url.replace("<userId>", userId);
-        System.out.println(json);
         JSONObject object = new JSONObject(json);
-
-
-
-
-
+        System.out.println(object.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -130,7 +122,9 @@ public class RequestBuilder {
                                                          final String accessToken) throws JSONException {
         String url = baseURL + CATEGORIES;
         url = url.replace("<userId>", userId);
+        System.out.println(json);
         JSONArray jsonArray = new JSONArray(json);
+        System.out.println(jsonArray.toString());
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, jsonArray,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -285,6 +279,8 @@ public class RequestBuilder {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                System.out.println("AN ERROR OCCURRED");
+                error.printStackTrace();
                 coordinator.abort(parseVolleyException(error));
             }
         };
@@ -305,6 +301,8 @@ public class RequestBuilder {
         Response.Listener<JSONArray> responseListener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                System.out.println("ARRAY REQUEST SUCCESS");
+                System.out.println(response.toString());
                 coordinator.done(index, response);
             }
         };

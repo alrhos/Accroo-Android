@@ -165,15 +165,9 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
         } else if (requestType == ApiService.UPDATE_PREFERENCES) {
             apiService.createDefaultCategories();
         } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
-            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+            progressDialog.dismiss();
+            //startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
         }
-
-
-//        if (requestType == ApiService.CREATE_USER) {
-//            apiService.createDefaultCategories();
-//        } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
-//            startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
-//        }
     }
 
     @Override

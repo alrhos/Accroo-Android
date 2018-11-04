@@ -12,7 +12,7 @@ public class DefaultGeneralCategory {
     @Expose private String categoryName;
     @Expose private String rootCategory;
     @Expose private String iconFile;
-    @Expose private ArrayList<DefaultSubCategory> subCategories = new ArrayList<>();
+    private ArrayList<DefaultSubCategory> subCategories = new ArrayList<>();
 
     public DefaultGeneralCategory(String categoryName, String rootCategory, String iconFile) {
         this.categoryName = categoryName;
@@ -61,7 +61,6 @@ public class DefaultGeneralCategory {
             generalCategory.getSubCategories().add(subCategory.encrypt());
         }
         return generalCategory;
-        //return new EncryptedGeneralCategory(securePayload.getData(), securePayload.getNonce());
     }
 
 }

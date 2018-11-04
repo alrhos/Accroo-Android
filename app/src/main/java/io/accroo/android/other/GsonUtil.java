@@ -13,7 +13,8 @@ public class GsonUtil {
     private Gson gson;
 
     private GsonUtil() {
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping().create();
     }
 
     public static GsonUtil getInstance() {
@@ -23,15 +24,6 @@ public class GsonUtil {
         return instance;
     }
 
-//    public JSONObject toJson(Object object) {
-//        try {
-//            return new JSONObject(gson.toJson(object));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
     public String toJson(Object object) {
         return gson.toJson(object);
     }
@@ -39,10 +31,6 @@ public class GsonUtil {
     public String toJson(ArrayList<Object> objects) {
         return gson.toJson(objects);
     }
-
-//    public Object fromJson(JSONObject json, Class className) {
-//        return gson.fromJson(json.toString(), className);
-//    }
 
     public Object fromJson(String json, Class className) {
         return gson.fromJson(json, className);
