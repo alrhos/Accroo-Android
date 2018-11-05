@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.Account;
+import io.accroo.android.model.EncryptedTransaction;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.LoginSession;
@@ -145,6 +146,26 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 //                    }
 //
 //                    DataProvider.loadData(generalCategories, subCategories, transactions);
+
+//                    ArrayList<EncryptedTransaction> encryptedTransactions = new ArrayList<>();
+//                    for (EncryptedTransaction encryptedTransaction : (EncryptedTransaction) GsonUtil.getInstance().fromJson(dataReceiver[0][0], EncryptedTransaction.class)) {
+//
+//                    }
+
+                    ArrayList<EncryptedTransaction> encryptedTransactions = GsonUtil.getInstance()
+                            .listFromJson(dataReceiver[0][0], EncryptedTransaction.class);
+
+                    for (EncryptedTransaction encryptedTransaction : encryptedTransactions) {
+                        Transaction transaction = encryptedTransaction.decrypt();
+                        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+                            transactions.add(transaction);
+                        }
+                    }
+
+                    for (Transaction t : transactions) {
+                        System.out.println(t.toString());
+                    }
+
                     return true;
 
                 case ApiService.CREATE_TRANSACTION:

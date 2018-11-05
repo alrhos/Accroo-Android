@@ -1,12 +1,13 @@
 package io.accroo.android.other;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.lang.reflect.Type;
 
 public class GsonUtil {
     private static GsonUtil instance = null;
@@ -32,8 +33,42 @@ public class GsonUtil {
         return gson.toJson(objects);
     }
 
-    public Object fromJson(String json, Class className) {
+//    public Object fromJson(String json, Class className) {
+//        return gson.fromJson(json, className);
+//    }
+
+//    public ArrayList<Object> fromJson(String json, Object[] objects) {
+//        return Arrays.asList(gson.fromJson(json, objects.getClass()));
+//        //return gson.fromJson(json, new TypeToken<List<type>>(){}.getType());
+//    }
+
+    public <T> T fromJson(@NonNull final String json, @NonNull Class<T> className) {
         return gson.fromJson(json, className);
+    }
+
+    public <E> ArrayList<E> listFromJson(@NonNull final String json, @NonNull final Class<E> className) {
+        return gson.fromJson(json, new ListType<>(className));
+    }
+
+    private static class ListType<E> implements ParameterizedType {
+
+        private Class<?> wrapped;
+
+        private ListType(Class<E> wrapped) {
+            this.wrapped = wrapped;
+        }
+
+        public Type[] getActualTypeArguments() {
+            return new Type[]{wrapped};
+        }
+
+        public Type getRawType() {
+            return ArrayList.class;
+        }
+
+        public Type getOwnerType() {
+            return null;
+        }
     }
 
 }

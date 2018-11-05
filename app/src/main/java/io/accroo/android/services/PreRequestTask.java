@@ -112,7 +112,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.getTransactions(0, coordinator, userId, accessToken));
-                    requests.add(RequestBuilder.getCategories(0, coordinator, userId, accessToken));
+                    //requests.add(RequestBuilder.getCategories(0, coordinator, userId, accessToken));
 
                     return true;
 
@@ -241,20 +241,20 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_TRANSACTION:
 
-                    json = ((Transaction) requestVariables.get("transaction")).encrypt();
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.TRANSACTION, json, context));
+//                    json = ((Transaction) requestVariables.get("transaction")).encrypt();
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
+//                            RequestBuilder.TRANSACTION, json, context));
 
                     return true;
 
                 case ApiService.UPDATE_TRANSACTION:
 
-                    transaction = (Transaction) requestVariables.get("transaction");
-                    json = transaction.encrypt();
-                    uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
-
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
-                            uri, json, context));
+//                    transaction = (Transaction) requestVariables.get("transaction");
+//                    json = transaction.encrypt();
+//                    uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
+//                            uri, json, context));
 
                     return true;
 

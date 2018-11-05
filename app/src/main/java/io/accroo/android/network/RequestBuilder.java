@@ -168,7 +168,7 @@ public class RequestBuilder {
     }
 
     public static JsonArrayRequest getCategories(int index, final  RequestCoordinator coordinator,
-                                                   String userId, final String accessToken) {
+                                                 String userId, final String accessToken) {
         String url = baseURL + CATEGORIES;
         url = url.replace("<userId>", userId);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,

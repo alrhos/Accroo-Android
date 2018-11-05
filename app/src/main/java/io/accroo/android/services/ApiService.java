@@ -80,7 +80,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public boolean userLoggedIn() {
         try {
-            CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
+            CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
             CryptoManager.getInstance().initMasterKey(context);
             return true;
         } catch (Exception e) {
