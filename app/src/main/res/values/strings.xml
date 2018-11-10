@@ -17,6 +17,7 @@
     <string name="password_mismatch">Your passwords don\'t match</string>
     <string name="enter_email">Enter email address</string>
     <string name="email_mismatch">Email addresses don\'t match</string>
+    <string name="email_not_found">No account found with this email</string>
     <string name="error_field_required">This field is required</string>
     <string name="agree_terms_privacy">By creating an account, you agree to the\n<a href="https://accroo.io/terms"><b>terms of use</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
     <string name="important">Important!</string>

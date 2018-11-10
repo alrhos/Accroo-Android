@@ -338,11 +338,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.GET_KEY_PACKAGE:
+                case ApiService.GET_KEY:
 
-                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.ENCRYPTION_KEY, null, context));
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.getKey(0, coordinator, userId, accessToken));
 
                     return true;
 

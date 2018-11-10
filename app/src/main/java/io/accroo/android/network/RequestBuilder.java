@@ -94,6 +94,23 @@ public class RequestBuilder {
         return request;
     }
 
+    public static JsonObjectRequest getKey(int index, final RequestCoordinator coordinator,
+                                           String userId, final String accessToken) {
+        String url = baseURL + ENCRYPTION_KEY;
+        url = url.replace("<userId>", userId);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
     public static JsonObjectRequest putKey(int index, final RequestCoordinator coordinator,
                                            String json, String userId, final String accessToken) throws JSONException {
         String url = baseURL + ENCRYPTION_KEY;
@@ -318,6 +335,8 @@ public class RequestBuilder {
             switch (statusCode) {
                 case 400:
                     return ApiService.INVALID_REQUEST;
+                case 404:
+                    return ApiService.NOT_FOUND;
                 case 409:
                     return ApiService.CONFLICT;
                 case 429:

@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.inputmethod.InputMethodManager;
-import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.model.Account;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
@@ -54,7 +53,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             password = getIntent().getCharArrayExtra("password");
 
             apiService = new ApiService(this, getApplicationContext());
-            apiService.getLoginCode(username);
+            //apiService.getLoginCode(username);
 
             Utils.showSoftKeyboard(VerificationCodeActivity.this);
 
@@ -89,7 +88,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                         progressDialog.show();
                         switch (action) {
                             case LOGIN:
-                                //apiService.login(username, loginCodeField.getText().toString());
+                                Account account = new Account(username, loginCodeField.getText().toString());
+                                apiService.login(account);
                                 break;
                             case UPDATE_EMAIL:
                                 apiService.updateEmail(email, loginCodeField.getText().toString());
@@ -152,23 +152,30 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType != ApiService.GET_VERIFICATION_CODE) {
+        if (requestType == ApiService.LOGIN) {
+            apiService.getKey();
+        } else if (requestType == ApiService.GET_KEY) {
             progressDialog.dismiss();
-            switch (action) {
-                case LOGIN:
-                    startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
-                    overridePendingTransition(R.anim.enter, R.anim.exit);
-                    break;
-                case UPDATE_EMAIL:
-                    Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    break;
-                case UPDATE_PASSWORD:
-                    Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    break;
-            }
+            startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         }
+ //       progressDialog.dismiss();
+//        if (requestType != ApiService.GET_VERIFICATION_CODE) {
+//            switch (action) {
+//                case LOGIN:
+//                    startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+//                    overridePendingTransition(R.anim.enter, R.anim.exit);
+//                    break;
+//                case UPDATE_EMAIL:
+//                    Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                    break;
+//                case UPDATE_PASSWORD:
+//                    Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                    break;
+//            }
+//        }
     }
 
     @Override

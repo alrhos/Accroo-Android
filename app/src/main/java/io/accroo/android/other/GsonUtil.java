@@ -33,9 +33,9 @@ public class GsonUtil {
         return gson.toJson(objects);
     }
 
-//    public Object fromJson(String json, Class className) {
-//        return gson.fromJson(json, className);
-//    }
+    public Object objectFromJson(@NonNull String json, @NonNull Class className) {
+        return gson.fromJson(json, className);
+    }
 
 //    public ArrayList<Object> fromJson(String json, Object[] objects) {
 //        return Arrays.asList(gson.fromJson(json, objects.getClass()));

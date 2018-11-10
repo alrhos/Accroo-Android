@@ -12,9 +12,6 @@ import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.network.RequestCoordinator;
-import io.accroo.android.network.RestRequest;
-
-import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -39,7 +36,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_SUB_CATEGORY =       11;
     public final static int DELETE_SUB_CATEGORY =       12;
     public final static int UPDATE_EMAIL =              13;
-    public final static int GET_KEY_PACKAGE =           14;
+    public final static int GET_KEY =                   14;
     public final static int UPDATE_PASSWORD =           15;
     public final static int GET_VERIFICATION_CODE =     16;
     public final static int CREATE_ACCOUNT =            17;
@@ -57,6 +54,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int INVALID_REQUEST =           1006;
     public final static int INVALID_DATE_RANGE =        1007;
     public final static int ORIGIN_UNAVAILABLE =        1008;
+    public final static int NOT_FOUND =                 1009;
 
     private RequestOutcome                              requestOutcome;
     private Context                                     context;
@@ -555,21 +553,21 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, preRequestVariables).execute();
     }
 
-    public void getKeyPackage() {
+    public void getKey() {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_KEY_PACKAGE, ApiService.this, context, null).execute(dataReceiver);
+                new PostRequestTask(GET_KEY, ApiService.this, context, null).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(GET_KEY_PACKAGE, errorCode);
+                requestOutcome.onFailure(GET_KEY, errorCode);
             }
         };
 
-        new PreRequestTask(GET_KEY_PACKAGE, this, context, coordinator, null).execute();
+        new PreRequestTask(GET_KEY, this, context, coordinator, null).execute();
     }
 
     public void updatePassword(char[] newPassword, String loginCode) {

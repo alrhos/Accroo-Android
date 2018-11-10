@@ -3,7 +3,6 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.EncryptedGeneralCategory;
 import io.accroo.android.model.EncryptedSubCategory;
@@ -11,15 +10,11 @@ import io.accroo.android.model.EncryptedTransaction;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.LoginSession;
-import io.accroo.android.model.SecurePayload;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
-import io.accroo.android.model.User;
 import io.accroo.android.other.GsonUtil;
 
 import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,8 +96,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                 case ApiService.LOGIN:
 
                     account = (Account) requestVariables.get("account");
-                    loginSession = (LoginSession) GsonUtil.getInstance().fromJson(dataReceiver[0][0],
-                            LoginSession.class);
+                    loginSession = GsonUtil.getInstance().fromJson(dataReceiver[0][0], LoginSession.class);
 
                     DateTime refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
                     DateTime accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
@@ -283,16 +277,19 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, newEmail);
                     return true;
 
-                case ApiService.GET_KEY_PACKAGE:
+                case ApiService.GET_KEY:
 
 //                    JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
 //                    DataProvider.setKey(new Key(json));
+                    Key key = (Key) GsonUtil.getInstance().objectFromJson(dataReceiver[0][0], Key.class);
+                    DataProvider.setKey(key);
                     return true;
 
                 case ApiService.UPDATE_PASSWORD:
 
 //                    deviceToken = dataReceiver[0][0].getString("deviceToken");
 //                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+
                     return true;
 
             }
