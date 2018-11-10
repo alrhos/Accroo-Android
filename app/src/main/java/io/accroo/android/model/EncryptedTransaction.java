@@ -9,7 +9,7 @@ import io.accroo.android.other.GsonUtil;
 
 public class EncryptedTransaction {
 
-    private int id;
+    @Expose (serialize = false) private int id;
     @Expose private int subCategoryId;
     @Expose private String data;
     @Expose private String nonce;
@@ -56,8 +56,7 @@ public class EncryptedTransaction {
     public Transaction decrypt() throws UnsupportedEncodingException {
         SecurePayload securePayload = new SecurePayload(this.data, this.nonce);
         String transactionJson = CryptoManager.getInstance().decrypt(securePayload);
-        Transaction transaction = (Transaction) GsonUtil.getInstance()
-                .fromJson(transactionJson, Transaction.class);
+        Transaction transaction = GsonUtil.getInstance().fromJson(transactionJson, Transaction.class);
         transaction.setId(this.id);
         transaction.setSubCategoryId(this.subCategoryId);
         return transaction;

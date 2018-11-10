@@ -41,9 +41,9 @@ public class RequestBuilder {
     public final static String ENCRYPTION_KEY =     "users/<userId>/keys";
     public final static String PREFERENCES =        "users/<userId>/preferences";
     public final static String CATEGORIES =         "users/<userId>/categories";
-    public final static String GENERAL_CATEGORY =   "users/<userId>/categories/general";
-    public final static String SUB_CATEGORY =       "users/<userId>/categories/sub";
-    public final static String TRANSACTION =        "users/<userId>/transactions";
+    public final static String GENERAL_CATEGORIES =   "users/<userId>/categories/general";
+    public final static String SUB_CATEGORIES =       "users/<userId>/categories/sub";
+    public final static String TRANSACTIONS =        "users/<userId>/transactions";
 
     private final static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(20000, 0,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -58,7 +58,6 @@ public class RequestBuilder {
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator));
         request.setRetryPolicy(retryPolicy);
         return request;
-
     }
 
     public static JsonObjectRequest postRefreshToken(int index, final RequestCoordinator coordinator,
@@ -150,9 +149,9 @@ public class RequestBuilder {
         return request;
     }
 
-    public static JsonArrayRequest getTransactions(int index, final  RequestCoordinator coordinator,
+    public static JsonArrayRequest getTransactions(int index, final RequestCoordinator coordinator,
                                                    String userId, final String accessToken) {
-        String url = baseURL + TRANSACTION;
+        String url = baseURL + TRANSACTIONS;
         url = url.replace("<userId>", userId);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
@@ -167,9 +166,26 @@ public class RequestBuilder {
         return request;
     }
 
-    public static JsonArrayRequest getCategories(int index, final  RequestCoordinator coordinator,
-                                                 String userId, final String accessToken) {
-        String url = baseURL + CATEGORIES;
+    public static JsonArrayRequest getGeneralCategories(int index, final RequestCoordinator coordinator,
+                                                        String userId, final String accessToken) {
+        String url = baseURL + GENERAL_CATEGORIES;
+        url = url.replace("<userId>", userId);
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonArrayRequest getSubCategories(int index, final RequestCoordinator coordinator,
+                                                    String userId, final String accessToken) {
+        String url = baseURL + SUB_CATEGORIES;
         url = url.replace("<userId>", userId);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {

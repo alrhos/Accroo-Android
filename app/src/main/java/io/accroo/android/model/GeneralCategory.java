@@ -25,9 +25,8 @@ public class GeneralCategory implements Parcelable {
     @Expose private String categoryName;
     @Expose private String rootCategory;
     @Expose private String iconFile;
-    private ArrayList<SubCategory> subCategories = new ArrayList<>();
-
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private ArrayList<SubCategory> subCategories;
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public GeneralCategory(String categoryName, String rootCategory, String iconFile) {
         this.categoryName = categoryName;
@@ -72,6 +71,9 @@ public class GeneralCategory implements Parcelable {
     }
 
     public ArrayList<SubCategory> getSubCategories() {
+        if (subCategories == null) {
+            subCategories = new ArrayList<>();
+        }
         return subCategories;
     }
 
@@ -164,4 +166,15 @@ public class GeneralCategory implements Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "GeneralCategory{" +
+                "id=" + id +
+                ", categoryName='" + categoryName + '\'' +
+                ", rootCategory='" + rootCategory + '\'' +
+                ", iconFile='" + iconFile + '\'' +
+                ", subCategories=" + subCategories +
+                ", df=" + df +
+                '}';
+    }
 }

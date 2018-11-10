@@ -8,10 +8,6 @@ import com.google.gson.annotations.Expose;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -26,8 +22,9 @@ public class SubCategory implements Relationship, Parcelable {
     @Expose private String categoryName;
     private String generalCategoryName;
     private GeneralCategory parent;
-    private ArrayList<Transaction> transactions = new ArrayList<>();
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private ArrayList<Transaction> transactions;
+    private static DecimalFormat df = new DecimalFormat("0.00");
+
 
 //    public SubCategory(String categoryName, int generalCategoryId) {
 //        this.categoryName = categoryName;
@@ -81,6 +78,9 @@ public class SubCategory implements Relationship, Parcelable {
     }
 
     public ArrayList<Transaction> getTransactions() {
+        if (transactions == null) {
+            transactions = new ArrayList<>();
+        }
         return transactions;
     }
 
@@ -179,4 +179,16 @@ public class SubCategory implements Relationship, Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "SubCategory{" +
+                "id=" + id +
+                ", generalCategoryId=" + generalCategoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", generalCategoryName='" + generalCategoryName + '\'' +
+                ", parent=" + parent +
+                ", transactions=" + transactions +
+                ", df=" + df +
+                '}';
+    }
 }

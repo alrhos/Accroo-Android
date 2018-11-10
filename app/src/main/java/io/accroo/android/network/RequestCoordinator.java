@@ -98,7 +98,7 @@ public abstract class RequestCoordinator {
     }
 
     protected void updateAccessToken(JSONObject json) {
-        AccessToken token = (AccessToken) GsonUtil.getInstance().fromJson(json.toString(), AccessToken.class);
+        AccessToken token = GsonUtil.getInstance().fromJson(json.toString(), AccessToken.class);
         DateTime tokenExpiry = new DateTime(token.getExpiresAt());
         // TODO: add proper exception handling
         try {

@@ -9,7 +9,7 @@ import io.accroo.android.other.GsonUtil;
 
 public class EncryptedSubCategory {
 
-    private int id;
+    @Expose (serialize = false) private int id;
     @Expose private int generalCategoryId;
     @Expose private String data;
     @Expose private String nonce;
@@ -61,10 +61,19 @@ public class EncryptedSubCategory {
     public SubCategory decrypt() throws UnsupportedEncodingException {
         SecurePayload securePayload = new SecurePayload(this.data, this.nonce);
         String categoryString = CryptoManager.getInstance().decrypt(securePayload);
-        SubCategory subCategory = (SubCategory) GsonUtil.getInstance().fromJson(categoryString, SubCategory.class);
+        SubCategory subCategory = GsonUtil.getInstance().fromJson(categoryString, SubCategory.class);
         subCategory.setId(this.id);
         subCategory.setGeneralCategoryId(this.generalCategoryId);
         return subCategory;
     }
 
+    @Override
+    public String toString() {
+        return "EncryptedSubCategory{" +
+                "id=" + id +
+                ", generalCategoryId=" + generalCategoryId +
+                ", data='" + data + '\'' +
+                ", nonce='" + nonce + '\'' +
+                '}';
+    }
 }

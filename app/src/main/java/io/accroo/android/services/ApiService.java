@@ -187,7 +187,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         if (startDate.before(endDate)) {
             DataProvider.setStartDate(startDate);
             DataProvider.setEndDate(endDate);
-            dataReceiver = new String[2];
+            dataReceiver = new String[3];
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
                 @Override
                 protected void onSuccess() {

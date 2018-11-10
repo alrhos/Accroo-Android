@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonRequest;
-import com.google.gson.Gson;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
@@ -22,10 +21,8 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.model.User;
 import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
-import io.accroo.android.network.RestRequest;
 import io.accroo.android.other.GsonUtil;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -107,12 +104,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.GET,
 //                            RequestBuilder.CATEGORIES, null, context));
 //                    requests.add(RequestBuilder.deviceTokenAuth(1, coordinator, Request.Method.GET,
-//                            RequestBuilder.TRANSACTION, null, context));
+//                            RequestBuilder.TRANSACTIONS, null, context));
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-                    requests.add(RequestBuilder.getTransactions(0, coordinator, userId, accessToken));
-                    //requests.add(RequestBuilder.getCategories(0, coordinator, userId, accessToken));
+                    requests.add(RequestBuilder.getGeneralCategories(0, coordinator, userId, accessToken));
+                    requests.add(RequestBuilder.getSubCategories(1, coordinator, userId, accessToken));
+                    requests.add(RequestBuilder.getTransactions(2, coordinator, userId, accessToken));
 
                     return true;
 
@@ -243,7 +241,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
 //                    json = ((Transaction) requestVariables.get("transaction")).encrypt();
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.TRANSACTION, json, context));
+//                            RequestBuilder.TRANSACTIONS, json, context));
 
                     return true;
 
@@ -251,7 +249,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
 //                    transaction = (Transaction) requestVariables.get("transaction");
 //                    json = transaction.encrypt();
-//                    uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
+//                    uri = RequestBuilder.TRANSACTIONS + "/" + transaction.getId();
 //
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
 //                            uri, json, context));
@@ -261,7 +259,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.DELETE_TRANSACTION:
 
                     transaction = (Transaction) requestVariables.get("transaction");
-                    uri = RequestBuilder.TRANSACTION + "/" + transaction.getId();
+                    uri = RequestBuilder.TRANSACTIONS + "/" + transaction.getId();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, context));
@@ -272,7 +270,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
 //                    json = ((GeneralCategory) requestVariables.get("generalCategory")).encrypt();
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.GENERAL_CATEGORY, json, context));
+//                            RequestBuilder.GENERAL_CATEGORIES, json, context));
 
                     return true;
 
@@ -280,7 +278,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
 //                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
 //                    json = generalCategory.encrypt();
-//                    uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
+//                    uri = RequestBuilder.GENERAL_CATEGORIES + "/" + generalCategory.getId();
 //
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
 //                            uri, json, context));
@@ -290,7 +288,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.DELETE_GENERAL_CATEGORY:
 
                     generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-                    uri = RequestBuilder.GENERAL_CATEGORY + "/" + generalCategory.getId();
+                    uri = RequestBuilder.GENERAL_CATEGORIES + "/" + generalCategory.getId();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, context));
@@ -302,7 +300,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    json = ((SubCategory) requestVariables.get("subCategory")).encrypt();
 //
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.SUB_CATEGORY, json, context));
+//                            RequestBuilder.SUB_CATEGORIES, json, context));
 
                     return true;
 
@@ -310,7 +308,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
 //                    subCategory = (SubCategory) requestVariables.get("subCategory");
 //                    json = subCategory.encrypt();
-//                    uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
+//                    uri = RequestBuilder.SUB_CATEGORIES + "/" + subCategory.getId();
 //
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
 //                            uri, json, context));
@@ -320,7 +318,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.DELETE_SUB_CATEGORY:
 
                     subCategory = (SubCategory) requestVariables.get("subCategory");
-                    uri = RequestBuilder.SUB_CATEGORY + "/" + subCategory.getId();
+                    uri = RequestBuilder.SUB_CATEGORIES + "/" + subCategory.getId();
 
                     requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
                             uri, null, context));
