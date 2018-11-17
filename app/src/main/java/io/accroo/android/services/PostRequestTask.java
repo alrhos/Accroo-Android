@@ -152,10 +152,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     ArrayList<EncryptedGeneralCategory> encryptedGeneralCategories = GsonUtil.getInstance()
                             .listFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
 
-                    for (EncryptedGeneralCategory e : encryptedGeneralCategories) {
-                        System.out.println(e.toString());
-                    }
-
                     for (EncryptedGeneralCategory encryptedGeneralCategory : encryptedGeneralCategories) {
                         generalCategories.add(encryptedGeneralCategory.decrypt());
                     }
@@ -167,32 +163,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                         subCategories.add(encryptedSubCategory.decrypt());
                     }
 
-//                    for (EncryptedGeneralCategory encryptedGeneralCategory : encryptedGeneralCategories) {
-//                        GeneralCategory generalCategory = encryptedGeneralCategory.decrypt();
-//                        for (EncryptedSubCategory encryptedSubCategory: encryptedGeneralCategory.getSubCategories()) {
-//                            SecurePayload securePayload = new SecurePayload(encryptedSubCategory.getData(), encryptedSubCategory.getNonce());
-//                            String subCategoryString = CryptoManager.getInstance().decrypt(securePayload);
-//                            SubCategory subCategory = GsonUtil.getInstance().fromJson(subCategoryString, SubCategory.class);
-//                            subCategory.setGeneralCategoryId(generalCategory.getId());
-//                            subCategory.setId(encryptedSubCategory.getId());
-//                            subCategories.add(subCategory);
-//                            //generalCategory.getSubCategories().add(subCategory);
-//                        }
-//                        generalCategories.add(generalCategory);
-//                    }
-
-                    GeneralCategory wtf = new GeneralCategory("Some category name", "Expense", "customIcon");
-                    System.out.println(wtf.toString());
-
-                    for (GeneralCategory g : generalCategories) {
-                        System.out.println(g.toString());
-                        System.out.println(g.getSubCategories());
-                    }
-
-                    for (SubCategory s : subCategories) {
-                        System.out.println(s.toString());
-                    }
-
                     ArrayList<EncryptedTransaction> encryptedTransactions = GsonUtil.getInstance()
                             .listFromJson(dataReceiver[0][2], EncryptedTransaction.class);
 
@@ -201,10 +171,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                         if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
                             transactions.add(transaction);
                         }
-                    }
-
-                    for (Transaction t : transactions) {
-                        System.out.println(t.toString());
                     }
 
                     DataProvider.loadData(generalCategories, subCategories, transactions);

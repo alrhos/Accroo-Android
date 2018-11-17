@@ -3,15 +3,22 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
+
 import io.accroo.android.crypto.CryptoManager;
+import io.accroo.android.model.AccessToken;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
+import io.accroo.android.other.GsonUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -62,6 +69,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     private String[]                                    dataReceiver;
     private HashMap<String, Object>                     preRequestVariables;
     private HashMap<String, Object>                     postRequestVariables;
+    private PreRequestTask                              preRequestTask;
+    private int                                         requestType;
 
     public ApiService(RequestOutcome requestOutcome, Context context) {
         this.requestOutcome = requestOutcome;
@@ -123,7 +132,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         }
 
-        new PreRequestTask(GET_VERIFICATION_CODE, this, context, coordinator, preRequestVariables).execute();
+        new PreRequestTask(GET_VERIFICATION_CODE, this, context,
+                coordinator, preRequestVariables).execute();
     }
 
     public void login(final Account account) {
@@ -173,6 +183,63 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, preRequestVariables).execute();
 //    }
 
+    private boolean newAccessTokenRequired() {
+        try {
+            // Check if a refresh token exists
+            CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            String tokenExpiry = CredentialService.getInstance(context)
+                    .getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+            DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+            System.out.println("TOKEN EXPIRY TIME: " + tokenExpiryTime.toLocalDateTime());
+            DateTime currentTime = new DateTime();
+            System.out.println("CURRENT TIME: " + currentTime.toLocalDateTime());
+            System.out.println("DIFFERENCE: " + Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds());
+            return Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 595; // TODO: change to 60 after testing
+        } catch (Exception e) {
+            // A refresh token wasn't found or the access token expiry couldn't be retrieved
+            e.printStackTrace();
+            return false;
+            // TODO: check how to better handle this exception
+        }
+    }
+
+    private void updateAccessToken() {
+        final String[] accessTokenReceiver = new String[1];
+        RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
+                this, accessTokenReceiver) {
+            @Override
+            protected void onSuccess() {
+                String response = accessTokenReceiver[0];
+                AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
+                DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
+                try {
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
+                    preRequestTask.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    requestOutcome.onError();
+                }
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(requestType, errorCode);
+            }
+        };
+
+        try {
+            String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
+                    accessTokenCoordinator, refreshToken);
+            accessTokenCoordinator.addRequests(accessTokenRequest);
+            accessTokenCoordinator.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            requestOutcome.onError();
+        }
+    }
+
     public void logout() {
         try {
             CredentialService.getInstance(context).clearSavedData();
@@ -201,8 +268,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     requestOutcome.onFailure(GET_DEFAULT_DATA, errorCode);
                 }
             };
-            new PreRequestTask(GET_DEFAULT_DATA, this, context, coordinator,
-                    null).execute();
+            preRequestTask = new PreRequestTask(GET_DEFAULT_DATA, this, context,
+                    coordinator, null);
+            requestType = GET_DEFAULT_DATA;
+
+            if (newAccessTokenRequired()) {
+                updateAccessToken();
+            } else {
+                preRequestTask.execute();
+            }
         } else {
             requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
@@ -246,8 +320,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("password", password);
 
-        new PreRequestTask(CREATE_KEY, this, context, coordinator,
-                preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(CREATE_KEY, this, context, coordinator,
+                preRequestVariables);
+        requestType = CREATE_KEY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
 //    public void updateKey(final char[] password) {
@@ -288,8 +369,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("preferences", preferences);
 
-        new PreRequestTask(UPDATE_PREFERENCES, this, context, coordinator,
-                preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(UPDATE_PREFERENCES, this, context, coordinator,
+                preRequestVariables);
+        requestType = UPDATE_PREFERENCES;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
 
@@ -329,7 +417,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this, context, coordinator, null).execute();
+        preRequestTask = new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this,
+                context, coordinator, null);
+        requestType = CREATE_DEFAULT_CATEGORIES;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void createTransaction(final Transaction transaction) {
@@ -339,7 +435,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("transaction", transaction);
-                new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -351,7 +448,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("transaction", transaction);
 
-        new PreRequestTask(CREATE_TRANSACTION, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(CREATE_TRANSACTION, this, context,
+                coordinator, preRequestVariables);
+        requestType = CREATE_TRANSACTION;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void updateTransaction(final Transaction transaction) {
@@ -361,7 +466,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("transaction", transaction);
-                new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -373,7 +479,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("transaction", transaction);
 
-        new PreRequestTask(UPDATE_TRANSACTION, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(UPDATE_TRANSACTION, this, context,
+                coordinator, preRequestVariables);
+        requestType = UPDATE_TRANSACTION;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void deleteTransaction(final Transaction transaction) {
@@ -383,7 +497,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("transaction", transaction);
-                new PostRequestTask(DELETE_TRANSACTION, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(DELETE_TRANSACTION, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -395,7 +510,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("transaction", transaction);
 
-        new PreRequestTask(DELETE_TRANSACTION, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(DELETE_TRANSACTION, this, context,
+                coordinator, preRequestVariables);
+        requestType = DELETE_TRANSACTION;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void createGeneralCategory(final GeneralCategory generalCategory) {
@@ -405,7 +528,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("generalCategory", generalCategory);
-                new PostRequestTask(CREATE_GENERAL_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(CREATE_GENERAL_CATEGORY, ApiService.this,
+                        context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -417,7 +541,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("generalCategory", generalCategory);
 
-        new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context,
+                coordinator, preRequestVariables);
+        requestType = CREATE_GENERAL_CATEGORY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void updateGeneralCategory(final GeneralCategory generalCategory) {
@@ -427,7 +559,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("generalCategory", generalCategory);
-                new PostRequestTask(UPDATE_GENERAL_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(UPDATE_GENERAL_CATEGORY, ApiService.this,
+                        context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -439,7 +572,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("generalCategory", generalCategory);
 
-        new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context,
+                coordinator, preRequestVariables);
+        requestType = UPDATE_GENERAL_CATEGORY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void deleteGeneralCategory(final GeneralCategory generalCategory) {
@@ -449,7 +590,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("generalCategory", generalCategory);
-                new PostRequestTask(DELETE_GENERAL_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(DELETE_GENERAL_CATEGORY, ApiService.this,
+                        context, postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -461,7 +603,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("generalCategory", generalCategory);
 
-        new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context,
+                coordinator, preRequestVariables);
+        requestType = DELETE_GENERAL_CATEGORY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void createSubCategory(final SubCategory subCategory) {
@@ -471,7 +621,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("subCategory", subCategory);
-                new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -483,7 +634,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("subCategory", subCategory);
 
-        new PreRequestTask(CREATE_SUB_CATEGORY, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(CREATE_SUB_CATEGORY, this, context,
+                coordinator, preRequestVariables);
+        requestType = CREATE_SUB_CATEGORY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void updateSubCategory(final SubCategory subCategory) {
@@ -493,7 +652,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("subCategory", subCategory);
-                new PostRequestTask(UPDATE_SUB_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(UPDATE_SUB_CATEGORY, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -505,7 +665,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("subCategory", subCategory);
 
-        new PreRequestTask(UPDATE_SUB_CATEGORY, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(UPDATE_SUB_CATEGORY, this, context,
+                coordinator, preRequestVariables);
+        requestType = UPDATE_SUB_CATEGORY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void deleteSubCategory(final SubCategory subCategory) {
@@ -515,7 +683,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("subCategory", subCategory);
-                new PostRequestTask(DELETE_SUB_CATEGORY, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(DELETE_SUB_CATEGORY, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -527,7 +696,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("subCategory", subCategory);
 
-        new PreRequestTask(DELETE_SUB_CATEGORY, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(DELETE_SUB_CATEGORY, this, context,
+                coordinator, preRequestVariables);
+        requestType = DELETE_SUB_CATEGORY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void updateEmail(final String newEmail, String loginCode) {
@@ -537,7 +714,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             protected void onSuccess() {
                 postRequestVariables.clear();
                 postRequestVariables.put("newEmail", newEmail);
-                new PostRequestTask(UPDATE_EMAIL, ApiService.this, context, postRequestVariables).execute(dataReceiver);
+                new PostRequestTask(UPDATE_EMAIL, ApiService.this, context,
+                        postRequestVariables).execute(dataReceiver);
             }
 
             @Override
@@ -550,7 +728,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.put("newEmail", newEmail);
         preRequestVariables.put("loginCode", loginCode);
 
-        new PreRequestTask(UPDATE_EMAIL, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(UPDATE_EMAIL, this, context,
+                coordinator, preRequestVariables);
+        requestType = UPDATE_EMAIL;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void getKey() {
@@ -558,7 +744,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_KEY, ApiService.this, context, null).execute(dataReceiver);
+                new PostRequestTask(GET_KEY, ApiService.this, context,
+                        null).execute(dataReceiver);
             }
 
             @Override
@@ -567,7 +754,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         };
 
-        new PreRequestTask(GET_KEY, this, context, coordinator, null).execute();
+        preRequestTask = new PreRequestTask(GET_KEY, this, context, coordinator,
+                null);
+        requestType = GET_KEY;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     public void updatePassword(char[] newPassword, String loginCode) {
@@ -575,7 +770,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context, null).execute(dataReceiver);
+                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context,
+                        null).execute(dataReceiver);
             }
 
             @Override
@@ -588,7 +784,15 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.put("loginCode", loginCode);
         preRequestVariables.put("newPassword", newPassword);
 
-        new PreRequestTask(UPDATE_PASSWORD, this, context, coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(UPDATE_PASSWORD, this, context,
+                coordinator, preRequestVariables);
+        requestType = UPDATE_PASSWORD;
+
+        if (newAccessTokenRequired()) {
+            updateAccessToken();
+        } else {
+            preRequestTask.execute();
+        }
     }
 
     @Override

@@ -78,11 +78,11 @@ public class RequestBuilder {
         return request;
     }
 
-    protected static JsonObjectRequest postAccessToken(final RequestCoordinator coordinator,
+    public static JsonObjectRequest postAccessToken(int index, final RequestCoordinator coordinator,
                                                        final String refreshToken) {
         String url = baseURL + ACCESS_TOKEN;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
-                createAccessTokenResponseListener(coordinator), createErrorListener(coordinator)) {
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
@@ -360,24 +360,13 @@ public class RequestBuilder {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("AN ERROR OCCURRED");
-                error.printStackTrace();
                 coordinator.abort(parseVolleyException(error));
             }
         };
     }
 
-    private static Response.Listener<JSONObject> createAccessTokenResponseListener(final RequestCoordinator coordinator) {
-        return new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                coordinator.updateAccessToken(response);
-                coordinator.submitRequests();
-            }
-        };
-    }
-
-    private static Response.Listener<JSONObject> createJsonObjectResponseListener(final int index, final RequestCoordinator coordinator) {
+    private static Response.Listener<JSONObject> createJsonObjectResponseListener(
+            final int index, final RequestCoordinator coordinator) {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -386,12 +375,11 @@ public class RequestBuilder {
         };
     }
 
-    private static Response.Listener<JSONArray> createJsonArrayResponseListener(final int index, final RequestCoordinator coordinator) {
+    private static Response.Listener<JSONArray> createJsonArrayResponseListener(
+            final int index, final RequestCoordinator coordinator) {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                System.out.println("ARRAY REQUEST SUCCESS");
-                System.out.println(response.toString());
                 coordinator.done(index, response);
             }
         };
