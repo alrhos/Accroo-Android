@@ -8,14 +8,18 @@ import com.google.gson.GsonBuilder;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.lang.reflect.Type;
+import java.util.Date;
 
 public class GsonUtil {
     private static GsonUtil instance = null;
     private Gson gson;
 
     private GsonUtil() {
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-                .disableHtmlEscaping().create();
+        gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .disableHtmlEscaping()
+                .registerTypeAdapter(Date.class, new DateLongFormatTypeAdapter())
+                .create();
     }
 
     public static GsonUtil getInstance() {

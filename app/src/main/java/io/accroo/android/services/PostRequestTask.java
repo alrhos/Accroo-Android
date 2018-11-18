@@ -29,9 +29,10 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
     private PostRequestOutcome postRequestOutcome;
     private Context context;
-    private Date startDate, endDate;
+    private DateTime startDate, endDate;
     private Account account;
     private LoginSession loginSession;
+    private EncryptedTransaction encryptedTransaction;
     private Transaction transaction;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
@@ -149,6 +150,9 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 //
 //                    }
 
+                    startDate = (DateTime) requestVariables.get("startDate");
+                    endDate = (DateTime) requestVariables.get("endDate");
+
                     ArrayList<EncryptedGeneralCategory> encryptedGeneralCategories = GsonUtil.getInstance()
                             .listFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
 
@@ -168,7 +172,9 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                     for (EncryptedTransaction encryptedTransaction : encryptedTransactions) {
                         Transaction transaction = encryptedTransaction.decrypt();
-                        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+                        System.out.println(transaction.toString());
+                        if (!transaction.getDate().isBefore(startDate) && !transaction.getDate()
+                                .isAfter(endDate)) {
                             transactions.add(transaction);
                         }
                     }
@@ -183,6 +189,15 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 //                    transaction = (Transaction) requestVariables.get("transaction");
 //                    transaction.setId(id);
 //                    DataProvider.addTransaction(transaction);
+
+                    encryptedTransaction = (EncryptedTransaction) GsonUtil.getInstance()
+                            .objectFromJson(dataReceiver[0][0], EncryptedTransaction.class);
+                    transaction = encryptedTransaction.decrypt();
+                    System.out.println(transaction.toString());
+//                    System.out.println(transaction.getAmount());
+//                    System.out.println(transaction.getRawDate().getTime());
+//                    System.out.println(transaction.getDate());
+                    DataProvider.addTransaction(transaction);
                     return true;
 
                 case ApiService.UPDATE_TRANSACTION:

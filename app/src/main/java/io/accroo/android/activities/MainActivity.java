@@ -23,6 +23,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.R;
 import io.accroo.android.fragments.CategoryOverviewFragment;
 import io.accroo.android.fragments.SummaryFragment;
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
     private ApiService apiService;
-    private Date startDate, endDate;
+    private DateTime startDate, endDate;
     private FloatingActionButton fab;
     private final int[] fabColorArray = {
                                             R.color.colorAccent,
@@ -59,8 +61,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             } else {
                 setContentView(R.layout.activity_main);
 
-                startDate = new Date(getIntent().getLongExtra("startDate", -1));
-                endDate = new Date (getIntent().getLongExtra("endDate", -1));
+                startDate = new DateTime(getIntent().getLongExtra("startDate", -1));
+                endDate = new DateTime(getIntent().getLongExtra("endDate", -1));
 
                 Toolbar toolbar = findViewById(R.id.main_toolbar);
                 setSupportActionBar(toolbar);
@@ -228,7 +230,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return summaryFragment = SummaryFragment.newInstance(startDate.getTime(), endDate.getTime());
+                    return summaryFragment = SummaryFragment.newInstance(startDate.getMillis(),
+                            endDate.getMillis());
                 case 1:
                     return transactionsFragment = new TransactionsFragment();
                 case 2:
@@ -264,17 +267,19 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
+        System.out.println(startDate.toDateTime());
+        System.out.println(endDate.toDateTime());
         apiService.getDefaultData(startDate, endDate);
     }
 
     @Override
-    public void onStartDateUpdated(Date date) {
+    public void onStartDateUpdated(DateTime date) {
         startDate = date;
         onSummarySwipeRefresh();
     }
 
     @Override
-    public void onEndDateUpdated(Date date) {
+    public void onEndDateUpdated(DateTime date) {
         endDate = date;
         onSummarySwipeRefresh();
     }
@@ -326,6 +331,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public void onSuccess(int requestType) {
+        System.out.println(startDate.toDateTime());
+        System.out.println(endDate.toDateTime());
         hideRefreshing();
         if (requestType == ApiService.GET_DEFAULT_DATA) {
             Handler handler = new Handler();

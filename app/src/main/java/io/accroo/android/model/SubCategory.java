@@ -188,7 +188,6 @@ public class SubCategory implements Relationship, Parcelable {
                 ", generalCategoryName='" + generalCategoryName + '\'' +
                 ", parent=" + parent +
                 ", transactions=" + transactions +
-                ", df=" + df +
                 '}';
     }
 }

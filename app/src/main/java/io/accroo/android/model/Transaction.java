@@ -5,13 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,14 +24,15 @@ public class Transaction implements Relationship, Parcelable {
 
     private int id;
     private int subCategoryId;
-    @Expose private Date date;
+    //@Expose private Date date;
+    @Expose private DateTime date;
     @Expose private double amount;
     @Expose private String description = "";
     private SubCategory parent;
-    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public Transaction(int subCategoryId, Date date, double amount, String description) {
+    public Transaction(int subCategoryId, DateTime date, double amount, String description) {
         this.subCategoryId = subCategoryId;
         this.date = date;
         this.amount = amount;
@@ -62,17 +61,21 @@ public class Transaction implements Relationship, Parcelable {
         this.subCategoryId = subCategoryId;
     }
 
-    public Date getDate() {
-        try {
-            String adjustedDateString = dateFormat.format(date);
-            return dateFormat.parse(adjustedDateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public DateTime getDate() {
+        return date;
     }
 
-    public void setDate(Date date) {
+//    public Date getDate() {
+//        try {
+//            String adjustedDateString = dateFormat.format(date);
+//            return dateFormat.parse(adjustedDateString);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    public void setDate(DateTime date) {
         this.date = date;
     }
 
@@ -173,7 +176,7 @@ public class Transaction implements Relationship, Parcelable {
     protected Transaction(Parcel in) {
         this.id = in.readInt();
         this.subCategoryId = in.readInt();
-        this.date = (Date) in.readSerializable();
+        this.date = (DateTime) in.readSerializable();
         this.amount = in.readDouble();
         this.description = in.readString();
         this.parent = in.readParcelable(SubCategory.class.getClassLoader());
@@ -201,8 +204,6 @@ public class Transaction implements Relationship, Parcelable {
                 ", date=" + date +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
-                ", parent=" + parent +
-                ", decimalFormat=" + decimalFormat +
                 ", dateFormat=" + dateFormat +
                 '}';
     }

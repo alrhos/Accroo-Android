@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.RootCategory;
@@ -33,9 +37,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private AdapterInteractionListener adapterInteractionListener;
     private ArrayList<Transaction> transactions;
-    private LinkedHashMap<Date, ArrayList<Transaction>> groupedTransactions;
+    private LinkedHashMap<DateTime, ArrayList<Transaction>> groupedTransactions;
     private LayoutInflater inflater;
-    private SimpleDateFormat df = new SimpleDateFormat("EEE dd, MMM yyyy", Locale.getDefault());
+    private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
+    //private SimpleDateFormat df = new SimpleDateFormat("EEE dd, MMM yyyy", Locale.getDefault());
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
@@ -69,14 +74,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         TransactionViewHolder vh = (TransactionViewHolder) holder;
-        Date date = new ArrayList<>(groupedTransactions.keySet()).get(position);
-        String formattedDate = df.format(date);
+        DateTime date = new ArrayList<>(groupedTransactions.keySet()).get(position);
+       // String formattedDate = df.format(date);
+        String formattedDate = date.toString(dateFormat);
         vh.dateHeader.setText(formattedDate);
 
         LinearLayout ll = vh.itemView.findViewById(R.id.transaction_list_layout);
         ll.removeAllViews();
 
         for (final Transaction transaction : groupedTransactions.get(date)) {
+
             View v = inflater.inflate(R.layout.transaction_list_details, null, false);
             ImageView iv = v.findViewById(R.id.transaction_icon);
 
@@ -93,6 +100,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             description.setText(transaction.getDescription());
 
             TextView amount = v.findViewById(R.id.transaction_category_amount);
+            System.out.println(transaction.toString());
             amount.setText(transaction.getFullyFormattedAmount());
 
             if (generalCategory.getRootCategory().equals(RootCategory.INCOME)) {
@@ -132,7 +140,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
 
-            for (Date key : groupedTransactions.keySet()) {
+            for (DateTime key : groupedTransactions.keySet()) {
                 ArrayList<Transaction> matches = new ArrayList<>();
                 for (Transaction transaction : transactions) {
                     if (key.equals(transaction.getDate())) {

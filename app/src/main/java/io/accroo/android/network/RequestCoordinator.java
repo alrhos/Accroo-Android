@@ -36,7 +36,7 @@ public abstract class RequestCoordinator {
         requests = new ArrayList<>();
     }
 
-    public void addRequests(JsonRequest... requests) throws Exception {
+    public void addRequests(JsonRequest... requests) {
         for (JsonRequest request : requests) {
             request.setTag(tag);
             this.requests.add(request);

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.R;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
@@ -16,8 +18,8 @@ import java.util.Date;
 
 public class LaunchActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private Calendar calendar;
-    private Date startDate, endDate;
+    //private Calendar calendar;
+    private DateTime startDate, endDate;
     public static boolean initialized = false;
     private ApiService apiService;
 
@@ -33,16 +35,25 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         apiService = new ApiService(this, getApplicationContext());
 
         if (apiService.userLoggedIn()) {
-            calendar = Calendar.getInstance();
-            endDate = calendar.getTime();
+//            calendar = Calendar.getInstance();
+//            endDate = calendar.getTime();
+//
+//            calendar.set(Calendar.DAY_OF_MONTH, 1);
+//            calendar.set(Calendar.HOUR_OF_DAY, 0);
+//            calendar.set(Calendar.MINUTE, 0);
+//            calendar.set(Calendar.SECOND, 0);
+//            calendar.set(Calendar.MILLISECOND, 0);
+//
+//            startDate = calendar.getTime();
 
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
+            endDate = new DateTime(); // TODO the time should probably be set to 23:59:59.999
+            startDate = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), 1,
+                    0, 0, 0, 0);
 
-            startDate = calendar.getTime();
+
+            System.out.println(startDate.toDateTime());
+            System.out.println(endDate.toDateTime());
+
             apiService.getDefaultData(startDate, endDate);
         } else {
             initLayout();
@@ -70,8 +81,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     @Override
     public void onSuccess(int requestType) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("startDate", startDate.getTime());
-        intent.putExtra("endDate", endDate.getTime());
+//        intent.putExtra("startDate", startDate.getTime());
+//        intent.putExtra("endDate", endDate.getTime());
+        intent.putExtra("startDate", startDate.getMillis());
+        intent.putExtra("endDate", endDate.getMillis());
         startActivity(intent);
     }
 

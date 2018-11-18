@@ -248,8 +248,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void getDefaultData(@NonNull final Date startDate, @NonNull final Date endDate) {
-        if (startDate.before(endDate)) {
+    public void getDefaultData(@NonNull final DateTime startDate, @NonNull final DateTime endDate) {
+        if (startDate.isBefore(endDate)) {
             DataProvider.setStartDate(startDate);
             DataProvider.setEndDate(endDate);
             dataReceiver = new String[3];
@@ -433,10 +433,12 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("transaction", transaction);
+//                postRequestVariables.clear();
+//                postRequestVariables.put("transaction", transaction);
+//                new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context,
+//                        postRequestVariables).execute(dataReceiver);
                 new PostRequestTask(CREATE_TRANSACTION, ApiService.this, context,
-                        postRequestVariables).execute(dataReceiver);
+                        null).execute(dataReceiver);
             }
 
             @Override

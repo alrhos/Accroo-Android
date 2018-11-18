@@ -239,6 +239,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_TRANSACTION:
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    transaction = (Transaction) requestVariables.get("transaction");
+                    System.out.println(transaction.toString());
+                    System.out.println(GsonUtil.getInstance().toJson(transaction));
+                    jsonString = GsonUtil.getInstance().toJson(transaction.encrypt());
+                    requests.add(RequestBuilder.postTransaction(0, coordinator,
+                            userId, jsonString, accessToken));
+
 //                    json = ((Transaction) requestVariables.get("transaction")).encrypt();
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
 //                            RequestBuilder.TRANSACTIONS, json, context));

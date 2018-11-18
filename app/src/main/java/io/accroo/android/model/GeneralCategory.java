@@ -174,7 +174,6 @@ public class GeneralCategory implements Parcelable {
                 ", rootCategory='" + rootCategory + '\'' +
                 ", iconFile='" + iconFile + '\'' +
                 ", subCategories=" + subCategories +
-                ", df=" + df +
                 '}';
     }
 }
