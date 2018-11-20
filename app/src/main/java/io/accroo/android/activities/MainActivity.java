@@ -267,8 +267,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
-        System.out.println(startDate.toDateTime());
-        System.out.println(endDate.toDateTime());
         apiService.getDefaultData(startDate, endDate);
     }
 
@@ -331,8 +329,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public void onSuccess(int requestType) {
-        System.out.println(startDate.toDateTime());
-        System.out.println(endDate.toDateTime());
         hideRefreshing();
         if (requestType == ApiService.GET_DEFAULT_DATA) {
             Handler handler = new Handler();

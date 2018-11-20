@@ -153,6 +153,10 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     startDate = (DateTime) requestVariables.get("startDate");
                     endDate = (DateTime) requestVariables.get("endDate");
 
+                    System.out.println("--------------------------------------");
+                    System.out.println(startDate.toDateTime().toString());
+                    System.out.println(endDate.toDateTime().toString());
+
                     ArrayList<EncryptedGeneralCategory> encryptedGeneralCategories = GsonUtil.getInstance()
                             .listFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
 

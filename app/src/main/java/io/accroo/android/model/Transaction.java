@@ -115,6 +115,7 @@ public class Transaction implements Relationship, Parcelable {
 
     public EncryptedTransaction encrypt() {
         String transactionJson = GsonUtil.getInstance().toJson(this);
+        System.out.println("TRANSACTION JSON - " + transactionJson);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(transactionJson);
         return new EncryptedTransaction(this.id, this.subCategoryId,
                 securePayload.getData(), securePayload.getNonce());
@@ -180,8 +181,8 @@ public class Transaction implements Relationship, Parcelable {
         this.amount = in.readDouble();
         this.description = in.readString();
         this.parent = in.readParcelable(SubCategory.class.getClassLoader());
-        this.decimalFormat = (DecimalFormat) in.readSerializable();
-        this.dateFormat = (SimpleDateFormat) in.readSerializable();
+//        this.decimalFormat = (DecimalFormat) in.readSerializable();
+//        this.dateFormat = (SimpleDateFormat) in.readSerializable();
     }
 
     public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {

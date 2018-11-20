@@ -106,7 +106,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 submitButton.setText(getResources().getString(R.string.save));
                 toggleEditing();
             } else {
-                date = new DateTime();
+                date = new DateTime().withTime(0, 0, 0, 0);
                 updateDate();
                 Utils.showSoftKeyboard(TransactionActivity.this);
             }
@@ -118,6 +118,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 //                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     date = new DateTime(year, monthOfYear + 1, dayOfMonth, 0,
                             0, 0, 0);
+                    System.out.println("DATE SELECTED - " + date.toDateTime());
                     updateDate();
                 }
             };
@@ -170,6 +171,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         existingTransaction.setDescription(formattedDescription);
                         apiService.updateTransaction(existingTransaction);
                     } else {
+                        System.out.println("CREATING NEW TRANSACTION - " + date.toDateTime());
                         newTransaction = new Transaction(selectedSubCategoryID,
                                 //calendar.getTime(),
                                 date.toDateTime(),

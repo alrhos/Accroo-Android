@@ -46,7 +46,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 //
 //            startDate = calendar.getTime();
 
-            endDate = new DateTime(); // TODO the time should probably be set to 23:59:59.999
+            // Set dates from first day of calendar month to the end of the current day
+            endDate = new DateTime().withTime(23, 59, 59, 999);
             startDate = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), 1,
                     0, 0, 0, 0);
 

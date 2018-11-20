@@ -120,7 +120,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
 //                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
               //  endDate = calendar.getTime();
                 endDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
-                        0, 0);
+                        23, 59, 59, 999);
                 summaryListAdapter.updateEndDate(endDate);
                 fragmentListener.onEndDateUpdated(endDate);
             }

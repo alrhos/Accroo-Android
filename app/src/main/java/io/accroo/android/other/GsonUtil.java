@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.internal.bind.DateTypeAdapter;
+
+import org.joda.time.DateTime;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -18,7 +21,8 @@ public class GsonUtil {
         gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .disableHtmlEscaping()
-                .registerTypeAdapter(Date.class, new DateLongFormatTypeAdapter())
+                //.registerTypeAdapter(DateTime.class, new DateLongFormatTypeAdapter())
+                .registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter())
                 .create();
     }
 

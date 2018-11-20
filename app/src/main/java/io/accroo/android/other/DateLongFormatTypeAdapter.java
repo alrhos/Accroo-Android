@@ -4,19 +4,21 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import org.joda.time.DateTime;
+
 import java.io.IOException;
 import java.util.Date;
 
-public class DateLongFormatTypeAdapter extends TypeAdapter<Date> {
+public class DateLongFormatTypeAdapter extends TypeAdapter<DateTime> {
 
     @Override
-    public void write(JsonWriter out, Date value) throws IOException {
-        out.value(value.getTime());
+    public void write(JsonWriter out, DateTime value) throws IOException {
+        out.value(value.toDateTime().toString());
     }
 
     @Override
-    public Date read(JsonReader in) throws IOException {
-        return new Date(in.nextLong());
+    public DateTime read(JsonReader in) throws IOException {
+        return new DateTime(in.nextLong());
     }
 
 }
