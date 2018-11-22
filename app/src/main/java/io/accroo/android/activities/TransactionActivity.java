@@ -325,6 +325,10 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
+        } else if (requestType == ApiService.DELETE_TRANSACTION && errorCode == ApiService.NOT_FOUND) {
+            // The transaction has already been deleted
+            Toast.makeText(getApplicationContext(), R.string.transaction_deleted, Toast.LENGTH_SHORT).show();
+            finish();
         } else {
             String message;
             switch (errorCode) {

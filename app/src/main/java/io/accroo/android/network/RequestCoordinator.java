@@ -52,7 +52,7 @@ public abstract class RequestCoordinator {
     }
 
     protected synchronized void done(int index, JSONObject data) {
-        dataReceiver[index] = data.toString();
+        dataReceiver[index] = data == null ? null : data.toString();
         doneCount++;
         if (doneCount == requests.size()) {
             onSuccess();

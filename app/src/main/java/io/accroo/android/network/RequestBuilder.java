@@ -7,11 +7,13 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.JsonObject;
@@ -23,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +48,7 @@ public class RequestBuilder {
     public final static String GENERAL_CATEGORIES = "users/<userId>/categories/general";
     public final static String SUB_CATEGORIES =     "users/<userId>/categories/sub";
     public final static String TRANSACTIONS =       "users/<userId>/transactions";
+    public final static String TRANSACTION =        "users/<userId>/transactions/<transactionId>";
 
     private final static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(20000, 0,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -223,7 +227,6 @@ public class RequestBuilder {
         String url = baseURL + TRANSACTIONS;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
-        System.out.println(object.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -231,6 +234,51 @@ public class RequestBuilder {
                 Map<String, String> headerMap = new HashMap<>();
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest putTransaction(int index, final RequestCoordinator coordinator,
+                                                   String userId, String transactionId,
+                                                   String json, final String accessToken) throws JSONException {
+        String url = baseURL + TRANSACTION;
+        url = url.replace("<userId>", userId);
+        url = url.replace("<transactionId>", transactionId);
+        JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest deleteTransaction(int index, final RequestCoordinator coordinator,
+                                                   String userId, String transactionId,
+                                                   final String accessToken) {
+        String url = baseURL + TRANSACTION;
+        url = url.replace("<userId>", userId);
+        url = url.replace("<transactionId>", transactionId);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                // Delete response return 204 - no content
+                return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
             }
         };
         request.setRetryPolicy(retryPolicy);
@@ -380,6 +428,8 @@ public class RequestBuilder {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                System.out.println("AN ERROR OCCURRED");
+                error.printStackTrace();
                 coordinator.abort(parseVolleyException(error));
             }
         };

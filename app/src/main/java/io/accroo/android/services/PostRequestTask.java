@@ -206,7 +206,10 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_TRANSACTION:
 
-                    transaction = (Transaction) requestVariables.get("transaction");
+                    //transaction = (Transaction) requestVariables.get("transaction");
+                    encryptedTransaction = (EncryptedTransaction) GsonUtil.getInstance()
+                            .objectFromJson(dataReceiver[0][0], EncryptedTransaction.class);
+                    transaction = encryptedTransaction.decrypt();
                     DataProvider.updateTransaction(transaction);
                     return true;
 

@@ -48,6 +48,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private Preferences preferences;
     private EncryptedPreferences encryptedPreferences;
     private Transaction transaction;
+    private String transactionId;
     private GeneralCategory generalCategory;
     private SubCategory subCategory;
     private PreRequestOutcome preRequestOutcome;
@@ -242,8 +243,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     transaction = (Transaction) requestVariables.get("transaction");
-                    System.out.println(transaction.toString());
-                    System.out.println(GsonUtil.getInstance().toJson(transaction));
                     jsonString = GsonUtil.getInstance().toJson(transaction.encrypt());
                     requests.add(RequestBuilder.postTransaction(0, coordinator,
                             userId, jsonString, accessToken));
@@ -263,15 +262,30 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
 //                            uri, json, context));
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    transaction = (Transaction) requestVariables.get("transaction");
+                    transactionId = String.valueOf(transaction.getId());
+                    jsonString = GsonUtil.getInstance().toJson(transaction.encrypt());
+                    requests.add(RequestBuilder.putTransaction(0, coordinator,
+                            userId, transactionId, jsonString, accessToken));
+
                     return true;
 
                 case ApiService.DELETE_TRANSACTION:
 
-                    transaction = (Transaction) requestVariables.get("transaction");
-                    uri = RequestBuilder.TRANSACTIONS + "/" + transaction.getId();
+//                    transaction = (Transaction) requestVariables.get("transaction");
+//                    uri = RequestBuilder.TRANSACTIONS + "/" + transaction.getId();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
+//                            uri, null, context));
 
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
-                            uri, null, context));
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    transaction = (Transaction) requestVariables.get("transaction");
+                    transactionId = String.valueOf(transaction.getId());
+                    requests.add(RequestBuilder.deleteTransaction(0, coordinator, userId,
+                            transactionId, accessToken));
 
                     return true;
 

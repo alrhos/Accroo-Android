@@ -466,8 +466,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("transaction", transaction);
+//                postRequestVariables.clear();
+//                postRequestVariables.put("transaction", transaction);
                 new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context,
                         postRequestVariables).execute(dataReceiver);
             }
