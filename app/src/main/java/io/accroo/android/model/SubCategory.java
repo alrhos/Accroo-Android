@@ -25,11 +25,10 @@ public class SubCategory implements Relationship, Parcelable {
     private ArrayList<Transaction> transactions;
     private static DecimalFormat df = new DecimalFormat("0.00");
 
-
-//    public SubCategory(String categoryName, int generalCategoryId) {
-//        this.categoryName = categoryName;
-//        this.generalCategoryId = generalCategoryId;
-//    }
+    public SubCategory(String categoryName, int generalCategoryId) {
+        this.categoryName = categoryName;
+        this.generalCategoryId = generalCategoryId;
+    }
 //
 //    public SubCategory(String categoryName, String generalCategoryName) {
 //        this.categoryName = categoryName;

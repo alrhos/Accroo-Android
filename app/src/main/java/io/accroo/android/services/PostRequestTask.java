@@ -37,6 +37,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private GeneralCategory generalCategory;
     private EncryptedGeneralCategory encryptedGeneralCategory;
     private SubCategory subCategory;
+    private EncryptedSubCategory encryptedSubCategory;
     private int id, requestType;
     private String username, newEmail, deviceToken;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
@@ -253,11 +254,21 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 //                    subCategory = (SubCategory) requestVariables.get("subCategory");
 //                    subCategory.setId(id);
 //                    DataProvider.addSubCategory(subCategory);
+
+                    encryptedSubCategory = (EncryptedSubCategory) GsonUtil.getInstance()
+                            .objectFromJson(dataReceiver[0][0], EncryptedSubCategory.class);
+                    subCategory = encryptedSubCategory.decrypt();
+                    DataProvider.addSubCategory(subCategory);
+
                     return true;
 
                 case ApiService.UPDATE_SUB_CATEGORY:
 
-                    subCategory = (SubCategory) requestVariables.get("subCategory");
+//                    subCategory = (SubCategory) requestVariables.get("subCategory");
+//                    DataProvider.updateSubCategory(subCategory);
+                    encryptedSubCategory = (EncryptedSubCategory) GsonUtil.getInstance()
+                            .objectFromJson(dataReceiver[0][0], EncryptedSubCategory.class);
+                    subCategory = encryptedSubCategory.decrypt();
                     DataProvider.updateSubCategory(subCategory);
                     return true;
 

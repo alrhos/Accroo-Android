@@ -621,8 +621,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("subCategory", subCategory);
+//                postRequestVariables.clear();
+//                postRequestVariables.put("subCategory", subCategory);
                 new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context,
                         postRequestVariables).execute(dataReceiver);
             }
@@ -652,8 +652,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("subCategory", subCategory);
+//                postRequestVariables.clear();
+//                postRequestVariables.put("subCategory", subCategory);
                 new PostRequestTask(UPDATE_SUB_CATEGORY, ApiService.this, context,
                         postRequestVariables).execute(dataReceiver);
             }

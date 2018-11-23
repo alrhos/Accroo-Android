@@ -48,6 +48,7 @@ public class RequestBuilder {
     public final static String GENERAL_CATEGORIES = "users/<userId>/categories/general";
     public final static String GENERAL_CATEGORY =   "users/<userId>/categories/general/<categoryId>";
     public final static String SUB_CATEGORIES =     "users/<userId>/categories/sub";
+    public final static String SUB_CATEGORY =       "users/<userId>/categories/sub/<categoryId>";
     public final static String TRANSACTIONS =       "users/<userId>/transactions";
     public final static String TRANSACTION =        "users/<userId>/transactions/<transactionId>";
 
@@ -262,8 +263,8 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest deleteTransaction(int index, final RequestCoordinator coordinator,
-                                                   String userId, String transactionId,
-                                                   final String accessToken) {
+                                                      String userId, String transactionId,
+                                                      final String accessToken) {
         String url = baseURL + TRANSACTION;
         url = url.replace("<userId>", userId);
         url = url.replace("<transactionId>", transactionId);
@@ -287,7 +288,7 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest postGeneralCategory(int index, final RequestCoordinator coordinator,
-                                                    String userId, String json, final String accessToken) throws JSONException {
+                                                        String userId, String json, final String accessToken) throws JSONException {
         String url = baseURL + GENERAL_CATEGORIES;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
@@ -305,8 +306,8 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest putGeneralCategory(int index, final RequestCoordinator coordinator,
-                                                   String userId, String categoryId,
-                                                   String json, final String accessToken) throws JSONException {
+                                                       String userId, String categoryId,
+                                                       String json, final String accessToken) throws JSONException {
         String url = baseURL + GENERAL_CATEGORY;
         url = url.replace("<userId>", userId);
         url = url.replace("<categoryId>", categoryId);
@@ -325,9 +326,72 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest deleteGeneralCategory(int index, final RequestCoordinator coordinator,
+                                                          String userId, String categoryId,
+                                                          final String accessToken) {
+        String url = baseURL + GENERAL_CATEGORY;
+        url = url.replace("<userId>", userId);
+        url = url.replace("<categoryId>", categoryId);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                // Delete response return 204 - no content
+                return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest postSubCategory(int index, final RequestCoordinator coordinator,
+                                                    String userId, String json, final String accessToken) throws JSONException {
+        String url = baseURL + SUB_CATEGORIES;
+        url = url.replace("<userId>", userId);
+        JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest putSubCategory(int index, final RequestCoordinator coordinator,
+                                                   String userId, String categoryId,
+                                                   String json, final String accessToken) throws JSONException {
+        String url = baseURL + SUB_CATEGORY;
+        url = url.replace("<userId>", userId);
+        url = url.replace("<categoryId>", categoryId);
+        JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest deleteSubCategory(int index, final RequestCoordinator coordinator,
                                                       String userId, String categoryId,
                                                       final String accessToken) {
-        String url = baseURL + GENERAL_CATEGORY;
+        String url = baseURL + SUB_CATEGORY;
         url = url.replace("<userId>", userId);
         url = url.replace("<categoryId>", categoryId);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,

@@ -52,6 +52,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private GeneralCategory generalCategory;
     private String generalCategoryId;
     private SubCategory subCategory;
+    private String subCategoryId;
     private PreRequestOutcome preRequestOutcome;
     private Context context;
     private RequestCoordinator coordinator;
@@ -348,6 +349,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
 //                            RequestBuilder.SUB_CATEGORIES, json, context));
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    subCategory = (SubCategory) requestVariables.get("subCategory");
+                    System.out.println(GsonUtil.getInstance().toJson(subCategory) + " " + subCategory.getGeneralCategoryId());
+                    jsonString = GsonUtil.getInstance().toJson(subCategory.encrypt());
+                    System.out.println(jsonString);
+                    requests.add(RequestBuilder.postSubCategory(0, coordinator,
+                            userId, jsonString, accessToken));
+
                     return true;
 
                 case ApiService.UPDATE_SUB_CATEGORY:
@@ -359,15 +369,33 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
 //                            uri, json, context));
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    subCategory = (SubCategory) requestVariables.get("subCategory");
+                    System.out.println(GsonUtil.getInstance().toJson(subCategory));
+                    subCategoryId = String.valueOf(subCategory.getId());
+                    jsonString = GsonUtil.getInstance().toJson(subCategory.encrypt());
+                    System.out.println(jsonString);
+                    requests.add(RequestBuilder.putSubCategory(0, coordinator,
+                            userId, subCategoryId, jsonString, accessToken));
+
                     return true;
 
                 case ApiService.DELETE_SUB_CATEGORY:
 
-                    subCategory = (SubCategory) requestVariables.get("subCategory");
-                    uri = RequestBuilder.SUB_CATEGORIES + "/" + subCategory.getId();
+//                    subCategory = (SubCategory) requestVariables.get("subCategory");
+//                    uri = RequestBuilder.SUB_CATEGORIES + "/" + subCategory.getId();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
+//                            uri, null, context));
 
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
-                            uri, null, context));
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    subCategory = (SubCategory) requestVariables.get("subCategory");
+                    System.out.println(GsonUtil.getInstance().toJson(subCategory));
+                    subCategoryId = String.valueOf(subCategory.getId());
+                    requests.add(RequestBuilder.deleteSubCategory(0, coordinator, userId,
+                            subCategoryId, accessToken));
 
                     return true;
 
