@@ -116,6 +116,10 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
+        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY && errorCode == ApiService.NOT_FOUND) {
+            // The category has already been deleted
+            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
+            finish();
         } else {
             String message;
             switch (errorCode) {

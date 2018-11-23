@@ -35,6 +35,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private EncryptedTransaction encryptedTransaction;
     private Transaction transaction;
     private GeneralCategory generalCategory;
+    private EncryptedGeneralCategory encryptedGeneralCategory;
     private SubCategory subCategory;
     private int id, requestType;
     private String username, newEmail, deviceToken;
@@ -197,10 +198,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     encryptedTransaction = (EncryptedTransaction) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedTransaction.class);
                     transaction = encryptedTransaction.decrypt();
-                    System.out.println(transaction.toString());
-//                    System.out.println(transaction.getAmount());
-//                    System.out.println(transaction.getRawDate().getTime());
-//                    System.out.println(transaction.getDate());
                     DataProvider.addTransaction(transaction);
                     return true;
 
@@ -225,12 +222,23 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 //                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
 //                    generalCategory.setId(id);
 //                    DataProvider.addGeneralCategory(generalCategory);
+
+                    encryptedGeneralCategory = (EncryptedGeneralCategory) GsonUtil.getInstance()
+                            .objectFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
+                    generalCategory = encryptedGeneralCategory.decrypt();
+                    DataProvider.addGeneralCategory(generalCategory);
+
                     return true;
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
 
-                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+//                    DataProvider.updateGeneralCategory(generalCategory);
+                    encryptedGeneralCategory = (EncryptedGeneralCategory) GsonUtil.getInstance()
+                            .objectFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
+                    generalCategory = encryptedGeneralCategory.decrypt();
                     DataProvider.updateGeneralCategory(generalCategory);
+
                     return true;
 
                 case ApiService.DELETE_GENERAL_CATEGORY:

@@ -46,6 +46,7 @@ public class RequestBuilder {
     public final static String PREFERENCES =        "users/<userId>/preferences";
     public final static String CATEGORIES =         "users/<userId>/categories";
     public final static String GENERAL_CATEGORIES = "users/<userId>/categories/general";
+    public final static String GENERAL_CATEGORY =   "users/<userId>/categories/general/<categoryId>";
     public final static String SUB_CATEGORIES =     "users/<userId>/categories/sub";
     public final static String TRANSACTIONS =       "users/<userId>/transactions";
     public final static String TRANSACTION =        "users/<userId>/transactions/<transactionId>";
@@ -285,6 +286,68 @@ public class RequestBuilder {
         return request;
     }
 
+    public static JsonObjectRequest postGeneralCategory(int index, final RequestCoordinator coordinator,
+                                                    String userId, String json, final String accessToken) throws JSONException {
+        String url = baseURL + GENERAL_CATEGORIES;
+        url = url.replace("<userId>", userId);
+        JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest putGeneralCategory(int index, final RequestCoordinator coordinator,
+                                                   String userId, String categoryId,
+                                                   String json, final String accessToken) throws JSONException {
+        String url = baseURL + GENERAL_CATEGORY;
+        url = url.replace("<userId>", userId);
+        url = url.replace("<categoryId>", categoryId);
+        JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest deleteGeneralCategory(int index, final RequestCoordinator coordinator,
+                                                      String userId, String categoryId,
+                                                      final String accessToken) {
+        String url = baseURL + GENERAL_CATEGORY;
+        url = url.replace("<userId>", userId);
+        url = url.replace("<categoryId>", categoryId);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                // Delete response return 204 - no content
+                return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
 
 
 

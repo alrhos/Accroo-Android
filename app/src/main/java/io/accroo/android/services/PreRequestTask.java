@@ -50,6 +50,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private Transaction transaction;
     private String transactionId;
     private GeneralCategory generalCategory;
+    private String generalCategoryId;
     private SubCategory subCategory;
     private PreRequestOutcome preRequestOutcome;
     private Context context;
@@ -295,6 +296,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
 //                            RequestBuilder.GENERAL_CATEGORIES, json, context));
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+                    jsonString = GsonUtil.getInstance().toJson(generalCategory.encrypt());
+                    requests.add(RequestBuilder.postGeneralCategory(0, coordinator,
+                            userId, jsonString, accessToken));
+
                     return true;
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
@@ -306,15 +314,30 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 //                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
 //                            uri, json, context));
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+                    generalCategoryId = String.valueOf(generalCategory.getId());
+                    jsonString = GsonUtil.getInstance().toJson(generalCategory.encrypt());
+                    requests.add(RequestBuilder.putGeneralCategory(0, coordinator,
+                            userId, generalCategoryId, jsonString, accessToken));
+
                     return true;
 
                 case ApiService.DELETE_GENERAL_CATEGORY:
 
-                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-                    uri = RequestBuilder.GENERAL_CATEGORIES + "/" + generalCategory.getId();
+//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+//                    uri = RequestBuilder.GENERAL_CATEGORIES + "/" + generalCategory.getId();
+//
+//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
+//                            uri, null, context));
 
-                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
-                            uri, null, context));
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
+                    generalCategoryId = String.valueOf(generalCategory.getId());
+                    requests.add(RequestBuilder.deleteGeneralCategory(0, coordinator, userId,
+                            generalCategoryId, accessToken));
 
                     return true;
 
