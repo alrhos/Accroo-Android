@@ -20,6 +20,7 @@ import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
 
+import java.security.spec.ECField;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -51,6 +52,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_PREFERENCES =        19;
     public final static int UPDATE_KEY =                20;
     public final static int CREATE_KEY =                21;
+    public final static int LOGOUT =                    22;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -242,6 +244,19 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public void logout() {
         try {
+            dataReceiver = new String[1];
+            coordinator = new RequestCoordinator(context, this, dataReceiver) {
+                @Override
+                protected void onSuccess() {}
+
+                @Override
+                protected void onFailure(int errorCode) {}
+            };
+
+            String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            JsonObjectRequest deleteRefreshToken = RequestBuilder.deleteRefreshToken(0, coordinator, refreshToken);
+            coordinator.addRequests(deleteRefreshToken);
+            coordinator.start();
             CredentialService.getInstance(context).clearSavedData();
         } catch (Exception e) {
             e.printStackTrace();

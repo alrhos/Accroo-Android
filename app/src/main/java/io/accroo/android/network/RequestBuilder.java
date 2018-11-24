@@ -85,6 +85,28 @@ public class RequestBuilder {
         return request;
     }
 
+    public static JsonObjectRequest deleteRefreshToken(int index, final RequestCoordinator coordinator,
+                                                       final String refreshToken) {
+        String url = baseURL + REFRESH_TOKEN;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + refreshToken);
+                return headerMap;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                // Delete response return 204 - no content
+                return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
     public static JsonObjectRequest postAccessToken(int index, final RequestCoordinator coordinator,
                                                        final String refreshToken) {
         String url = baseURL + ACCESS_TOKEN;
