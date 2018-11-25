@@ -53,6 +53,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_KEY =                20;
     public final static int CREATE_KEY =                21;
     public final static int LOGOUT =                    22;
+    public final static int REAUTHENTICATE =            23;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -162,6 +163,28 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 preRequestVariables).execute();
     }
 
+    public void reauthenticate(final String password) {
+        dataReceiver = new String[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(REAUTHENTICATE, ApiService.this, context,
+                        null).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(REAUTHENTICATE, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("loginCode", password);
+
+        new PreRequestTask(REAUTHENTICATE, this, context, coordinator,
+                preRequestVariables).execute();
+    }
+
 //    public void login(@NonNull final String username, @NonNull String loginCode) {
 //        dataReceiver = new JSONObject[1];
 //        coordinator = new RequestCoordinator(context, this, dataReceiver) {
@@ -196,7 +219,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             DateTime currentTime = new DateTime();
             System.out.println("CURRENT TIME: " + currentTime.toLocalDateTime());
             System.out.println("DIFFERENCE: " + Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds());
-            return Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 595; // TODO: change to 60 after testing
+            return Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60; // TODO: change to 60 after testing
         } catch (Exception e) {
             // A refresh token wasn't found or the access token expiry couldn't be retrieved
             e.printStackTrace();
@@ -782,13 +805,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void updatePassword(char[] newPassword, String loginCode) {
+    public void updatePassword(char[] newPassword) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context,
-                        null).execute(dataReceiver);
+//                new PostRequestTask(UPDATE_PASSWORD, ApiService.this, context,
+//                        null).execute(dataReceiver);
+                requestOutcome.onSuccess(UPDATE_PASSWORD);
             }
 
             @Override
@@ -798,8 +822,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         preRequestVariables.clear();
-        preRequestVariables.put("loginCode", loginCode);
         preRequestVariables.put("newPassword", newPassword);
+//        preRequestVariables.put("loginCode", loginCode);
+//        preRequestVariables.put("newPassword", newPassword);
 
         preRequestTask = new PreRequestTask(UPDATE_PASSWORD, this, context,
                 coordinator, preRequestVariables);

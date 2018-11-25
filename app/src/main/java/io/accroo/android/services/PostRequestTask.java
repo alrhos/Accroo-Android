@@ -32,6 +32,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private DateTime startDate, endDate;
     private Account account;
     private LoginSession loginSession;
+    private DateTime refreshTokenExpiry, accessTokenExpiry;
     private EncryptedTransaction encryptedTransaction;
     private Transaction transaction;
     private GeneralCategory generalCategory;
@@ -101,11 +102,25 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     account = (Account) requestVariables.get("account");
                     loginSession = GsonUtil.getInstance().fromJson(dataReceiver[0][0], LoginSession.class);
 
-                    DateTime refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
-                    DateTime accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
+                    refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
+                    accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
 
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, account.getEmail());
                     CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, loginSession.getUserId());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, loginSession.getRefreshToken().getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, loginSession.getAccessToken().getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, accessTokenExpiry.toString());
+
+                    return true;
+
+                case ApiService.REAUTHENTICATE:
+
+                    loginSession = GsonUtil.getInstance().fromJson(dataReceiver[0][0], LoginSession.class);
+
+                    refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
+                    accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
+
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, loginSession.getRefreshToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, loginSession.getAccessToken().getToken());
@@ -292,12 +307,12 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     DataProvider.setKey(key);
                     return true;
 
-                case ApiService.UPDATE_PASSWORD:
-
-//                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-//                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
-
-                    return true;
+//                case ApiService.UPDATE_PASSWORD:
+//
+////                    deviceToken = dataReceiver[0][0].getString("deviceToken");
+////                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
+//
+//                    return true;
 
             }
         } catch (Exception e) {

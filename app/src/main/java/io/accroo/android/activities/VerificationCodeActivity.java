@@ -92,10 +92,12 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                                 apiService.login(account);
                                 break;
                             case UPDATE_EMAIL:
-                                apiService.updateEmail(email, loginCodeField.getText().toString());
+                                apiService.reauthenticate(loginCodeField.getText().toString());
+                                //apiService.updateEmail(email, loginCodeField.getText().toString());
                                 break;
                             case UPDATE_PASSWORD:
-                                apiService.updatePassword(password, loginCodeField.getText().toString());
+                                apiService.reauthenticate(loginCodeField.getText().toString());
+                                //apiService.updatePassword(password, loginCodeField.getText().toString());
                                 break;
                         }
                     }
@@ -158,6 +160,19 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             progressDialog.dismiss();
             startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
             overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (requestType == ApiService.REAUTHENTICATE) {
+            if (action == UPDATE_EMAIL) {
+                //apiService.updateEmail();
+            } else if (action == UPDATE_PASSWORD) {
+                System.out.println("CALLING UPDATE PASSWORD API METHOD");
+                apiService.updatePassword(password);
+            }
+        } else if (requestType == ApiService.UPDATE_EMAIL) {
+            Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        } else if (requestType == ApiService.UPDATE_PASSWORD) {
+            Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
  //       progressDialog.dismiss();
 //        if (requestType != ApiService.GET_VERIFICATION_CODE) {

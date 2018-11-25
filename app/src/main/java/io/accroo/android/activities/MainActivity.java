@@ -35,7 +35,6 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
         TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,

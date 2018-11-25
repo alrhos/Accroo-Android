@@ -95,12 +95,20 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
 
     @Override
     public void onSuccess(int requestType) {
-        progressDialog.dismiss();
-        int currentPasswordLength = currentPassword.getText().length();
-        currentPwd = new char[currentPasswordLength];
-        currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
-
-        if (apiService.initializeKey(currentPwd)) {
+        if (requestType == ApiService.GET_KEY) {
+            int currentPasswordLength = currentPassword.getText().length();
+            currentPwd = new char[currentPasswordLength];
+            currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
+            System.out.println("CHECKING IF CURRENT PASSWORD IS VALID");
+            if (apiService.initializeKey(currentPwd)) {
+                System.out.println("PASSWORD VALID - GETTING LOGIN CODE");
+                apiService.getLoginCode(null);
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            progressDialog.dismiss();
             int newPasswordLength = newPassword.getText().length();
             newPwd = new char[newPasswordLength];
             newPassword.getText().getChars(0, newPasswordLength, newPwd, 0);
@@ -109,8 +117,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             intent.putExtra("password", newPwd);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -7,7 +7,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
@@ -16,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.gson.JsonObject;
 
 import io.accroo.android.services.CredentialService;
 import io.accroo.android.services.ApiService;
@@ -25,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +33,7 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String baseURL =           "http://192.168.1.15/v1/";
+    private final static String BASE_URL =          "http://192.168.1.15/v1/";
     public final static String ACCOUNT =            "auth/accounts";
     public final static String EMAIL =              "auth/accounts/email";
     public final static String VERIFICATION_TOKEN = "auth/verification-tokens";
@@ -52,14 +49,14 @@ public class RequestBuilder {
     public final static String TRANSACTIONS =       "users/<userId>/transactions";
     public final static String TRANSACTION =        "users/<userId>/transactions/<transactionId>";
 
-    private final static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(20000, 0,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+    private final static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(20000,
+            0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
 
     private RequestBuilder() {}
 
     public static JsonObjectRequest postAccount(int index, final RequestCoordinator coordinator,
                                              String json) throws JSONException {
-        String url = baseURL + ACCOUNT;
+        String url = BASE_URL + ACCOUNT;
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator));
@@ -69,7 +66,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest postRefreshToken(int index, final RequestCoordinator coordinator,
                                                      String username, String verificationToken) {
-        String url = baseURL + REFRESH_TOKEN;
+        String url = BASE_URL + REFRESH_TOKEN;
         String credentials = username + ":" + verificationToken;
         final String authHeader = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
@@ -87,7 +84,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest deleteRefreshToken(int index, final RequestCoordinator coordinator,
                                                        final String refreshToken) {
-        String url = baseURL + REFRESH_TOKEN;
+        String url = BASE_URL + REFRESH_TOKEN;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -108,8 +105,8 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest postAccessToken(int index, final RequestCoordinator coordinator,
-                                                       final String refreshToken) {
-        String url = baseURL + ACCESS_TOKEN;
+                                                    final String refreshToken) {
+        String url = BASE_URL + ACCESS_TOKEN;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -125,7 +122,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest getKey(int index, final RequestCoordinator coordinator,
                                            String userId, final String accessToken) {
-        String url = baseURL + ENCRYPTION_KEY;
+        String url = BASE_URL + ENCRYPTION_KEY;
         url = url.replace("<userId>", userId);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
@@ -142,7 +139,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest putKey(int index, final RequestCoordinator coordinator,
                                            String json, String userId, final String accessToken) throws JSONException {
-        String url = baseURL + ENCRYPTION_KEY;
+        String url = BASE_URL + ENCRYPTION_KEY;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
@@ -160,7 +157,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest putPreferences(int index, final RequestCoordinator coordinator,
                                            String json, String userId, final String accessToken) throws JSONException {
-        String url = baseURL + PREFERENCES;
+        String url = BASE_URL + PREFERENCES;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
@@ -179,7 +176,7 @@ public class RequestBuilder {
     public static JsonArrayRequest postDefaultCategories(int index, final RequestCoordinator coordinator,
                                                          String json, String userId,
                                                          final String accessToken) throws JSONException {
-        String url = baseURL + CATEGORIES;
+        String url = BASE_URL + CATEGORIES;
         url = url.replace("<userId>", userId);
         JSONArray jsonArray = new JSONArray(json);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, jsonArray,
@@ -197,7 +194,7 @@ public class RequestBuilder {
 
     public static JsonArrayRequest getTransactions(int index, final RequestCoordinator coordinator,
                                                    String userId, final String accessToken) {
-        String url = baseURL + TRANSACTIONS;
+        String url = BASE_URL + TRANSACTIONS;
         url = url.replace("<userId>", userId);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
@@ -214,7 +211,7 @@ public class RequestBuilder {
 
     public static JsonArrayRequest getGeneralCategories(int index, final RequestCoordinator coordinator,
                                                         String userId, final String accessToken) {
-        String url = baseURL + GENERAL_CATEGORIES;
+        String url = BASE_URL + GENERAL_CATEGORIES;
         url = url.replace("<userId>", userId);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
@@ -231,7 +228,7 @@ public class RequestBuilder {
 
     public static JsonArrayRequest getSubCategories(int index, final RequestCoordinator coordinator,
                                                     String userId, final String accessToken) {
-        String url = baseURL + SUB_CATEGORIES;
+        String url = BASE_URL + SUB_CATEGORIES;
         url = url.replace("<userId>", userId);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
@@ -248,7 +245,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest postTransaction(int index, final RequestCoordinator coordinator,
                                                     String userId, String json, final String accessToken) throws JSONException {
-        String url = baseURL + TRANSACTIONS;
+        String url = BASE_URL + TRANSACTIONS;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
@@ -267,7 +264,7 @@ public class RequestBuilder {
     public static JsonObjectRequest putTransaction(int index, final RequestCoordinator coordinator,
                                                    String userId, String transactionId,
                                                    String json, final String accessToken) throws JSONException {
-        String url = baseURL + TRANSACTION;
+        String url = BASE_URL + TRANSACTION;
         url = url.replace("<userId>", userId);
         url = url.replace("<transactionId>", transactionId);
         JSONObject object = new JSONObject(json);
@@ -287,7 +284,7 @@ public class RequestBuilder {
     public static JsonObjectRequest deleteTransaction(int index, final RequestCoordinator coordinator,
                                                       String userId, String transactionId,
                                                       final String accessToken) {
-        String url = baseURL + TRANSACTION;
+        String url = BASE_URL + TRANSACTION;
         url = url.replace("<userId>", userId);
         url = url.replace("<transactionId>", transactionId);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
@@ -311,7 +308,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest postGeneralCategory(int index, final RequestCoordinator coordinator,
                                                         String userId, String json, final String accessToken) throws JSONException {
-        String url = baseURL + GENERAL_CATEGORIES;
+        String url = BASE_URL + GENERAL_CATEGORIES;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
@@ -330,7 +327,7 @@ public class RequestBuilder {
     public static JsonObjectRequest putGeneralCategory(int index, final RequestCoordinator coordinator,
                                                        String userId, String categoryId,
                                                        String json, final String accessToken) throws JSONException {
-        String url = baseURL + GENERAL_CATEGORY;
+        String url = BASE_URL + GENERAL_CATEGORY;
         url = url.replace("<userId>", userId);
         url = url.replace("<categoryId>", categoryId);
         JSONObject object = new JSONObject(json);
@@ -350,7 +347,7 @@ public class RequestBuilder {
     public static JsonObjectRequest deleteGeneralCategory(int index, final RequestCoordinator coordinator,
                                                           String userId, String categoryId,
                                                           final String accessToken) {
-        String url = baseURL + GENERAL_CATEGORY;
+        String url = BASE_URL + GENERAL_CATEGORY;
         url = url.replace("<userId>", userId);
         url = url.replace("<categoryId>", categoryId);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
@@ -374,7 +371,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest postSubCategory(int index, final RequestCoordinator coordinator,
                                                     String userId, String json, final String accessToken) throws JSONException {
-        String url = baseURL + SUB_CATEGORIES;
+        String url = BASE_URL + SUB_CATEGORIES;
         url = url.replace("<userId>", userId);
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
@@ -393,7 +390,7 @@ public class RequestBuilder {
     public static JsonObjectRequest putSubCategory(int index, final RequestCoordinator coordinator,
                                                    String userId, String categoryId,
                                                    String json, final String accessToken) throws JSONException {
-        String url = baseURL + SUB_CATEGORY;
+        String url = BASE_URL + SUB_CATEGORY;
         url = url.replace("<userId>", userId);
         url = url.replace("<categoryId>", categoryId);
         JSONObject object = new JSONObject(json);
@@ -413,7 +410,7 @@ public class RequestBuilder {
     public static JsonObjectRequest deleteSubCategory(int index, final RequestCoordinator coordinator,
                                                       String userId, String categoryId,
                                                       final String accessToken) {
-        String url = baseURL + SUB_CATEGORY;
+        String url = BASE_URL + SUB_CATEGORY;
         url = url.replace("<userId>", userId);
         url = url.replace("<categoryId>", categoryId);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url, null,
@@ -459,7 +456,7 @@ public class RequestBuilder {
         String credentials = username + ":" + password;
         String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-        String url = baseURL + endpoint;
+        String url = BASE_URL + endpoint;
 
         return new RestRequest(method, url, json, responseListener,
                 errorListener, RestRequest.BASIC, authValue);
@@ -471,7 +468,7 @@ public class RequestBuilder {
         Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String url = baseURL + endpoint;
+        String url = BASE_URL + endpoint;
         url = url.replace("<userId>", userId);
         String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
 
@@ -485,7 +482,7 @@ public class RequestBuilder {
         Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String url = baseURL + endpoint;
+        String url = BASE_URL + endpoint;
         url = url.replace("<userId>", userId);
         String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
         JSONObject jsonObject = new JSONObject(json);
@@ -500,7 +497,7 @@ public class RequestBuilder {
         Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String url = baseURL + endpoint;
+        String url = BASE_URL + endpoint;
         String authValue = CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
 
         return new RestRequest(method, url, json, responseListener, errorListener,
@@ -513,7 +510,7 @@ public class RequestBuilder {
         Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String url = baseURL + endpoint;
+        String url = BASE_URL + endpoint;
 
         return new RestRequest(method, url, json, responseListener, errorListener,
                 RestRequest.NONE, null);
@@ -525,7 +522,7 @@ public class RequestBuilder {
         Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
         Response.ErrorListener errorListener = createErrorListener(coordinator);
 
-        String url = baseURL + endpoint;
+        String url = BASE_URL + endpoint;
         JSONObject jsonObject = new JSONObject(json);
 
         return new RestRequest(method, url, jsonObject, responseListener, errorListener,

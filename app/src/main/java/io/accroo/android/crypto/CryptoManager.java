@@ -50,7 +50,8 @@ public class CryptoManager {
         CharBuffer charBuffer = CharBuffer.wrap(password);
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
 
-        byte[] passwordBytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
+        byte[] passwordBytes = Arrays.copyOfRange(byteBuffer.array(),
+                byteBuffer.position(), byteBuffer.limit());
 
         Arrays.fill(password, '\u0000');
         Arrays.fill(charBuffer.array(), '\u0000');
@@ -121,7 +122,8 @@ public class CryptoManager {
     }
 
     public Key encryptMasterKey(char[] password, Context context) throws Exception {
-        byte[] secretKeyBytes = decode(CredentialService.getInstance(context).getEntry(CredentialService.ENCRYPTION_KEY));
+        byte[] secretKeyBytes = decode(CredentialService.getInstance(context)
+                .getEntry(CredentialService.ENCRYPTION_KEY));
         Key key = generateKeyPackage(secretKeyBytes, password);
         Arrays.fill(password, '\u0000');
         return key;
@@ -152,11 +154,13 @@ public class CryptoManager {
     }
 
     public void saveMasterKey(Context context) throws Exception {
-        CredentialService.getInstance(context).saveEntry(CredentialService.ENCRYPTION_KEY, encode(masterKey));
+        CredentialService.getInstance(context).saveEntry(CredentialService.ENCRYPTION_KEY,
+                encode(masterKey));
     }
 
     public void initMasterKey(Context context) throws Exception {
-        byte[] secretKeyBytes = decode(CredentialService.getInstance(context).getEntry(CredentialService.ENCRYPTION_KEY));
+        byte[] secretKeyBytes = decode(CredentialService.getInstance(context)
+                .getEntry(CredentialService.ENCRYPTION_KEY));
         secretBox = new SecretBox(secretKeyBytes);
     }
 

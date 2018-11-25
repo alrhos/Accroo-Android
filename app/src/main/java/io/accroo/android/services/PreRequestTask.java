@@ -152,6 +152,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
+                case ApiService.REAUTHENTICATE:
+
+                    loginCode = (String) requestVariables.get("loginCode");
+                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
+                    requests.add(RequestBuilder.postRefreshToken(0, coordinator,
+                            username, loginCode));
+
+                    return true;
+
                 case ApiService.CREATE_KEY:
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
@@ -417,6 +426,17 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.getKey(0, coordinator, userId, accessToken));
+
+                    return true;
+
+                case ApiService.UPDATE_PASSWORD:
+
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    newPassword = (char[]) requestVariables.get("newPassword");
+                    Key newKey = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
+                    requests.add(RequestBuilder.putKey(0, coordinator,
+                            GsonUtil.getInstance().toJson(newKey), userId, accessToken));
 
                     return true;
 
