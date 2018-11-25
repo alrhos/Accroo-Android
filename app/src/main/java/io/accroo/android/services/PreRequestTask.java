@@ -408,24 +408,34 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.UPDATE_EMAIL:
-
-                    newEmail = (String) requestVariables.get("newEmail");
-                    loginCode = (String) requestVariables.get("loginCode");
-                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
-                    json = new JSONObject();
-                    json.put("email", newEmail);
-
-                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-                            json, RequestBuilder.EMAIL, username, loginCode));
-
-                    return true;
+//                case ApiService.UPDATE_EMAIL:
+//
+//                    newEmail = (String) requestVariables.get("newEmail");
+//                    loginCode = (String) requestVariables.get("loginCode");
+//                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
+//                    json = new JSONObject();
+//                    json.put("email", newEmail);
+//
+//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
+//                            json, RequestBuilder.EMAIL, username, loginCode));
+//
+//                    return true;
 
                 case ApiService.GET_KEY:
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.getKey(0, coordinator, userId, accessToken));
+
+                    return true;
+
+                case ApiService.UPDATE_EMAIL:
+
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    newEmail = (String) requestVariables.get("newEmail");
+                    JSONObject emailJson = new JSONObject();
+                    emailJson.put("email", newEmail);
+                    requests.add(RequestBuilder.putEmail(0, coordinator, accessToken, emailJson));
 
                     return true;
 

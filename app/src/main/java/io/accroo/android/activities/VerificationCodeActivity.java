@@ -162,14 +162,23 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.REAUTHENTICATE) {
             if (action == UPDATE_EMAIL) {
-                //apiService.updateEmail();
+                apiService.updateEmail(email);
             } else if (action == UPDATE_PASSWORD) {
                 System.out.println("CALLING UPDATE PASSWORD API METHOD");
                 apiService.updatePassword(password);
             }
         } else if (requestType == ApiService.UPDATE_EMAIL) {
-            Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            loginCodeField.getText().clear();
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
+            builder.setTitle(R.string.email_updated_title)
+                    .setMessage(R.string.email_updated_message)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            relaunch();
+                        }
+                    }).create().show();
         } else if (requestType == ApiService.UPDATE_PASSWORD) {
             Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));

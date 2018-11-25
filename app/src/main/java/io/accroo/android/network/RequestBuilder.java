@@ -120,6 +120,22 @@ public class RequestBuilder {
         return request;
     }
 
+    public static JsonObjectRequest putEmail(int index, final RequestCoordinator coordinator,
+                                             final String accessToken, JSONObject object) {
+        String url = BASE_URL + EMAIL;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
     public static JsonObjectRequest getKey(int index, final RequestCoordinator coordinator,
                                            String userId, final String accessToken) {
         String url = BASE_URL + ENCRYPTION_KEY;

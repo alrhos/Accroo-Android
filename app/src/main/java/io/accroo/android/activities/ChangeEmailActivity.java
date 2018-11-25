@@ -1,22 +1,25 @@
 package io.accroo.android.activities;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
+import io.accroo.android.services.ApiService;
 
-public class ChangeEmailActivity extends AppCompatActivity {
+public class ChangeEmailActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText emailAddress, confirmEmailAddress;
     private Button next;
+    private ProgressDialog progressDialog;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,11 @@ public class ChangeEmailActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
+            apiService = new ApiService(this, getApplicationContext());
+            progressDialog = new ProgressDialog(ChangeEmailActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setCancelable(false);
+
             emailAddress = findViewById(R.id.new_email);
             confirmEmailAddress = findViewById(R.id.confirm_new_email);
             next = findViewById(R.id.next);
@@ -38,11 +46,13 @@ public class ChangeEmailActivity extends AppCompatActivity {
                     if (!isEmailValid()) {
                         return;
                     }
-                    Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
-                    intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
-                    intent.putExtra("email", emailAddress.getText().toString());
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.enter, R.anim.exit);
+                    progressDialog.show();
+                    apiService.getLoginCode(null);
+//                    Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
+//                    intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
+//                    intent.putExtra("email", emailAddress.getText().toString());
+//                    startActivity(intent);
+//                    overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
 
@@ -78,6 +88,53 @@ public class ChangeEmailActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onSuccess(int requestType) {
+        progressDialog.dismiss();
+        if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
+            intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
+            intent.putExtra("email", emailAddress.getText().toString());
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        }
+    }
+
+    @Override
+    public void onFailure(int requestType, int errorCode) {
+        progressDialog.dismiss();
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
+            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
+            apiService.logout();
+            relaunch();
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onError() {
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+        relaunch();
     }
 
 }

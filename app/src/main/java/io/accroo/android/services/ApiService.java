@@ -265,6 +265,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
+    public void clearLocalSession() {
+        try {
+            CredentialService.getInstance(context).clearSavedData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void logout() {
         try {
             dataReceiver = new String[1];
@@ -747,15 +755,17 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void updateEmail(final String newEmail, String loginCode) {
+    public void updateEmail(final String newEmail) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("newEmail", newEmail);
-                new PostRequestTask(UPDATE_EMAIL, ApiService.this, context,
-                        postRequestVariables).execute(dataReceiver);
+                try {
+                    CredentialService.getInstance(context).clearSavedData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                requestOutcome.onSuccess(UPDATE_EMAIL);
             }
 
             @Override
@@ -766,7 +776,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
         preRequestVariables.clear();
         preRequestVariables.put("newEmail", newEmail);
-        preRequestVariables.put("loginCode", loginCode);
 
         preRequestTask = new PreRequestTask(UPDATE_EMAIL, this, context,
                 coordinator, preRequestVariables);
