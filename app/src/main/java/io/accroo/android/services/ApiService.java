@@ -265,14 +265,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void clearLocalSession() {
-        try {
-            CredentialService.getInstance(context).clearSavedData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void logout() {
         try {
             dataReceiver = new String[1];
@@ -285,10 +277,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             };
 
             String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            CredentialService.getInstance(context).clearSavedData();
             JsonObjectRequest deleteRefreshToken = RequestBuilder.deleteRefreshToken(0, coordinator, refreshToken);
             coordinator.addRequests(deleteRefreshToken);
             coordinator.start();
-            CredentialService.getInstance(context).clearSavedData();
         } catch (Exception e) {
             e.printStackTrace();
         }

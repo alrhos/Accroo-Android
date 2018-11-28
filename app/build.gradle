@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "io.accroo.android"
         minSdkVersion 23
@@ -35,5 +36,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'joda-time:joda-time:2.10.1'
+    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.1'
     testImplementation 'junit:junit:4.12'
 }

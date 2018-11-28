@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+
 import io.accroo.android.BuildConfig;
 import io.accroo.android.R;
 
@@ -55,7 +57,8 @@ public class AboutActivity extends AppCompatActivity {
         licenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), LicensesActivity.class));
+                //startActivity(new Intent(getApplicationContext(), LicensesActivity.class));
+                startActivity(new Intent(getApplicationContext(), OssLicensesMenuActivity.class));
             }
         });
 
