@@ -57,6 +57,7 @@
 
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">Couldn\'t connect to server</string>
+    <string name="no_network_connection">No network connection</string>
     <string name="general_error">An error occurred</string>
     <string name="too_many_requests">Please try again in a moment</string>
     <string name="maintenance_title">Down for maintenance</string>

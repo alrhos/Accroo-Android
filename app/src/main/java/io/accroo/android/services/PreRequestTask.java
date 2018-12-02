@@ -39,6 +39,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
     private String accessToken;
     private String json;
     private Account account;
+    private JSONObject emailJson;
     private Preferences preferences;
     private Key key;
     private Transaction transaction;
@@ -76,6 +77,15 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         try {
             switch (requestType) {
 
+                case ApiService.GET_VERIFICATION_CODE:
+
+                    username = (String) requestVariables.get("username");
+                    emailJson = new JSONObject();
+                    emailJson.put("email", username);
+                    requests.add(RequestBuilder.postVerificationToken(0, coordinator, emailJson));
+
+                    return true;
+
                 case ApiService.GET_DEFAULT_DATA:
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
@@ -89,8 +99,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.CREATE_ACCOUNT:
 
                     account = (Account) requestVariables.get("account");
+                    String recaptchaToken = (String) requestVariables.get("recaptchaToken");
                     requests.add(RequestBuilder.postAccount(0, coordinator,
-                            GsonUtil.getInstance().toJson(account)));
+                            GsonUtil.getInstance().toJson(account), recaptchaToken));
 
                     return true;
 
@@ -282,7 +293,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     newEmail = (String) requestVariables.get("newEmail");
-                    JSONObject emailJson = new JSONObject();
+                    emailJson = new JSONObject();
                     emailJson.put("email", newEmail);
                     requests.add(RequestBuilder.putEmail(0, coordinator, accessToken, emailJson));
 

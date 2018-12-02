@@ -57,9 +57,26 @@ public class RequestBuilder {
     private RequestBuilder() {}
 
     public static JsonObjectRequest postAccount(int index, final RequestCoordinator coordinator,
-                                             String json) throws JSONException {
+                                                String json, final String recaptchaToken) throws JSONException {
         String url = BASE_URL + ACCOUNT;
         JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                headerMap.put("Recaptcha-Token", recaptchaToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest postVerificationToken(int index, final RequestCoordinator coordinator,
+                                                          JSONObject object) {
+        String url = BASE_URL + VERIFICATION_TOKEN;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override

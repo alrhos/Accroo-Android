@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
@@ -13,10 +14,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.safetynet.SafetyNetStatusCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import io.accroo.android.R;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.Preferences;
-import io.accroo.android.model.User;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
@@ -32,6 +39,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     private Account account;
     private char[] pwd;
     private boolean displayPasswordWarning = true;
+    private final String recaptchaSiteKey = "6LduSH4UAAAAAAcY15ThqAo9wJ0Lz3O6RKLW9ehm";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +87,6 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         displayPasswordWarning = false;
                                         createAccount();
-//                                        progressDialog.show();
-//                                        int passwordLength = password.getText().length();
-//                                        pwd = new char[passwordLength];
-//                                        password.getText().getChars(0, passwordLength, pwd, 0);
-//                                        User user = new User(emailAddress.getText().toString(), pwd, new Preferences());
-//                                        apiService.createUser(user);
                                     }
                                 })
                                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -100,9 +102,42 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     }
 
     private void createAccount() {
-        progressDialog.show();
-        account = new Account(emailAddress.getText().toString());
-        apiService.createAccount(account);
+        SafetyNet.getClient(this).verifyWithRecaptcha(recaptchaSiteKey)
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        if (!response.getTokenResult().isEmpty()) {
+                            progressDialog.show();
+                            account = new Account(emailAddress.getText().toString());
+                            apiService.createAccount(account, response.getTokenResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            int statusCode = apiException.getStatusCode();
+                            String message;
+                            switch (statusCode) {
+                                case SafetyNetStatusCodes.TIMEOUT:
+                                    message = getResources().getString(R.string.timeout_error);
+                                    break;
+                                case SafetyNetStatusCodes.NETWORK_ERROR:
+                                    message = getResources().getString(R.string.no_network_connection);
+                                    break;
+                                default:
+                                    message = getResources().getString(R.string.general_error);
+                            }
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), getResources()
+                                    .getString(R.string.general_error), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override
