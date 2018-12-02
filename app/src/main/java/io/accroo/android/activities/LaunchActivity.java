@@ -82,8 +82,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     @Override
     public void onSuccess(int requestType) {
         Intent intent = new Intent(this, MainActivity.class);
-//        intent.putExtra("startDate", startDate.getTime());
-//        intent.putExtra("endDate", endDate.getTime());
         intent.putExtra("startDate", startDate.getMillis());
         intent.putExtra("endDate", endDate.getMillis());
         startActivity(intent);
@@ -94,8 +92,9 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
-                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.ORIGIN_UNAVAILABLE) {
-            if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.ORIGIN_UNAVAILABLE ||
+                errorCode == ApiService.SERVICE_UNAVAILABLE) {
+            if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
                 MaintenanceDialog.show(this);
             }
             setContentView(R.layout.activity_no_connection);

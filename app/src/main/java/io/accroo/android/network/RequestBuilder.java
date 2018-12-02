@@ -602,6 +602,8 @@ public class RequestBuilder {
                     return ApiService.TOO_MANY_REQUESTS;
                 case 500:
                     return ApiService.GENERIC_ERROR;
+                case 503:
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 521:
                     return ApiService.ORIGIN_UNAVAILABLE;
                 case 522:
@@ -619,7 +621,6 @@ public class RequestBuilder {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("AN ERROR OCCURRED");
                 error.printStackTrace();
                 coordinator.abort(parseVolleyException(error));
             }

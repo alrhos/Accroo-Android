@@ -3,7 +3,6 @@ package io.accroo.android.activities;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,10 +30,6 @@ import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 import io.accroo.android.services.InputService;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
 public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
     private EditText amountField, descriptionField;
@@ -43,7 +37,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private ImageView categoryIcon;
     private Button submitButton;
     private DatePickerDialog.OnDateSetListener datePicker;
-    //private Calendar calendar;
     private DateTime date;
     private Transaction newTransaction, existingTransaction;
     private int selectedSubCategoryID;
@@ -52,7 +45,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private boolean editing = false;
     private boolean editable = true;
     private ApiService apiService;
-    //private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
     @Override
@@ -66,8 +58,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
-           // final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
             amountField = findViewById(R.id.add_transaction_amount);
             descriptionField = findViewById(R.id.add_transaction_description);
             categoryField = findViewById(R.id.add_transaction_category);
@@ -80,18 +70,15 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
-            //calendar = Calendar.getInstance();
 
             existingTransaction = getIntent().getParcelableExtra("transaction");
 
             if (existingTransaction != null) {
                 editing = true;
-                //calendar.setTime(existingTransaction.getDate());
                 date = existingTransaction.getDate();
                 setTitle(R.string.title_activity_edit_transaction);
 
                 amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
-                //dateField.setText(dateFormat.format(existingTransaction.getDate()));
                 dateField.setText(existingTransaction.getDate().toString(dateFormat));
                 descriptionField.setText(existingTransaction.getDescription());
 
@@ -113,23 +100,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
             datePicker = new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                    calendar.set(Calendar.YEAR, year);
-//                    calendar.set(Calendar.MONTH, monthOfYear);
-//                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     date = new DateTime(year, monthOfYear + 1, dayOfMonth, 0,
                             0, 0, 0);
                     System.out.println("DATE SELECTED - " + date.toDateTime());
                     updateDate();
                 }
             };
-
-//            dateField.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    new DatePickerDialog(TransactionActivity.this, datePicker, calendar.get(Calendar.YEAR),
-//                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-//                }
-//            });
 
             dateField.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,14 +142,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                     if (editing) {
                         existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
                         existingTransaction.setSubCategoryId(selectedSubCategoryID);
-                        //existingTransaction.setDate(calendar.getTime());
                         existingTransaction.setDate(date);
                         existingTransaction.setDescription(formattedDescription);
                         apiService.updateTransaction(existingTransaction);
                     } else {
-                        System.out.println("CREATING NEW TRANSACTION - " + date.toDateTime());
                         newTransaction = new Transaction(selectedSubCategoryID,
-                                //calendar.getTime(),
                                 date.toDateTime(),
                                 Double.parseDouble(amountField.getText().toString()),
                                 formattedDescription);
@@ -239,8 +212,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     private void updateDate() {
-        //String dateString = dateFormat.format(calendar.getTime());
-        //dateField.setText(dateString);
         dateField.setText(date.toString(dateFormat));
 
     }
@@ -319,7 +290,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

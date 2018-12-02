@@ -2,20 +2,11 @@ package io.accroo.android.network;
 
 import android.content.Context;
 
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
-import com.google.gson.annotations.Expose;
 
-import org.joda.time.DateTime;
-import org.joda.time.Seconds;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
-
-import io.accroo.android.model.AccessToken;
-import io.accroo.android.other.GsonUtil;
-import io.accroo.android.services.ApiService;
-import io.accroo.android.services.CredentialService;
 
 /**
  * Created by oscar on 11/03/17.

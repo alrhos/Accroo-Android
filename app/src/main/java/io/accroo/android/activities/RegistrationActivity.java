@@ -173,7 +173,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else {
             String message;

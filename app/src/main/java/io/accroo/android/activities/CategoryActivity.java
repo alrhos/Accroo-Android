@@ -164,7 +164,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
