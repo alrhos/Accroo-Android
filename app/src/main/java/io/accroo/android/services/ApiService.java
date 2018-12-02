@@ -208,6 +208,61 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //        new PreRequestTask(GET_DEVICE_TOKEN, this, context, coordinator, preRequestVariables).execute();
 //    }
 
+    private void submitRequest() {
+        try {
+            String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            String tokenExpiry = CredentialService.getInstance(context)
+                    .getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+            DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+            DateTime currentTime = new DateTime();
+            if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {
+                // Access token needs to be refreshed
+                final String[] accessTokenReceiver = new String[1];
+                RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
+                        this, accessTokenReceiver) {
+                    @Override
+                    protected void onSuccess() {
+                        String response = accessTokenReceiver[0];
+                        AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
+                        DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
+                        try {
+                            CredentialService.getInstance(context)
+                                    .saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
+                            CredentialService.getInstance(context)
+                                    .saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
+                            preRequestTask.execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            requestOutcome.onError();
+                        }
+                    }
+
+                    @Override
+                    protected void onFailure(int errorCode) {
+                        requestOutcome.onFailure(requestType, errorCode);
+                    }
+                };
+
+                try {
+                    JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
+                            accessTokenCoordinator, refreshToken);
+                    accessTokenCoordinator.addRequests(accessTokenRequest);
+                    accessTokenCoordinator.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    requestOutcome.onError();
+                }
+            } else {
+                // Current access token can still be used
+                preRequestTask.execute();
+            }
+        } catch (Exception e) {
+            // A refresh token wasn't found or the access token expiry couldn't be retrieved
+            e.printStackTrace();
+            requestOutcome.onError();
+        }
+    }
+
     private boolean newAccessTokenRequired() {
         try {
             // Check if a refresh token exists
@@ -309,12 +364,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             preRequestTask = new PreRequestTask(GET_DEFAULT_DATA, this, context,
                     coordinator, null);
             requestType = GET_DEFAULT_DATA;
+            submitRequest();
 
-            if (newAccessTokenRequired()) {
-                updateAccessToken();
-            } else {
-                preRequestTask.execute();
-            }
+//            if (newAccessTokenRequired()) {
+//                updateAccessToken();
+//            } else {
+//                preRequestTask.execute();
+//            }
         } else {
             requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
@@ -361,12 +417,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(CREATE_KEY, this, context, coordinator,
                 preRequestVariables);
         requestType = CREATE_KEY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
 //    public void updateKey(final char[] password) {
@@ -410,12 +467,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(UPDATE_PREFERENCES, this, context, coordinator,
                 preRequestVariables);
         requestType = UPDATE_PREFERENCES;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
 
@@ -458,12 +516,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(CREATE_DEFAULT_CATEGORIES, this,
                 context, coordinator, null);
         requestType = CREATE_DEFAULT_CATEGORIES;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void createTransaction(final Transaction transaction) {
@@ -491,12 +550,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(CREATE_TRANSACTION, this, context,
                 coordinator, preRequestVariables);
         requestType = CREATE_TRANSACTION;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void updateTransaction(final Transaction transaction) {
@@ -522,12 +582,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(UPDATE_TRANSACTION, this, context,
                 coordinator, preRequestVariables);
         requestType = UPDATE_TRANSACTION;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void deleteTransaction(final Transaction transaction) {
@@ -553,12 +614,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(DELETE_TRANSACTION, this, context,
                 coordinator, preRequestVariables);
         requestType = DELETE_TRANSACTION;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void createGeneralCategory(final GeneralCategory generalCategory) {
@@ -584,12 +646,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(CREATE_GENERAL_CATEGORY, this, context,
                 coordinator, preRequestVariables);
         requestType = CREATE_GENERAL_CATEGORY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void updateGeneralCategory(final GeneralCategory generalCategory) {
@@ -615,12 +678,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(UPDATE_GENERAL_CATEGORY, this, context,
                 coordinator, preRequestVariables);
         requestType = UPDATE_GENERAL_CATEGORY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void deleteGeneralCategory(final GeneralCategory generalCategory) {
@@ -646,12 +710,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(DELETE_GENERAL_CATEGORY, this, context,
                 coordinator, preRequestVariables);
         requestType = DELETE_GENERAL_CATEGORY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void createSubCategory(final SubCategory subCategory) {
@@ -677,12 +742,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(CREATE_SUB_CATEGORY, this, context,
                 coordinator, preRequestVariables);
         requestType = CREATE_SUB_CATEGORY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void updateSubCategory(final SubCategory subCategory) {
@@ -708,12 +774,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(UPDATE_SUB_CATEGORY, this, context,
                 coordinator, preRequestVariables);
         requestType = UPDATE_SUB_CATEGORY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void deleteSubCategory(final SubCategory subCategory) {
@@ -739,12 +806,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(DELETE_SUB_CATEGORY, this, context,
                 coordinator, preRequestVariables);
         requestType = DELETE_SUB_CATEGORY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void updateEmail(final String newEmail) {
@@ -772,12 +840,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(UPDATE_EMAIL, this, context,
                 coordinator, preRequestVariables);
         requestType = UPDATE_EMAIL;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void getKey() {
@@ -798,12 +867,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(GET_KEY, this, context, coordinator,
                 null);
         requestType = GET_KEY;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     public void updatePassword(char[] newPassword) {
@@ -830,12 +900,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestTask = new PreRequestTask(UPDATE_PASSWORD, this, context,
                 coordinator, preRequestVariables);
         requestType = UPDATE_PASSWORD;
+        submitRequest();
 
-        if (newAccessTokenRequired()) {
-            updateAccessToken();
-        } else {
-            preRequestTask.execute();
-        }
+//        if (newAccessTokenRequired()) {
+//            updateAccessToken();
+//        } else {
+//            preRequestTask.execute();
+//        }
     }
 
     @Override

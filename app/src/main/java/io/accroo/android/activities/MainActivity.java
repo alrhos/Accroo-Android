@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private DateTime startDate, endDate;
     private FloatingActionButton fab;
     private final int[] fabColorArray = {
-                                            R.color.colorAccent,
-                                            R.color.colorAccent,
-                                            R.color.colorAccentSecondary
+        R.color.colorAccent,
+        R.color.colorAccent,
+        R.color.colorAccentSecondary
     };
 
     @Override
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     protected void animateFab(final int position) {
         fab.clearAnimation();
-        // Scale down animation
         ScaleAnimation shrink =  new ScaleAnimation(1f, 0.2f, 1f, 0.2f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         shrink.setDuration(150);     // animation duration in milliseconds
@@ -128,14 +127,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Change FAB color and icon
-                //fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position]));
-                fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position], getApplicationContext().getTheme()));
-
-                // Scale up animation
+                fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position],
+                        getApplicationContext().getTheme()));
                 ScaleAnimation expand =  new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                expand.setDuration(100);     // animation duration in milliseconds
+                expand.setDuration(100);
                 expand.setInterpolator(new AccelerateInterpolator());
                 fab.startAnimation(expand);
             }
