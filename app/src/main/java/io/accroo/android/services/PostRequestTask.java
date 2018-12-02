@@ -39,8 +39,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private EncryptedGeneralCategory encryptedGeneralCategory;
     private SubCategory subCategory;
     private EncryptedSubCategory encryptedSubCategory;
-    private int id, requestType;
-    private String username, newEmail, deviceToken;
+    private int requestType;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private ArrayList<SubCategory> subCategories = new ArrayList<>();
     private ArrayList<Transaction> transactions = new ArrayList<>();
@@ -65,37 +64,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     protected Boolean doInBackground(String[]... dataReceiver) {
         try {
             switch (requestType) {
-
-                case ApiService.GET_DEVICE_TOKEN:
-
-//                    username = (String) requestVariables.get("username");
-//                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-//
-//                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
-//                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
-//
-//                    JSONObject keyData = dataReceiver[0][0].getJSONObject("keyPackage");
-//                    String key = keyData.getString("key");
-//                    String nonce = keyData.getString("nonce");
-//                    String salt = keyData.getString("salt");
-//                    int algorithm = keyData.getInt("algorithm");
-//                    int memlimit = keyData.getInt("memlimit");
-//                    int opslimit = keyData.getInt("opslimit");
-//
-//                    Key keyPackage = new Key(key, nonce, salt, algorithm, opslimit, memlimit);
-//
-//                    DataProvider.setKey(keyPackage);
-                    return true;
-
-                case ApiService.CREATE_USER:
-
-//                    username = ((User) requestVariables.get("user")).getEmail();
-//                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-//
-//                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, username);
-//                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
-//                    CryptoManager.getInstance().saveMasterKey(context);
-                    return true;
 
                 case ApiService.LOGIN:
 
@@ -130,49 +98,8 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.GET_DEFAULT_DATA:
 
-//                    JSONArray generalCategoriesArray = dataReceiver[0][0].getJSONArray("categories");
-//
-//                    startDate = (Date) requestVariables.get("startDate");
-//                    endDate = (Date) requestVariables.get("endDate");
-//
-//                    for (int i = 0; i < generalCategoriesArray.length(); i++) {
-//                        JSONObject gc = generalCategoriesArray.getJSONObject(i);
-//                        GeneralCategory generalCategory = new GeneralCategory(gc);
-//                        JSONArray linkedSubCategories = gc.getJSONArray("subCategories");
-//
-//                        for (int j = 0; j < linkedSubCategories.length(); j++) {
-//                            JSONObject sc = linkedSubCategories.getJSONObject(j);
-//                            SubCategory subCategory = new SubCategory(sc);
-//                            subCategories.add(subCategory);
-//                        }
-//
-//                        generalCategories.add(generalCategory);
-//                    }
-//
-//                    JSONArray transactionsArray = dataReceiver[0][1].getJSONArray("transactions");
-//
-//                    for (int k = 0; k < transactionsArray.length(); k++) {
-//                        JSONObject t = transactionsArray.getJSONObject(k);
-//                        Transaction transaction = new Transaction(t);
-//
-//                        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
-//                            transactions.add(transaction);
-//                        }
-//                    }
-//
-//                    DataProvider.loadData(generalCategories, subCategories, transactions);
-
-//                    ArrayList<EncryptedTransaction> encryptedTransactions = new ArrayList<>();
-//                    for (EncryptedTransaction encryptedTransaction : (EncryptedTransaction) GsonUtil.getInstance().fromJson(dataReceiver[0][0], EncryptedTransaction.class)) {
-//
-//                    }
-
                     startDate = (DateTime) requestVariables.get("startDate");
                     endDate = (DateTime) requestVariables.get("endDate");
-
-                    System.out.println("--------------------------------------");
-                    System.out.println(startDate.toDateTime().toString());
-                    System.out.println(endDate.toDateTime().toString());
 
                     ArrayList<EncryptedGeneralCategory> encryptedGeneralCategories = GsonUtil.getInstance()
                             .listFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
@@ -193,7 +120,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                     for (EncryptedTransaction encryptedTransaction : encryptedTransactions) {
                         Transaction transaction = encryptedTransaction.decrypt();
-                        System.out.println(transaction.toString());
                         if (!transaction.getDate().isBefore(startDate) && !transaction.getDate()
                                 .isAfter(endDate)) {
                             transactions.add(transaction);
@@ -206,11 +132,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.CREATE_TRANSACTION:
 
-//                    id = dataReceiver[0][0].getInt("transactionID");
-//                    transaction = (Transaction) requestVariables.get("transaction");
-//                    transaction.setId(id);
-//                    DataProvider.addTransaction(transaction);
-
                     encryptedTransaction = (EncryptedTransaction) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedTransaction.class);
                     transaction = encryptedTransaction.decrypt();
@@ -219,7 +140,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_TRANSACTION:
 
-                    //transaction = (Transaction) requestVariables.get("transaction");
                     encryptedTransaction = (EncryptedTransaction) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedTransaction.class);
                     transaction = encryptedTransaction.decrypt();
@@ -234,11 +154,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.CREATE_GENERAL_CATEGORY:
 
-//                    id = dataReceiver[0][0].getInt("generalCategoryID");
-//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-//                    generalCategory.setId(id);
-//                    DataProvider.addGeneralCategory(generalCategory);
-
                     encryptedGeneralCategory = (EncryptedGeneralCategory) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
                     generalCategory = encryptedGeneralCategory.decrypt();
@@ -248,8 +163,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
 
-//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-//                    DataProvider.updateGeneralCategory(generalCategory);
                     encryptedGeneralCategory = (EncryptedGeneralCategory) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
                     generalCategory = encryptedGeneralCategory.decrypt();
@@ -265,11 +178,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.CREATE_SUB_CATEGORY:
 
-//                    id = dataReceiver[0][0].getInt("subCategoryID");
-//                    subCategory = (SubCategory) requestVariables.get("subCategory");
-//                    subCategory.setId(id);
-//                    DataProvider.addSubCategory(subCategory);
-
                     encryptedSubCategory = (EncryptedSubCategory) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedSubCategory.class);
                     subCategory = encryptedSubCategory.decrypt();
@@ -279,8 +187,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_SUB_CATEGORY:
 
-//                    subCategory = (SubCategory) requestVariables.get("subCategory");
-//                    DataProvider.updateSubCategory(subCategory);
                     encryptedSubCategory = (EncryptedSubCategory) GsonUtil.getInstance()
                             .objectFromJson(dataReceiver[0][0], EncryptedSubCategory.class);
                     subCategory = encryptedSubCategory.decrypt();
@@ -295,24 +201,15 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.UPDATE_EMAIL:
 
-                    newEmail = (String) requestVariables.get("newEmail");
+                    String newEmail = (String) requestVariables.get("newEmail");
                     CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, newEmail);
                     return true;
 
                 case ApiService.GET_KEY:
 
-//                    JSONObject json = dataReceiver[0][0].getJSONObject("keyPackage");
-//                    DataProvider.setKey(new Key(json));
                     Key key = (Key) GsonUtil.getInstance().objectFromJson(dataReceiver[0][0], Key.class);
                     DataProvider.setKey(key);
                     return true;
-
-//                case ApiService.UPDATE_PASSWORD:
-//
-////                    deviceToken = dataReceiver[0][0].getString("deviceToken");
-////                    CredentialService.getInstance(context).saveEntry(CredentialService.DEVICE_TOKEN_KEY, deviceToken);
-//
-//                    return true;
 
             }
         } catch (Exception e) {

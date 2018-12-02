@@ -3,7 +3,6 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.android.volley.Request;
 import com.android.volley.toolbox.JsonRequest;
 
 import io.accroo.android.crypto.CryptoManager;
@@ -12,13 +11,11 @@ import io.accroo.android.model.Account;
 import io.accroo.android.model.DefaultGeneralCategory;
 import io.accroo.android.model.DefaultSubCategory;
 import io.accroo.android.model.EncryptedDefaultGeneralCategory;
-import io.accroo.android.model.EncryptedPreferences;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
-import io.accroo.android.model.User;
 import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
@@ -37,16 +34,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
     private ArrayList<JsonRequest> requests;
     private HashMap<String, Object> requestVariables;
-    private String uri;
     private int requestType;
     private String userId;
     private String accessToken;
-    private JSONObject json;
-    // TODO: rename this to json after removing JSONObject
-    private String jsonString;
+    private String json;
     private Account account;
     private Preferences preferences;
-    private EncryptedPreferences encryptedPreferences;
+    private Key key;
     private Transaction transaction;
     private String transactionId;
     private GeneralCategory generalCategory;
@@ -82,32 +76,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         try {
             switch (requestType) {
 
-                case ApiService.GET_VERIFICATION_CODE:
-
-                    json = new JSONObject();
-                    json.put("email", requestVariables.get("username"));
-
-                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.VERIFICATION_TOKEN, json));
-
-                    return true;
-
-                case ApiService.GET_DEVICE_TOKEN:
-
-//                    username = (String) requestVariables.get("username");
-//                    loginCode = (String) requestVariables.get("loginCode");
-//
-//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-//                            null, RequestBuilder.DEVICE_TOKEN, username, loginCode));
-
-                    return true;
-
                 case ApiService.GET_DEFAULT_DATA:
-
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.GET,
-//                            RequestBuilder.CATEGORIES, null, context));
-//                    requests.add(RequestBuilder.deviceTokenAuth(1, coordinator, Request.Method.GET,
-//                            RequestBuilder.TRANSACTIONS, null, context));
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
@@ -117,26 +86,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.CREATE_USER:
-
-                    User user = (User) requestVariables.get("user");
-
-                    Key key = CryptoManager.getInstance().generateNewKey(user.getPassword());
-                    user.setKey(key);
-
-                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-                            RequestBuilder.ACCOUNT, user.toJSON()));
-
-                    return true;
-
                 case ApiService.CREATE_ACCOUNT:
 
                     account = (Account) requestVariables.get("account");
                     requests.add(RequestBuilder.postAccount(0, coordinator,
                             GsonUtil.getInstance().toJson(account)));
-
-//                    requests.add(RequestBuilder.noAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.ACCOUNT, GsonUtil.getInstance().toJson(account)));
 
                     return true;
 
@@ -145,10 +99,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     account = (Account) requestVariables.get("account");
                     requests.add(RequestBuilder.postRefreshToken(0, coordinator,
                             account.getEmail(), account.getVerificationToken()));
-
-//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.POST,
-//                            null, RequestBuilder.REFRESH_TOKEN, account.getEmail(),
-//                            account.getVerificationToken()));
 
                     return true;
 
@@ -171,18 +121,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     requests.add(RequestBuilder.putKey(0, coordinator,
                             GsonUtil.getInstance().toJson(key), userId, accessToken));
 
-//                    jsonString = GsonUtil.getInstance().toJson(key);
-//                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator,
-//                            Request.Method.PUT, RequestBuilder.ENCRYPTION_KEY, userId,
-//                            jsonString, context));
-
                     return true;
-
-//                case ApiService.UPDATE_KEY:
-//
-//                    password = (char[]) requestVariables.get("password");
-//
-//                    return true;
 
                 case ApiService.UPDATE_PREFERENCES:
 
@@ -220,32 +159,11 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                         encryptedCategories.add(category.encrypt());
                     }
 
-                    jsonString = GsonUtil.getInstance().toJson(encryptedCategories);
+                    json = GsonUtil.getInstance().toJson(encryptedCategories);
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-                    requests.add(RequestBuilder.postDefaultCategories(0, coordinator, jsonString,
+                    requests.add(RequestBuilder.postDefaultCategories(0, coordinator, json,
                             userId, accessToken));
-//                    requests.add(RequestBuilder.accessTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.CATEGORIES, userId, jsonString, context));
-
-//                    JSONArray generalCategoriesArray = new JSONArray();
-//
-//                    for (DefaultGeneralCategory generalCategory : generalCategories) {
-//                        JSONArray subCategoriesArray = new JSONArray();
-//                        for (SubCategory subCategory : generalCategory.getSubCategories()) {
-//                            subCategoriesArray.put(subCategory.encrypt());
-//                        }
-//
-//                        JSONObject category = generalCategory.encrypt();
-//                        category.put("subCategories", subCategoriesArray);
-//                        generalCategoriesArray.put(category);
-//                    }
-//
-//                    JSONObject categories = new JSONObject();
-//                    categories.put("categories", generalCategoriesArray);
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.CATEGORY, categories, context));
 
                     return true;
 
@@ -254,42 +172,25 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     transaction = (Transaction) requestVariables.get("transaction");
-                    jsonString = GsonUtil.getInstance().toJson(transaction.encrypt());
+                    json = GsonUtil.getInstance().toJson(transaction.encrypt());
                     requests.add(RequestBuilder.postTransaction(0, coordinator,
-                            userId, jsonString, accessToken));
-
-//                    json = ((Transaction) requestVariables.get("transaction")).encrypt();
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.TRANSACTIONS, json, context));
+                            userId, json, accessToken));
 
                     return true;
 
                 case ApiService.UPDATE_TRANSACTION:
 
-//                    transaction = (Transaction) requestVariables.get("transaction");
-//                    json = transaction.encrypt();
-//                    uri = RequestBuilder.TRANSACTIONS + "/" + transaction.getId();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
-//                            uri, json, context));
-
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     transaction = (Transaction) requestVariables.get("transaction");
                     transactionId = String.valueOf(transaction.getId());
-                    jsonString = GsonUtil.getInstance().toJson(transaction.encrypt());
+                    json = GsonUtil.getInstance().toJson(transaction.encrypt());
                     requests.add(RequestBuilder.putTransaction(0, coordinator,
-                            userId, transactionId, jsonString, accessToken));
+                            userId, transactionId, json, accessToken));
 
                     return true;
 
                 case ApiService.DELETE_TRANSACTION:
-
-//                    transaction = (Transaction) requestVariables.get("transaction");
-//                    uri = RequestBuilder.TRANSACTIONS + "/" + transaction.getId();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
-//                            uri, null, context));
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
@@ -302,45 +203,28 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_GENERAL_CATEGORY:
 
-//                    json = ((GeneralCategory) requestVariables.get("generalCategory")).encrypt();
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.GENERAL_CATEGORIES, json, context));
-
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-                    jsonString = GsonUtil.getInstance().toJson(generalCategory.encrypt());
+                    json = GsonUtil.getInstance().toJson(generalCategory.encrypt());
                     requests.add(RequestBuilder.postGeneralCategory(0, coordinator,
-                            userId, jsonString, accessToken));
+                            userId, json, accessToken));
 
                     return true;
 
                 case ApiService.UPDATE_GENERAL_CATEGORY:
 
-//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-//                    json = generalCategory.encrypt();
-//                    uri = RequestBuilder.GENERAL_CATEGORIES + "/" + generalCategory.getId();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
-//                            uri, json, context));
-
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
                     generalCategoryId = String.valueOf(generalCategory.getId());
-                    jsonString = GsonUtil.getInstance().toJson(generalCategory.encrypt());
+                    json = GsonUtil.getInstance().toJson(generalCategory.encrypt());
                     requests.add(RequestBuilder.putGeneralCategory(0, coordinator,
-                            userId, generalCategoryId, jsonString, accessToken));
+                            userId, generalCategoryId, json, accessToken));
 
                     return true;
 
                 case ApiService.DELETE_GENERAL_CATEGORY:
-
-//                    generalCategory = (GeneralCategory) requestVariables.get("generalCategory");
-//                    uri = RequestBuilder.GENERAL_CATEGORIES + "/" + generalCategory.getId();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
-//                            uri, null, context));
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
@@ -353,73 +237,38 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_SUB_CATEGORY:
 
-//                    json = ((SubCategory) requestVariables.get("subCategory")).encrypt();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.POST,
-//                            RequestBuilder.SUB_CATEGORIES, json, context));
-
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     subCategory = (SubCategory) requestVariables.get("subCategory");
                     System.out.println(GsonUtil.getInstance().toJson(subCategory) + " " + subCategory.getGeneralCategoryId());
-                    jsonString = GsonUtil.getInstance().toJson(subCategory.encrypt());
-                    System.out.println(jsonString);
+                    json = GsonUtil.getInstance().toJson(subCategory.encrypt());
                     requests.add(RequestBuilder.postSubCategory(0, coordinator,
-                            userId, jsonString, accessToken));
+                            userId, json, accessToken));
 
                     return true;
 
                 case ApiService.UPDATE_SUB_CATEGORY:
 
-//                    subCategory = (SubCategory) requestVariables.get("subCategory");
-//                    json = subCategory.encrypt();
-//                    uri = RequestBuilder.SUB_CATEGORIES + "/" + subCategory.getId();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.PUT,
-//                            uri, json, context));
-
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     subCategory = (SubCategory) requestVariables.get("subCategory");
-                    System.out.println(GsonUtil.getInstance().toJson(subCategory));
                     subCategoryId = String.valueOf(subCategory.getId());
-                    jsonString = GsonUtil.getInstance().toJson(subCategory.encrypt());
-                    System.out.println(jsonString);
+                    json = GsonUtil.getInstance().toJson(subCategory.encrypt());
                     requests.add(RequestBuilder.putSubCategory(0, coordinator,
-                            userId, subCategoryId, jsonString, accessToken));
+                            userId, subCategoryId, json, accessToken));
 
                     return true;
 
                 case ApiService.DELETE_SUB_CATEGORY:
 
-//                    subCategory = (SubCategory) requestVariables.get("subCategory");
-//                    uri = RequestBuilder.SUB_CATEGORIES + "/" + subCategory.getId();
-//
-//                    requests.add(RequestBuilder.deviceTokenAuth(0, coordinator, Request.Method.DELETE,
-//                            uri, null, context));
-
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     subCategory = (SubCategory) requestVariables.get("subCategory");
-                    System.out.println(GsonUtil.getInstance().toJson(subCategory));
                     subCategoryId = String.valueOf(subCategory.getId());
                     requests.add(RequestBuilder.deleteSubCategory(0, coordinator, userId,
                             subCategoryId, accessToken));
 
                     return true;
-
-//                case ApiService.UPDATE_EMAIL:
-//
-//                    newEmail = (String) requestVariables.get("newEmail");
-//                    loginCode = (String) requestVariables.get("loginCode");
-//                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
-//                    json = new JSONObject();
-//                    json.put("email", newEmail);
-//
-//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-//                            json, RequestBuilder.EMAIL, username, loginCode));
-//
-//                    return true;
 
                 case ApiService.GET_KEY:
 
@@ -449,18 +298,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                             GsonUtil.getInstance().toJson(newKey), userId, accessToken));
 
                     return true;
-
-//                case ApiService.UPDATE_PASSWORD:
-//
-//                    loginCode = (String) requestVariables.get("loginCode");
-//                    newPassword = (char[]) requestVariables.get("newPassword");
-//                    username = CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY);
-//                    Key newKey = CryptoManager.getInstance().encryptMasterKey(newPassword, context);
-//
-//                    requests.add(RequestBuilder.basicAuth(0, coordinator, Request.Method.PUT,
-//                            newKey.toJSON(), RequestBuilder.ENCRYPTION_KEY, username, loginCode));
-//
-//                    return true;
 
             }
 

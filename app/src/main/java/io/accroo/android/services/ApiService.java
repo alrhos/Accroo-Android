@@ -567,7 +567,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //                postRequestVariables.clear();
 //                postRequestVariables.put("transaction", transaction);
                 new PostRequestTask(UPDATE_TRANSACTION, ApiService.this, context,
-                        postRequestVariables).execute(dataReceiver);
+                        null).execute(dataReceiver);
             }
 
             @Override
@@ -631,7 +631,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //                postRequestVariables.clear();
 //                postRequestVariables.put("generalCategory", generalCategory);
                 new PostRequestTask(CREATE_GENERAL_CATEGORY, ApiService.this,
-                        context, postRequestVariables).execute(dataReceiver);
+                        context, null).execute(dataReceiver);
             }
 
             @Override
@@ -663,7 +663,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //                postRequestVariables.clear();
 //                postRequestVariables.put("generalCategory", generalCategory);
                 new PostRequestTask(UPDATE_GENERAL_CATEGORY, ApiService.this,
-                        context, postRequestVariables).execute(dataReceiver);
+                        context, null).execute(dataReceiver);
             }
 
             @Override
@@ -727,7 +727,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //                postRequestVariables.clear();
 //                postRequestVariables.put("subCategory", subCategory);
                 new PostRequestTask(CREATE_SUB_CATEGORY, ApiService.this, context,
-                        postRequestVariables).execute(dataReceiver);
+                        null).execute(dataReceiver);
             }
 
             @Override
@@ -759,7 +759,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 //                postRequestVariables.clear();
 //                postRequestVariables.put("subCategory", subCategory);
                 new PostRequestTask(UPDATE_SUB_CATEGORY, ApiService.this, context,
-                        postRequestVariables).execute(dataReceiver);
+                        null).execute(dataReceiver);
             }
 
             @Override

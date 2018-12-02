@@ -33,21 +33,23 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String BASE_URL =          "http://192.168.1.15/v1/";
-    public final static String ACCOUNT =            "auth/accounts";
-    public final static String EMAIL =              "auth/accounts/email";
-    public final static String VERIFICATION_TOKEN = "auth/verification-tokens";
-    public final static String REFRESH_TOKEN =      "auth/refresh-tokens";
-    public final static String ACCESS_TOKEN =       "auth/access-tokens";
-    public final static String ENCRYPTION_KEY =     "users/<userId>/keys";
-    public final static String PREFERENCES =        "users/<userId>/preferences";
-    public final static String CATEGORIES =         "users/<userId>/categories";
-    public final static String GENERAL_CATEGORIES = "users/<userId>/categories/general";
-    public final static String GENERAL_CATEGORY =   "users/<userId>/categories/general/<categoryId>";
-    public final static String SUB_CATEGORIES =     "users/<userId>/categories/sub";
-    public final static String SUB_CATEGORY =       "users/<userId>/categories/sub/<categoryId>";
-    public final static String TRANSACTIONS =       "users/<userId>/transactions";
-    public final static String TRANSACTION =        "users/<userId>/transactions/<transactionId>";
+    private final static String BASE_URL =              "http://192.168.1.15/v1/";
+    private final static String CLIENT_VERSION_KEY =    "Accroo-Client";
+    private final static String CLIENT_VERSION_VALUE =  "Android 1.1.0";
+    public final static String ACCOUNT =                "auth/accounts";
+    public final static String EMAIL =                  "auth/accounts/email";
+    public final static String VERIFICATION_TOKEN =     "auth/verification-tokens";
+    public final static String REFRESH_TOKEN =          "auth/refresh-tokens";
+    public final static String ACCESS_TOKEN =           "auth/access-tokens";
+    public final static String ENCRYPTION_KEY =         "users/<userId>/keys";
+    public final static String PREFERENCES =            "users/<userId>/preferences";
+    public final static String CATEGORIES =             "users/<userId>/categories";
+    public final static String GENERAL_CATEGORIES =     "users/<userId>/categories/general";
+    public final static String GENERAL_CATEGORY =       "users/<userId>/categories/general/<categoryId>";
+    public final static String SUB_CATEGORIES =         "users/<userId>/categories/sub";
+    public final static String SUB_CATEGORY =           "users/<userId>/categories/sub/<categoryId>";
+    public final static String TRANSACTIONS =           "users/<userId>/transactions";
+    public final static String TRANSACTION =            "users/<userId>/transactions/<transactionId>";
 
     private final static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(20000,
             0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -59,7 +61,14 @@ public class RequestBuilder {
         String url = BASE_URL + ACCOUNT;
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
-                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator));
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                return headerMap;
+            }
+        };
         request.setRetryPolicy(retryPolicy);
         return request;
     }
@@ -74,6 +83,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Basic " + authHeader);
                 return headerMap;
             }
@@ -90,6 +100,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + refreshToken);
                 return headerMap;
             }
@@ -112,6 +123,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + refreshToken);
                 return headerMap;
             }
@@ -128,6 +140,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -145,6 +158,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -163,6 +177,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -181,6 +196,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -200,6 +216,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -217,6 +234,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -234,6 +252,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -251,6 +270,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -269,6 +289,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -289,6 +310,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -308,6 +330,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -332,6 +355,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -352,6 +376,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -371,6 +396,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -395,6 +421,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -415,6 +442,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -434,6 +462,7 @@ public class RequestBuilder {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
                 headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
@@ -462,88 +491,88 @@ public class RequestBuilder {
 
 
 
-    public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
-                                        int method, JSONObject json, String endpoint,
-                                        String username, String password) {
-
-        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String credentials = username + ":" + password;
-        String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-        String url = BASE_URL + endpoint;
-
-        return new RestRequest(method, url, json, responseListener,
-                errorListener, RestRequest.BASIC, authValue);
-    }
-
-    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
-                                              String endpoint, String userId, JSONObject json,
-                                              Context context) throws Exception {
-        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = BASE_URL + endpoint;
-        url = url.replace("<userId>", userId);
-        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-
-        return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.TOKEN, authValue);
-    }
-
-    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
-                                              String endpoint, String userId, String json,
-                                              Context context) throws Exception {
-        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = BASE_URL + endpoint;
-        url = url.replace("<userId>", userId);
-        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-        JSONObject jsonObject = new JSONObject(json);
-
-        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
-                RestRequest.TOKEN, authValue);
-    }
-
-    public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,
-                                              String endpoint, JSONObject json, Context context) throws Exception {
-
-        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = BASE_URL + endpoint;
-        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
-
-        return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.TOKEN, authValue);
-    }
-
-    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
-                                        String endpoint, JSONObject json) throws Exception {
-
-        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = BASE_URL + endpoint;
-
-        return new RestRequest(method, url, json, responseListener, errorListener,
-                RestRequest.NONE, null);
-    }
-
-    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
-                                     String endpoint, String json) throws Exception {
-
-        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-        Response.ErrorListener errorListener = createErrorListener(coordinator);
-
-        String url = BASE_URL + endpoint;
-        JSONObject jsonObject = new JSONObject(json);
-
-        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
-                RestRequest.NONE, null);
-    }
+//    public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
+//                                        int method, JSONObject json, String endpoint,
+//                                        String username, String password) {
+//
+//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator);
+//
+//        String credentials = username + ":" + password;
+//        String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+//
+//        String url = BASE_URL + endpoint;
+//
+//        return new RestRequest(method, url, json, responseListener,
+//                errorListener, RestRequest.BASIC, authValue);
+//    }
+//
+//    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
+//                                              String endpoint, String userId, JSONObject json,
+//                                              Context context) throws Exception {
+//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator);
+//
+//        String url = BASE_URL + endpoint;
+//        url = url.replace("<userId>", userId);
+//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+//
+//        return new RestRequest(method, url, json, responseListener, errorListener,
+//                RestRequest.TOKEN, authValue);
+//    }
+//
+//    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
+//                                              String endpoint, String userId, String json,
+//                                              Context context) throws Exception {
+//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator);
+//
+//        String url = BASE_URL + endpoint;
+//        url = url.replace("<userId>", userId);
+//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+//        JSONObject jsonObject = new JSONObject(json);
+//
+//        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
+//                RestRequest.TOKEN, authValue);
+//    }
+//
+//    public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,
+//                                              String endpoint, JSONObject json, Context context) throws Exception {
+//
+//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator);
+//
+//        String url = BASE_URL + endpoint;
+//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
+//
+//        return new RestRequest(method, url, json, responseListener, errorListener,
+//                RestRequest.TOKEN, authValue);
+//    }
+//
+//    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
+//                                        String endpoint, JSONObject json) throws Exception {
+//
+//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator);
+//
+//        String url = BASE_URL + endpoint;
+//
+//        return new RestRequest(method, url, json, responseListener, errorListener,
+//                RestRequest.NONE, null);
+//    }
+//
+//    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
+//                                     String endpoint, String json) throws Exception {
+//
+//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
+//        Response.ErrorListener errorListener = createErrorListener(coordinator);
+//
+//        String url = BASE_URL + endpoint;
+//        JSONObject jsonObject = new JSONObject(json);
+//
+//        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
+//                RestRequest.NONE, null);
+//    }
 
     private static int getResponseCode(VolleyError error) {
         NetworkResponse response = error.networkResponse;
