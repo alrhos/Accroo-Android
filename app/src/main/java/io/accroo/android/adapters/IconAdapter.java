@@ -23,7 +23,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String[][] iconArray;
     private final int cols = 5;
     private int rows;
-
     private ArrayList<String> icons;
 
     public IconAdapter(Context context , AdapterInteractionListener adapterListener) {
@@ -81,7 +80,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         vh.icon1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(iconId1);
                 adapterListener.onIconSelected(iconId1);
             }
         });
@@ -89,7 +87,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         vh.icon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(iconId2);
                 adapterListener.onIconSelected(iconId2);
             }
         });
@@ -97,7 +94,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         vh.icon3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(iconId3);
                 adapterListener.onIconSelected(iconId3);
             }
         });
@@ -105,7 +101,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         vh.icon4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(iconId4);
                 adapterListener.onIconSelected(iconId4);
             }
         });
@@ -113,7 +108,6 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         vh.icon5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(iconId5);
                 adapterListener.onIconSelected(iconId5);
             }
         });
@@ -122,7 +116,8 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.icon_selector_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.icon_selector_item,
+                parent, false);
         return new IconViewHolder(view);
     }
 

@@ -53,7 +53,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             password = getIntent().getCharArrayExtra("password");
 
             apiService = new ApiService(this, getApplicationContext());
-            //apiService.getLoginCode(username);
 
             Utils.showSoftKeyboard(VerificationCodeActivity.this);
 
@@ -93,11 +92,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                                 break;
                             case UPDATE_EMAIL:
                                 apiService.reauthenticate(loginCodeField.getText().toString());
-                                //apiService.updateEmail(email, loginCodeField.getText().toString());
                                 break;
                             case UPDATE_PASSWORD:
                                 apiService.reauthenticate(loginCodeField.getText().toString());
-                                //apiService.updatePassword(password, loginCodeField.getText().toString());
                                 break;
                         }
                     }
@@ -164,7 +161,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             if (action == UPDATE_EMAIL) {
                 apiService.updateEmail(email);
             } else if (action == UPDATE_PASSWORD) {
-                System.out.println("CALLING UPDATE PASSWORD API METHOD");
                 apiService.updatePassword(password);
             }
         } else if (requestType == ApiService.UPDATE_EMAIL) {
@@ -183,23 +179,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
- //       progressDialog.dismiss();
-//        if (requestType != ApiService.GET_VERIFICATION_CODE) {
-//            switch (action) {
-//                case LOGIN:
-//                    startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
-//                    overridePendingTransition(R.anim.enter, R.anim.exit);
-//                    break;
-//                case UPDATE_EMAIL:
-//                    Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_SHORT).show();
-//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                    break;
-//                case UPDATE_PASSWORD:
-//                    Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
-//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                    break;
-//            }
-//        }
     }
 
     @Override
@@ -234,7 +213,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 

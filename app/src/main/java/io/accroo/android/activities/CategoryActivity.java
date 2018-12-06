@@ -185,14 +185,14 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onError() {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
 

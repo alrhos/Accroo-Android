@@ -1,6 +1,5 @@
 package io.accroo.android.network;
 
-import android.content.Context;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
@@ -16,7 +15,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import io.accroo.android.services.CredentialService;
 import io.accroo.android.services.ApiService;
 
 import org.json.JSONArray;
@@ -494,103 +492,6 @@ public class RequestBuilder {
         return request;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public static RestRequest basicAuth(int index, final RequestCoordinator coordinator,
-//                                        int method, JSONObject json, String endpoint,
-//                                        String username, String password) {
-//
-//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator);
-//
-//        String credentials = username + ":" + password;
-//        String authValue = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-//
-//        String url = BASE_URL + endpoint;
-//
-//        return new RestRequest(method, url, json, responseListener,
-//                errorListener, RestRequest.BASIC, authValue);
-//    }
-//
-//    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
-//                                              String endpoint, String userId, JSONObject json,
-//                                              Context context) throws Exception {
-//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator);
-//
-//        String url = BASE_URL + endpoint;
-//        url = url.replace("<userId>", userId);
-//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//
-//        return new RestRequest(method, url, json, responseListener, errorListener,
-//                RestRequest.TOKEN, authValue);
-//    }
-//
-//    public static RestRequest accessTokenAuth(int index, RequestCoordinator coordinator, int method,
-//                                              String endpoint, String userId, String json,
-//                                              Context context) throws Exception {
-//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator);
-//
-//        String url = BASE_URL + endpoint;
-//        url = url.replace("<userId>", userId);
-//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//        JSONObject jsonObject = new JSONObject(json);
-//
-//        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
-//                RestRequest.TOKEN, authValue);
-//    }
-//
-//    public static RestRequest deviceTokenAuth(int index, RequestCoordinator coordinator, int method,
-//                                              String endpoint, JSONObject json, Context context) throws Exception {
-//
-//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator);
-//
-//        String url = BASE_URL + endpoint;
-//        String authValue = CredentialService.getInstance(context).getEntry(CredentialService.DEVICE_TOKEN_KEY);
-//
-//        return new RestRequest(method, url, json, responseListener, errorListener,
-//                RestRequest.TOKEN, authValue);
-//    }
-//
-//    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
-//                                        String endpoint, JSONObject json) throws Exception {
-//
-//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator);
-//
-//        String url = BASE_URL + endpoint;
-//
-//        return new RestRequest(method, url, json, responseListener, errorListener,
-//                RestRequest.NONE, null);
-//    }
-//
-//    public static RestRequest noAuth(int index, RequestCoordinator coordinator, int method,
-//                                     String endpoint, String json) throws Exception {
-//
-//        Response.Listener<JSONObject> responseListener = createJsonObjectResponseListener(index, coordinator);
-//        Response.ErrorListener errorListener = createErrorListener(coordinator);
-//
-//        String url = BASE_URL + endpoint;
-//        JSONObject jsonObject = new JSONObject(json);
-//
-//        return new RestRequest(method, url, jsonObject, responseListener, errorListener,
-//                RestRequest.NONE, null);
-//    }
-
     private static int getResponseCode(VolleyError error) {
         NetworkResponse response = error.networkResponse;
         if (response != null) {
@@ -611,6 +512,8 @@ public class RequestBuilder {
             switch (statusCode) {
                 case 400:
                     return ApiService.INVALID_REQUEST;
+                case 403:
+                    return ApiService.FORBIDDEN;
                 case 404:
                     return ApiService.NOT_FOUND;
                 case 409:
@@ -639,6 +542,11 @@ public class RequestBuilder {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                try {
+                    System.out.println(new String(error.networkResponse.data, "UTF-8"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 coordinator.abort(parseVolleyException(error));
             }
         };

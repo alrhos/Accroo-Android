@@ -315,7 +315,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 
