@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String BASE_URL =              "http://192.168.1.15/v1/";
+    private final static String BASE_URL =              "https://dev.accroo.io/v1/";
     private final static String CLIENT_VERSION_KEY =    "Accroo-Client";
     private final static String CLIENT_VERSION_VALUE =  "Android 1.1.0";
     public final static String ACCOUNT =                "auth/accounts";

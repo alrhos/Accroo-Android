@@ -102,7 +102,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                     date = new DateTime(year, monthOfYear + 1, dayOfMonth, 0,
                             0, 0, 0);
-                    System.out.println("DATE SELECTED - " + date.toDateTime());
                     updateDate();
                 }
             };
