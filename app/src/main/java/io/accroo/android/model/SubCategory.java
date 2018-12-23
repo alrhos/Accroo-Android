@@ -29,15 +29,6 @@ public class SubCategory implements Relationship, Parcelable {
         this.categoryName = categoryName;
         this.generalCategoryId = generalCategoryId;
     }
-//
-//    public SubCategory(String categoryName, String generalCategoryName) {
-//        this.categoryName = categoryName;
-//        this.generalCategoryName = generalCategoryName;
-//    }
-//
-//    public SubCategory(JSONObject json) throws JSONException, UnsupportedEncodingException {
-//        decrypt(json);
-//    }
 
     public SubCategory(String categoryName, String generalCategoryName) {
         this.categoryName = categoryName;
@@ -115,34 +106,6 @@ public class SubCategory implements Relationship, Parcelable {
     public Object getParent() {
         return parent;
     }
-
-//    @Override
-//    public JSONObject encrypt() throws JSONException {
-//        JSONObject categoryData = new JSONObject();
-//        categoryData.put("categoryName", categoryName);
-//        SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
-//        JSONObject json = new JSONObject();
-//
-//        if (id != 0) {
-//            json.put("id", id);
-//        }
-//
-//        json.put("generalCategoryId", generalCategoryId);
-//        json.put("data", payload.getData());
-//        json.put("nonce", payload.getNonce());
-//
-//        return json;
-//    }
-//
-//    @Override
-//    public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
-//        SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
-//        String categoryString = CryptoManager.getInstance().decrypt(payload);
-//        JSONObject categoryJson = new JSONObject(categoryString);
-//        this.id = json.getInt("id");
-//        this.generalCategoryId = json.getInt("generalCategoryId");
-//        this.categoryName = categoryJson.getString("categoryName");
-//    }
 
     @Override
     public int describeContents() {

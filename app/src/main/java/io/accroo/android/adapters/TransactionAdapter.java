@@ -21,11 +21,8 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.services.DataProvider;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 
 /**
@@ -40,7 +37,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private LinkedHashMap<DateTime, ArrayList<Transaction>> groupedTransactions;
     private LayoutInflater inflater;
     private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
-    //private SimpleDateFormat df = new SimpleDateFormat("EEE dd, MMM yyyy", Locale.getDefault());
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
@@ -75,7 +71,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         TransactionViewHolder vh = (TransactionViewHolder) holder;
         DateTime date = new ArrayList<>(groupedTransactions.keySet()).get(position);
-       // String formattedDate = df.format(date);
         String formattedDate = date.toString(dateFormat);
         vh.dateHeader.setText(formattedDate);
 
@@ -135,15 +130,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             adapterInteractionListener.onNonEmptyList();
             for (Transaction transaction : transactions) {
-                if (!groupedTransactions.containsKey(transaction.getDate())) {
-                    groupedTransactions.put(transaction.getDate(), null);
+                if (!groupedTransactions.containsKey(transaction.getDateWithoutTime())) {
+                    groupedTransactions.put(transaction.getDateWithoutTime(), null);
                 }
             }
 
             for (DateTime key : groupedTransactions.keySet()) {
                 ArrayList<Transaction> matches = new ArrayList<>();
                 for (Transaction transaction : transactions) {
-                    if (key.equals(transaction.getDate())) {
+                    if (key.equals(transaction.getDateWithoutTime())) {
                         matches.add(transaction);
                     }
                 }

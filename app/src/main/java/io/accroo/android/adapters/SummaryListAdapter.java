@@ -1,7 +1,6 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +20,7 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Summary;
 import io.accroo.android.services.DataProvider;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by oscar on 27/05/17.
@@ -40,7 +36,6 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private SummaryViewHolder summaryViewHolder;
     private AdapterInteractionListener adapterInteractionListener;
     private DateTime startDate, endDate;
-    //private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
     public SummaryListAdapter(Context context, DateTime startDate, DateTime endDate,

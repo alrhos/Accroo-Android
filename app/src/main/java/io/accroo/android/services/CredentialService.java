@@ -38,10 +38,6 @@ public class CredentialService {
     public static final String              ACCESS_TOKEN_EXPIRY_KEY = "accessTokenExpiry";
     public static final String              ENCRYPTION_KEY = "encryptionKey";
 
-
-    // TODO: remove
-    public static final String              DEVICE_TOKEN_KEY = "deviceTokenKey";
-
     private CredentialService() throws KeyStoreException, NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException,
             IOException, CertificateException, NoSuchPaddingException {

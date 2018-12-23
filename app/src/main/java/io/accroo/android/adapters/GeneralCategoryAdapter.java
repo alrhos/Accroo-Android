@@ -75,16 +75,13 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void refreshDataSource() {
-
         dataSource.clear();
         ArrayList<GeneralCategory> generalCategories = DataProvider.getGeneralCategories();
 
         for (GeneralCategory generalCategory : generalCategories) {
             dataSource.add(generalCategory);
         }
-
         notifyDataSetChanged();
-
     }
 
 }

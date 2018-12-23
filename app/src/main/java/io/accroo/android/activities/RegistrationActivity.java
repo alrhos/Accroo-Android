@@ -61,7 +61,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             agree.setMovementMethod(LinkMovementMethod.getInstance());
 
             progressDialog = new ProgressDialog(RegistrationActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setMessage(getResources().getString(R.string.creating_account));
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());

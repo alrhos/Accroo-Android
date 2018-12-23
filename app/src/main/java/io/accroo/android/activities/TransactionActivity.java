@@ -66,7 +66,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             submitButton = findViewById(R.id.submit_transaction_button);
 
             progressDialog = new ProgressDialog(TransactionActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.submitting));
+            progressDialog.setMessage(getResources().getString(R.string.saving));
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
@@ -93,15 +93,17 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 submitButton.setText(getResources().getString(R.string.save));
                 toggleEditing();
             } else {
-                date = new DateTime().withTime(0, 0, 0, 0);
+                date = new DateTime();
                 updateDate();
                 Utils.showSoftKeyboard(TransactionActivity.this);
             }
 
             datePicker = new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    date = new DateTime(year, monthOfYear + 1, dayOfMonth, 0,
-                            0, 0, 0);
+                    date = new DateTime()
+                            .withYear(year)
+                            .withMonthOfYear(monthOfYear + 1)
+                            .withDayOfMonth(dayOfMonth);
                     updateDate();
                 }
             };

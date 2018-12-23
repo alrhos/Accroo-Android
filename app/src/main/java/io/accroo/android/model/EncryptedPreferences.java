@@ -36,7 +36,7 @@ public class EncryptedPreferences {
     public Preferences decrypt() throws UnsupportedEncodingException {
         SecurePayload securePayload = new SecurePayload(this.data, this.nonce);
         String preferencesString = CryptoManager.getInstance().decrypt(securePayload);
-        return (Preferences) GsonUtil.getInstance().fromJson(preferencesString, Preferences.class);
+        return GsonUtil.getInstance().fromJson(preferencesString, Preferences.class);
     }
 
 }

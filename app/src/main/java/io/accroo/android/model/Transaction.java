@@ -11,9 +11,7 @@ import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -24,7 +22,6 @@ public class Transaction implements Relationship, Parcelable {
 
     private int id;
     private int subCategoryId;
-    //@Expose private Date date;
     @Expose private DateTime date;
     @Expose private double amount;
     @Expose private String description = "";
@@ -40,10 +37,6 @@ public class Transaction implements Relationship, Parcelable {
             this.description = description;
         }
     }
-
-//    public Transaction(JSONObject json) throws JSONException, UnsupportedEncodingException {
-//        decrypt(json);
-//    }
 
     public int getId() {
         return id;
@@ -65,15 +58,12 @@ public class Transaction implements Relationship, Parcelable {
         return date;
     }
 
-//    public Date getDate() {
-//        try {
-//            String adjustedDateString = dateFormat.format(date);
-//            return dateFormat.parse(adjustedDateString);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    public DateTime getDateWithoutTime() {
+        return date.withHourOfDay(0)
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0);
+    }
 
     public void setDate(DateTime date) {
         this.date = date;
@@ -121,42 +111,6 @@ public class Transaction implements Relationship, Parcelable {
                 securePayload.getData(), securePayload.getNonce());
     }
 
-//    @Override
-//    public JSONObject encrypt() throws JSONException {
-//        JSONObject transactionData = new JSONObject();
-//
-//        transactionData.put("date", date.getTime());
-//        transactionData.put("amount", amount);
-//        transactionData.put("description", description);
-//
-//        SecurePayload payload = CryptoManager.getInstance().encrypt(transactionData.toString());
-//        JSONObject json = new JSONObject();
-//
-//        if (id != 0) {
-//            json.put("id", id);
-//        }
-//
-//        json.put("subCategoryId", subCategoryId);
-//        json.put("data", payload.getData());
-//        json.put("nonce", payload.getNonce());
-//
-//        return json;
-//    }
-//
-//    @Override
-//    public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
-//        SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
-//
-//        String transactionString = CryptoManager.getInstance().decrypt(payload);
-//        JSONObject transactionJson = new JSONObject(transactionString);
-//
-//        this.id = json.getInt("id");
-//        this.subCategoryId = json.getInt("subCategoryId");
-//        this.date = new Date(transactionJson.getLong("date"));
-//        this.amount = transactionJson.getDouble("amount");
-//        this.description = transactionJson.getString("description");
-//    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -181,8 +135,6 @@ public class Transaction implements Relationship, Parcelable {
         this.amount = in.readDouble();
         this.description = in.readString();
         this.parent = in.readParcelable(SubCategory.class.getClassLoader());
-//        this.decimalFormat = (DecimalFormat) in.readSerializable();
-//        this.dateFormat = (SimpleDateFormat) in.readSerializable();
     }
 
     public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {

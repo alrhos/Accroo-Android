@@ -21,7 +21,6 @@ public class GsonUtil {
         gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .disableHtmlEscaping()
-                //.registerTypeAdapter(DateTime.class, new DateLongFormatTypeAdapter())
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter())
                 .create();
     }
@@ -37,18 +36,9 @@ public class GsonUtil {
         return gson.toJson(object);
     }
 
-    public String toJson(ArrayList<Object> objects) {
-        return gson.toJson(objects);
-    }
-
     public Object objectFromJson(@NonNull String json, @NonNull Class className) {
         return gson.fromJson(json, className);
     }
-
-//    public ArrayList<Object> fromJson(String json, Object[] objects) {
-//        return Arrays.asList(gson.fromJson(json, objects.getClass()));
-//        //return gson.fromJson(json, new TypeToken<List<type>>(){}.getType());
-//    }
 
     public <T> T fromJson(@NonNull final String json, @NonNull Class<T> className) {
         return gson.fromJson(json, className);

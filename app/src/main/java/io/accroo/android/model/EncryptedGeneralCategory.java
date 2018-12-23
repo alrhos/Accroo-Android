@@ -21,11 +21,6 @@ public class EncryptedGeneralCategory {
         this.nonce = nonce;
     }
 
-    public EncryptedGeneralCategory(String data, String nonce) {
-        this.data = data;
-        this.nonce = nonce;
-    }
-
     public int getId() {
         return id;
     }
@@ -61,11 +56,6 @@ public class EncryptedGeneralCategory {
     public GeneralCategory decrypt() throws UnsupportedEncodingException {
         SecurePayload securePayload = new SecurePayload(this.data, this.nonce);
         String categoryString = CryptoManager.getInstance().decrypt(securePayload);
-//        ArrayList<SubCategory> decryptedSubCategories = new ArrayList<>();
-//        for (EncryptedSubCategory encryptedSubCategory: this.subCategories) {
-//            SubCategory decryptedCategory = CryptoManager.getInstance().decrypt()
-//            decryptedSubCategories.add(CryptoManager.)
-//        }
         GeneralCategory generalCategory = GsonUtil.getInstance().fromJson(categoryString, GeneralCategory.class);
         generalCategory.setId(this.id);
         return generalCategory;

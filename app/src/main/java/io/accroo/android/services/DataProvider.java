@@ -13,7 +13,6 @@ import io.accroo.android.model.TransactionComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -124,12 +123,6 @@ public class DataProvider {
         }
 
         return categoryNames.contains(categoryName);
-//
-//        if (categoryNames.contains(categoryName)) {
-//            return true;
-//        }
-//
-//        return false;
     }
 
     public static boolean checkDuplicateSubCategory(String categoryName) {
@@ -140,12 +133,6 @@ public class DataProvider {
         }
 
         return categoryNames.contains(categoryName);
-
-//        if (categoryNames.contains(categoryName)) {
-//            return true;
-//        }
-//
-//        return false;
     }
 
     public static void addTransaction(Transaction transaction) {
@@ -174,7 +161,6 @@ public class DataProvider {
             }
         }
         sortData();
-
     }
 
     public static void deleteTransaction(Transaction transactionToDelete) {
@@ -193,7 +179,6 @@ public class DataProvider {
                 }
             }
         }
-
     }
 
     public static void addGeneralCategory(GeneralCategory generalCategory) {

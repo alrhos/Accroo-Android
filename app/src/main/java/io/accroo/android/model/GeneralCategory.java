@@ -8,10 +8,6 @@ import com.google.gson.annotations.Expose;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -33,10 +29,6 @@ public class GeneralCategory implements Parcelable {
         this.rootCategory = rootCategory;
         this.iconFile = iconFile;
     }
-
-//    public GeneralCategory(JSONObject json) throws JSONException, UnsupportedEncodingException {
-//        decrypt(json);
-//    }
 
     public int getId() {
         return id;
@@ -98,39 +90,6 @@ public class GeneralCategory implements Parcelable {
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
         return new EncryptedGeneralCategory(this.id, securePayload.getData(), securePayload.getNonce());
     }
-
-//
-//    @Override
-//    public JSONObject encrypt() throws JSONException {
-//        JSONObject categoryData = new JSONObject();
-//
-//        categoryData.put("categoryName", categoryName);
-//        categoryData.put("rootCategory", rootCategory);
-//        categoryData.put("iconFile", iconFile);
-//        SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
-//
-//        JSONObject json = new JSONObject();
-//
-//        if (id != 0) {
-//            json.put("id", id);
-//        }
-//
-//        json.put("data", payload.getData());
-//        json.put("nonce", payload.getNonce());
-//
-//        return json;
-//    }
-//
-//    @Override
-//    public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
-//        SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
-//        String categoryString = CryptoManager.getInstance().decrypt(payload);
-//        JSONObject categoryJson = new JSONObject(categoryString);
-//        this.id = json.getInt("id");
-//        this.categoryName = categoryJson.getString("categoryName");
-//        this.rootCategory = categoryJson.getString("rootCategory");
-//        this.iconFile = categoryJson.getString("iconFile");
-//    }
 
     @Override
     public int describeContents() {

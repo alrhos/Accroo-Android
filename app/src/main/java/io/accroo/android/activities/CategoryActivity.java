@@ -50,7 +50,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setMessage(getResources().getString(R.string.saving));
 
             apiService = new ApiService(this, getApplicationContext());
 

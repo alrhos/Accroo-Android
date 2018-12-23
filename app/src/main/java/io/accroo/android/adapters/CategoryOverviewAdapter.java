@@ -84,7 +84,6 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
 
             ll.addView(v);
-
         }
 
         vh.itemView.setOnClickListener(new View.OnClickListener() {

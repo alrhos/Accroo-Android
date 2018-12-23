@@ -15,6 +15,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import io.accroo.android.BuildConfig;
 import io.accroo.android.services.ApiService;
 
 import org.json.JSONArray;
@@ -33,7 +34,7 @@ public class RequestBuilder {
 
     private final static String BASE_URL =              "https://dev.accroo.io/v1/";
     private final static String CLIENT_VERSION_KEY =    "Accroo-Client";
-    private final static String CLIENT_VERSION_VALUE =  "Android 1.1.0";
+    private final static String CLIENT_VERSION_VALUE =  "Android " + BuildConfig.VERSION_NAME;
     public final static String ACCOUNT =                "auth/accounts";
     public final static String EMAIL =                  "auth/accounts/email";
     public final static String VERIFICATION_TOKEN =     "auth/verification-tokens";

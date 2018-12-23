@@ -1,6 +1,5 @@
 package io.accroo.android.model;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -51,19 +50,5 @@ public class User {
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
     }
-
-    public JSONObject toJSON() {
-        return null;
-    }
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("email", email);
-//            json.put("key", key.toJSON());
-//            json.put("preferences", preferences.encrypt());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return json;
-//    }
 
 }

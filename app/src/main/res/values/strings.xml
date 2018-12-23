@@ -103,6 +103,7 @@
     <string name="loading">Loading...</string>
     <string name="saving">Saving...</string>
     <string name="signing_out">Signing out...</string>
+    <string name="creating_account">Creating account...</string>
     <string name="email_updated_title">Email updated</string>
     <string name="email_updated_message">Your email address was successfully updated. Please login again to continue.</string>
     <string name="password_updated">Password updated</string>
