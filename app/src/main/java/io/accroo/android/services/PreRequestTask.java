@@ -251,7 +251,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     subCategory = (SubCategory) requestVariables.get("subCategory");
-                    System.out.println(GsonUtil.getInstance().toJson(subCategory) + " " + subCategory.getGeneralCategoryId());
                     json = GsonUtil.getInstance().toJson(subCategory.encrypt());
                     requests.add(RequestBuilder.postSubCategory(0, coordinator,
                             userId, json, accessToken));

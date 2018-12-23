@@ -17,9 +17,7 @@ import io.accroo.android.other.GsonUtil;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-
 
 /**
  * Created by oscar on 4/07/17.

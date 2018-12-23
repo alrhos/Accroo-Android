@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import io.accroo.android.model.DefaultGeneralCategory;
 import io.accroo.android.model.DefaultSubCategory;
-import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.model.SubCategory;
 
 import java.util.ArrayList;
 

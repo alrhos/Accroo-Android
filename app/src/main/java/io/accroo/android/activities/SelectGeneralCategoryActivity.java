@@ -11,7 +11,6 @@ import android.widget.TextView;
 import io.accroo.android.R;
 import io.accroo.android.adapters.GeneralCategoryAdapter;
 import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.other.DividerItemDecoration;
 
 public class SelectGeneralCategoryActivity extends AppCompatActivity implements GeneralCategoryAdapter.AdapterInteractionListener {
 

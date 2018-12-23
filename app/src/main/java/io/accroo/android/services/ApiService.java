@@ -20,8 +20,6 @@ import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
 
-import java.security.spec.ECField;
-import java.util.Date;
 import java.util.HashMap;
 
 /**

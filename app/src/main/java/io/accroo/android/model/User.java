@@ -1,7 +1,5 @@
 package io.accroo.android.model;
 
-import org.json.JSONObject;
-
 /**
  * Created by oscar on 4/03/17.
  */

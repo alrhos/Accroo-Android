@@ -19,7 +19,6 @@ import io.accroo.android.model.RootCategory;
 import io.accroo.android.services.DataProvider;
 import io.accroo.android.services.InputService;
 
-
 public class GeneralCategoryFragment extends Fragment {
 
     private FragmentInteractionListener fragmentListener;

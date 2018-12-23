@@ -46,11 +46,6 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                 @Override
                 public void onClick(View view) {
                     if (isValidInput()) {
-//                        Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
-//                        intent.putExtra("action", VerificationCodeActivity.LOGIN);
-//                        intent.putExtra("username", usernameField.getText().toString().trim());
-//                        startActivity(intent);
-//                        overridePendingTransition(R.anim.enter, R.anim.exit);
                         progressDialog.show();
                         username = usernameField.getText().toString().trim();
                         apiService.getLoginCode(username);

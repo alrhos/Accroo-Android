@@ -19,7 +19,6 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-
 /**
  * Created by oscar on 4/03/17.
  */

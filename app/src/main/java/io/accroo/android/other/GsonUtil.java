@@ -4,14 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.bind.DateTypeAdapter;
 
 import org.joda.time.DateTime;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.lang.reflect.Type;
-import java.util.Date;
 
 public class GsonUtil {
     private static GsonUtil instance = null;
