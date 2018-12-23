@@ -31,23 +31,24 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String BASE_URL =              "https://dev.accroo.io/v1/";
-    private final static String CLIENT_VERSION_KEY =    "Accroo-Client";
-    private final static String CLIENT_VERSION_VALUE =  "Android " + BuildConfig.VERSION_NAME;
-    public final static String ACCOUNT =                "auth/accounts";
-    public final static String EMAIL =                  "auth/accounts/email";
-    public final static String VERIFICATION_TOKEN =     "auth/verification-tokens";
-    public final static String REFRESH_TOKEN =          "auth/refresh-tokens";
-    public final static String ACCESS_TOKEN =           "auth/access-tokens";
-    public final static String ENCRYPTION_KEY =         "users/<userId>/keys";
-    public final static String PREFERENCES =            "users/<userId>/preferences";
-    public final static String CATEGORIES =             "users/<userId>/categories";
-    public final static String GENERAL_CATEGORIES =     "users/<userId>/categories/general";
-    public final static String GENERAL_CATEGORY =       "users/<userId>/categories/general/<categoryId>";
-    public final static String SUB_CATEGORIES =         "users/<userId>/categories/sub";
-    public final static String SUB_CATEGORY =           "users/<userId>/categories/sub/<categoryId>";
-    public final static String TRANSACTIONS =           "users/<userId>/transactions";
-    public final static String TRANSACTION =            "users/<userId>/transactions/<transactionId>";
+    private final static String BASE_URL =               "https://dev.accroo.io/v1/";
+    private final static String CLIENT_VERSION_KEY =     "Accroo-Client";
+    private final static String CLIENT_VERSION_VALUE =   "Android " + BuildConfig.VERSION_NAME;
+    private final static String RECAPTCHA_TOKEN_KEY =    "Recaptcha-Token";
+    private final static String ACCOUNT =                "auth/accounts";
+    private final static String EMAIL =                  "auth/accounts/email";
+    private final static String VERIFICATION_TOKEN =     "auth/verification-tokens";
+    private final static String REFRESH_TOKEN =          "auth/refresh-tokens";
+    private final static String ACCESS_TOKEN =           "auth/access-tokens";
+    private final static String ENCRYPTION_KEY =         "users/<userId>/keys";
+    private final static String PREFERENCES =            "users/<userId>/preferences";
+    private final static String CATEGORIES =             "users/<userId>/categories";
+    private final static String GENERAL_CATEGORIES =     "users/<userId>/categories/general";
+    private final static String GENERAL_CATEGORY =       "users/<userId>/categories/general/<categoryId>";
+    private final static String SUB_CATEGORIES =         "users/<userId>/categories/sub";
+    private final static String SUB_CATEGORY =           "users/<userId>/categories/sub/<categoryId>";
+    private final static String TRANSACTIONS =           "users/<userId>/transactions";
+    private final static String TRANSACTION =            "users/<userId>/transactions/<transactionId>";
 
     private final static DefaultRetryPolicy retryPolicy = new DefaultRetryPolicy(20000,
             0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -64,7 +65,7 @@ public class RequestBuilder {
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
                 headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
-                headerMap.put("Recaptcha-Token", recaptchaToken);
+                headerMap.put(RECAPTCHA_TOKEN_KEY, recaptchaToken);
                 return headerMap;
             }
         };

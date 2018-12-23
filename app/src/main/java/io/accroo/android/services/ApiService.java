@@ -125,7 +125,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             preRequestVariables.put("username", username);
         } else {
             try {
-                preRequestVariables.put("username", CredentialService.getInstance(context).getEntry(CredentialService.USERNAME_KEY));
+                preRequestVariables.put("username", CredentialService.getInstance(context)
+                        .getEntry(CredentialService.USERNAME_KEY));
             } catch (Exception e) {
                 requestOutcome.onFailure(GET_VERIFICATION_CODE, GENERIC_ERROR);
             }
