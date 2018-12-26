@@ -100,6 +100,9 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
         } else {
             String message;
             switch (errorCode) {
+                case ApiService.UNAUTHORIZED:
+                    message = getResources().getString(R.string.account_locked);
+                    break;
                 case ApiService.CONNECTION_ERROR:
                     message = getResources().getString(R.string.connection_error);
                     break;

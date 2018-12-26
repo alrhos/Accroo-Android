@@ -62,8 +62,6 @@ public class SubCategoryFragment extends Fragment {
             icon.setImageResource(iconID);
             generalCategoryName.setText(generalCategory.getCategoryName());
             subCategoryName.setText(existingCategory.getCategoryName());
-            submit.setText(getResources().getString(R.string.save));
-
         }
 
         icon.setOnClickListener(new View.OnClickListener() {

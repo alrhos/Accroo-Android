@@ -74,8 +74,6 @@ public class GeneralCategoryFragment extends Fragment {
             } else if (existingCategory.getRootCategory().equals(RootCategory.EXPENSE)) {
                 expenseRadioButton.setChecked(true);
             }
-
-            submit.setText(getResources().getString(R.string.save));
         }
 
         icon.setOnClickListener(new View.OnClickListener() {

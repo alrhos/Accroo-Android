@@ -159,7 +159,7 @@
         android:layout_marginTop="28dp"
         android:background="@drawable/rounded_button"
         android:elevation="0dp"
-        android:text="@string/submit"
+        android:text="@string/save"
         android:textColor="@android:color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

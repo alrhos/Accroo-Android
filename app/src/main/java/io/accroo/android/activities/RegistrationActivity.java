@@ -39,7 +39,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     private Account account;
     private char[] pwd;
     private boolean displayPasswordWarning = true;
-    private final String recaptchaSiteKey = "6LduSH4UAAAAAAcY15ThqAo9wJ0Lz3O6RKLW9ehm";
+    private final String recaptchaSiteKey = "6Lfwx4QUAAAAAI11Haf_gzbrGX4v2p0o-WS0lPz9";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             agree.setMovementMethod(LinkMovementMethod.getInstance());
 
             progressDialog = new ProgressDialog(RegistrationActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.creating_account));
+            progressDialog.setMessage(getResources().getString(R.string.registering_account));
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());

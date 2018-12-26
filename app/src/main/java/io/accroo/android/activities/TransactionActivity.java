@@ -90,7 +90,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
                 categoryField.setText(subCategoryName);
                 this.selectedSubCategoryID = existingTransaction.getSubCategoryId();
-                submitButton.setText(getResources().getString(R.string.save));
                 toggleEditing();
             } else {
                 date = new DateTime();

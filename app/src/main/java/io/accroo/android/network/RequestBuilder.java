@@ -513,8 +513,6 @@ public class RequestBuilder {
             switch (statusCode) {
                 case 400:
                     return ApiService.INVALID_REQUEST;
-                case 403:
-                    return ApiService.FORBIDDEN;
                 case 404:
                     return ApiService.NOT_FOUND;
                 case 409:
