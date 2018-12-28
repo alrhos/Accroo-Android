@@ -48,11 +48,6 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
                     }
                     progressDialog.show();
                     apiService.getLoginCode(null);
-//                    Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
-//                    intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
-//                    intent.putExtra("email", emailAddress.getText().toString());
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
 

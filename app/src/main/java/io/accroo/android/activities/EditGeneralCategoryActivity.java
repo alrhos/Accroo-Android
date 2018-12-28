@@ -160,7 +160,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void updateGeneralCategory(GeneralCategory generalCategory) {
         progressDialog.show();
-        System.out.println(generalCategory.toString());
         apiService.updateGeneralCategory(generalCategory);
     }
 

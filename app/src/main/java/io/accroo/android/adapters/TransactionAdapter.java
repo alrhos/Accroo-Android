@@ -24,7 +24,6 @@ import io.accroo.android.services.DataProvider;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-
 /**
  * Created by oscar on 6/06/17.
  */
@@ -95,7 +94,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             description.setText(transaction.getDescription());
 
             TextView amount = v.findViewById(R.id.transaction_category_amount);
-            System.out.println(transaction.toString());
             amount.setText(transaction.getFullyFormattedAmount());
 
             if (generalCategory.getRootCategory().equals(RootCategory.INCOME)) {

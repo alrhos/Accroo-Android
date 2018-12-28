@@ -105,7 +105,6 @@ public class Transaction implements Relationship, Parcelable {
 
     public EncryptedTransaction encrypt() {
         String transactionJson = GsonUtil.getInstance().toJson(this);
-        System.out.println("TRANSACTION JSON - " + transactionJson);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(transactionJson);
         return new EncryptedTransaction(this.id, this.subCategoryId,
                 securePayload.getData(), securePayload.getNonce());

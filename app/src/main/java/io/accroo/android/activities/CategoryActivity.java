@@ -24,7 +24,6 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
-
 public class CategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
         GeneralCategoryFragment.FragmentInteractionListener, SubCategoryFragment.FragmentInteractionListener {
 

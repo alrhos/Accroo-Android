@@ -99,9 +99,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             int currentPasswordLength = currentPassword.getText().length();
             currentPwd = new char[currentPasswordLength];
             currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
-            System.out.println("CHECKING IF CURRENT PASSWORD IS VALID");
             if (apiService.initializeKey(currentPwd)) {
-                System.out.println("PASSWORD VALID - GETTING LOGIN CODE");
                 apiService.getLoginCode(null);
             } else {
                 progressDialog.dismiss();

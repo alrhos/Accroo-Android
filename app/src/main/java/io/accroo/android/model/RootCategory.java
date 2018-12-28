@@ -51,7 +51,6 @@ public class RootCategory implements Parcelable {
         this.generalCategories = generalCategories;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
