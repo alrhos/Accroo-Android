@@ -9,6 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.RootCategory;
@@ -16,10 +20,7 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Summary;
 import io.accroo.android.services.DataProvider;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by oscar on 27/05/17.
@@ -34,10 +35,11 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private LayoutInflater inflater;
     private SummaryViewHolder summaryViewHolder;
     private AdapterInteractionListener adapterInteractionListener;
-    private Date startDate, endDate;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private DateTime startDate, endDate;
+    private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
-    public SummaryListAdapter(Context context, Date startDate, Date endDate, AdapterInteractionListener adapterInteractionListener) {
+    public SummaryListAdapter(Context context, DateTime startDate, DateTime endDate,
+                              AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -110,8 +112,8 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 summaryViewHolder.income.setText(summary.getTotal(RootCategory.INCOME));
                 summaryViewHolder.expenses.setText(summary.getTotal(RootCategory.EXPENSE));
                 summaryViewHolder.savings.setText(summary.getSavings());
-                summaryViewHolder.startDateView.setText(dateFormat.format(startDate.getTime()));
-                summaryViewHolder.endDateView.setText(dateFormat.format(endDate.getTime()));
+                summaryViewHolder.startDateView.setText(startDate.toString(dateFormat));
+                summaryViewHolder.endDateView.setText(endDate.toString(dateFormat));
 
                 summaryViewHolder.startDateView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -202,14 +204,14 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-    public void updateStartDate(Date date) {
+    public void updateStartDate(DateTime date) {
         startDate = date;
-        summaryViewHolder.startDateView.setText(dateFormat.format(date.getTime()));
+        summaryViewHolder.startDateView.setText(date.toString(dateFormat));
     }
 
-    public void updateEndDate(Date date) {
+    public void updateEndDate(DateTime date) {
         endDate = date;
-        summaryViewHolder.endDateView.setText(dateFormat.format(date.getTime()));
+        summaryViewHolder.endDateView.setText(date.toString(dateFormat));
     }
 
 }

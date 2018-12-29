@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
@@ -13,9 +14,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.safetynet.SafetyNetStatusCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import io.accroo.android.R;
+import io.accroo.android.model.Account;
 import io.accroo.android.model.Preferences;
-import io.accroo.android.model.User;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
@@ -28,7 +36,10 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     private Button register;
     private ProgressDialog progressDialog;
     private ApiService apiService;
+    private Account account;
     private char[] pwd;
+    private boolean displayPasswordWarning = true;
+    private final String recaptchaSiteKey = "6Lfwx4QUAAAAAI11Haf_gzbrGX4v2p0o-WS0lPz9";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +61,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             agree.setMovementMethod(LinkMovementMethod.getInstance());
 
             progressDialog = new ProgressDialog(RegistrationActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setMessage(getResources().getString(R.string.registering_account));
             progressDialog.setCancelable(false);
 
             apiService = new ApiService(this, getApplicationContext());
@@ -67,27 +78,66 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
 
                     Utils.hideSoftKeyboard(RegistrationActivity.this);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
-                    builder.setMessage(R.string.password_warning)
-                            .setTitle(R.string.important)
-                            .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    progressDialog.show();
-                                    int passwordLength = password.getText().length();
-                                    pwd = new char[passwordLength];
-                                    password.getText().getChars(0, passwordLength, pwd, 0);
-                                    User user = new User(emailAddress.getText().toString(), pwd, new Preferences());
-                                    apiService.createUser(user);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {}
-                            }).create().show();
+                    if(displayPasswordWarning) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
+                        builder.setMessage(R.string.password_warning)
+                                .setTitle(R.string.important)
+                                .setPositiveButton(R.string.continue_on, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        displayPasswordWarning = false;
+                                        createAccount();
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {}
+                                }).create().show();
+                    } else {
+                        createAccount();
+                    }
                 }
             });
         }
+    }
+
+    private void createAccount() {
+        SafetyNet.getClient(this).verifyWithRecaptcha(recaptchaSiteKey)
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        if (!response.getTokenResult().isEmpty()) {
+                            progressDialog.show();
+                            account = new Account(emailAddress.getText().toString());
+                            apiService.createAccount(account, response.getTokenResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            int statusCode = apiException.getStatusCode();
+                            String message;
+                            switch (statusCode) {
+                                case SafetyNetStatusCodes.TIMEOUT:
+                                    message = getResources().getString(R.string.timeout_error);
+                                    break;
+                                case SafetyNetStatusCodes.NETWORK_ERROR:
+                                    message = getResources().getString(R.string.no_network_connection);
+                                    break;
+                                default:
+                                    message = getResources().getString(R.string.general_error);
+                            }
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), getResources()
+                                    .getString(R.string.general_error), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -138,9 +188,19 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.CREATE_USER) {
+        if (requestType == ApiService.CREATE_ACCOUNT) {
+            apiService.login(account);
+        } else if (requestType == ApiService.LOGIN) {
+            int passwordLength = password.getText().length();
+            pwd = new char[passwordLength];
+            password.getText().getChars(0, passwordLength, pwd, 0);
+            apiService.createKey(pwd);
+        } else if (requestType == ApiService.CREATE_KEY) {
+            apiService.updatePreferences(new Preferences());
+        } else if (requestType == ApiService.UPDATE_PREFERENCES) {
             apiService.createDefaultCategories();
         } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
+            progressDialog.dismiss();
             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
         }
     }
@@ -148,7 +208,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else {
             String message;
@@ -168,7 +228,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 

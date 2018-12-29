@@ -5,8 +5,6 @@ package io.accroo.android.model;
  */
 
 public interface Relationship {
-
     void setParent(Object parent);
     Object getParent();
-
 }

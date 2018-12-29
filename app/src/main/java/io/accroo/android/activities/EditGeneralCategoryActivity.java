@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewDebug;
 import android.widget.Toast;
 
 import io.accroo.android.R;
@@ -110,12 +109,16 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
+        } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY && errorCode == ApiService.NOT_FOUND) {
+            // The category has already been deleted
+            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
+            finish();
         } else {
             String message;
             switch (errorCode) {
@@ -131,7 +134,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -157,7 +160,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public void updateGeneralCategory(GeneralCategory generalCategory) {
         progressDialog.show();
-        System.out.println(generalCategory.toString());
         apiService.updateGeneralCategory(generalCategory);
     }
 

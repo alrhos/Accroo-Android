@@ -16,7 +16,6 @@ import io.accroo.android.services.DataProvider;
 
 import java.util.ArrayList;
 
-
 /**
  * Created by oscar on 11/06/17.
  */
@@ -84,7 +83,6 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
 
             ll.addView(v);
-
         }
 
         vh.itemView.setOnClickListener(new View.OnClickListener() {

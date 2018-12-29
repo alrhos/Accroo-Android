@@ -1,8 +1,5 @@
 package io.accroo.android.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by oscar on 4/03/17.
  */
@@ -11,7 +8,7 @@ public class User {
 
     private String email;
     private char[] password;
-    private KeyPackage keyPackage;
+    private Key key;
     private Preferences preferences;
 
     public User(String email, char[] password, Preferences preferences) {
@@ -36,12 +33,12 @@ public class User {
         this.password = password;
     }
 
-    public KeyPackage getKeyPackage() {
-        return keyPackage;
+    public Key getKey() {
+        return key;
     }
 
-    public void setKeyPackage(KeyPackage keyPackage) {
-        this.keyPackage = keyPackage;
+    public void setKey(Key key) {
+        this.key = key;
     }
 
     public Preferences getPreferences() {
@@ -50,18 +47,6 @@ public class User {
 
     public void setPreferences(Preferences preferences) {
         this.preferences = preferences;
-    }
-
-    public JSONObject toJSON() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("email", email);
-            json.put("keyPackage", keyPackage.toJSON());
-            json.put("preferences", preferences.encrypt());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
     }
 
 }

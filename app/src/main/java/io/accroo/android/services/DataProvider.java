@@ -1,8 +1,10 @@
 package io.accroo.android.services;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.GeneralCategoryComparator;
-import io.accroo.android.model.KeyPackage;
+import io.accroo.android.model.Key;
 import io.accroo.android.model.RootCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.SubCategoryComparator;
@@ -11,7 +13,6 @@ import io.accroo.android.model.TransactionComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -24,8 +25,8 @@ public class DataProvider {
     private static ArrayList<SubCategory> subCategories = new ArrayList<>();
     private static ArrayList<Transaction> transactions = new ArrayList<>();
     private static RootCategory[] rootCategories;
-    private static KeyPackage keyPackage;
-    private static Date startDate, endDate;
+    private static Key key;
+    private static DateTime startDate, endDate;
 
     public static void loadData(ArrayList<GeneralCategory> generalCategories,
                                 ArrayList<SubCategory> subCategories,
@@ -94,19 +95,19 @@ public class DataProvider {
         return generalCategories;
     }
 
-    public static void setKeyPackage(KeyPackage keyPackage) {
-        DataProvider.keyPackage = keyPackage;
+    public static void setKey(Key key) {
+        DataProvider.key = key;
     }
 
-    public static KeyPackage getKeyPackage() {
-        return keyPackage;
+    public static Key getKey() {
+        return key;
     }
 
-    public static void setStartDate(Date startDate) {
+    public static void setStartDate(DateTime startDate) {
         DataProvider.startDate = startDate;
     }
 
-    public static void setEndDate(Date endDate) {
+    public static void setEndDate(DateTime endDate) {
         DataProvider.endDate = endDate;
     }
 
@@ -121,11 +122,7 @@ public class DataProvider {
             categoryNames.add(generalCategory.getCategoryName());
         }
 
-        if (categoryNames.contains(categoryName)) {
-            return true;
-        }
-
-        return false;
+        return categoryNames.contains(categoryName);
     }
 
     public static boolean checkDuplicateSubCategory(String categoryName) {
@@ -135,15 +132,11 @@ public class DataProvider {
             categoryNames.add(subCategory.getCategoryName());
         }
 
-        if (categoryNames.contains(categoryName)) {
-            return true;
-        }
-
-        return false;
+        return categoryNames.contains(categoryName);
     }
 
     public static void addTransaction(Transaction transaction) {
-        if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+        if (!transaction.getDate().isBefore(startDate) && !transaction.getDate().isAfter(endDate)) {
             transactions.add(transaction);
             for (SubCategory subCategory : subCategories) {
                 if (transaction.getSubCategoryId() == subCategory.getId()) {
@@ -159,7 +152,7 @@ public class DataProvider {
     public static void updateTransaction(Transaction transaction) {
         for (int i = 0; i < transactions.size(); i++) {
             if (transactions.get(i).getId() == transaction.getId()) {
-                if (!transaction.getDate().before(startDate) && !transaction.getDate().after(endDate)) {
+                if (!transaction.getDate().isBefore(startDate) && !transaction.getDate().isAfter(endDate)) {
                     transactions.set(i, transaction);
                 } else {
                     transactions.remove(i);
@@ -168,7 +161,6 @@ public class DataProvider {
             }
         }
         sortData();
-
     }
 
     public static void deleteTransaction(Transaction transactionToDelete) {
@@ -187,7 +179,6 @@ public class DataProvider {
                 }
             }
         }
-
     }
 
     public static void addGeneralCategory(GeneralCategory generalCategory) {

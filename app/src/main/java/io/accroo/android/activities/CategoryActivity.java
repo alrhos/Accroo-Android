@@ -24,7 +24,6 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
-
 public class CategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
         GeneralCategoryFragment.FragmentInteractionListener, SubCategoryFragment.FragmentInteractionListener {
 
@@ -50,7 +49,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
             progressDialog = new ProgressDialog(CategoryActivity.this);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
+            progressDialog.setMessage(getResources().getString(R.string.saving));
 
             apiService = new ApiService(this, getApplicationContext());
 
@@ -164,7 +163,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
@@ -185,14 +184,14 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onError() {
         progressDialog.dismiss();
-        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
 

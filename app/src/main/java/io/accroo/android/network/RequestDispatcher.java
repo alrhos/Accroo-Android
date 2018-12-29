@@ -3,6 +3,7 @@ package io.accroo.android.network;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 
 /**
@@ -25,9 +26,9 @@ public class RequestDispatcher {
         return instance;
     }
 
-    public void addRequest(RestRequest restRequest) {
+    public void addRequest(JsonRequest request) {
         if (requestQueue != null) {
-            requestQueue.add(restRequest);
+            requestQueue.add(request);
         }
     }
 

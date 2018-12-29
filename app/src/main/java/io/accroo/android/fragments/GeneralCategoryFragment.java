@@ -19,7 +19,6 @@ import io.accroo.android.model.RootCategory;
 import io.accroo.android.services.DataProvider;
 import io.accroo.android.services.InputService;
 
-
 public class GeneralCategoryFragment extends Fragment {
 
     private FragmentInteractionListener fragmentListener;
@@ -75,8 +74,6 @@ public class GeneralCategoryFragment extends Fragment {
             } else if (existingCategory.getRootCategory().equals(RootCategory.EXPENSE)) {
                 expenseRadioButton.setChecked(true);
             }
-
-            submit.setText(getResources().getString(R.string.save));
         }
 
         icon.setOnClickListener(new View.OnClickListener() {

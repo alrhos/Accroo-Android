@@ -1,12 +1,10 @@
 package io.accroo.android.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,7 +51,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                         return;
                     }
                     progressDialog.show();
-                    apiService.getKeyPackage();
+                    apiService.getKey();
                 }
             });
 
@@ -97,12 +95,18 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
 
     @Override
     public void onSuccess(int requestType) {
-        progressDialog.dismiss();
-        int currentPasswordLength = currentPassword.getText().length();
-        currentPwd = new char[currentPasswordLength];
-        currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
-
-        if (apiService.initializeKey(currentPwd)) {
+        if (requestType == ApiService.GET_KEY) {
+            int currentPasswordLength = currentPassword.getText().length();
+            currentPwd = new char[currentPasswordLength];
+            currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
+            if (apiService.initializeKey(currentPwd)) {
+                apiService.getLoginCode(null);
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            progressDialog.dismiss();
             int newPasswordLength = newPassword.getText().length();
             newPwd = new char[newPasswordLength];
             newPassword.getText().getChars(0, newPasswordLength, newPwd, 0);
@@ -111,15 +115,13 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             intent.putExtra("password", newPwd);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
@@ -140,7 +142,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 

@@ -31,8 +31,12 @@ public class CredentialService {
     private static SharedPreferences.Editor editor;
     private static final String             APP = "io.accroo.android";
     public static final String              USERNAME_KEY = "usernameKey";
+    public static final String              USER_ID_KEY = "userId";
+    public static final String              REFRESH_TOKEN_KEY = "refreshToken";
+    public static final String              REFRESH_TOKEN_EXPIRY_KEY = "refreshTokenExpiry";
+    public static final String              ACCESS_TOKEN_KEY = "accessToken";
+    public static final String              ACCESS_TOKEN_EXPIRY_KEY = "accessTokenExpiry";
     public static final String              ENCRYPTION_KEY = "encryptionKey";
-    public static final String              DEVICE_TOKEN_KEY = "deviceTokenKey";
 
     private CredentialService() throws KeyStoreException, NoSuchAlgorithmException,
             NoSuchProviderException, InvalidAlgorithmParameterException,
@@ -59,6 +63,21 @@ public class CredentialService {
     public void saveEntry(String key, String value) throws Exception {
         try {
             String encryptedValue = keyStoreManager.encrypt(value);
+            editor = sharedPreferences.edit();
+            editor.putString(key, encryptedValue);
+            editor.apply();
+        } catch (NoSuchAlgorithmException | UnrecoverableEntryException |
+                KeyStoreException | InvalidKeyException | InvalidAlgorithmParameterException |
+                IllegalBlockSizeException | BadPaddingException | NoSuchPaddingException e) {
+            e.printStackTrace();
+            throw new Exception(key + " could not be encrypted");
+        }
+    }
+
+    public void saveEntry(String key, long value) throws Exception {
+        try {
+            String valueString = String.valueOf(value);
+            String encryptedValue = keyStoreManager.encrypt(valueString);
             editor = sharedPreferences.edit();
             editor.putString(key, encryptedValue);
             editor.apply();

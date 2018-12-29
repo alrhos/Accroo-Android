@@ -3,12 +3,11 @@ package io.accroo.android.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+
 import io.accroo.android.crypto.CryptoManager;
+import io.accroo.android.other.GsonUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -16,14 +15,15 @@ import java.util.ArrayList;
  * Created by oscar on 24/03/17.
  */
 
-public class SubCategory implements Securable, Relationship, Parcelable {
+public class SubCategory implements Relationship, Parcelable {
 
-    private int id, generalCategoryId;
-    private String categoryName, generalCategoryName;
+    private int id;
+    private int generalCategoryId;
+    @Expose private String categoryName;
+    private String generalCategoryName;
     private GeneralCategory parent;
-    private ArrayList<Transaction> transactions = new ArrayList<>();
-
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private ArrayList<Transaction> transactions;
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public SubCategory(String categoryName, int generalCategoryId) {
         this.categoryName = categoryName;
@@ -33,10 +33,6 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     public SubCategory(String categoryName, String generalCategoryName) {
         this.categoryName = categoryName;
         this.generalCategoryName = generalCategoryName;
-    }
-
-    public SubCategory(JSONObject json) throws JSONException, UnsupportedEncodingException {
-        decrypt(json);
     }
 
     public int getId() {
@@ -67,7 +63,14 @@ public class SubCategory implements Securable, Relationship, Parcelable {
         return generalCategoryName;
     }
 
+    public void setGeneralCategoryName(String generalCategoryName) {
+        this.generalCategoryName = generalCategoryName;
+    }
+
     public ArrayList<Transaction> getTransactions() {
+        if (transactions == null) {
+            transactions = new ArrayList<>();
+        }
         return transactions;
     }
 
@@ -87,6 +90,13 @@ public class SubCategory implements Securable, Relationship, Parcelable {
         this.transactions = transactions;
     }
 
+    public EncryptedSubCategory encrypt() {
+        String categoryJson = GsonUtil.getInstance().toJson(this);
+        SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
+        return new EncryptedSubCategory(this.id, this.generalCategoryId,
+                securePayload.getData(), securePayload.getNonce());
+    }
+
     @Override
     public void setParent(Object parent) {
         this.parent = (GeneralCategory) parent;
@@ -95,34 +105,6 @@ public class SubCategory implements Securable, Relationship, Parcelable {
     @Override
     public Object getParent() {
         return parent;
-    }
-
-    @Override
-    public JSONObject encrypt() throws JSONException {
-        JSONObject categoryData = new JSONObject();
-        categoryData.put("categoryName", categoryName);
-        SecurePayload payload = CryptoManager.getInstance().encrypt(categoryData.toString());
-        JSONObject json = new JSONObject();
-
-        if (id != 0) {
-            json.put("id", id);
-        }
-
-        json.put("generalCategoryId", generalCategoryId);
-        json.put("data", payload.getData());
-        json.put("nonce", payload.getNonce());
-
-        return json;
-    }
-
-    @Override
-    public void decrypt(JSONObject json) throws JSONException, UnsupportedEncodingException {
-        SecurePayload payload = new SecurePayload(json.getString("data"), json.getString("nonce"));
-        String categoryString = CryptoManager.getInstance().decrypt(payload);
-        JSONObject categoryJson = new JSONObject(categoryString);
-        this.id = json.getInt("id");
-        this.generalCategoryId = json.getInt("generalCategoryId");
-        this.categoryName = categoryJson.getString("categoryName");
     }
 
     @Override
@@ -159,4 +141,15 @@ public class SubCategory implements Securable, Relationship, Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "SubCategory{" +
+                "id=" + id +
+                ", generalCategoryId=" + generalCategoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", generalCategoryName='" + generalCategoryName + '\'' +
+                ", parent=" + parent +
+                ", transactions=" + transactions +
+                '}';
+    }
 }

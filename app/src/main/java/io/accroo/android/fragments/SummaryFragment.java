@@ -14,12 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.R;
 import io.accroo.android.adapters.SummaryListAdapter;
-import io.accroo.android.other.DividerItemDecoration;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class SummaryFragment extends Fragment implements SummaryListAdapter.AdapterInteractionListener {
 
@@ -30,8 +28,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
     private LinearLayoutManager layoutManager;
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE = "END_DATE";
-    private Calendar calendar;
-    private Date startDate, endDate;
+    private DateTime startDate, endDate;
     private DatePickerDialog.OnDateSetListener startDatePicker;
     private DatePickerDialog.OnDateSetListener endDatePicker;
 
@@ -50,11 +47,10 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.startDate = new Date(getArguments().getLong(START_DATE));
-            this.endDate = new Date(getArguments().getLong(END_DATE));
+            this.startDate = new DateTime(getArguments().getLong(START_DATE));
+            this.endDate = new DateTime(getArguments().getLong(END_DATE));
         }
         summaryListAdapter = new SummaryListAdapter(requireActivity(), startDate, endDate, this);
-        calendar = Calendar.getInstance();
     }
 
     @Override
@@ -97,10 +93,8 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         startDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                startDate = calendar.getTime();
+                startDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
+                        0, 0);
                 summaryListAdapter.updateStartDate(startDate);
                 fragmentListener.onStartDateUpdated(startDate);
             }
@@ -109,10 +103,8 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         endDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                endDate = calendar.getTime();
+                endDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
+                        23, 59, 59, 999);
                 summaryListAdapter.updateEndDate(endDate);
                 fragmentListener.onEndDateUpdated(endDate);
             }
@@ -140,8 +132,8 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
 
     public interface FragmentInteractionListener {
         void onSummarySwipeRefresh();
-        void onStartDateUpdated(Date date);
-        void onEndDateUpdated(Date date);
+        void onStartDateUpdated(DateTime date);
+        void onEndDateUpdated(DateTime date);
         void hideFab();
         void showFab();
     }
@@ -156,16 +148,14 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
 
     @Override
     public void onStartDateClicked() {
-        calendar.setTime(startDate);
-        new DatePickerDialog(requireActivity(), startDatePicker, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(requireActivity(), startDatePicker, startDate.getYear(),
+                startDate.getMonthOfYear() - 1, startDate.getDayOfMonth()).show();
     }
 
     @Override
     public void onEndDateClicked() {
-        calendar.setTime(endDate);
-        new DatePickerDialog(requireActivity(), endDatePicker, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(requireActivity(), endDatePicker, endDate.getYear(),
+                endDate.getMonthOfYear() - 1, endDate.getDayOfMonth()).show();
     }
 
 }

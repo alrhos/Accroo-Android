@@ -7,17 +7,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.R;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class LaunchActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private Calendar calendar;
-    private Date startDate, endDate;
+    private DateTime startDate, endDate;
     public static boolean initialized = false;
     private ApiService apiService;
 
@@ -33,16 +31,11 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         apiService = new ApiService(this, getApplicationContext());
 
         if (apiService.userLoggedIn()) {
-            calendar = Calendar.getInstance();
-            endDate = calendar.getTime();
+            // Set dates from first day of calendar month to the end of the current day
+            endDate = new DateTime().withTime(23, 59, 59, 999);
+            startDate = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), 1,
+                    0, 0, 0, 0);
 
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            startDate = calendar.getTime();
             apiService.getDefaultData(startDate, endDate);
         } else {
             initLayout();
@@ -70,8 +63,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     @Override
     public void onSuccess(int requestType) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("startDate", startDate.getTime());
-        intent.putExtra("endDate", endDate.getTime());
+        intent.putExtra("startDate", startDate.getMillis());
+        intent.putExtra("endDate", endDate.getMillis());
         startActivity(intent);
     }
 
@@ -80,8 +73,9 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
-                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.ORIGIN_UNAVAILABLE) {
-            if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.ORIGIN_UNAVAILABLE ||
+                errorCode == ApiService.SERVICE_UNAVAILABLE) {
+            if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
                 MaintenanceDialog.show(this);
             }
             setContentView(R.layout.activity_no_connection);

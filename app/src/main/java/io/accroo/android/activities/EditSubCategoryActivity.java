@@ -143,12 +143,16 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
+        } else if (requestType == ApiService.DELETE_SUB_CATEGORY && errorCode == ApiService.NOT_FOUND) {
+            // The category has already been deleted
+            Toast.makeText(getApplicationContext(), R.string.category_deleted, Toast.LENGTH_SHORT).show();
+            finish();
         } else {
             String message;
             switch (errorCode) {
@@ -164,7 +168,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 

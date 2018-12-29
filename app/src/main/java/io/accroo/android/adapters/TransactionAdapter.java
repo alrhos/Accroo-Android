@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.RootCategory;
@@ -17,12 +21,8 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.services.DataProvider;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Locale;
-
 
 /**
  * Created by oscar on 6/06/17.
@@ -33,9 +33,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private AdapterInteractionListener adapterInteractionListener;
     private ArrayList<Transaction> transactions;
-    private LinkedHashMap<Date, ArrayList<Transaction>> groupedTransactions;
+    private LinkedHashMap<DateTime, ArrayList<Transaction>> groupedTransactions;
     private LayoutInflater inflater;
-    private SimpleDateFormat df = new SimpleDateFormat("EEE dd, MMM yyyy", Locale.getDefault());
+    private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
@@ -69,14 +69,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         TransactionViewHolder vh = (TransactionViewHolder) holder;
-        Date date = new ArrayList<>(groupedTransactions.keySet()).get(position);
-        String formattedDate = df.format(date);
+        DateTime date = new ArrayList<>(groupedTransactions.keySet()).get(position);
+        String formattedDate = date.toString(dateFormat);
         vh.dateHeader.setText(formattedDate);
 
         LinearLayout ll = vh.itemView.findViewById(R.id.transaction_list_layout);
         ll.removeAllViews();
 
         for (final Transaction transaction : groupedTransactions.get(date)) {
+
             View v = inflater.inflate(R.layout.transaction_list_details, null, false);
             ImageView iv = v.findViewById(R.id.transaction_icon);
 
@@ -127,15 +128,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             adapterInteractionListener.onNonEmptyList();
             for (Transaction transaction : transactions) {
-                if (!groupedTransactions.containsKey(transaction.getDate())) {
-                    groupedTransactions.put(transaction.getDate(), null);
+                if (!groupedTransactions.containsKey(transaction.getDateWithoutTime())) {
+                    groupedTransactions.put(transaction.getDateWithoutTime(), null);
                 }
             }
 
-            for (Date key : groupedTransactions.keySet()) {
+            for (DateTime key : groupedTransactions.keySet()) {
                 ArrayList<Transaction> matches = new ArrayList<>();
                 for (Transaction transaction : transactions) {
-                    if (key.equals(transaction.getDate())) {
+                    if (key.equals(transaction.getDateWithoutTime())) {
                         matches.add(transaction);
                     }
                 }

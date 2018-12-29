@@ -23,6 +23,8 @@ import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import io.accroo.android.R;
 import io.accroo.android.fragments.CategoryOverviewFragment;
 import io.accroo.android.fragments.SummaryFragment;
@@ -33,8 +35,6 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
 
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
         TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,
      ApiService.RequestOutcome {
@@ -43,12 +43,12 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private TransactionsFragment transactionsFragment;
     private CategoryOverviewFragment categoryOverviewFragment;
     private ApiService apiService;
-    private Date startDate, endDate;
+    private DateTime startDate, endDate;
     private FloatingActionButton fab;
     private final int[] fabColorArray = {
-                                            R.color.colorAccent,
-                                            R.color.colorAccent,
-                                            R.color.colorAccentSecondary
+        R.color.colorAccent,
+        R.color.colorAccent,
+        R.color.colorAccentSecondary
     };
 
     @Override
@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             } else {
                 setContentView(R.layout.activity_main);
 
-                startDate = new Date(getIntent().getLongExtra("startDate", -1));
-                endDate = new Date (getIntent().getLongExtra("endDate", -1));
+                startDate = new DateTime(getIntent().getLongExtra("startDate", -1));
+                endDate = new DateTime(getIntent().getLongExtra("endDate", -1));
 
                 Toolbar toolbar = findViewById(R.id.main_toolbar);
                 setSupportActionBar(toolbar);
@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     protected void animateFab(final int position) {
         fab.clearAnimation();
-        // Scale down animation
         ScaleAnimation shrink =  new ScaleAnimation(1f, 0.2f, 1f, 0.2f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         shrink.setDuration(150);     // animation duration in milliseconds
@@ -127,14 +126,11 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // Change FAB color and icon
-                //fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position]));
-                fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position], getApplicationContext().getTheme()));
-
-                // Scale up animation
+                fab.setBackgroundTintList(getResources().getColorStateList(fabColorArray[position],
+                        getApplicationContext().getTheme()));
                 ScaleAnimation expand =  new ScaleAnimation(0.2f, 1f, 0.2f, 1f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                expand.setDuration(100);     // animation duration in milliseconds
+                expand.setDuration(100);
                 expand.setInterpolator(new AccelerateInterpolator());
                 fab.startAnimation(expand);
             }
@@ -228,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return summaryFragment = SummaryFragment.newInstance(startDate.getTime(), endDate.getTime());
+                    return summaryFragment = SummaryFragment.newInstance(startDate.getMillis(),
+                            endDate.getMillis());
                 case 1:
                     return transactionsFragment = new TransactionsFragment();
                 case 2:
@@ -268,13 +265,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     }
 
     @Override
-    public void onStartDateUpdated(Date date) {
+    public void onStartDateUpdated(DateTime date) {
         startDate = date;
         onSummarySwipeRefresh();
     }
 
     @Override
-    public void onEndDateUpdated(Date date) {
+    public void onEndDateUpdated(DateTime date) {
         endDate = date;
         onSummarySwipeRefresh();
     }
@@ -348,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE) {
+        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
@@ -372,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 
