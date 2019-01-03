@@ -102,7 +102,6 @@ public class GeneralCategory implements Parcelable {
         dest.writeString(this.categoryName);
         dest.writeString(this.rootCategory);
         dest.writeString(this.iconFile);
-        dest.writeSerializable(this.df);
     }
 
     protected GeneralCategory(Parcel in) {
@@ -110,7 +109,6 @@ public class GeneralCategory implements Parcelable {
         this.categoryName = in.readString();
         this.rootCategory = in.readString();
         this.iconFile = in.readString();
-        this.df = (DecimalFormat) in.readSerializable();
     }
 
     public static final Creator<GeneralCategory> CREATOR = new Creator<GeneralCategory>() {
