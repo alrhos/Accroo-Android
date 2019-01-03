@@ -16,8 +16,7 @@ public class RootCategory implements Parcelable {
     public static final String EXPENSE = "Expense";
     private String categoryName;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
-
-    private DecimalFormat df = new DecimalFormat("0.00");
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public RootCategory(String categoryName) {
         this.categoryName = categoryName;
@@ -60,14 +59,12 @@ public class RootCategory implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.categoryName);
         dest.writeList(this.generalCategories);
-        dest.writeSerializable(this.df);
     }
 
     protected RootCategory(Parcel in) {
         this.categoryName = in.readString();
         this.generalCategories = new ArrayList<>();
         in.readList(this.generalCategories, GeneralCategory.class.getClassLoader());
-        this.df = (DecimalFormat) in.readSerializable();
     }
 
     public static final Parcelable.Creator<RootCategory> CREATOR = new Parcelable.Creator<RootCategory>() {

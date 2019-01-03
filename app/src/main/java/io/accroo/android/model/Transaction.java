@@ -123,8 +123,6 @@ public class Transaction implements Relationship, Parcelable {
         dest.writeDouble(this.amount);
         dest.writeString(this.description);
         dest.writeParcelable(this.parent, flags);
-        dest.writeSerializable(this.decimalFormat);
-        dest.writeSerializable(this.dateFormat);
     }
 
     protected Transaction(Parcel in) {

@@ -118,7 +118,6 @@ public class SubCategory implements Relationship, Parcelable {
         dest.writeInt(this.generalCategoryId);
         dest.writeString(this.categoryName);
         dest.writeParcelable(this.parent, flags);
-        dest.writeSerializable(this.df);
     }
 
     protected SubCategory(Parcel in) {
@@ -126,7 +125,6 @@ public class SubCategory implements Relationship, Parcelable {
         this.generalCategoryId = in.readInt();
         this.categoryName = in.readString();
         this.parent = in.readParcelable(GeneralCategory.class.getClassLoader());
-        this.df = (DecimalFormat) in.readSerializable();
     }
 
     public static final Creator<SubCategory> CREATOR = new Creator<SubCategory>() {
