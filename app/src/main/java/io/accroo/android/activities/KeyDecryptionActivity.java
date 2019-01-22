@@ -60,13 +60,8 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                 @Override
                 public void onClick(View view) {
                     Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Forgot password");
-                    try {
-                        startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
-                    }
+                    Uri uri = Uri.parse("https://accroo.io/forgot-password");
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 }
             });
 
