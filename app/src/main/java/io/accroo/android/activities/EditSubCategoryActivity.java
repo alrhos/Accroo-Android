@@ -143,7 +143,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

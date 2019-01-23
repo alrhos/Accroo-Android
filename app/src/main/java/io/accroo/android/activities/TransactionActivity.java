@@ -197,16 +197,12 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
-                // Crash reports suggest that there are instances where subCategory can be null.
-                // Not sure how this can occur so adding this check to prevent potential null pointer exceptions.
-                if (subCategory != null) {
-                    this.selectedSubCategoryID = subCategory.getId();
-                    String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
-                    int iconId = getApplicationContext().getResources().getIdentifier(
-                            "@drawable/" + icon, null, getApplicationContext().getPackageName());
-                    categoryIcon.setImageResource(iconId);
-                    categoryField.setText(subCategory.getCategoryName());
-                }
+                this.selectedSubCategoryID = subCategory.getId();
+                String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
+                int iconId = getApplicationContext().getResources().getIdentifier(
+                        "@drawable/" + icon, null, getApplicationContext().getPackageName());
+                categoryIcon.setImageResource(iconId);
+                categoryField.setText(subCategory.getCategoryName());
             }
         }
     }
@@ -290,7 +286,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

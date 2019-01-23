@@ -521,16 +521,20 @@ public class RequestBuilder {
                     return ApiService.TOO_MANY_REQUESTS;
                 case 500:
                     return ApiService.GENERIC_ERROR;
+                case 502:
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 503:
                     return ApiService.SERVICE_UNAVAILABLE;
                 case 521:
-                    return ApiService.ORIGIN_UNAVAILABLE;
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 522:
                     return ApiService.TIMEOUT_ERROR;
                 case 523:
-                    return ApiService.CONNECTION_ERROR;
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 524:
                     return ApiService.TIMEOUT_ERROR;
+                case 530:
+                    return ApiService.SERVICE_UNAVAILABLE;
             }
         }
         return ApiService.GENERIC_ERROR;
