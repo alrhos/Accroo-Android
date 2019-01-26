@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "io.accroo.android"
         minSdkVersion 23
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 6
         versionName "1.1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
