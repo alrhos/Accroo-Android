@@ -32,7 +32,6 @@ public class GeneralCategoryFragment extends Fragment {
     private final static String DEFAULT_ICON = "i0";
     private GeneralCategory existingCategory;
     private boolean editing = false;
-    private boolean editable = true;
 
     public GeneralCategoryFragment() {}
 
@@ -66,6 +65,8 @@ public class GeneralCategoryFragment extends Fragment {
             int iconID = requireActivity().getResources().getIdentifier("@drawable/" + existingCategory.getIconFile(),
                     null, requireActivity().getPackageName());
             icon.setImageResource(iconID);
+            icon.setFocusableInTouchMode(true);
+            icon.requestFocus();
             categoryName.setText(existingCategory.getCategoryName());
             iconName = existingCategory.getIconFile();
 
@@ -145,16 +146,6 @@ public class GeneralCategoryFragment extends Fragment {
     public void updateIcon(int iconID, String iconName) {
         icon.setImageResource(iconID);
         this.iconName = iconName;
-    }
-
-    public void toggleEditing() {
-        editable = !editable;
-        icon.setEnabled(editable);
-        categoryName.setEnabled(editable);
-        radioGroup.setEnabled(editable);
-        incomeRadioButton.setEnabled(editable);
-        expenseRadioButton.setEnabled(editable);
-        submit.setEnabled(editable);
     }
 
     private boolean isValidCategoryName() {

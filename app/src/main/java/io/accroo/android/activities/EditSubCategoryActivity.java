@@ -39,7 +39,6 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             }
             apiService = new ApiService(this, getApplicationContext());
             subCategoryFragment = (SubCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_sub_category);
-            subCategoryFragment.toggleEditing();
             subCategory = getIntent().getParcelableExtra("subCategory");
             progressDialog = new ProgressDialog(EditSubCategoryActivity.this);
             progressDialog.setCancelable(false);
@@ -68,9 +67,6 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.edit_resource:
-                subCategoryFragment.toggleEditing();
-                return true;
             case R.id.delete_resource:
                 deleteSubCategory();
                 return true;

@@ -29,7 +29,6 @@ public class SubCategoryFragment extends Fragment {
     private SubCategory existingCategory;
     private GeneralCategory generalCategory;
     private boolean editing = false;
-    private boolean editable = true;
 
     public SubCategoryFragment() {}
 
@@ -54,12 +53,13 @@ public class SubCategoryFragment extends Fragment {
         existingCategory = requireActivity().getIntent().getParcelableExtra("subCategory");
 
         if (existingCategory != null) {
-
             editing = true;
             generalCategory = ((GeneralCategory) existingCategory.getParent());
             int iconID = requireActivity().getResources().getIdentifier("@drawable/" +
                             generalCategory.getIconFile(), null, requireActivity().getPackageName());
             icon.setImageResource(iconID);
+            icon.setFocusableInTouchMode(true);
+            icon.requestFocus();
             generalCategoryName.setText(generalCategory.getCategoryName());
             subCategoryName.setText(existingCategory.getCategoryName());
         }
@@ -160,14 +160,6 @@ public class SubCategoryFragment extends Fragment {
         }
 
         return true;
-    }
-
-    public void toggleEditing() {
-        editable = !editable;
-        icon.setEnabled(editable);
-        subCategoryName.setEnabled(editable);
-        generalCategoryName.setEnabled(editable);
-        submit.setEnabled(editable);
     }
 
     public void clearFields() {

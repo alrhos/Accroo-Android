@@ -87,10 +87,11 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         "@drawable/" + icon, null, getApplicationContext().getPackageName());
 
                 categoryIcon.setImageResource(iconId);
+                categoryIcon.setFocusableInTouchMode(true);
+                categoryIcon.requestFocus();
                 String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
                 categoryField.setText(subCategoryName);
                 this.selectedSubCategoryID = existingTransaction.getSubCategoryId();
-                toggleEditing();
             } else {
                 date = new DateTime();
                 updateDate();
@@ -181,9 +182,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.edit_resource:
-                toggleEditing();
-                return true;
             case R.id.delete_resource:
                 deleteTransaction();
                 return true;
@@ -209,16 +207,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
     private void updateDate() {
         dateField.setText(date.toString(dateFormat));
-
-    }
-
-    private void toggleEditing() {
-        editable = !editable;
-        amountField.setEnabled(editable);
-        categoryField.setEnabled(editable);
-        dateField.setEnabled(editable);
-        descriptionField.setEnabled(editable);
-        submitButton.setEnabled(editable);
     }
 
     private void deleteTransaction() {
@@ -240,7 +228,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private boolean isValidAmount() {
         String amountString = amountField.getText().toString();
         if (amountString.length() > 0) {
-            Double amount = Double.parseDouble(amountString);
+            double amount = Double.parseDouble(amountString);
             if (amount <= 0) {
                 Toast.makeText(getApplicationContext(), R.string.negative_amount,
                         Toast.LENGTH_SHORT).show();

@@ -38,7 +38,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             }
             apiService = new ApiService(this, getApplicationContext());
             generalCategoryFragment = (GeneralCategoryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_general_category);
-            generalCategoryFragment.toggleEditing();
             generalCategory = getIntent().getParcelableExtra("generalCategory");
             progressDialog = new ProgressDialog(EditGeneralCategoryActivity.this);
             progressDialog.setCancelable(false);
@@ -67,9 +66,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.edit_resource:
-                generalCategoryFragment.toggleEditing();
-                return true;
             case R.id.delete_resource:
                 deleteGeneralCategory();
                 return true;
