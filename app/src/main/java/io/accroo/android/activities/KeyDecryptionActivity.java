@@ -1,6 +1,5 @@
 package io.accroo.android.activities;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     private Button unlockButton;
     private TextView forgotPassword;
     private ApiService apiService;
-    private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
