@@ -52,6 +52,9 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                     }
                 }
             });
+
+            usernameField.setFocusableInTouchMode(true);
+            usernameField.requestFocus();
             Utils.showSoftKeyboard(LoginActivity.this);
         }
     }

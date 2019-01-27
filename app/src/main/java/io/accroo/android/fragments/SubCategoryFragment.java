@@ -14,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import io.accroo.android.R;
+import io.accroo.android.activities.TransactionActivity;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.DataProvider;
 import io.accroo.android.services.InputService;
 
@@ -62,6 +64,10 @@ public class SubCategoryFragment extends Fragment {
             icon.requestFocus();
             generalCategoryName.setText(generalCategory.getCategoryName());
             subCategoryName.setText(existingCategory.getCategoryName());
+        } else {
+            subCategoryName.setFocusableInTouchMode(true);
+            subCategoryName.requestFocus();
+            Utils.showSoftKeyboard(requireActivity());
         }
 
         icon.setOnClickListener(new View.OnClickListener() {

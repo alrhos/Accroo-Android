@@ -51,6 +51,8 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
                 }
             });
 
+            emailAddress.setFocusableInTouchMode(true);
+            emailAddress.requestFocus();
             Utils.showSoftKeyboard(ChangeEmailActivity.this);
         }
     }

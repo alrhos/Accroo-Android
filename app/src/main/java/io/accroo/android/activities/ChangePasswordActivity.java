@@ -55,6 +55,8 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                 }
             });
 
+            currentPassword.setFocusableInTouchMode(true);
+            currentPassword.requestFocus();
             Utils.showSoftKeyboard(ChangePasswordActivity.this);
         }
     }

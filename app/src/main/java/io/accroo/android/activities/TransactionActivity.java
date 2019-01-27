@@ -43,7 +43,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private ProgressDialog progressDialog;
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
-    private boolean editable = true;
     private ApiService apiService;
     private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
@@ -95,6 +94,8 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             } else {
                 date = new DateTime();
                 updateDate();
+                amountField.setFocusableInTouchMode(true);
+                amountField.requestFocus();
                 Utils.showSoftKeyboard(TransactionActivity.this);
             }
 

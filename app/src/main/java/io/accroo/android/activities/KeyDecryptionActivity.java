@@ -33,7 +33,11 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
+
             keyPassword = findViewById(R.id.key_password);
+            keyPassword.setFocusableInTouchMode(true);
+            keyPassword.requestFocus();
+
             unlockButton = findViewById(R.id.unlock_button);
             forgotPassword = findViewById(R.id.forgot_password_link);
 

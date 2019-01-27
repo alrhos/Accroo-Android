@@ -22,6 +22,7 @@ import io.accroo.android.fragments.SubCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class CategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
@@ -120,6 +121,12 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(CategoryActivity.this);
     }
 
     @Override
