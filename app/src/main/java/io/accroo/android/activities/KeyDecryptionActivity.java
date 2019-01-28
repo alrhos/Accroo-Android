@@ -1,6 +1,5 @@
 package io.accroo.android.activities;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     private Button unlockButton;
     private TextView forgotPassword;
     private ApiService apiService;
-    private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +31,11 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
+
             keyPassword = findViewById(R.id.key_password);
+            keyPassword.setFocusableInTouchMode(true);
+            keyPassword.requestFocus();
+
             unlockButton = findViewById(R.id.unlock_button);
             forgotPassword = findViewById(R.id.forgot_password_link);
 
@@ -60,13 +62,8 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                 @Override
                 public void onClick(View view) {
                     Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Forgot password");
-                    try {
-                        startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
-                    }
+                    Uri uri = Uri.parse("https://accroo.io/forgot-password");
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
                 }
             });
 

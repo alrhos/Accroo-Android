@@ -57,10 +57,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int TOO_MANY_REQUESTS =         1005;
     public final static int INVALID_REQUEST =           1006;
     public final static int INVALID_DATE_RANGE =        1007;
-    public final static int ORIGIN_UNAVAILABLE =        1008;
-    public final static int NOT_FOUND =                 1009;
-    public final static int SERVICE_UNAVAILABLE =       1010;
-    public final static int FORBIDDEN =                 1011;
+    public final static int NOT_FOUND =                 1008;
+    public final static int SERVICE_UNAVAILABLE =       1009;
+    public final static int FORBIDDEN =                 1010;
 
     private RequestOutcome                              requestOutcome;
     private Context                                     context;

@@ -521,16 +521,25 @@ public class RequestBuilder {
                     return ApiService.TOO_MANY_REQUESTS;
                 case 500:
                     return ApiService.GENERIC_ERROR;
+                case 502:
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 503:
                     return ApiService.SERVICE_UNAVAILABLE;
                 case 521:
-                    return ApiService.ORIGIN_UNAVAILABLE;
+                    // Cloudflare: origin refused connection
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 522:
+                    // Cloudflare: connection timed out
                     return ApiService.TIMEOUT_ERROR;
                 case 523:
-                    return ApiService.CONNECTION_ERROR;
+                    // Cloudflare: origin unreachable
+                    return ApiService.SERVICE_UNAVAILABLE;
                 case 524:
+                    // Cloudflare: timeout
                     return ApiService.TIMEOUT_ERROR;
+                case 530:
+                    // Cloudflare: origin DNS error - tunnel is unavailable
+                    return ApiService.SERVICE_UNAVAILABLE;
             }
         }
         return ApiService.GENERIC_ERROR;

@@ -52,6 +52,9 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                     }
                 }
             });
+
+            usernameField.setFocusableInTouchMode(true);
+            usernameField.requestFocus();
             Utils.showSoftKeyboard(LoginActivity.this);
         }
     }
@@ -95,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else {
             String message;

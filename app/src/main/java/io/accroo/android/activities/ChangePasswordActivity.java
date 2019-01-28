@@ -55,6 +55,8 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
                 }
             });
 
+            currentPassword.setFocusableInTouchMode(true);
+            currentPassword.requestFocus();
             Utils.showSoftKeyboard(ChangePasswordActivity.this);
         }
     }
@@ -121,7 +123,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

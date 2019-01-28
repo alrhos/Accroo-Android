@@ -73,9 +73,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
-                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.ORIGIN_UNAVAILABLE ||
-                errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+            if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
                 MaintenanceDialog.show(this);
             }
             setContentView(R.layout.activity_no_connection);

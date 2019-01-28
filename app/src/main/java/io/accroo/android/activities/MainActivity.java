@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

@@ -22,6 +22,7 @@ import io.accroo.android.fragments.SubCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class CategoryActivity extends AppCompatActivity implements ApiService.RequestOutcome,
@@ -123,6 +124,12 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Utils.hideSoftKeyboard(CategoryActivity.this);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (generalCategoryFragment == null || subCategoryFragment == null) {
             relaunch();
@@ -163,7 +170,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

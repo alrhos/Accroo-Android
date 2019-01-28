@@ -43,7 +43,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private ProgressDialog progressDialog;
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
-    private boolean editable = true;
     private ApiService apiService;
     private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
@@ -87,13 +86,16 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         "@drawable/" + icon, null, getApplicationContext().getPackageName());
 
                 categoryIcon.setImageResource(iconId);
+                categoryIcon.setFocusableInTouchMode(true);
+                categoryIcon.requestFocus();
                 String subCategoryName = ((SubCategory) existingTransaction.getParent()).getCategoryName();
                 categoryField.setText(subCategoryName);
                 this.selectedSubCategoryID = existingTransaction.getSubCategoryId();
-                toggleEditing();
             } else {
                 date = new DateTime();
                 updateDate();
+                amountField.setFocusableInTouchMode(true);
+                amountField.requestFocus();
                 Utils.showSoftKeyboard(TransactionActivity.this);
             }
 
@@ -181,9 +183,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.edit_resource:
-                toggleEditing();
-                return true;
             case R.id.delete_resource:
                 deleteTransaction();
                 return true;
@@ -197,32 +196,18 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
         if (requestCode == SUB_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 SubCategory subCategory = data.getParcelableExtra("subCategory");
-                // Crash reports suggest that there are instances where subCategory can be null.
-                // Not sure how this can occur so adding this check to prevent potential null pointer exceptions.
-                if (subCategory != null) {
-                    this.selectedSubCategoryID = subCategory.getId();
-                    String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
-                    int iconId = getApplicationContext().getResources().getIdentifier(
-                            "@drawable/" + icon, null, getApplicationContext().getPackageName());
-                    categoryIcon.setImageResource(iconId);
-                    categoryField.setText(subCategory.getCategoryName());
-                }
+                this.selectedSubCategoryID = subCategory.getId();
+                String icon = ((GeneralCategory) subCategory.getParent()).getIconFile();
+                int iconId = getApplicationContext().getResources().getIdentifier(
+                        "@drawable/" + icon, null, getApplicationContext().getPackageName());
+                categoryIcon.setImageResource(iconId);
+                categoryField.setText(subCategory.getCategoryName());
             }
         }
     }
 
     private void updateDate() {
         dateField.setText(date.toString(dateFormat));
-
-    }
-
-    private void toggleEditing() {
-        editable = !editable;
-        amountField.setEnabled(editable);
-        categoryField.setEnabled(editable);
-        dateField.setEnabled(editable);
-        descriptionField.setEnabled(editable);
-        submitButton.setEnabled(editable);
     }
 
     private void deleteTransaction() {
@@ -244,7 +229,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private boolean isValidAmount() {
         String amountString = amountField.getText().toString();
         if (amountString.length() > 0) {
-            Double amount = Double.parseDouble(amountString);
+            double amount = Double.parseDouble(amountString);
             if (amount <= 0) {
                 Toast.makeText(getApplicationContext(), R.string.negative_amount,
                         Toast.LENGTH_SHORT).show();
@@ -290,7 +275,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();

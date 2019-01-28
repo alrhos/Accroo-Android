@@ -54,6 +54,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
             apiService = new ApiService(this, getApplicationContext());
 
+
             Utils.showSoftKeyboard(VerificationCodeActivity.this);
 
             submit = findViewById(R.id.submit);
@@ -72,8 +73,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                     break;
             }
 
-            loginCodeField = findViewById(R.id.login_code);
             noCode = findViewById(R.id.not_receiving_codes);
+
+            loginCodeField = findViewById(R.id.login_code);
+            loginCodeField.setFocusableInTouchMode(true);
+            loginCodeField.requestFocus();
 
             progressDialog = new ProgressDialog(VerificationCodeActivity.this);
             progressDialog.setMessage(getResources().getString(R.string.loading));
@@ -184,7 +188,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     @Override
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
-        if (errorCode == ApiService.ORIGIN_UNAVAILABLE || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
