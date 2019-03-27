@@ -57,7 +57,8 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         GeneralCategoryViewHolder vh = (GeneralCategoryViewHolder) holder;
         final GeneralCategory generalCategory = dataSource.get(position);
-        int iconId = context.getResources().getIdentifier("@drawable/" + generalCategory.getIconFile(), null, context.getPackageName());
+        int iconId = context.getResources().getIdentifier("@drawable/" +
+                generalCategory.getIconFile(), null, context.getPackageName());
         vh.icon.setImageResource(iconId);
         vh.category.setText(generalCategory.getCategoryName());
         vh.itemView.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +71,8 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.general_category_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.general_category_list_item,
+                parent, false);
         return new GeneralCategoryViewHolder(view);
     }
 
