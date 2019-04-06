@@ -65,7 +65,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     @Override
-    @NonNull
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         final Transaction transaction = transactions.get(position);
         if (position > 0 && transactions.get(position - 1).getDateWithoutTime().isEqual(transaction.getDateWithoutTime())) {

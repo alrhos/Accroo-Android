@@ -1,6 +1,7 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
  * Created by oscar on 12/07/17.
  */
 
-public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class IconAdapter extends RecyclerView.Adapter<IconAdapter.IconViewHolder> {
 
     private Context context;
     private AdapterInteractionListener adapterListener;
@@ -62,50 +63,48 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        IconViewHolder vh = (IconViewHolder) holder;
-
+    public void onBindViewHolder(IconViewHolder holder, int position) {
         final int iconId1 = context.getResources().getIdentifier("@drawable/" + iconArray[0][position], null, context.getPackageName());
         final int iconId2 = context.getResources().getIdentifier("@drawable/" + iconArray[1][position], null, context.getPackageName());
         final int iconId3 = context.getResources().getIdentifier("@drawable/" + iconArray[2][position], null, context.getPackageName());
         final int iconId4 = context.getResources().getIdentifier("@drawable/" + iconArray[3][position], null, context.getPackageName());
         final int iconId5 = context.getResources().getIdentifier("@drawable/" + iconArray[4][position], null, context.getPackageName());
 
-        vh.icon1.setImageResource(iconId1);
-        vh.icon2.setImageResource(iconId2);
-        vh.icon3.setImageResource(iconId3);
-        vh.icon4.setImageResource(iconId4);
-        vh.icon5.setImageResource(iconId5);
+        holder.icon1.setImageResource(iconId1);
+        holder.icon2.setImageResource(iconId2);
+        holder.icon3.setImageResource(iconId3);
+        holder.icon4.setImageResource(iconId4);
+        holder.icon5.setImageResource(iconId5);
 
-        vh.icon1.setOnClickListener(new View.OnClickListener() {
+        holder .icon1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterListener.onIconSelected(iconId1);
             }
         });
 
-        vh.icon2.setOnClickListener(new View.OnClickListener() {
+        holder.icon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterListener.onIconSelected(iconId2);
             }
         });
 
-        vh.icon3.setOnClickListener(new View.OnClickListener() {
+        holder.icon3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterListener.onIconSelected(iconId3);
             }
         });
 
-        vh.icon4.setOnClickListener(new View.OnClickListener() {
+        holder.icon4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterListener.onIconSelected(iconId4);
             }
         });
 
-        vh.icon5.setOnClickListener(new View.OnClickListener() {
+        holder.icon5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterListener.onIconSelected(iconId5);
@@ -115,7 +114,8 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public IconViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.icon_selector_item,
                 parent, false);
         return new IconViewHolder(view);
