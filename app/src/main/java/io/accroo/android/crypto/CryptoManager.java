@@ -10,7 +10,6 @@ import io.accroo.android.services.CredentialService;
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
 import org.libsodium.jni.SodiumConstants;
-import org.libsodium.jni.crypto.Random;
 import org.libsodium.jni.crypto.SecretBox;
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +24,6 @@ import java.util.Arrays;
 
 public class CryptoManager {
 
-    private Random               random;
     private byte[]               masterKey;
     private SecretBox            secretBox;
     private static CryptoManager instance = null;
@@ -42,7 +40,6 @@ public class CryptoManager {
         if (Sodium.sodium_init() == -1) {
             throw new IllegalStateException("Libsodium could not be initialised");
         }
-        this.random = new Random();
     }
 
     private byte[] passwordToByteArray(char[] password) {
@@ -59,9 +56,15 @@ public class CryptoManager {
         return passwordBytes;
     }
 
+    private byte[] randomBytes(int length) {
+        byte[] buffer = new byte[length];
+        Sodium.randombytes(buffer, length);
+        return buffer;
+    }
+
     private byte[] generateNonce() {
         int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
-        return random.randomBytes(nonceSize);
+        return randomBytes(nonceSize);
     }
 
     private String encode(byte[] value) {
@@ -78,7 +81,7 @@ public class CryptoManager {
         // Derive key from password byte array
 
         int saltSize = Sodium.crypto_pwhash_saltbytes();
-        byte[] salt = random.randomBytes(saltSize);
+        byte[] salt = randomBytes(saltSize);
         byte[] dataPasswordKey = new byte[SodiumConstants.SECRETKEY_BYTES];
 
         int algorithm = Sodium.crypto_pwhash_alg_default();
@@ -92,7 +95,7 @@ public class CryptoManager {
 
         SecretBox box = new SecretBox(dataPasswordKey);
         int nonceSize = Sodium.crypto_secretbox_xsalsa20poly1305_noncebytes();
-        byte[] nonce = random.randomBytes(nonceSize);
+        byte[] nonce = randomBytes(nonceSize);
 
         byte[] encryptedMasterKey = box.encrypt(nonce, key);
 
@@ -113,7 +116,7 @@ public class CryptoManager {
     }
 
     public Key generateNewKey(char[] password) {
-        masterKey = random.randomBytes(SodiumConstants.SECRETKEY_BYTES);
+        masterKey = randomBytes(SodiumConstants.SECRETKEY_BYTES);
         secretBox = new SecretBox(masterKey);
         Key key = generateKeyPackage(masterKey, password);
         Arrays.fill(password, '\u0000');
