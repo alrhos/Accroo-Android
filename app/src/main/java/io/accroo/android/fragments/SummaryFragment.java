@@ -82,12 +82,12 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         swipeRefreshLayout = fragmentView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        fragmentListener.onSummarySwipeRefresh();
-                    }
+            new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    fragmentListener.onSummarySwipeRefresh();
                 }
+            }
         );
 
         startDatePicker = new DatePickerDialog.OnDateSetListener() {
