@@ -51,7 +51,7 @@
         android:id="@+id/imageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:srcCompat="@drawable/dollar_symbol"
+        app:srcCompat="@drawable/ic_dollar"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
@@ -60,14 +60,13 @@
         android:layout_marginTop="24dp"
         app:layout_constraintHorizontal_bias="0.024"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:tint="@android:color/black" />
+        android:layout_marginEnd="8dp" />
 
     <ImageView
         android:id="@+id/add_transaction_category_icon"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:srcCompat="@drawable/category_icon"
+        app:srcCompat="@drawable/i0"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
@@ -82,7 +81,7 @@
         android:id="@+id/imageView3"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:srcCompat="@drawable/date_icon"
+        app:srcCompat="@drawable/ic_date"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
@@ -91,14 +90,13 @@
         app:layout_constraintTop_toBottomOf="@+id/add_transaction_category_icon"
         app:layout_constraintHorizontal_bias="0.02"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:tint="@android:color/black"/>
+        android:layout_marginEnd="8dp" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        app:srcCompat="@drawable/edit_icon"
+        app:srcCompat="@drawable/ic_edit"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
@@ -107,8 +105,7 @@
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/imageView3"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:tint="@android:color/black"/>
+        android:layout_marginEnd="8dp" />
 
     <EditText
         android:id="@+id/add_transaction_amount"
