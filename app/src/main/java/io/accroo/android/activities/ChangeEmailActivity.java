@@ -84,6 +84,10 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             Toast.makeText(getApplicationContext(), R.string.email_mismatch, Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (emailAddress.getText().length() < 5) {
+            Toast.makeText(getApplicationContext(), R.string.email_too_short, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

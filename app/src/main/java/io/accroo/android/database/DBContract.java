@@ -56,7 +56,7 @@ public final class DBContract {
             GeneralCategory.COLUMN_CATEGORY_ICON + ", " +
             GeneralCategory.COLUMN_ROOT_CATEGORY + ") VALUES " +
             "('Wages', 'i30', 'Income'), " +
-            "('Food and Drink', 'i4', 'Expense'), " +
+            "('Food and Drink', 'i70', 'Expense'), " +
             "('Transport', 'i6', 'Expense'), " +
             "('Pets', 'i18', 'Expense'), " +
             "('Health', 'i29', 'Expense'), " +
