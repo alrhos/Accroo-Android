@@ -101,11 +101,9 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                     public void onClick(View view) {
                         int selectedTab = tabLayout.getSelectedTabPosition();
                         if (selectedTab == 0 || selectedTab == 1) {
-                            Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
-                            startActivity(intent);
+                            startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
                         } else if (selectedTab == 2) {
-                            Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
-                            startActivity(intent);
+                            startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
                         }
                     }
                 });
