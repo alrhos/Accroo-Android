@@ -1,6 +1,7 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * Created by oscar on 22/07/17.
  */
 
-public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GeneralCategoryAdapter extends RecyclerView.Adapter<GeneralCategoryAdapter.GeneralCategoryViewHolder> {
 
     private ArrayList<GeneralCategory> dataSource;
     private Context context;
@@ -54,13 +55,13 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        GeneralCategoryViewHolder vh = (GeneralCategoryViewHolder) holder;
+    public void onBindViewHolder(@NonNull GeneralCategoryViewHolder holder, int position) {
         final GeneralCategory generalCategory = dataSource.get(position);
-        int iconId = context.getResources().getIdentifier("@drawable/" + generalCategory.getIconFile(), null, context.getPackageName());
-        vh.icon.setImageResource(iconId);
-        vh.category.setText(generalCategory.getCategoryName());
-        vh.itemView.setOnClickListener(new View.OnClickListener() {
+        int iconId = context.getResources().getIdentifier("@drawable/" +
+                generalCategory.getIconFile(), null, context.getPackageName());
+        holder.icon.setImageResource(iconId);
+        holder.category.setText(generalCategory.getCategoryName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterInteractionListener.onGeneralCategorySelected(generalCategory);
@@ -69,8 +70,10 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.general_category_list_item, parent, false);
+    @NonNull
+    public GeneralCategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.general_category_list_item,
+                parent, false);
         return new GeneralCategoryViewHolder(view);
     }
 

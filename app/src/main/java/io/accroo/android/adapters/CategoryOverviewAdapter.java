@@ -1,6 +1,7 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  * Created by oscar on 11/06/17.
  */
 
-public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CategoryOverviewAdapter extends RecyclerView.Adapter<CategoryOverviewAdapter.CategoryOverviewViewHolder> {
 
     private Context context;
     private AdapterInteractionListener adapterInteractionListener;
@@ -59,14 +60,13 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CategoryOverviewViewHolder vh = (CategoryOverviewViewHolder) holder;
+    public void onBindViewHolder(@NonNull CategoryOverviewViewHolder holder, int position) {
         final GeneralCategory gc = generalCategories.get(position);
         int iconId = context.getResources().getIdentifier("@drawable/" + gc.getIconFile(), null, context.getPackageName());
-        vh.categoryIcon.setImageResource(iconId);
-        vh.generalCategory.setText(gc.getCategoryName());
+        holder.categoryIcon.setImageResource(iconId);
+        holder.generalCategory.setText(gc.getCategoryName());
 
-        LinearLayout ll = vh.itemView.findViewById(R.id.category_overview_linear_layout);
+        LinearLayout ll = holder.itemView.findViewById(R.id.category_overview_linear_layout);
         ll.removeAllViews();
 
         for (final SubCategory sc : gc.getSubCategories()) {
@@ -85,7 +85,7 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             ll.addView(v);
         }
 
-        vh.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapterInteractionListener.onGeneralCategoryClicked(gc);
@@ -95,7 +95,8 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public CategoryOverviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_overview_item, parent, false);
         return new CategoryOverviewViewHolder(view);
     }

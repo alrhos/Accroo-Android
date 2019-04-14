@@ -550,11 +550,6 @@ public class RequestBuilder {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                try {
-                    System.out.println(new String(error.networkResponse.data, "UTF-8"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 coordinator.abort(parseVolleyException(error));
             }
         };
