@@ -21,9 +21,16 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initialized = true;
-        autoLogin();
+        try {
+            Thread.sleep(800);
+            setTheme(R.style.AppTheme_NoActionBar);
+            super.onCreate(savedInstanceState);
+            initialized = true;
+            autoLogin();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void autoLogin() {
