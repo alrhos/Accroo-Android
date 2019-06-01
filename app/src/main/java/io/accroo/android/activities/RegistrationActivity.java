@@ -57,7 +57,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
             password = findViewById(R.id.password);
             confirmPassword = findViewById(R.id.confirm_password);
             register = findViewById(R.id.register);
-            agree = findViewById(R.id.acceptTerms);
+            agree = findViewById(R.id.accept_terms);
             agree.setMovementMethod(LinkMovementMethod.getInstance());
 
             progressDialog = new ProgressDialog(RegistrationActivity.this);

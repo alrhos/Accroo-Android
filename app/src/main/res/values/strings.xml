@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Accroo</string>
 
-    <string name="email">Email</string>
+    <string name="email">Email address</string>
     <string name="confirm_email">Confirm email</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="login_required">Login required</string>
