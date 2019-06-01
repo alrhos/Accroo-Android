@@ -83,8 +83,7 @@
     <string name="continue_on">Continue</string>
     <string name="ok">Ok</string>
     <string name="sign_in">Sign in</string>
-    <string name="sign_in_caps">SIGN IN</string>
-    <string name="register">REGISTER</string>
+    <string name="create_account">Create account</string>
     <string name="update">UPDATE</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
