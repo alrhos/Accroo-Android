@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                     message = getResources().getString(R.string.too_many_requests);
                     break;
                 case ApiService.NOT_FOUND:
-                    message = getResources().getString(R.string.email_not_found);
+                    message = getResources().getString(R.string.account_not_found);
                     break;
                 default:
                     message = getResources().getString(R.string.general_error);

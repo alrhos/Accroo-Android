@@ -1,7 +1,6 @@
 package io.accroo.android.activities;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,8 +10,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
 import io.accroo.android.model.Account;
@@ -28,10 +30,12 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     private int action;
-    private EditText loginCodeField;
-    private Button submit;
+    private EditText verificationCodeField;
+    private TextInputLayout verificationCodeInput;
+    private Button next;
     private TextView noCode;
-    private ProgressDialog progressDialog;
+    private ProgressBar progressBar
+//    private ProgressDialog progressDialog;
     private ApiService apiService;
     private String username, email;
     private char[] password;
@@ -42,68 +46,81 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         if (!LaunchActivity.initialized) {
             relaunch();
         } else {
-            setContentView(R.layout.activity_verification_code);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
+            setContentView(R.layout.activity_verification_code_new);
+
+
+//            setContentView(R.layout.activity_verification_code);
+//            if (getSupportActionBar() != null) {
+//                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            }
 
             action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");
             email = getIntent().getStringExtra("email");
             password = getIntent().getCharArrayExtra("password");
 
+            progressBar = findViewById(R.id.progress_bar);
+
+            verificationCodeInput = findViewById(R.id.input_verification_code);
+            verificationCodeInput.setError(" ");
+
+
             apiService = new ApiService(this, getApplicationContext());
 
 
-            Utils.showSoftKeyboard(VerificationCodeActivity.this);
+     //       Utils.showSoftKeyboard(VerificationCodeActivity.this);
 
-            submit = findViewById(R.id.submit);
+            TextView emailAddress = findViewById(R.id.email);
+            emailAddress.setText(username);
+            next = findViewById(R.id.next);
 
             switch (action) {
                 case LOGIN:
-                    submit.setText(R.string.next);
+                    next.setText(R.string.next);
                     break;
                 case UPDATE_EMAIL:
-                    this.getSupportActionBar().setTitle(R.string.title_activity_change_email);
-                    submit.setText(R.string.submit);
+                 //   this.getSupportActionBar().setTitle(R.string.title_activity_change_email);
+                    next.setText(R.string.submit);
                     break;
                 case UPDATE_PASSWORD:
-                    this.getSupportActionBar().setTitle(R.string.title_activity_change_password);
-                    submit.setText(R.string.submit);
+                 //   this.getSupportActionBar().setTitle(R.string.title_activity_change_password);
+                    next.setText(R.string.submit);
                     break;
             }
 
             noCode = findViewById(R.id.not_receiving_codes);
 
-            loginCodeField = findViewById(R.id.login_code);
-            loginCodeField.setFocusableInTouchMode(true);
-            loginCodeField.requestFocus();
+            verificationCodeField = findViewById(R.id.verification_code);
+//            verificationCodeField.setFocusableInTouchMode(true);
+//            verificationCodeField.requestFocus();
 
-            progressDialog = new ProgressDialog(VerificationCodeActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
-            progressDialog.setCancelable(false);
+//            progressDialog = new ProgressDialog(VerificationCodeActivity.this);
+//            progressDialog.setMessage(getResources().getString(R.string.loading));
+//            progressDialog.setCancelable(false);
 
-            submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isValidInput()) {
-                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                        progressDialog.show();
-                        switch (action) {
-                            case LOGIN:
-                                Account account = new Account(username, loginCodeField.getText().toString());
-                                apiService.login(account);
-                                break;
-                            case UPDATE_EMAIL:
-                                apiService.reauthenticate(loginCodeField.getText().toString());
-                                break;
-                            case UPDATE_PASSWORD:
-                                apiService.reauthenticate(loginCodeField.getText().toString());
-                                break;
-                        }
-                    }
-                }
-            });
+            next.setOnClickListener(nextListener);
+
+//            next.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (isValidInput()) {
+//                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+// //                       progressDialog.show();
+//                        switch (action) {
+//                            case LOGIN:
+//                                Account account = new Account(username, verificationCodeField.getText().toString());
+//                                apiService.login(account);
+//                                break;
+//                            case UPDATE_EMAIL:
+//                                apiService.reauthenticate(verificationCodeField.getText().toString());
+//                                break;
+//                            case UPDATE_PASSWORD:
+//                                apiService.reauthenticate(verificationCodeField.getText().toString());
+//                                break;
+//                        }
+//                    }
+//                }
+//            });
 
             noCode.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,6 +136,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 }
             });
         }
+
+
     }
 
     @Override
@@ -140,8 +159,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     }
 
     private boolean isValidInput() {
-        if (loginCodeField.getText().length() != 8) {
-            Toast.makeText(getApplicationContext(), R.string.invalid_verification_code, Toast.LENGTH_SHORT).show();
+        if (verificationCodeField.getText().length() != 8) {
+            Toast.makeText(getApplicationContext(), R.string.invalid_verification_code_length, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -158,7 +177,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         if (requestType == ApiService.LOGIN) {
             apiService.getKey();
         } else if (requestType == ApiService.GET_KEY) {
-            progressDialog.dismiss();
+   //         progressDialog.dismiss();
             startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.REAUTHENTICATE) {
@@ -168,8 +187,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 apiService.updatePassword(password);
             }
         } else if (requestType == ApiService.UPDATE_EMAIL) {
-            loginCodeField.getText().clear();
-            progressDialog.dismiss();
+            verificationCodeField.getText().clear();
+  //          progressDialog.dismiss();
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setTitle(R.string.email_updated_title)
                     .setMessage(R.string.email_updated_message)
@@ -187,7 +206,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     @Override
     public void onFailure(int requestType, int errorCode) {
-        progressDialog.dismiss();
+ //       progressDialog.dismiss();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
@@ -223,9 +242,27 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     @Override
     public void onError() {
-        progressDialog.dismiss();
+ //       progressDialog.dismiss();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
+
+    View.OnClickListener nextListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            String verificationCode = verificationCodeField.getText().toString();
+            if (verificationCode.length() == 0) {
+                verificationCodeInput.setError(getResources().getString(R.string.enter_verification_code));
+            } else if (verificationCode.length() != 8) {
+                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_length));
+            } else if (!verificationCode.matches("^[A-Z2-7]{8}$")) {
+                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_format));
+            } else {
+                verificationCodeInput.setError(" ");
+                progressBar.setVisibility(View.VISIBLE);
+                Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+                // TODO: submit request
+            }
+        }
+    };
 
 }

@@ -5,7 +5,7 @@
     <string name="confirm_email">Confirm email</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="login_required">Login required</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_email">Invalid email address</string>
     <string name="not_receiving_codes">Not receiving codes?</string>
     <string name="invalid_username_or_password">Invalid username or password</string>
     <string name="enter_current_password">Enter your current password</string>
@@ -13,17 +13,17 @@
     <string name="enter_password">Enter password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
-    <string name="password_too_long">Password can\'t exceed 4096 characters</string>
+    <string name="password_too_long">Password can\'t exceed 256 characters</string>
     <string name="password_mismatch">Your passwords don\'t match</string>
-    <string name="enter_email">Enter email address</string>
+    <string name="enter_email">Enter your email address</string>
     <string name="email_mismatch">Email addresses don\'t match</string>
     <string name="email_too_short">Email address is too short</string>
-    <string name="email_not_found">No account found with this email</string>
+    <string name="account_not_found">No account found with this email address</string>
     <string name="error_field_required">This field is required</string>
     <string name="agree_terms_privacy">By creating an account, you agree to the\n<a href="https://accroo.io/terms"><b>terms of use</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
     <string name="important">Important!</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
-    <string name="verification_code_description">A verification code has been sent to your email. Please enter it below to continue.</string>
+    <string name="verification_code_description">We\'ve sent you a verification code via email. Please enter it below to verify your identity.</string>
 
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_transaction">Add Transaction</string>
@@ -88,6 +88,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="verification_code">Verification code</string>
+    <string name="resend_code">Resend code</string>
     <string name="confirm_password">Confirm password</string>
     <string name="unlock">UNLOCK</string>
     <string name="settings">Settings</string>
@@ -122,7 +123,9 @@
     <string name="no_transactions">No transactions</string>
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>
-    <string name="invalid_verification_code">The verification code is 8 characters</string>
+    <string name="enter_verification_code">Enter your verification code</string>
+    <string name="invalid_verification_code_length">The verification code is 8 characters</string>
+    <string name="invalid_verification_code_format">Invalid verification code format</string>
     <string name="incorrect_verification_code">Incorrect or expired verification code</string>
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>
