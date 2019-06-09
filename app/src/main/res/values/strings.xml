@@ -127,6 +127,9 @@
     <string name="invalid_verification_code_length">The verification code is 8 characters</string>
     <string name="invalid_verification_code_format">Invalid verification code format</string>
     <string name="incorrect_verification_code">Incorrect or expired verification code</string>
+    <string name="where_is_my_code">Where is my code?</string>
+    <string name="verification_code_explanation">We sent you an 8-character verification code via email.\n\nSometimes it can take a couple of minutes for you to receive it, or it may end up in your spam folder.\n\nIf, however, you don\'t receive the code, you can request another one.</string>
+    <string name="new_verification_code_sent">We\'ve sent you a new verification code</string>
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>
     <string name="terms_of_use">Terms of use</string>

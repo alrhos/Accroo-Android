@@ -32,10 +32,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     private int action;
     private EditText verificationCodeField;
     private TextInputLayout verificationCodeInput;
-    private Button next;
-    private TextView noCode;
-    private ProgressBar progressBar
-//    private ProgressDialog progressDialog;
+    private Button next, resendCode;
+    private ProgressBar progressBar;
     private ApiService apiService;
     private String username, email;
     private char[] password;
@@ -47,80 +45,25 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             relaunch();
         } else {
             setContentView(R.layout.activity_verification_code_new);
-
-
-//            setContentView(R.layout.activity_verification_code);
-//            if (getSupportActionBar() != null) {
-//                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            }
-
             action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");
             email = getIntent().getStringExtra("email");
             password = getIntent().getCharArrayExtra("password");
-
             progressBar = findViewById(R.id.progress_bar);
-
             verificationCodeInput = findViewById(R.id.input_verification_code);
             verificationCodeInput.setError(" ");
 
-
             apiService = new ApiService(this, getApplicationContext());
-
-
-     //       Utils.showSoftKeyboard(VerificationCodeActivity.this);
 
             TextView emailAddress = findViewById(R.id.email);
             emailAddress.setText(username);
             next = findViewById(R.id.next);
+            resendCode = findViewById(R.id.resend_code);
 
-            switch (action) {
-                case LOGIN:
-                    next.setText(R.string.next);
-                    break;
-                case UPDATE_EMAIL:
-                 //   this.getSupportActionBar().setTitle(R.string.title_activity_change_email);
-                    next.setText(R.string.submit);
-                    break;
-                case UPDATE_PASSWORD:
-                 //   this.getSupportActionBar().setTitle(R.string.title_activity_change_password);
-                    next.setText(R.string.submit);
-                    break;
-            }
-
-            noCode = findViewById(R.id.not_receiving_codes);
-
+            TextView noCode = findViewById(R.id.not_receiving_codes);
             verificationCodeField = findViewById(R.id.verification_code);
-//            verificationCodeField.setFocusableInTouchMode(true);
-//            verificationCodeField.requestFocus();
-
-//            progressDialog = new ProgressDialog(VerificationCodeActivity.this);
-//            progressDialog.setMessage(getResources().getString(R.string.loading));
-//            progressDialog.setCancelable(false);
-
+            resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
-
-//            next.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (isValidInput()) {
-//                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-// //                       progressDialog.show();
-//                        switch (action) {
-//                            case LOGIN:
-//                                Account account = new Account(username, verificationCodeField.getText().toString());
-//                                apiService.login(account);
-//                                break;
-//                            case UPDATE_EMAIL:
-//                                apiService.reauthenticate(verificationCodeField.getText().toString());
-//                                break;
-//                            case UPDATE_PASSWORD:
-//                                apiService.reauthenticate(verificationCodeField.getText().toString());
-//                                break;
-//                        }
-//                    }
-//                }
-//            });
 
             noCode.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -136,7 +79,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 }
             });
         }
-
 
     }
 
@@ -158,14 +100,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         Utils.hideSoftKeyboard(VerificationCodeActivity.this);
     }
 
-    private boolean isValidInput() {
-        if (verificationCodeField.getText().length() != 8) {
-            Toast.makeText(getApplicationContext(), R.string.invalid_verification_code_length, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-
     private void relaunch() {
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -174,10 +108,19 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.LOGIN) {
+        if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            verificationCodeField.setText("");
+            progressBar.setVisibility(View.INVISIBLE);
+            resendCode.setOnClickListener(resendCodeListener);
+            next.setOnClickListener(nextListener);
+            verificationCodeInput.setError(getResources().getString(R.string.new_verification_code_sent));
+        } else if (requestType == ApiService.LOGIN) {
             apiService.getKey();
         } else if (requestType == ApiService.GET_KEY) {
-   //         progressDialog.dismiss();
+            verificationCodeField.getText().clear();
+            progressBar.setVisibility(View.INVISIBLE);
+            resendCode.setOnClickListener(resendCodeListener);
+            next.setOnClickListener(nextListener);
             startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.REAUTHENTICATE) {
@@ -188,7 +131,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             }
         } else if (requestType == ApiService.UPDATE_EMAIL) {
             verificationCodeField.getText().clear();
-  //          progressDialog.dismiss();
+            progressBar.setVisibility(View.INVISIBLE);
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setTitle(R.string.email_updated_title)
                     .setMessage(R.string.email_updated_message)
@@ -199,17 +142,20 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                         }
                     }).create().show();
         } else if (requestType == ApiService.UPDATE_PASSWORD) {
-            Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_LONG).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
     }
 
     @Override
     public void onFailure(int requestType, int errorCode) {
- //       progressDialog.dismiss();
+        progressBar.setVisibility(View.INVISIBLE);
+        resendCode.setOnClickListener(resendCodeListener);
+        next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
+            // TODO: come back and review if this scenario can be handled better
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -236,13 +182,13 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            verificationCodeInput.setError(message);
         }
     }
 
     @Override
     public void onError() {
- //       progressDialog.dismiss();
+        progressBar.setVisibility(View.INVISIBLE);
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
@@ -255,13 +201,50 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             } else if (verificationCode.length() != 8) {
                 verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_length));
             } else if (!verificationCode.matches("^[A-Z2-7]{8}$")) {
+                // Verification code is a Base32 string
                 verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_format));
             } else {
                 verificationCodeInput.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);
                 Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                // TODO: submit request
+                resendCode.setOnClickListener(null);
+                next.setOnClickListener(null);
+                switch (action) {
+                    case LOGIN:
+                        Account account = new Account(username, verificationCodeField.getText().toString());
+                        apiService.login(account);
+                        break;
+                    case UPDATE_EMAIL:
+                        apiService.reauthenticate(verificationCodeField.getText().toString());
+                        break;
+                    case UPDATE_PASSWORD:
+                        apiService.reauthenticate(verificationCodeField.getText().toString());
+                        break;
+                }
             }
+        }
+    };
+
+    View.OnClickListener resendCodeListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
+            builder.setMessage(R.string.verification_code_explanation)
+                    .setTitle(R.string.where_is_my_code)
+                    .setPositiveButton(R.string.resend_code, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            verificationCodeInput.setError(" ");
+                            progressBar.setVisibility(View.VISIBLE);
+                            Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+                            resendCode.setOnClickListener(null);
+                            next.setOnClickListener(null);
+                            apiService.getLoginCode(username);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {}
+                    }).create().show();
         }
     };
 

@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 
 import io.accroo.android.R;
 import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class LaunchActivity extends AppCompatActivity implements ApiService.RequestOutcome {
@@ -32,15 +33,16 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         setTheme(R.style.AppTheme_NoActionBar);
         try {
             Thread.sleep(1000);
-            super.onCreate(savedInstanceState);
-            initialized = true;
-            autoLogin();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        super.onCreate(savedInstanceState);
+        initialized = true;
+        autoLogin();
     }
 
     private void autoLogin() {
@@ -66,7 +68,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         signIn = findViewById(R.id.next);
         signIn.setOnClickListener(signInListener);
 
-        Button createAccount = findViewById(R.id.get_new_code);
+        Button createAccount = findViewById(R.id.resend_code);
         createAccount.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // TODO: submit request to check if email address is already in use. If not proceed.
@@ -80,13 +82,15 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onSuccess(int requestType) {
-        inputEmailAddress.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            Utils.hideSoftKeyboard(LaunchActivity.this);
             signIn.setOnClickListener(signInListener);
             Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
             intent.putExtra("username", emailAddress.getText().toString());
             intent.putExtra("action", VerificationCodeActivity.LOGIN);
             startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.GET_DEFAULT_DATA) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("startDate", startDate.getMillis());
@@ -139,8 +143,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             } else {
                 inputEmailAddress.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);
-                apiService.getLoginCode(email);
                 signIn.setOnClickListener(null);
+                apiService.getLoginCode(email);
             }
 
             //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
