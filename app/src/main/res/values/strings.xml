@@ -10,7 +10,7 @@
     <string name="invalid_username_or_password">Invalid username or password</string>
     <string name="enter_current_password">Enter your current password</string>
     <string name="incorrect_password">Incorrect password</string>
-    <string name="enter_password">Enter password</string>
+    <string name="enter_password">Enter your password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 256 characters</string>
@@ -130,6 +130,7 @@
     <string name="where_is_my_code">Where is my code?</string>
     <string name="verification_code_explanation">We sent you an 8-character verification code via email.\n\nSometimes it can take a couple of minutes for you to receive it, or it may end up in your spam folder.\n\nIf, however, you don\'t receive the code, you can request another one.</string>
     <string name="new_verification_code_sent">We\'ve sent you a new verification code</string>
+    <string name="key_decryption_message">Enter your Accroo password to decrypt your data.</string>
     <string name="no_connection">NO CONNECTION</string>
     <string name="try_again">TRY AGAIN</string>
     <string name="terms_of_use">Terms of use</string>

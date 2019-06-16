@@ -42,7 +42,8 @@
         <activity
             android:name=".activities.KeyDecryptionActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.TransactionActivity"
             android:label="@string/title_activity_add_transaction"

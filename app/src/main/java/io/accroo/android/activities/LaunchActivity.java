@@ -33,7 +33,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         setTheme(R.style.AppTheme_NoActionBar);
         try {
             Thread.sleep(1000);
@@ -60,11 +59,11 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     }
 
     private void initLayout() {
-        setContentView(R.layout.new_launch_activity);
+        setContentView(R.layout.activity_launch);
         progressBar = findViewById(R.id.progress_bar);
-        inputEmailAddress = findViewById(R.id.input_verification_code);
+        inputEmailAddress = findViewById(R.id.input_email);
         inputEmailAddress.setError(" ");
-        emailAddress = findViewById(R.id.verification_code);
+        emailAddress = findViewById(R.id.email);
         signIn = findViewById(R.id.next);
         signIn.setOnClickListener(signInListener);
 
@@ -82,8 +81,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onSuccess(int requestType) {
-        progressBar.setVisibility(View.INVISIBLE);
         if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            progressBar.setVisibility(View.INVISIBLE);
             Utils.hideSoftKeyboard(LaunchActivity.this);
             signIn.setOnClickListener(signInListener);
             Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
@@ -146,8 +145,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                 signIn.setOnClickListener(null);
                 apiService.getLoginCode(email);
             }
-
-            //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         }
     };
 

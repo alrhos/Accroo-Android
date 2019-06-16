@@ -10,14 +10,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import io.accroo.android.R;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class KeyDecryptionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
+    private TextInputLayout keyPasswordInput;
     private EditText keyPassword;
-    private Button unlockButton;
+    private Button unlock;
     private TextView forgotPassword;
     private ApiService apiService;
 
@@ -28,22 +31,18 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             relaunch();
         } else {
             setContentView(R.layout.activity_key_decryption);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
+            TextView email = findViewById(R.id.email);
+            email.setText(getIntent().getStringExtra("username"));
+            keyPasswordInput = findViewById(R.id.input_password);
+            keyPasswordInput.setError(" ");
+            keyPassword = findViewById(R.id.password);
+            unlock = findViewById(R.id.unlock);
+            forgotPassword = findViewById(R.id.forgot_password);
 
-            keyPassword = findViewById(R.id.key_password);
-            keyPassword.setFocusableInTouchMode(true);
-            keyPassword.requestFocus();
-
-            unlockButton = findViewById(R.id.unlock_button);
-            forgotPassword = findViewById(R.id.forgot_password_link);
-
-            Utils.showSoftKeyboard(KeyDecryptionActivity.this);
-
-            unlockButton.setOnClickListener(new View.OnClickListener() {
+            unlock.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    if (isValidInput()) {
+                    if (keyPassword.getText().length() > 0) {
+                        keyPasswordInput.setError(" ");
                         int passwordLength = keyPassword.length();
                         char[] password = new char[passwordLength];
                         keyPassword.getText().getChars(0, passwordLength, password, 0);
@@ -52,8 +51,10 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                             keyPassword.getText().clear();
                             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
                         } else {
-                            Toast.makeText(KeyDecryptionActivity.this, R.string.incorrect_password, Toast.LENGTH_SHORT).show();
+                            keyPasswordInput.setError(getResources().getString(R.string.incorrect_password));
                         }
+                    } else {
+                        keyPasswordInput.setError(getResources().getString(R.string.enter_password));
                     }
                 }
             });
@@ -88,14 +89,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     public void onPause() {
         super.onPause();
         Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-    }
-
-    private boolean isValidInput() {
-        if (keyPassword.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.enter_password, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
     }
 
     private void relaunch() {

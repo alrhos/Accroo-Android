@@ -44,13 +44,13 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         if (!LaunchActivity.initialized) {
             relaunch();
         } else {
-            setContentView(R.layout.activity_verification_code_new);
+            setContentView(R.layout.activity_verification_code);
             action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");
             email = getIntent().getStringExtra("email");
             password = getIntent().getCharArrayExtra("password");
             progressBar = findViewById(R.id.progress_bar);
-            verificationCodeInput = findViewById(R.id.input_verification_code);
+            verificationCodeInput = findViewById(R.id.input_password);
             verificationCodeInput.setError(" ");
 
             apiService = new ApiService(this, getApplicationContext());
@@ -60,7 +60,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             next = findViewById(R.id.next);
             resendCode = findViewById(R.id.resend_code);
 
-            TextView noCode = findViewById(R.id.not_receiving_codes);
+            TextView noCode = findViewById(R.id.no_code);
             verificationCodeField = findViewById(R.id.verification_code);
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
@@ -121,7 +121,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             progressBar.setVisibility(View.INVISIBLE);
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
-            startActivity(new Intent(getApplicationContext(), KeyDecryptionActivity.class));
+            Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.REAUTHENTICATE) {
             if (action == UPDATE_EMAIL) {
@@ -201,7 +203,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             } else if (verificationCode.length() != 8) {
                 verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_length));
             } else if (!verificationCode.matches("^[A-Z2-7]{8}$")) {
-                // Verification code is a Base32 string
+                // Verification code is a Base32 encoded string
                 verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_format));
             } else {
                 verificationCodeInput.setError(" ");
