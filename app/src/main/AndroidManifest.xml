@@ -11,6 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.ConfirmPasswordActivity"></activity>
+        <activity
+            android:name=".activities.ChoosePasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleTask"
@@ -18,7 +23,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.VerificationCodeActivity"
-            android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -28,7 +32,7 @@
         <activity
             android:name=".activities.LaunchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SplashScreen" >
+            android:theme="@style/AppTheme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,7 +45,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.KeyDecryptionActivity"
-            android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

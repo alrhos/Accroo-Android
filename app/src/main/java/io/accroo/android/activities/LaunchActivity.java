@@ -29,7 +29,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private ProgressBar progressBar;
     private TextInputLayout inputEmailAddress;
     private EditText emailAddress;
-    private Button signIn;
+    private Button createAccount, signIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +64,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         inputEmailAddress = findViewById(R.id.input_email);
         inputEmailAddress.setError(" ");
         emailAddress = findViewById(R.id.email);
-        signIn = findViewById(R.id.next);
+        createAccount = findViewById(R.id.create_account);
+        createAccount.setOnClickListener(createAccountListener);
+        signIn = findViewById(R.id.sign_in);
         signIn.setOnClickListener(signInListener);
-
-        Button createAccount = findViewById(R.id.resend_code);
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                // TODO: submit request to check if email address is already in use. If not proceed.
-                //startActivity(new Intent(getApplicationContext(), RegistrationActivity.class));
-            }
-        });
-
         TextView acceptTerms = findViewById(R.id.accept_terms);
         acceptTerms.setMovementMethod(LinkMovementMethod.getInstance());
     }
@@ -84,6 +77,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         if (requestType == ApiService.GET_VERIFICATION_CODE) {
             progressBar.setVisibility(View.INVISIBLE);
             Utils.hideSoftKeyboard(LaunchActivity.this);
+            createAccount.setOnClickListener(createAccountListener);
             signIn.setOnClickListener(signInListener);
             Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
             intent.putExtra("username", emailAddress.getText().toString());
@@ -104,6 +98,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             initLayout();
         } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.NOT_FOUND) {
             progressBar.setVisibility(View.INVISIBLE);
+            createAccount.setOnClickListener(createAccountListener);
             signIn.setOnClickListener(signInListener);
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
@@ -132,6 +127,33 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         startActivity(intent);
     }
 
+    View.OnClickListener createAccountListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            String email = emailAddress.getText().toString();
+            if (email.length() == 0) {
+                inputEmailAddress.setError(getResources().getString(R.string.enter_email));
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                inputEmailAddress.setError(getResources().getString(R.string.error_invalid_email));
+            } else {
+                inputEmailAddress.setError(" ");
+                progressBar.setVisibility(View.VISIBLE);
+                createAccount.setOnClickListener(null);
+                signIn.setOnClickListener(null);
+                // TODO: make API call to check if email is already in use
+                //
+                // TODO: move this logic into the handler for when email address is NOT in use
+                progressBar.setVisibility(View.INVISIBLE);
+                Utils.hideSoftKeyboard(LaunchActivity.this);
+                createAccount.setOnClickListener(createAccountListener);
+                signIn.setOnClickListener(signInListener);
+                Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
+                intent.putExtra("username", emailAddress.getText().toString());
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+            }
+        }
+    };
+
     View.OnClickListener signInListener = new View.OnClickListener() {
         public void onClick(View view) {
             String email = emailAddress.getText().toString();
@@ -142,6 +164,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             } else {
                 inputEmailAddress.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);
+                createAccount.setOnClickListener(null);
                 signIn.setOnClickListener(null);
                 apiService.getLoginCode(email);
             }

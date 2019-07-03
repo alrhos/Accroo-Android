@@ -21,6 +21,7 @@
     <string name="account_not_found">No account found with this email address</string>
     <string name="error_field_required">This field is required</string>
     <string name="agree_terms_privacy">By creating an account, you agree to the\n<a href="https://accroo.io/terms"><b>terms of use</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
+    <string name="choose_password">Enter a strong password that is at least 10 characters.\n\nThis password will be used to encrypt your data so that only you can access it.</string>
     <string name="important">Important!</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
     <string name="verification_code_description">We\'ve sent you a verification code via email. Please enter it below to verify your identity.</string>
