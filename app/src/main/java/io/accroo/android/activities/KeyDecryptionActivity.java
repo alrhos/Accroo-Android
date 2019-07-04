@@ -54,7 +54,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                             keyPasswordInput.setError(getResources().getString(R.string.incorrect_password));
                         }
                     } else {
-                        keyPasswordInput.setError(getResources().getString(R.string.enter_password));
+                        keyPasswordInput.setError(getResources().getString(R.string.enter_your_password));
                     }
                 }
             });

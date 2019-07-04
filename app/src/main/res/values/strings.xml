@@ -10,7 +10,9 @@
     <string name="invalid_username_or_password">Invalid username or password</string>
     <string name="enter_current_password">Enter your current password</string>
     <string name="incorrect_password">Incorrect password</string>
-    <string name="enter_password">Enter your password</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="confirm_your_password">Confirm your password</string>
+    <string name="enter_a_password">Enter a password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="password_too_short">Password must be at least 10 characters</string>
     <string name="password_too_long">Password can\'t exceed 256 characters</string>
@@ -21,7 +23,8 @@
     <string name="account_not_found">No account found with this email address</string>
     <string name="error_field_required">This field is required</string>
     <string name="agree_terms_privacy">By creating an account, you agree to the\n<a href="https://accroo.io/terms"><b>terms of use</b></a> and <a href="https://accroo.io/privacy"><b>privacy policy</b></a></string>
-    <string name="choose_password">Enter a strong password that is at least 10 characters.\n\nThis password will be used to encrypt your data so that only you can access it.</string>
+    <string name="choose_password_message">Enter a strong password that is at least 10 characters.\n\nThis password will be used to encrypt your data so that only you can access it.</string>
+    <string name="confirm_password_message">Confirm your password to ensure it\'s correct.\n\nYour password is known only to you and for your privacy, it is never stored on Accroo servers. This means that it cannot be reset or recovered if you forget it.</string>
     <string name="important">Important!</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
     <string name="verification_code_description">We\'ve sent you a verification code via email. Please enter it below to verify your identity.</string>

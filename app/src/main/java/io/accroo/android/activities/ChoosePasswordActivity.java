@@ -39,7 +39,7 @@ public class ChoosePasswordActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String password = passwordField.getText().toString();
                     if (password.length() == 0) {
-                        choosePasswordInput.setError(getResources().getString(R.string.enter_password));
+                        choosePasswordInput.setError(getResources().getString(R.string.enter_a_password));
                     } else if (password.length() < Constants.MIN_PASSWORD_LENGTH) {
                         choosePasswordInput.setError(getResources().getString(R.string.password_too_short));
                     } else {
