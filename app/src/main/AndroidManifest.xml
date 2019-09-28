@@ -83,8 +83,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangeEmailActivity"
-            android:label="@string/title_activity_change_email"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ChangePasswordActivity"
             android:label="@string/title_activity_change_password"

@@ -1,24 +1,32 @@
 package io.accroo.android.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
+import io.accroo.android.services.CredentialService;
 
 public class ChangeEmailActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
-    private EditText emailAddress, confirmEmailAddress;
+    private TextView currentEmail;
+    private String username;
     private Button next;
-    private ProgressDialog progressDialog;
+    private ProgressBar progressBar;
+    private TextInputLayout inputEmailAddress;
+    private EditText newEmailAddress;
     private ApiService apiService;
 
     @Override
@@ -28,32 +36,28 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             relaunch();
         } else {
             setContentView(R.layout.activity_change_email);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            currentEmail = findViewById(R.id.current_email);
+            progressBar = findViewById(R.id.progress_bar);
+            inputEmailAddress = findViewById(R.id.input_email);
+            inputEmailAddress.setError(" ");
+            newEmailAddress = findViewById(R.id.new_email);
+            next = findViewById(R.id.next);
+
+            newEmailAddress.setFocusableInTouchMode(true);
+            newEmailAddress.requestFocus();
+
+            try {
+                username = CredentialService.getInstance(getApplicationContext())
+                            .getEntry(CredentialService.USERNAME_KEY);
+                currentEmail.setText(username);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+                relaunch();
             }
 
-            apiService = new ApiService(this, getApplicationContext());
-            progressDialog = new ProgressDialog(ChangeEmailActivity.this);
-            progressDialog.setMessage(getResources().getString(R.string.loading));
-            progressDialog.setCancelable(false);
-
-            emailAddress = findViewById(R.id.new_email);
-            confirmEmailAddress = findViewById(R.id.confirm_new_email);
-            next = findViewById(R.id.next);
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!isEmailValid()) {
-                        return;
-                    }
-                    progressDialog.show();
-                    apiService.getLoginCode(null);
-                }
-            });
-
-            emailAddress.setFocusableInTouchMode(true);
-            emailAddress.requestFocus();
             Utils.showSoftKeyboard(ChangeEmailActivity.this);
+            apiService = new ApiService(this, getApplicationContext());
+            next.setOnClickListener(nextListener);
         }
     }
 
@@ -75,29 +79,16 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
         startActivity(intent);
     }
 
-    private boolean isEmailValid() {
-        if (emailAddress.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.enter_email, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!emailAddress.getText().toString().equals(confirmEmailAddress.getText().toString())) {
-            Toast.makeText(getApplicationContext(), R.string.email_mismatch, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (emailAddress.getText().length() < 5) {
-            Toast.makeText(getApplicationContext(), R.string.email_too_short, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public void onSuccess(int requestType) {
-        progressDialog.dismiss();
         if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            progressBar.setVisibility(View.INVISIBLE);
+            Utils.hideSoftKeyboard(ChangeEmailActivity.this);
+            next.setOnClickListener(nextListener);
             Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
+            intent.putExtra("username", username);
+            intent.putExtra("email", newEmailAddress.getText().toString());
             intent.putExtra("action", VerificationCodeActivity.UPDATE_EMAIL);
-            intent.putExtra("email", emailAddress.getText().toString());
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         }
@@ -105,7 +96,8 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
 
     @Override
     public void onFailure(int requestType, int errorCode) {
-        progressDialog.dismiss();
+        progressBar.setVisibility(View.INVISIBLE);
+        next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
@@ -127,15 +119,33 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
                 default:
                     message = getResources().getString(R.string.general_error);
             }
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            inputEmailAddress.setError(message);
         }
     }
 
     @Override
     public void onError() {
-        progressDialog.dismiss();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
     }
+
+    View.OnClickListener nextListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            String email = newEmailAddress.getText().toString();
+            if (email.length() == 0) {
+                inputEmailAddress.setError(getResources().getString(R.string.enter_email));
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                inputEmailAddress.setError(getResources().getString(R.string.error_invalid_email));
+            } else if (username.equals(email)) {
+                inputEmailAddress.setError(getResources().getString(R.string.email_unchanged));
+            } else {
+                // TODO: add check to see if email address is being used
+                inputEmailAddress.setError(" ");
+                progressBar.setVisibility(View.VISIBLE);
+                next.setOnClickListener(null);
+                apiService.getLoginCode(username);
+            }
+        }
+    };
 
 }

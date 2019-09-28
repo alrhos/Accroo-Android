@@ -41,10 +41,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         }
         super.onCreate(savedInstanceState);
         initialized = true;
-        autoLogin();
+        startUp();
     }
 
-    private void autoLogin() {
+    private void startUp() {
         setContentView(R.layout.activity_launch_loading);
         apiService = new ApiService(this, getApplicationContext());
         if (apiService.userLoggedIn()) {
@@ -103,6 +103,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
                 errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+            // TODO: review how this logic works
             if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
                 MaintenanceDialog.show(this);
             }
@@ -110,7 +111,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             Button tryAgain = findViewById(R.id.try_again);
             tryAgain.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    autoLogin();
+                    startUp();
                 }
             });
         } else {

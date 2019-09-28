@@ -79,7 +79,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 }
             });
         }
-
     }
 
     @Override
