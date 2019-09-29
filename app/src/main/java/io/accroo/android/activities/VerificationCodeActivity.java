@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
 import io.accroo.android.model.Account;
+import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
@@ -27,7 +29,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
     public static final int LOGIN = 1;
     public static final int UPDATE_EMAIL = 2;
     public static final int UPDATE_PASSWORD = 3;
-    private static final String ACCROO_SUPPORT = "support@accroo.io";
 
     private int action;
     private EditText verificationCodeField;
@@ -58,7 +59,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             TextView emailAddress = findViewById(R.id.email);
             emailAddress.setText(username);
             next = findViewById(R.id.next);
-            resendCode = findViewById(R.id.resend_code);
+            resendCode = findViewById(R.id.new_code);
 
             TextView noCode = findViewById(R.id.no_code);
             verificationCodeField = findViewById(R.id.verification_code);
@@ -69,7 +70,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 @Override
                 public void onClick(View view) {
                     Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constants.ACCROO_SUPPORT_EMAIL, null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
                     try {
                         startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
@@ -121,6 +122,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
             Intent intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
+            intent.putExtra("action", KeyDecryptionActivity.LOGIN);
             intent.putExtra("username", username);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -231,7 +233,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.verification_code_explanation)
                     .setTitle(R.string.where_is_my_code)
-                    .setPositiveButton(R.string.resend_code, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.new_code, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             verificationCodeInput.setError(" ");

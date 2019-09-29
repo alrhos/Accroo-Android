@@ -184,8 +184,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     private void submitRequest() {
         try {
             String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
-            String tokenExpiry = CredentialService.getInstance(context)
-                    .getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+            String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
             DateTime tokenExpiryTime = new DateTime(tokenExpiry);
             DateTime currentTime = new DateTime();
             if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {

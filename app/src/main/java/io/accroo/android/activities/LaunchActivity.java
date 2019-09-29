@@ -148,6 +148,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                 createAccount.setOnClickListener(createAccountListener);
                 signIn.setOnClickListener(signInListener);
                 Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
+                intent.putExtra("action", ChoosePasswordActivity.REGISTER);
                 intent.putExtra("username", emailAddress.getText().toString());
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter, R.anim.exit);

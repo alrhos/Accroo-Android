@@ -30,6 +30,10 @@ import io.accroo.android.services.ApiService;
 
 public class ConfirmPasswordActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
+    public static final int REGISTER = 1;
+    public static final int UPDATE_PASSWORD = 2;
+
+    private int action;
     private String username, password;
     private ProgressBar progressBar;
     private TextInputLayout confirmPasswordField;
@@ -44,20 +48,24 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
         if (!LaunchActivity.initialized) {
             relaunch();
         } else {
-            setContentView(R.layout.activity_confirm_password);
-            apiService = new ApiService(this, getApplicationContext());
+            setContentView(R.layout.enter_password);
+            action = getIntent().getIntExtra("action", 0);
             username = getIntent().getStringExtra("username");
             password = getIntent().getStringExtra("password");
             TextView emailAddress = findViewById(R.id.email);
             emailAddress.setText(username);
+            TextView passwordMessage = findViewById(R.id.password_message);
+            passwordMessage.setText(R.string.confirm_password_message);
             progressBar = findViewById(R.id.progress_bar);
             confirmPasswordField = findViewById(R.id.input_password);
+            confirmPasswordField.setHint(getResources().getString(R.string.confirm_password));
             confirmPasswordField.setError(" ");
             passwordField = findViewById(R.id.password);
             next = findViewById(R.id.next);
+            next.setText(R.string.next);
             next.setOnClickListener(nextListener);
+            apiService = new ApiService(this, getApplicationContext());
         }
-
     }
 
     private void createAccount() {
@@ -109,7 +117,11 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                 confirmPasswordField.setError(" ");
                 Utils.hideSoftKeyboard(ConfirmPasswordActivity.this);
                 next.setOnClickListener(null);
-                createAccount();
+                if (action == REGISTER) {
+                    createAccount();
+                } else if (action == UPDATE_PASSWORD) {
+                    // todo - request verification code
+                }
             }
         }
     };

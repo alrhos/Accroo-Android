@@ -8,7 +8,7 @@
     <string name="error_invalid_email">Invalid email address</string>
     <string name="not_receiving_codes">Not receiving codes?</string>
     <string name="invalid_username_or_password">Invalid username or password</string>
-    <string name="enter_current_password">Enter your current password</string>
+    <string name="enter_current_password">Enter your current password.</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="confirm_your_password">Confirm your password</string>
@@ -92,7 +92,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="verification_code">Verification code</string>
-    <string name="resend_code">Resend code</string>
+    <string name="new_code">Send new code</string>
     <string name="confirm_password">Confirm password</string>
     <string name="unlock">UNLOCK</string>
     <string name="settings">Settings</string>
@@ -105,6 +105,7 @@
     <string name="email_unchanged">You\'re already using this email address</string>
     <string name="confirm_new_email">Confirm new email</string>
     <string name="current_password">Current password</string>
+    <string name="new_password_message">Enter a new password that is at least 10 characters long.</string>
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm new password</string>
     <string name="submitting">Submitting...</string>

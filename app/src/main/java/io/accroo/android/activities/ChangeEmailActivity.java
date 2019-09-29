@@ -36,7 +36,9 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             relaunch();
         } else {
             setContentView(R.layout.activity_change_email);
+            username = getIntent().getStringExtra("username");
             currentEmail = findViewById(R.id.current_email);
+            currentEmail.setText(username);
             progressBar = findViewById(R.id.progress_bar);
             inputEmailAddress = findViewById(R.id.input_email);
             inputEmailAddress.setError(" ");
@@ -46,14 +48,15 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             newEmailAddress.setFocusableInTouchMode(true);
             newEmailAddress.requestFocus();
 
-            try {
-                username = CredentialService.getInstance(getApplicationContext())
-                            .getEntry(CredentialService.USERNAME_KEY);
-                currentEmail.setText(username);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-                relaunch();
-            }
+            // todo: change this so that username is passed into activity
+//            try {
+//                username = CredentialService.getInstance(getApplicationContext())
+//                            .getEntry(CredentialService.USERNAME_KEY);
+//                currentEmail.setText(username);
+//            } catch (Exception e) {
+//                Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+//                relaunch();
+//            }
 
             Utils.showSoftKeyboard(ChangeEmailActivity.this);
             apiService = new ApiService(this, getApplicationContext());
