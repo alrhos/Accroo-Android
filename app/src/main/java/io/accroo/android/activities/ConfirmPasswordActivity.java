@@ -120,7 +120,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                 if (action == REGISTER) {
                     createAccount();
                 } else if (action == UPDATE_PASSWORD) {
-                    // todo - request verification code
+                    apiService.getLoginCode(username);
                 }
             }
         }
@@ -152,6 +152,16 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
             apiService.createDefaultCategories();
         } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
+            intent.putExtra("action", VerificationCodeActivity.UPDATE_PASSWORD);
+            intent.putExtra("username", username);
+            int newPasswordLength = password.length();
+            char[] newPassword = new char[newPasswordLength];
+            password.getChars(0, newPasswordLength, newPassword, 0);
+            intent.putExtra("password", newPassword);
+            startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         }
     }
