@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements ApiService.Reque
                     if (isValidInput()) {
                         progressDialog.show();
                         username = usernameField.getText().toString().trim();
-                        apiService.getLoginCode(username);
+                        apiService.getVerificationCode(username);
                     }
                 }
             });

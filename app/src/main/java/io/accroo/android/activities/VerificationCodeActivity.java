@@ -241,7 +241,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                             Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                             resendCode.setOnClickListener(null);
                             next.setOnClickListener(null);
-                            apiService.getLoginCode(username);
+                            apiService.getVerificationCode(username);
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

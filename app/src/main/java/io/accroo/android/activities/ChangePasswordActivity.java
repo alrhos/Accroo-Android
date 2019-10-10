@@ -102,7 +102,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiServ
             currentPwd = new char[currentPasswordLength];
             currentPassword.getText().getChars(0, currentPasswordLength, currentPwd, 0);
             if (apiService.initializeKey(currentPwd)) {
-                apiService.getLoginCode(null);
+                apiService.getVerificationCode(null);
             } else {
                 progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.incorrect_password, Toast.LENGTH_SHORT).show();

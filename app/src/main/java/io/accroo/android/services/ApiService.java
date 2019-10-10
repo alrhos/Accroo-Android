@@ -48,6 +48,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_PREFERENCES =        18;
     public final static int CREATE_KEY =                19;
     public final static int REAUTHENTICATE =            20;
+    public final static int GET_ANONYMOUS_TOKEN =       21;
+    public final static int CHECK_EMAIL_AVAILABILITY =  22;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -83,6 +85,20 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         void onError();
     }
 
+    public boolean hasActiveAccessToken() {
+        try {
+            String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+            DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+            DateTime currentTime = new DateTime();
+            if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() > 60) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean userLoggedIn() {
         try {
             CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
@@ -104,7 +120,28 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void getLoginCode(String username) {
+    public void checkEmailAvailability(String email) {
+        dataReceiver = new String[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(CHECK_EMAIL_AVAILABILITY);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(CHECK_EMAIL_AVAILABILITY, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("email", email);
+
+        new PreRequestTask(CHECK_EMAIL_AVAILABILITY, this, context, coordinator,
+                preRequestVariables).execute();
+    }
+
+    public void getVerificationCode(String username) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -133,6 +170,28 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
         new PreRequestTask(GET_VERIFICATION_CODE, this, context,
                 coordinator, preRequestVariables).execute();
+    }
+
+    public void getAnonymousToken(final String recaptchaToken) {
+        dataReceiver = new String[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(GET_ANONYMOUS_TOKEN, ApiService.this, context,
+                        null).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(GET_ANONYMOUS_TOKEN, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("recaptchaToken", recaptchaToken);
+
+        new PreRequestTask(GET_ANONYMOUS_TOKEN, this, context, coordinator,
+                preRequestVariables).execute();
     }
 
     public void login(final Account account) {
@@ -196,6 +255,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     protected void onSuccess() {
                         String response = accessTokenReceiver[0];
                         AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
+
+                        // TODO: remove
+                        System.out.println(accessToken.getToken());
+
                         DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
                         try {
                             CredentialService.getInstance(context)

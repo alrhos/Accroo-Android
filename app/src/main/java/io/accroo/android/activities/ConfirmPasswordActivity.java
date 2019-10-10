@@ -120,7 +120,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                 if (action == REGISTER) {
                     createAccount();
                 } else if (action == UPDATE_PASSWORD) {
-                    apiService.getLoginCode(username);
+                    apiService.getVerificationCode(username);
                 }
             }
         }

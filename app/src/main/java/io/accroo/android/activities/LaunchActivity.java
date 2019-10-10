@@ -2,6 +2,8 @@ package io.accroo.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.method.LinkMovementMethod;
@@ -12,16 +14,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.safetynet.SafetyNetStatusCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.joda.time.DateTime;
 
 import io.accroo.android.R;
+import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
 public class LaunchActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+
+    private final static int CREATE_ACCOUNT = 1;
+    private final static int SIGN_IN = 2;
 
     private DateTime startDate, endDate;
     public static boolean initialized = false;
@@ -30,6 +42,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private TextInputLayout inputEmailAddress;
     private EditText emailAddress;
     private Button createAccount, signIn;
+    private int action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +87,20 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_VERIFICATION_CODE) {
+        if (requestType == ApiService.GET_ANONYMOUS_TOKEN) {
+            String email = emailAddress.getText().toString().trim();
+            if (action == CREATE_ACCOUNT) {
+                apiService.checkEmailAvailability(email);
+            } else if (action == SIGN_IN) {
+                apiService.getVerificationCode(email);
+            }
+        } else if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY) {
+            // Email is already being used - HTTP 200
+            progressBar.setVisibility(View.INVISIBLE);
+            createAccount.setOnClickListener(createAccountListener);
+            signIn.setOnClickListener(signInListener);
+            inputEmailAddress.setError(getResources().getString(R.string.email_in_use));
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
             progressBar.setVisibility(View.INVISIBLE);
             Utils.hideSoftKeyboard(LaunchActivity.this);
             createAccount.setOnClickListener(createAccountListener);
@@ -94,12 +120,22 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onFailure(int requestType, int errorCode) {
+        progressBar.setVisibility(View.INVISIBLE);
+        createAccount.setOnClickListener(createAccountListener);
+        signIn.setOnClickListener(signInListener);
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
-        } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.NOT_FOUND) {
-            progressBar.setVisibility(View.INVISIBLE);
+        } else if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY && errorCode == ApiService.NOT_FOUND) {
+            // Email is not being used
+            Utils.hideSoftKeyboard(LaunchActivity.this);
             createAccount.setOnClickListener(createAccountListener);
             signIn.setOnClickListener(signInListener);
+            Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
+            intent.putExtra("action", ChoosePasswordActivity.REGISTER);
+            intent.putExtra("username", emailAddress.getText().toString());
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.NOT_FOUND) {
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
                 errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE) {
@@ -128,30 +164,61 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         startActivity(intent);
     }
 
+    private void recaptchaChallenge() {
+        SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        if (!response.getTokenResult().isEmpty()) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            apiService.getAnonymousToken(response.getTokenResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            int statusCode = apiException.getStatusCode();
+                            String message;
+                            switch (statusCode) {
+                                case SafetyNetStatusCodes.TIMEOUT:
+                                    message = getResources().getString(R.string.timeout_error);
+                                    break;
+                                case SafetyNetStatusCodes.NETWORK_ERROR:
+                                    message = getResources().getString(R.string.no_network_connection);
+                                    break;
+                                default:
+                                    message = getResources().getString(R.string.general_error);
+                            }
+                            inputEmailAddress.setError(message);
+                        } else {
+                            inputEmailAddress.setError(getResources().getString(R.string.general_error));
+                        }
+                    }
+                });
+    }
+
     View.OnClickListener createAccountListener = new View.OnClickListener() {
         public void onClick(View view) {
-            String email = emailAddress.getText().toString();
+            String email = emailAddress.getText().toString().trim();
             if (email.length() == 0) {
                 inputEmailAddress.setError(getResources().getString(R.string.enter_email));
             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 inputEmailAddress.setError(getResources().getString(R.string.error_invalid_email));
             } else {
+                action = CREATE_ACCOUNT;
                 inputEmailAddress.setError(" ");
-                progressBar.setVisibility(View.VISIBLE);
                 createAccount.setOnClickListener(null);
                 signIn.setOnClickListener(null);
-                // TODO: make API call to check if email is already in use
-                //
-                // TODO: move this logic into the handler for when email address is NOT in use
-                progressBar.setVisibility(View.INVISIBLE);
-                Utils.hideSoftKeyboard(LaunchActivity.this);
-                createAccount.setOnClickListener(createAccountListener);
-                signIn.setOnClickListener(signInListener);
-                Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
-                intent.putExtra("action", ChoosePasswordActivity.REGISTER);
-                intent.putExtra("username", emailAddress.getText().toString());
-                startActivity(intent);
-                overridePendingTransition(R.anim.enter, R.anim.exit);
+                if (apiService.hasActiveAccessToken()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    apiService.checkEmailAvailability(email);
+                } else {
+                    recaptchaChallenge();
+                }
             }
         }
     };
@@ -164,11 +231,17 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 inputEmailAddress.setError(getResources().getString(R.string.error_invalid_email));
             } else {
+                action = SIGN_IN;
                 inputEmailAddress.setError(" ");
-                progressBar.setVisibility(View.VISIBLE);
                 createAccount.setOnClickListener(null);
                 signIn.setOnClickListener(null);
-                apiService.getLoginCode(email);
+                if (apiService.hasActiveAccessToken()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    apiService.getVerificationCode(email);
+                } else {
+                    recaptchaChallenge();
+                }
+
             }
         }
     };

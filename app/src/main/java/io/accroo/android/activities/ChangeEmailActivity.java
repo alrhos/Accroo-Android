@@ -17,7 +17,6 @@ import io.accroo.android.R;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
-import io.accroo.android.services.CredentialService;
 
 public class ChangeEmailActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -146,7 +145,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
                 inputEmailAddress.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);
                 next.setOnClickListener(null);
-                apiService.getLoginCode(username);
+                apiService.getVerificationCode(username);
             }
         }
     };
