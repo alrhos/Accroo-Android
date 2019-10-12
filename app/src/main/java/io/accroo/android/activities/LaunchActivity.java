@@ -128,8 +128,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         } else if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY && errorCode == ApiService.NOT_FOUND) {
             // Email is not being used
             Utils.hideSoftKeyboard(LaunchActivity.this);
-            createAccount.setOnClickListener(createAccountListener);
-            signIn.setOnClickListener(signInListener);
             Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
             intent.putExtra("action", ChoosePasswordActivity.REGISTER);
             intent.putExtra("username", emailAddress.getText().toString());

@@ -47,16 +47,6 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             newEmailAddress.setFocusableInTouchMode(true);
             newEmailAddress.requestFocus();
 
-            // todo: change this so that username is passed into activity
-//            try {
-//                username = CredentialService.getInstance(getApplicationContext())
-//                            .getEntry(CredentialService.USERNAME_KEY);
-//                currentEmail.setText(username);
-//            } catch (Exception e) {
-//                Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-//                relaunch();
-//            }
-
             Utils.showSoftKeyboard(ChangeEmailActivity.this);
             apiService = new ApiService(this, getApplicationContext());
             next.setOnClickListener(nextListener);
@@ -83,7 +73,12 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_VERIFICATION_CODE) {
+        if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY) {
+            // Email is already being used - HTTP 200
+            progressBar.setVisibility(View.INVISIBLE);
+            inputEmailAddress.setError(getResources().getString(R.string.email_in_use));
+            next.setOnClickListener(nextListener);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
             progressBar.setVisibility(View.INVISIBLE);
             Utils.hideSoftKeyboard(ChangeEmailActivity.this);
             next.setOnClickListener(nextListener);
@@ -98,30 +93,35 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
 
     @Override
     public void onFailure(int requestType, int errorCode) {
-        progressBar.setVisibility(View.INVISIBLE);
-        next.setOnClickListener(nextListener);
-        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
-            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
-            apiService.logout();
-            relaunch();
+        if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY && errorCode == ApiService.NOT_FOUND) {
+            // Email is not being used - continue with update process
+            apiService.getVerificationCode(username);
         } else {
-            String message;
-            switch (errorCode) {
-                case ApiService.CONNECTION_ERROR:
-                    message = getResources().getString(R.string.connection_error);
-                    break;
-                case ApiService.TIMEOUT_ERROR:
-                    message = getResources().getString(R.string.timeout_error);
-                    break;
-                case ApiService.TOO_MANY_REQUESTS:
-                    message = getResources().getString(R.string.too_many_requests);
-                    break;
-                default:
-                    message = getResources().getString(R.string.general_error);
+            progressBar.setVisibility(View.INVISIBLE);
+            next.setOnClickListener(nextListener);
+            if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
+                MaintenanceDialog.show(this);
+            } else if (errorCode == ApiService.UNAUTHORIZED) {
+                Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
+                apiService.logout();
+                relaunch();
+            } else {
+                String message;
+                switch (errorCode) {
+                    case ApiService.CONNECTION_ERROR:
+                        message = getResources().getString(R.string.connection_error);
+                        break;
+                    case ApiService.TIMEOUT_ERROR:
+                        message = getResources().getString(R.string.timeout_error);
+                        break;
+                    case ApiService.TOO_MANY_REQUESTS:
+                        message = getResources().getString(R.string.too_many_requests);
+                        break;
+                    default:
+                        message = getResources().getString(R.string.general_error);
+                }
+                inputEmailAddress.setError(message);
             }
-            inputEmailAddress.setError(message);
         }
     }
 
@@ -141,11 +141,10 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             } else if (username.equals(email)) {
                 inputEmailAddress.setError(getResources().getString(R.string.email_unchanged));
             } else {
-                // TODO: add check to see if email address is being used
                 inputEmailAddress.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);
                 next.setOnClickListener(null);
-                apiService.getVerificationCode(username);
+                apiService.checkEmailAvailability(email);
             }
         }
     };
