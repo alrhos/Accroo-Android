@@ -109,7 +109,7 @@ public class RegistrationActivity extends AppCompatActivity implements ApiServic
                         if (!response.getTokenResult().isEmpty()) {
                             progressDialog.show();
                             account = new Account(emailAddress.getText().toString());
-                            apiService.createAccount(account, response.getTokenResult());
+                            //apiService.createAccount(account, response.getTokenResult());
                         }
                     }
                 })

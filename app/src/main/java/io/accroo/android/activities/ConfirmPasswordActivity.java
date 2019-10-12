@@ -68,15 +68,14 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
         }
     }
 
-    private void createAccount() {
+    private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
                 .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
                     @Override
                     public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
                         if (!response.getTokenResult().isEmpty()) {
                             progressBar.setVisibility(View.VISIBLE);
-                            account = new Account(username);
-                            apiService.createAccount(account, response.getTokenResult());
+                            apiService.getAnonymousToken(response.getTokenResult());
                         }
                     }
                 })
@@ -102,6 +101,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                         } else {
                             confirmPasswordField.setError(getResources().getString(R.string.general_error));
                         }
+                        next.setOnClickListener(nextListener);
                     }
                 });
     }
@@ -118,7 +118,13 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                 Utils.hideSoftKeyboard(ConfirmPasswordActivity.this);
                 next.setOnClickListener(null);
                 if (action == REGISTER) {
-                    createAccount();
+                    if (apiService.hasActiveAccessToken()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        account = new Account(username);
+                        apiService.createAccount(account);
+                    } else {
+                        recaptchaChallenge();
+                    }
                 } else if (action == UPDATE_PASSWORD) {
                     apiService.getVerificationCode(username);
                 }
@@ -140,20 +146,21 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.CREATE_ACCOUNT) {
+        if (requestType == ApiService.GET_ANONYMOUS_TOKEN) {
+            account = new Account(username);
+            apiService.createAccount(account);
+        } else if (requestType == ApiService.CREATE_ACCOUNT) {
             apiService.login(account);
         } else if (requestType == ApiService.LOGIN) {
             char[] pwd = new char[password.length()];
             password.getChars(0, password.length(), pwd, 0);
-            apiService.createKey(pwd);
-        } else if (requestType == ApiService.CREATE_KEY) {
-            apiService.updatePreferences(new Preferences());
-        } else if (requestType == ApiService.UPDATE_PREFERENCES) {
-            apiService.createDefaultCategories();
-        } else if (requestType == ApiService.CREATE_DEFAULT_CATEGORIES) {
+            apiService.initializeAccountData(pwd, new Preferences());
+        } else if (requestType == ApiService.INITIALIZE_ACCOUNT_DATA) {
+            progressBar.setVisibility(View.INVISIBLE);
             startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
+            progressBar.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
             intent.putExtra("action", VerificationCodeActivity.UPDATE_PASSWORD);
             intent.putExtra("username", username);

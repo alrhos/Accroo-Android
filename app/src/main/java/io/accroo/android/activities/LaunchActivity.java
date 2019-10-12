@@ -197,6 +197,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                         } else {
                             inputEmailAddress.setError(getResources().getString(R.string.general_error));
                         }
+                        createAccount.setOnClickListener(createAccountListener);
+                        signIn.setOnClickListener(signInListener);
                     }
                 });
     }

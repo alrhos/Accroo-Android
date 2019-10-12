@@ -93,7 +93,7 @@ public class RequestBuilder {
 
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                // Success response return 200 - no content
+                // Success response returns 200 - no content
                 return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
             }
         };

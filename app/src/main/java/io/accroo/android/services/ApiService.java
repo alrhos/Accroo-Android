@@ -50,6 +50,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int REAUTHENTICATE =            20;
     public final static int GET_ANONYMOUS_TOKEN =       21;
     public final static int CHECK_EMAIL_AVAILABILITY =  22;
+    public final static int INITIALIZE_ACCOUNT_DATA =   23;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -319,6 +320,30 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
+    public void initializeAccountData(final char[] password, final Preferences preferences) {
+        dataReceiver = new String[3];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(INITIALIZE_ACCOUNT_DATA);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(INITIALIZE_ACCOUNT_DATA, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("password", password);
+        preRequestVariables.put("preferences", preferences);
+
+        preRequestTask = new PreRequestTask(INITIALIZE_ACCOUNT_DATA, this,
+                context, coordinator, preRequestVariables);
+        requestType = INITIALIZE_ACCOUNT_DATA;
+        submitRequest();
+    }
+
     public void getDefaultData(@NonNull final DateTime startDate, @NonNull final DateTime endDate) {
         if (startDate.isBefore(endDate)) {
             DataProvider.setStartDate(startDate);
@@ -348,7 +373,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void createAccount(final Account account, final String recaptchaToken) {
+    public void createAccount(final Account account) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -364,7 +389,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
         preRequestVariables.clear();
         preRequestVariables.put("account", account);
-        preRequestVariables.put("recaptchaToken", recaptchaToken);
 
         new PreRequestTask(CREATE_ACCOUNT, this, context, coordinator,
                 preRequestVariables).execute();
