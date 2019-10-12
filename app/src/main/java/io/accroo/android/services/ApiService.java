@@ -256,10 +256,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     protected void onSuccess() {
                         String response = accessTokenReceiver[0];
                         AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
-
-                        // TODO: remove
-                        System.out.println(accessToken.getToken());
-
                         DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
                         try {
                             CredentialService.getInstance(context)

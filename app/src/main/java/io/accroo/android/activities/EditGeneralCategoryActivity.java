@@ -65,17 +65,17 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_resource:
-                deleteGeneralCategory();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.delete_resource) {
+            deleteGeneralCategory();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ICON_REQUEST) {
             if (resultCode == RESULT_OK) {
                 int iconID = data.getIntExtra("iconID", 0);
@@ -108,7 +108,6 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY && errorCode == ApiService.NOT_FOUND) {

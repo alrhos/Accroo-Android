@@ -1,5 +1,7 @@
 package io.accroo.android.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
 import io.accroo.android.other.Constants;
+import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -28,6 +31,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     private TextInputLayout keyPasswordInput;
     private ProgressBar progressBar;
     private EditText keyPassword;
+    private Button next;
     private ApiService apiService;
     private int passwordLength;
     private char[] password;
@@ -49,7 +53,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             keyPasswordInput.setHint(getResources().getString(R.string.password));
             keyPasswordInput.setError(" ");
             keyPassword = findViewById(R.id.password);
-            Button next = findViewById(R.id.next);
+            next = findViewById(R.id.next);
             TextView forgotPassword = findViewById(R.id.forgot_password);
             forgotPassword.setVisibility(View.VISIBLE);
 
@@ -63,31 +67,34 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
 
             apiService = new ApiService(this, getApplicationContext());
 
-            next.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (keyPassword.getText().length() > 0) {
-                        keyPasswordInput.setError(" ");
-                        passwordLength = keyPassword.length();
-                        password = new char[passwordLength];
-                        keyPassword.getText().getChars(0, passwordLength, password, 0);
-                        if (action == LOGIN) {
-                            if (apiService.initializeKey(password)) {
-                                Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-                                keyPassword.getText().clear();
-                                startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
-                            } else {
-                                keyPasswordInput.setError(getResources().getString(R.string.incorrect_password));
-                            }
-                        } else if (action == UPDATE_PASSWORD) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getKey();
-                        }
-                    } else {
-                        keyPasswordInput.setError(getResources().getString(R.string.enter_your_password));
-                    }
-                }
-            });
+//            next.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View view) {
+//                    if (keyPassword.getText().length() > 0) {
+//                        next.setOnClickListener(null);
+//                        keyPasswordInput.setError(" ");
+//                        passwordLength = keyPassword.length();
+//                        password = new char[passwordLength];
+//                        keyPassword.getText().getChars(0, passwordLength, password, 0);
+//                        if (action == LOGIN) {
+//                            if (apiService.initializeKey(password)) {
+//                                Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
+//                                keyPassword.getText().clear();
+//                                startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+//                            } else {
+//                                keyPasswordInput.setError(getResources().getString(R.string.incorrect_password));
+//                                next.setOnClickListener();
+//                            }
+//                        } else if (action == UPDATE_PASSWORD) {
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            apiService.getKey();
+//                        }
+//                    } else {
+//                        keyPasswordInput.setError(getResources().getString(R.string.enter_your_password));
+//                    }
+//                }
+//            });
 
+            next.setOnClickListener(nextListener);
             forgotPassword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -98,6 +105,33 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             });
         }
     }
+
+    View.OnClickListener nextListener = new View.OnClickListener() {
+        public void onClick(View view) {
+            if (keyPassword.getText().length() > 0) {
+                next.setOnClickListener(null);
+                keyPasswordInput.setError(" ");
+                passwordLength = keyPassword.length();
+                password = new char[passwordLength];
+                keyPassword.getText().getChars(0, passwordLength, password, 0);
+                if (action == LOGIN) {
+                    if (apiService.initializeKey(password)) {
+                        Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
+                        keyPassword.getText().clear();
+                        startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
+                    } else {
+                        keyPasswordInput.setError(getResources().getString(R.string.incorrect_password));
+                        next.setOnClickListener(nextListener);
+                    }
+                } else if (action == UPDATE_PASSWORD) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    apiService.getKey();
+                }
+            } else {
+                keyPasswordInput.setError(getResources().getString(R.string.enter_your_password));
+            }
+        }
+    };
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -128,6 +162,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     @Override
     public void onSuccess(int requestType) {
         progressBar.setVisibility(View.INVISIBLE);
+        next.setOnClickListener(nextListener);
         if (requestType == ApiService.GET_KEY) {
             if (apiService.initializeKey(password)) {
                 Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
@@ -143,7 +178,30 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
 
     @Override
     public void onFailure(int requestType, int errorCode) {
-        // TODO
+        progressBar.setVisibility(View.INVISIBLE);
+        next.setOnClickListener(nextListener);
+        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
+            MaintenanceDialog.show(this);
+        } else if (errorCode == ApiService.UNAUTHORIZED) {
+            apiService.logout();
+            relaunch();
+        } else {
+            String message;
+            switch (errorCode) {
+                case ApiService.CONNECTION_ERROR:
+                    message = getResources().getString(R.string.connection_error);
+                    break;
+                case ApiService.TIMEOUT_ERROR:
+                    message = getResources().getString(R.string.timeout_error);
+                    break;
+                case ApiService.TOO_MANY_REQUESTS:
+                    message = getResources().getString(R.string.too_many_requests);
+                    break;
+                default:
+                    message = getResources().getString(R.string.general_error);
+            }
+            keyPasswordInput.setError(message);
+        }
     }
 
     @Override

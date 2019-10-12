@@ -212,17 +212,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                 resendCode.setOnClickListener(null);
                 next.setOnClickListener(null);
-                switch (action) {
-                    case LOGIN:
-                        Account account = new Account(username, verificationCodeField.getText().toString());
-                        apiService.login(account);
-                        break;
-                    case UPDATE_EMAIL:
-                        apiService.reauthenticate(verificationCodeField.getText().toString());
-                        break;
-                    case UPDATE_PASSWORD:
-                        apiService.reauthenticate(verificationCodeField.getText().toString());
-                        break;
+                if (action == LOGIN) {
+                    Account account = new Account(username, verificationCodeField.getText().toString());
+                    apiService.login(account);
+                } else if (action == UPDATE_EMAIL || action == UPDATE_PASSWORD) {
+                    apiService.reauthenticate(verificationCodeField.getText().toString());
                 }
             }
         }

@@ -120,9 +120,11 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onFailure(int requestType, int errorCode) {
-        progressBar.setVisibility(View.INVISIBLE);
-        createAccount.setOnClickListener(createAccountListener);
-        signIn.setOnClickListener(signInListener);
+        if (!apiService.userLoggedIn()) {
+            progressBar.setVisibility(View.INVISIBLE);
+            createAccount.setOnClickListener(createAccountListener);
+            signIn.setOnClickListener(signInListener);
+        }
         if (errorCode == ApiService.UNAUTHORIZED) {
             initLayout();
         } else if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY && errorCode == ApiService.NOT_FOUND) {
@@ -130,24 +132,24 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             Utils.hideSoftKeyboard(LaunchActivity.this);
             Intent intent = new Intent(getApplicationContext(), ChoosePasswordActivity.class);
             intent.putExtra("action", ChoosePasswordActivity.REGISTER);
-            intent.putExtra("username", emailAddress.getText().toString());
+            intent.putExtra("username", emailAddress.getText().toString().trim());
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.NOT_FOUND) {
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
                 errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            // TODO: review how this logic works
-            if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-                MaintenanceDialog.show(this);
+            // Default to maintenance mode message
+            MaintenanceDialog.show(this);
+            if (apiService.userLoggedIn()) {
+                setContentView(R.layout.activity_no_connection);
+                Button tryAgain = findViewById(R.id.try_again);
+                tryAgain.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        startUp();
+                    }
+                });
             }
-            setContentView(R.layout.activity_no_connection);
-            Button tryAgain = findViewById(R.id.try_again);
-            tryAgain.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    startUp();
-                }
-            });
         } else {
             onError();
         }

@@ -131,6 +131,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (generalCategoryFragment == null || subCategoryFragment == null) {
             relaunch();
         } else {
@@ -173,7 +174,6 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
         } else {

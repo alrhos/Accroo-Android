@@ -51,11 +51,6 @@ public class ChoosePasswordActivity extends AppCompatActivity {
                 choosePasswordInput.setHint(getResources().getString(R.string.new_password));
             }
 
-            // todo: check why this isn't working as expected
-//            passwordField.setFocusableInTouchMode(true);
-//            passwordField.requestFocus();
-//            Utils.showSoftKeyboard(ChoosePasswordActivity.this);
-
             next.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     String password = passwordField.getText().toString();
