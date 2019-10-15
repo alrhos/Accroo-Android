@@ -67,33 +67,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
 
             apiService = new ApiService(this, getApplicationContext());
 
-//            next.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    if (keyPassword.getText().length() > 0) {
-//                        next.setOnClickListener(null);
-//                        keyPasswordInput.setError(" ");
-//                        passwordLength = keyPassword.length();
-//                        password = new char[passwordLength];
-//                        keyPassword.getText().getChars(0, passwordLength, password, 0);
-//                        if (action == LOGIN) {
-//                            if (apiService.initializeKey(password)) {
-//                                Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-//                                keyPassword.getText().clear();
-//                                startActivity(new Intent(getApplicationContext(), LaunchActivity.class));
-//                            } else {
-//                                keyPasswordInput.setError(getResources().getString(R.string.incorrect_password));
-//                                next.setOnClickListener();
-//                            }
-//                        } else if (action == UPDATE_PASSWORD) {
-//                            progressBar.setVisibility(View.VISIBLE);
-//                            apiService.getKey();
-//                        }
-//                    } else {
-//                        keyPasswordInput.setError(getResources().getString(R.string.enter_your_password));
-//                    }
-//                }
-//            });
-
             next.setOnClickListener(nextListener);
             forgotPassword.setOnClickListener(new View.OnClickListener() {
                 @Override
