@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_connection"
+        android:textAllCaps="true"
         android:textAppearance="@style/Heading"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"

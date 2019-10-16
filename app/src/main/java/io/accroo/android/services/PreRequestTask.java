@@ -186,62 +186,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-//                case ApiService.CREATE_KEY:
-//
-//                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
-//                    password = (char[]) requestVariables.get("password");
-//                    key = CryptoManager.getInstance().generateNewKey(password);
-//                    CryptoManager.getInstance().saveMasterKey(context);
-//                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//                    requests.add(RequestBuilder.putKey(0, coordinator,
-//                            GsonUtil.getInstance().toJson(key), userId, accessToken));
-//
-//                    return true;
-
-//                case ApiService.UPDATE_PREFERENCES:
-//
-//                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
-//                    preferences = (Preferences) requestVariables.get("preferences");
-//                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//                    requests.add(RequestBuilder.putPreferences(0, coordinator,
-//                            GsonUtil.getInstance().toJson(preferences.encrypt()), userId, accessToken));
-//
-//                    return true;
-
-//                case ApiService.CREATE_DEFAULT_CATEGORIES:
-//
-//                    ArrayList<DefaultGeneralCategory> generalCategories = DataAccess.getInstance(context).getDefaultGeneralCategories();
-//                    ArrayList<DefaultSubCategory> subCategories = DataAccess.getInstance(context).getDefaultSubCategories();
-//
-//                    // Shuffle items so that each user's categories are inserted in a random
-//                    // order making it more difficult for sysadmins to guess a certain category
-//                    // given the cipher text length or order of records in db table.
-//
-//                    Collections.shuffle(generalCategories);
-//                    Collections.shuffle(subCategories);
-//
-//                    for (DefaultSubCategory subCategory : subCategories) {
-//                        for (DefaultGeneralCategory generalCategory : generalCategories) {
-//                            if (subCategory.getGeneralCategoryName().equals(generalCategory.getCategoryName())) {
-//                                generalCategory.getSubCategories().add(subCategory);
-//                                break;
-//                            }
-//                        }
-//                    }
-//
-//                    ArrayList<EncryptedDefaultGeneralCategory> encryptedCategories = new ArrayList<>();
-//                    for (DefaultGeneralCategory category: generalCategories) {
-//                        encryptedCategories.add(category.encrypt());
-//                    }
-//
-//                    json = GsonUtil.getInstance().toJson(encryptedCategories);
-//                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
-//                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//                    requests.add(RequestBuilder.postDefaultCategories(0, coordinator, json,
-//                            userId, accessToken));
-//
-//                    return true;
-
                 case ApiService.CREATE_TRANSACTION:
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);

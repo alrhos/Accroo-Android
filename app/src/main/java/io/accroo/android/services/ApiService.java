@@ -91,13 +91,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
             DateTime tokenExpiryTime = new DateTime(tokenExpiry);
             DateTime currentTime = new DateTime();
-            if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() > 60) {
-                return true;
-            }
+            return Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() > 60;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     public boolean userLoggedIn() {
@@ -138,8 +136,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         preRequestVariables.clear();
         preRequestVariables.put("email", email);
 
-        new PreRequestTask(CHECK_EMAIL_AVAILABILITY, this, context, coordinator,
-                preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(CHECK_EMAIL_AVAILABILITY, this,
+                context, coordinator, preRequestVariables);
+        requestType = CHECK_EMAIL_AVAILABILITY;
+        submitRequest();
     }
 
     public void getVerificationCode(String username) {
@@ -169,8 +169,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         }
 
-        new PreRequestTask(GET_VERIFICATION_CODE, this, context,
-                coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(GET_VERIFICATION_CODE, this, context,
+                coordinator, preRequestVariables);
+        requestType = GET_VERIFICATION_CODE;
+        submitRequest();
     }
 
     public void getAnonymousToken(final String recaptchaToken) {
@@ -242,56 +244,63 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     private void submitRequest() {
-        try {
-            String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
-            String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
-            DateTime tokenExpiryTime = new DateTime(tokenExpiry);
-            DateTime currentTime = new DateTime();
-            if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {
-                // Access token needs to be refreshed
-                final String[] accessTokenReceiver = new String[1];
-                RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
-                        this, accessTokenReceiver) {
-                    @Override
-                    protected void onSuccess() {
-                        String response = accessTokenReceiver[0];
-                        AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
-                        DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
-                        try {
-                            CredentialService.getInstance(context)
-                                    .saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
-                            CredentialService.getInstance(context)
-                                    .saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
-                            preRequestTask.execute();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            requestOutcome.onError();
+        if (userLoggedIn()) {
+            try {
+                String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+                String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+                DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+                DateTime currentTime = new DateTime();
+                if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {
+                    // Access token needs to be refreshed
+                    final String[] accessTokenReceiver = new String[1];
+                    RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
+                            this, accessTokenReceiver) {
+                        @Override
+                        protected void onSuccess() {
+                            String response = accessTokenReceiver[0];
+                            AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
+                            DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
+                            // Update access token in local storage
+                            try {
+                                CredentialService.getInstance(context)
+                                        .saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
+                                CredentialService.getInstance(context)
+                                        .saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
+                                // Execute queued task
+                                preRequestTask.execute();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                requestOutcome.onError();
+                            }
                         }
-                    }
 
-                    @Override
-                    protected void onFailure(int errorCode) {
-                        requestOutcome.onFailure(requestType, errorCode);
-                    }
-                };
+                        @Override
+                        protected void onFailure(int errorCode) {
+                            requestOutcome.onFailure(requestType, errorCode);
+                        }
+                    };
 
-                try {
-                    JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
-                            accessTokenCoordinator, refreshToken);
-                    accessTokenCoordinator.addRequests(accessTokenRequest);
-                    accessTokenCoordinator.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    requestOutcome.onError();
+                    try {
+                        JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
+                                accessTokenCoordinator, refreshToken);
+                        accessTokenCoordinator.addRequests(accessTokenRequest);
+                        accessTokenCoordinator.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        requestOutcome.onError();
+                    }
+                } else {
+                    // Current access token can still be used
+                    preRequestTask.execute();
                 }
-            } else {
-                // Current access token can still be used
-                preRequestTask.execute();
+            } catch (Exception e) {
+                // A refresh token wasn't found or the access token expiry couldn't be retrieved
+                e.printStackTrace();
+                requestOutcome.onError();
             }
-        } catch (Exception e) {
-            // A refresh token wasn't found or the access token expiry couldn't be retrieved
-            e.printStackTrace();
-            requestOutcome.onError();
+        } else {
+            // Anonymous user - can't refresh their token
+            preRequestTask.execute();
         }
     }
 

@@ -158,7 +158,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
-            // TODO: come back and review if this scenario can be handled better
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
