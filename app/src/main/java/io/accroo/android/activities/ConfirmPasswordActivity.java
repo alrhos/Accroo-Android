@@ -161,6 +161,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
             progressBar.setVisibility(View.INVISIBLE);
+            next.setOnClickListener(nextListener);
             Intent intent = new Intent(getApplicationContext(), VerificationCodeActivity.class);
             intent.putExtra("action", VerificationCodeActivity.UPDATE_PASSWORD);
             intent.putExtra("username", username);
