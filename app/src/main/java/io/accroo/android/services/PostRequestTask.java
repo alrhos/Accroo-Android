@@ -3,6 +3,7 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import io.accroo.android.model.AccessToken;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.EncryptedGeneralCategory;
 import io.accroo.android.model.EncryptedSubCategory;
@@ -45,12 +46,10 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
     public PostRequestTask(int requestType, PostRequestOutcome postRequestOutcome,
                            Context context, HashMap<String, Object> requestVariables) {
-
         this.requestType = requestType;
         this.postRequestOutcome = postRequestOutcome;
         this.context = context;
         this.requestVariables = requestVariables;
-
     }
 
     public interface PostRequestOutcome {
@@ -62,6 +61,16 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     protected Boolean doInBackground(String[]... dataReceiver) {
         try {
             switch (requestType) {
+
+                case ApiService.GET_ANONYMOUS_TOKEN:
+
+                    AccessToken accessToken = GsonUtil.getInstance().fromJson(dataReceiver[0][0], AccessToken.class);
+
+                    DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
+
+                    return true;
 
                 case ApiService.LOGIN:
 

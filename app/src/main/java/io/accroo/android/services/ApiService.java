@@ -1,7 +1,7 @@
 package io.accroo.android.services;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
@@ -48,6 +48,9 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_PREFERENCES =        18;
     public final static int CREATE_KEY =                19;
     public final static int REAUTHENTICATE =            20;
+    public final static int GET_ANONYMOUS_TOKEN =       21;
+    public final static int CHECK_EMAIL_AVAILABILITY =  22;
+    public final static int INITIALIZE_ACCOUNT_DATA =   23;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -83,6 +86,18 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         void onError();
     }
 
+    public boolean hasActiveAccessToken() {
+        try {
+            String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+            DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+            DateTime currentTime = new DateTime();
+            return Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() > 60;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean userLoggedIn() {
         try {
             CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
@@ -104,7 +119,30 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void getLoginCode(String username) {
+    public void checkEmailAvailability(String email) {
+        dataReceiver = new String[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(CHECK_EMAIL_AVAILABILITY);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(CHECK_EMAIL_AVAILABILITY, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("email", email);
+
+        preRequestTask = new PreRequestTask(CHECK_EMAIL_AVAILABILITY, this,
+                context, coordinator, preRequestVariables);
+        requestType = CHECK_EMAIL_AVAILABILITY;
+        submitRequest();
+    }
+
+    public void getVerificationCode(String username) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -131,8 +169,32 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             }
         }
 
-        new PreRequestTask(GET_VERIFICATION_CODE, this, context,
-                coordinator, preRequestVariables).execute();
+        preRequestTask = new PreRequestTask(GET_VERIFICATION_CODE, this, context,
+                coordinator, preRequestVariables);
+        requestType = GET_VERIFICATION_CODE;
+        submitRequest();
+    }
+
+    public void getAnonymousToken(final String recaptchaToken) {
+        dataReceiver = new String[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(GET_ANONYMOUS_TOKEN, ApiService.this, context,
+                        null).execute(dataReceiver);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(GET_ANONYMOUS_TOKEN, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("recaptchaToken", recaptchaToken);
+
+        new PreRequestTask(GET_ANONYMOUS_TOKEN, this, context, coordinator,
+                preRequestVariables).execute();
     }
 
     public void login(final Account account) {
@@ -182,57 +244,63 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     private void submitRequest() {
-        try {
-            String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
-            String tokenExpiry = CredentialService.getInstance(context)
-                    .getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
-            DateTime tokenExpiryTime = new DateTime(tokenExpiry);
-            DateTime currentTime = new DateTime();
-            if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {
-                // Access token needs to be refreshed
-                final String[] accessTokenReceiver = new String[1];
-                RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
-                        this, accessTokenReceiver) {
-                    @Override
-                    protected void onSuccess() {
-                        String response = accessTokenReceiver[0];
-                        AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
-                        DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
-                        try {
-                            CredentialService.getInstance(context)
-                                    .saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
-                            CredentialService.getInstance(context)
-                                    .saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
-                            preRequestTask.execute();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            requestOutcome.onError();
+        if (userLoggedIn()) {
+            try {
+                String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+                String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+                DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+                DateTime currentTime = new DateTime();
+                if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {
+                    // Access token needs to be refreshed
+                    final String[] accessTokenReceiver = new String[1];
+                    RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
+                            this, accessTokenReceiver) {
+                        @Override
+                        protected void onSuccess() {
+                            String response = accessTokenReceiver[0];
+                            AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
+                            DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
+                            // Update access token in local storage
+                            try {
+                                CredentialService.getInstance(context)
+                                        .saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
+                                CredentialService.getInstance(context)
+                                        .saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
+                                // Execute queued task
+                                preRequestTask.execute();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                requestOutcome.onError();
+                            }
                         }
-                    }
 
-                    @Override
-                    protected void onFailure(int errorCode) {
-                        requestOutcome.onFailure(requestType, errorCode);
-                    }
-                };
+                        @Override
+                        protected void onFailure(int errorCode) {
+                            requestOutcome.onFailure(requestType, errorCode);
+                        }
+                    };
 
-                try {
-                    JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
-                            accessTokenCoordinator, refreshToken);
-                    accessTokenCoordinator.addRequests(accessTokenRequest);
-                    accessTokenCoordinator.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    requestOutcome.onError();
+                    try {
+                        JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
+                                accessTokenCoordinator, refreshToken);
+                        accessTokenCoordinator.addRequests(accessTokenRequest);
+                        accessTokenCoordinator.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        requestOutcome.onError();
+                    }
+                } else {
+                    // Current access token can still be used
+                    preRequestTask.execute();
                 }
-            } else {
-                // Current access token can still be used
-                preRequestTask.execute();
+            } catch (Exception e) {
+                // A refresh token wasn't found or the access token expiry couldn't be retrieved
+                e.printStackTrace();
+                requestOutcome.onError();
             }
-        } catch (Exception e) {
-            // A refresh token wasn't found or the access token expiry couldn't be retrieved
-            e.printStackTrace();
-            requestOutcome.onError();
+        } else {
+            // Anonymous user - can't refresh their token
+            preRequestTask.execute();
         }
     }
 
@@ -255,6 +323,30 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void initializeAccountData(final char[] password, final Preferences preferences) {
+        dataReceiver = new String[3];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                requestOutcome.onSuccess(INITIALIZE_ACCOUNT_DATA);
+            }
+
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(INITIALIZE_ACCOUNT_DATA, errorCode);
+            }
+        };
+
+        preRequestVariables.clear();
+        preRequestVariables.put("password", password);
+        preRequestVariables.put("preferences", preferences);
+
+        preRequestTask = new PreRequestTask(INITIALIZE_ACCOUNT_DATA, this,
+                context, coordinator, preRequestVariables);
+        requestType = INITIALIZE_ACCOUNT_DATA;
+        submitRequest();
     }
 
     public void getDefaultData(@NonNull final DateTime startDate, @NonNull final DateTime endDate) {
@@ -286,7 +378,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void createAccount(final Account account, final String recaptchaToken) {
+    public void createAccount(final Account account) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -302,7 +394,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
         preRequestVariables.clear();
         preRequestVariables.put("account", account);
-        preRequestVariables.put("recaptchaToken", recaptchaToken);
 
         new PreRequestTask(CREATE_ACCOUNT, this, context, coordinator,
                 preRequestVariables).execute();

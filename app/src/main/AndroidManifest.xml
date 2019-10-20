@@ -12,22 +12,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.ConfirmPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ChoosePasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.VerificationCodeActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LaunchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,13 +39,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegistrationActivity"
-            android:label="@string/title_activity_register"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.KeyDecryptionActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.TransactionActivity"
             android:label="@string/title_activity_add_transaction"
@@ -75,12 +75,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ChangeEmailActivity"
-            android:label="@string/title_activity_change_email"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ChangePasswordActivity"
-            android:label="@string/title_activity_change_password"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"

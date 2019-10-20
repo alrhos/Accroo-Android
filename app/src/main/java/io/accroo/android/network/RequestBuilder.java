@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,15 +33,17 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String BASE_URL =               "https://api.accroo.io/v1/";
+    private final static String BASE_URL =               "https://dev.accroo.io/v1/";
     private final static String CLIENT_VERSION_KEY =     "Accroo-Client";
     private final static String CLIENT_VERSION_VALUE =   "Android " + BuildConfig.VERSION_NAME;
     private final static String RECAPTCHA_TOKEN_KEY =    "Recaptcha-Token";
     private final static String ACCOUNT =                "auth/accounts";
     private final static String EMAIL =                  "auth/accounts/email";
+    private final static String EMAIL_CHECK =            "auth/accounts/email/<email>";
     private final static String VERIFICATION_TOKEN =     "auth/verification-tokens";
     private final static String REFRESH_TOKEN =          "auth/refresh-tokens";
     private final static String ACCESS_TOKEN =           "auth/access-tokens";
+    private final static String ANONYMOUS_ACCESS_TOKEN = "auth/access-tokens/anonymous";
     private final static String ENCRYPTION_KEY =         "users/<userId>/keys";
     private final static String PREFERENCES =            "users/<userId>/preferences";
     private final static String CATEGORIES =             "users/<userId>/categories";
@@ -55,11 +59,10 @@ public class RequestBuilder {
 
     private RequestBuilder() {}
 
-    public static JsonObjectRequest postAccount(int index, final RequestCoordinator coordinator,
-                                                String json, final String recaptchaToken) throws JSONException {
-        String url = BASE_URL + ACCOUNT;
-        JSONObject object = new JSONObject(json);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
+    public static JsonObjectRequest postAnonymousAccessToken(int index, final RequestCoordinator coordinator,
+                                                             final String recaptchaToken) {
+        String url = BASE_URL + ANONYMOUS_ACCESS_TOKEN;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
             public Map<String, String> getHeaders() {
@@ -73,8 +76,51 @@ public class RequestBuilder {
         return request;
     }
 
+    public static JsonObjectRequest headEmail(int index, final RequestCoordinator coordinator,
+                                              final String accessToken, final String email) throws UnsupportedEncodingException {
+        String url = BASE_URL + EMAIL_CHECK;
+        url = url.replace("<email>", URLEncoder.encode(email, "UTF-8"));
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.HEAD, url, null,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                // Success response returns 200 - no content
+                return Response.success(null, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonObjectRequest postAccount(int index, final RequestCoordinator coordinator,
+                                                String json, final String accessToken) throws JSONException {
+        String url = BASE_URL + ACCOUNT;
+        JSONObject object = new JSONObject(json);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
+                createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
     public static JsonObjectRequest postVerificationToken(int index, final RequestCoordinator coordinator,
-                                                          JSONObject object) {
+                                                          final String accessToken, JSONObject object) {
         String url = BASE_URL + VERIFICATION_TOKEN;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
@@ -82,6 +128,7 @@ public class RequestBuilder {
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();
                 headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                headerMap.put("Authorization", "Bearer " + accessToken);
                 return headerMap;
             }
         };

@@ -1,4 +1,4 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -70,6 +70,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimary"
         android:elevation="0dp"
         android:text="@string/save"
         android:textColor="@android:color/white"
@@ -78,4 +79,4 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintTop_toBottomOf="@+id/sub_category_arrow"  />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

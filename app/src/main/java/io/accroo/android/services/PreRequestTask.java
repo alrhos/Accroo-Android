@@ -77,12 +77,28 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
         try {
             switch (requestType) {
 
+                case ApiService.GET_ANONYMOUS_TOKEN:
+
+                    String recaptchaToken = (String) requestVariables.get("recaptchaToken");
+                    requests.add(RequestBuilder.postAnonymousAccessToken(0, coordinator, recaptchaToken));
+
+                    return true;
+
+                case ApiService.CHECK_EMAIL_AVAILABILITY:
+
+                    String email = (String) requestVariables.get("email");
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.headEmail(0, coordinator, accessToken, email));
+
+                    return true;
+
                 case ApiService.GET_VERIFICATION_CODE:
 
                     username = (String) requestVariables.get("username");
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     emailJson = new JSONObject();
                     emailJson.put("email", username);
-                    requests.add(RequestBuilder.postVerificationToken(0, coordinator, emailJson));
+                    requests.add(RequestBuilder.postVerificationToken(0, coordinator, accessToken, emailJson));
 
                     return true;
 
@@ -99,9 +115,9 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                 case ApiService.CREATE_ACCOUNT:
 
                     account = (Account) requestVariables.get("account");
-                    String recaptchaToken = (String) requestVariables.get("recaptchaToken");
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.postAccount(0, coordinator,
-                            GsonUtil.getInstance().toJson(account), recaptchaToken));
+                            GsonUtil.getInstance().toJson(account), accessToken));
 
                     return true;
 
@@ -122,30 +138,24 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.CREATE_KEY:
+                case ApiService.INITIALIZE_ACCOUNT_DATA:
 
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+
+                    // Generate and save data encryption key details
                     password = (char[]) requestVariables.get("password");
                     key = CryptoManager.getInstance().generateNewKey(password);
                     CryptoManager.getInstance().saveMasterKey(context);
-                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.putKey(0, coordinator,
                             GsonUtil.getInstance().toJson(key), userId, accessToken));
 
-                    return true;
-
-                case ApiService.UPDATE_PREFERENCES:
-
-                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+                    // Generate and save default preferences
                     preferences = (Preferences) requestVariables.get("preferences");
-                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-                    requests.add(RequestBuilder.putPreferences(0, coordinator,
+                    requests.add(RequestBuilder.putPreferences(1, coordinator,
                             GsonUtil.getInstance().toJson(preferences.encrypt()), userId, accessToken));
 
-                    return true;
-
-                case ApiService.CREATE_DEFAULT_CATEGORIES:
-
+                    // Generate and save default categories
                     ArrayList<DefaultGeneralCategory> generalCategories = DataAccess.getInstance(context).getDefaultGeneralCategories();
                     ArrayList<DefaultSubCategory> subCategories = DataAccess.getInstance(context).getDefaultSubCategories();
 
@@ -171,9 +181,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
                     }
 
                     json = GsonUtil.getInstance().toJson(encryptedCategories);
-                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
-                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-                    requests.add(RequestBuilder.postDefaultCategories(0, coordinator, json,
+                    requests.add(RequestBuilder.postDefaultCategories(2, coordinator, json,
                             userId, accessToken));
 
                     return true;

@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +34,7 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
+import io.accroo.android.services.CredentialService;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
         TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,
@@ -173,12 +174,30 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.change_email:
-                startActivity(new Intent(getApplicationContext(), ChangeEmailActivity.class));
+                intent = new Intent(getApplicationContext(), ChangeEmailActivity.class);
+                try {
+                    String username = CredentialService.getInstance(getApplicationContext())
+                            .getEntry(CredentialService.USERNAME_KEY);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+                }
                 return true;
             case R.id.change_password:
-                startActivity(new Intent(getApplicationContext(), ChangePasswordActivity.class));
+                intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
+                intent.putExtra("action", KeyDecryptionActivity.UPDATE_PASSWORD);
+                try {
+                    String username = CredentialService.getInstance(getApplicationContext())
+                            .getEntry(CredentialService.USERNAME_KEY);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
+                }
                 return true;
             case R.id.sign_out:
                 apiService.logout();
@@ -346,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
         } else {

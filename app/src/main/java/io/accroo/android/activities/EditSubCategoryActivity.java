@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -66,12 +66,11 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_resource:
-                deleteSubCategory();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.delete_resource) {
+            deleteSubCategory();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -111,6 +110,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GENERAL_CATEGORY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 GeneralCategory generalCategory = data.getParcelableExtra("generalCategory");
@@ -142,7 +142,6 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MaintenanceDialog.show(this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            Toast.makeText(getApplicationContext(), R.string.login_required, Toast.LENGTH_LONG).show();
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_SUB_CATEGORY && errorCode == ApiService.NOT_FOUND) {
