@@ -18,7 +18,6 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.DataProvider;
-import io.accroo.android.services.InputService;
 
 public class SubCategoryFragment extends Fragment {
 
@@ -94,7 +93,7 @@ public class SubCategoryFragment extends Fragment {
                     return;
                 }
 
-                String formattedName = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
+                String formattedName = Utils.capitaliseAndTrim(subCategoryName.getText().toString());
 
                 if (editing) {
                     existingCategory.setCategoryName(formattedName);
@@ -155,7 +154,7 @@ public class SubCategoryFragment extends Fragment {
             return false;
         }
 
-        String category = InputService.capitaliseAndTrim(subCategoryName.getText().toString());
+        String category = Utils.capitaliseAndTrim(subCategoryName.getText().toString());
 
         if (!editing) {
             if (DataProvider.checkDuplicateSubCategory(category)) {

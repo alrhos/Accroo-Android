@@ -54,6 +54,14 @@ public class Utils {
 
     // fab.setImageBitmap(Utils.textAsBitmap(Utils.getCurrencySymbol("EUR"), 40, Color.WHITE));
 
+    public static String capitaliseAndTrim(String input) {
+        if (input.length() > 0) {
+            String result = input.substring(0, 1).toUpperCase() + input.substring(1);
+            return result.trim();
+        }
+        return input;
+    }
+
     public static void hideSoftKeyboard(Activity activity) {
         final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (imm != null) {

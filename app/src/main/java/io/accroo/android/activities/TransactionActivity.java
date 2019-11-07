@@ -28,7 +28,6 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
-import io.accroo.android.services.InputService;
 
 public class TransactionActivity extends AppCompatActivity implements ApiService.RequestOutcome {
 
@@ -139,7 +138,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
 
                     progressDialog.show();
 
-                    String formattedDescription = InputService.capitaliseAndTrim(descriptionField.getText().toString());
+                    String formattedDescription = Utils.capitaliseAndTrim(descriptionField.getText().toString());
 
                     if (editing) {
                         existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));

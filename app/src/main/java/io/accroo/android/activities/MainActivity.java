@@ -174,37 +174,16 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
-            case R.id.change_email:
-                intent = new Intent(getApplicationContext(), ChangeEmailActivity.class);
-                try {
-                    String username = CredentialService.getInstance(getApplicationContext())
-                            .getEntry(CredentialService.USERNAME_KEY);
-                    intent.putExtra("username", username);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-                }
+            case R.id.about:
+                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
                 return true;
-            case R.id.change_password:
-                intent = new Intent(getApplicationContext(), KeyDecryptionActivity.class);
-                intent.putExtra("action", KeyDecryptionActivity.UPDATE_PASSWORD);
-                try {
-                    String username = CredentialService.getInstance(getApplicationContext())
-                            .getEntry(CredentialService.USERNAME_KEY);
-                    intent.putExtra("username", username);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
-                }
+            case R.id.settings:
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
             case R.id.sign_out:
                 apiService.logout();
                 relaunch();
-                return true;
-            case R.id.about:
-                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

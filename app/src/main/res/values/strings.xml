@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Accroo</string>
 
+    <string name="account">Account</string>
+    <string name="general">General</string>
     <string name="email">Email address</string>
     <string name="confirm_email">Confirm email</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -219,18 +221,10 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="summary_period_title">Default summary date period</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- Preference Messages -->
+    <string name="change_email_message">Change your account email address.</string>
+    <string name="change_password_message">Change your account password.</string>
 
 </resources>

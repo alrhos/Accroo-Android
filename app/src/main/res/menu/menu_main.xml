@@ -1,26 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.paleskyline.accroo.activities.ScrollingActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/change_email"
-        android:title="@string/change_email"
+        android:id="@+id/about"
+        android:title="@string/about"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/change_password"
-        android:title="@string/change_password"
+        android:id="@+id/settings"
+        android:title="@string/settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/sign_out"
         android:title="@string/sign_out"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/about"
-        android:title="@string/about"
         app:showAsAction="never" />
 
 </menu>

@@ -16,8 +16,8 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.RootCategory;
+import io.accroo.android.other.Utils;
 import io.accroo.android.services.DataProvider;
-import io.accroo.android.services.InputService;
 
 public class GeneralCategoryFragment extends Fragment {
 
@@ -107,7 +107,7 @@ public class GeneralCategoryFragment extends Fragment {
                     rootCategory = RootCategory.EXPENSE;
                 }
 
-                String formattedName = InputService.capitaliseAndTrim(categoryName.getText().toString());
+                String formattedName = Utils.capitaliseAndTrim(categoryName.getText().toString());
 
                 if (editing) {
                     existingCategory.setIconFile(iconName);
@@ -152,7 +152,7 @@ public class GeneralCategoryFragment extends Fragment {
         String categoryString = categoryName.getText().toString();
         if (categoryString.length() > 0) {
             if (!editing) {
-                String category = InputService.capitaliseAndTrim(categoryName.getText().toString());
+                String category = Utils.capitaliseAndTrim(categoryName.getText().toString());
                 if (DataProvider.checkDuplicateGeneralCategory(category)) {
                     Toast.makeText(requireActivity(), R.string.general_category_already_exists, Toast.LENGTH_SHORT).show();
                     return false;
