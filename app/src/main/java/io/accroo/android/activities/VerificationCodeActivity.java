@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -15,6 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.safetynet.SafetyNetStatusCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
@@ -104,6 +112,45 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    private void recaptchaChallenge() {
+        SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        if (!response.getTokenResult().isEmpty()) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            apiService.getVerificationCode(username);
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            int statusCode = apiException.getStatusCode();
+                            String message;
+                            switch (statusCode) {
+                                case SafetyNetStatusCodes.TIMEOUT:
+                                    message = getResources().getString(R.string.timeout_error);
+                                    break;
+                                case SafetyNetStatusCodes.NETWORK_ERROR:
+                                    message = getResources().getString(R.string.no_network_connection);
+                                    break;
+                                default:
+                                    message = getResources().getString(R.string.general_error);
+                            }
+                            verificationCodeInput.setError(message);
+                        } else {
+                            verificationCodeInput.setError(getResources().getString(R.string.general_error));
+                        }
+                        resendCode.setOnClickListener(resendCodeListener);
+                        next.setOnClickListener(nextListener);
+                    }
+                });
     }
 
     @Override
@@ -230,11 +277,15 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             verificationCodeInput.setError(" ");
-                            progressBar.setVisibility(View.VISIBLE);
                             Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                             resendCode.setOnClickListener(null);
                             next.setOnClickListener(null);
-                            apiService.getVerificationCode(username);
+                            if (apiService.hasActiveAccessToken()) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                apiService.getVerificationCode(username);
+                            } else {
+                                recaptchaChallenge();
+                            }
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
