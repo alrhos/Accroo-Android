@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Accroo</string>
 
+    <string name="account">Account</string>
+    <string name="general">General</string>
     <string name="email">Email address</string>
     <string name="confirm_email">Confirm email</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -216,5 +218,13 @@
             </body>
         </html>]]>
     </string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="summary_period_title">Default summary date period</string>
+
+    <!-- Preference Messages -->
+    <string name="change_email_message">Change your account email address.</string>
+    <string name="change_password_message">Change your account password.</string>
 
 </resources>

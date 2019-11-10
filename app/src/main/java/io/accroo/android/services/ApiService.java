@@ -2,6 +2,7 @@ package io.accroo.android.services;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
@@ -317,6 +318,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
             String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
             CredentialService.getInstance(context).clearSavedData();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
             JsonObjectRequest deleteRefreshToken = RequestBuilder.deleteRefreshToken(0, coordinator, refreshToken);
             coordinator.addRequests(deleteRefreshToken);
             coordinator.start();

@@ -1,10 +1,12 @@
 package io.accroo.android.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -61,10 +63,25 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         setContentView(R.layout.activity_launch_loading);
         apiService = new ApiService(this, getApplicationContext());
         if (apiService.userLoggedIn()) {
-            // Set dates from first day of calendar month to the end of the current day
-            endDate = new DateTime().withTime(23, 59, 59, 999);
-            startDate = new DateTime(endDate.getYear(), endDate.getMonthOfYear(), 1,
-                    0, 0, 0, 0);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String summaryPeriod = sharedPreferences.getString("summary_period", "month");
+            switch (summaryPeriod) {
+                case "week":
+                    // From Monday of the current week through to Sunday
+                    startDate = new DateTime().dayOfWeek().withMinimumValue().withTime(0, 0, 0, 0);
+                    endDate = new DateTime().dayOfWeek().withMaximumValue().withTime(23, 59, 59, 999);
+                    break;
+                case "month":
+                    // From the first to the last day of the current month
+                    startDate = new DateTime().withDayOfMonth(1).withTime(0, 0, 0, 0);
+                    endDate = new DateTime().dayOfMonth().withMaximumValue().withTime(23, 59, 59, 999);
+                    break;
+                case "year":
+                    // From the first to the last day of the current year
+                    startDate = new DateTime().withMonthOfYear(1).withDayOfYear(1).withTime(0, 0, 0, 0);
+                    endDate = new DateTime().withMonthOfYear(12).withDayOfMonth(31).withTime(23, 59, 59, 999);
+                    break;
+            }
             apiService.getDefaultData(startDate, endDate);
         } else {
             initLayout();

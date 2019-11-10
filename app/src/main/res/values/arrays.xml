@@ -1,0 +1,16 @@
+<resources>
+
+    <!-- Summary period preference -->
+    <string-array name="summary_period_entries">
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
+
+    <string-array name="summary_period_values">
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
+
+</resources>
