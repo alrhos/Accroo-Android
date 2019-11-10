@@ -188,6 +188,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
                             relaunch();
                         }
                     }).create().show();
