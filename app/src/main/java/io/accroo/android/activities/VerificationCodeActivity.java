@@ -204,7 +204,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         resendCode.setOnClickListener(resendCodeListener);
         next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(VerificationCodeActivity.this);
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)

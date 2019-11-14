@@ -156,8 +156,9 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
                 errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            // Default to maintenance mode message
-            MaintenanceDialog.show(this);
+            if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
+                MaintenanceDialog.show(LaunchActivity.this);
+            }
             if (apiService.userLoggedIn()) {
                 setContentView(R.layout.activity_no_connection);
                 Button tryAgain = findViewById(R.id.try_again);

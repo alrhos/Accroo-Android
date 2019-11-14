@@ -172,7 +172,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(CategoryActivity.this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

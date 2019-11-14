@@ -106,7 +106,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(EditGeneralCategoryActivity.this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

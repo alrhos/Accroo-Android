@@ -154,7 +154,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
         progressBar.setVisibility(View.INVISIBLE);
         next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(KeyDecryptionActivity.this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

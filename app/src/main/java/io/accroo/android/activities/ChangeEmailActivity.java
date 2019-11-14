@@ -100,7 +100,7 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             progressBar.setVisibility(View.INVISIBLE);
             next.setOnClickListener(nextListener);
             if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-                MaintenanceDialog.show(this);
+                MaintenanceDialog.show(ChangeEmailActivity.this);
             } else if (errorCode == ApiService.UNAUTHORIZED) {
                 apiService.logout();
                 relaunch();
