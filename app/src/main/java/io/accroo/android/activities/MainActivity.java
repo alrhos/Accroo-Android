@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(MainActivity.this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

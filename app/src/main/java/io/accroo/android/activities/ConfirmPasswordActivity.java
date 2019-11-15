@@ -179,7 +179,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
         progressBar.setVisibility(View.INVISIBLE);
         next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(ConfirmPasswordActivity.this);
         } else {
             String message;
             switch (errorCode) {

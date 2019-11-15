@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.ConfirmPasswordActivity"
             android:screenOrientation="portrait"

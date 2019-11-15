@@ -275,7 +275,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(this);
+            MaintenanceDialog.show(TransactionActivity.this);
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

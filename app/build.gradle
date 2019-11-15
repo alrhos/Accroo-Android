@@ -8,8 +8,8 @@ android {
         applicationId "io.accroo.android"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 9
-        versionName "1.1.5"
+        versionCode 10
+        versionName "1.1.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
