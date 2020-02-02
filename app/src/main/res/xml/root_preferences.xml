@@ -20,12 +20,14 @@
 
         <Preference
             app:key="change_email"
+            app:icon="@drawable/ic_email"
             app:title="@string/change_email"
             app:summary="@string/change_email_message">
         </Preference>
 
         <Preference
             app:key="change_password"
+            app:icon="@drawable/ic_password"
             app:title="@string/change_password"
             app:summary="@string/change_password_message">
         </Preference>
@@ -39,6 +41,7 @@
             app:entries="@array/summary_period_entries"
             app:entryValues="@array/summary_period_values"
             app:key="summary_period"
+            app:icon="@drawable/ic_date"
             app:title="@string/summary_period_title"
             app:useSimpleSummaryProvider="true" />
 
