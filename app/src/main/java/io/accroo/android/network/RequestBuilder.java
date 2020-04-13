@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String BASE_URL =               "https://api.accroo.io/v1/";
+    private final static String BASE_URL =               "https://dev.accroo.io/v1/";
     private final static String CLIENT_VERSION_KEY =     "Accroo-Client";
     private final static String CLIENT_VERSION_VALUE =   "Android " + BuildConfig.VERSION_NAME;
     private final static String RECAPTCHA_TOKEN_KEY =    "Recaptcha-Token";
