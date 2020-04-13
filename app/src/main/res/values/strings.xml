@@ -48,6 +48,7 @@
     <string name="title_activity_account_verification">Account Verification</string>
 
     <string name="activity_overview">Activity Overview</string>
+    <string name="type">Type</string>
     <string name="income">Income</string>
     <string name="expenses">Expenses</string>
     <string name="expense">Expense</string>
@@ -61,11 +62,13 @@
     <string name="amount">Amount</string>
     <string name="date">Date</string>
     <string name="description">Description (optional)</string>
+    <string name="description_csv">Description</string>
 
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">Couldn\'t connect to server</string>
     <string name="no_network_connection">No network connection</string>
     <string name="general_error">An error occurred</string>
+    <string name="data_export_error">Data could not be exported</string>
     <string name="too_many_requests">Please try again in a few minutes</string>
     <string name="maintenance_title">Down for maintenance</string>
     <string name="maintenance_message">Accroo is temporarily down for maintenance but should be back again soon. Please try again later.</string>
@@ -102,6 +105,7 @@
     <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
     <string name="about">About</string>
+    <string name="export_data">Export data</string>
     <string name="new_email">New email address</string>
     <string name="new_email_message">Change your account email address.\n\nWe\'ll send a verification code to your current email address to confirm the change.</string>
     <string name="email_unchanged">You\'re already using this email address</string>
@@ -116,6 +120,7 @@
     <string name="signing_out">Signing out...</string>
     <string name="registering_account">Registering account...</string>
     <string name="email_updated_title">Email updated</string>
+    <string name="data_exported">Your data has been exported</string>
     <string name="email_updated_message">Your email address was successfully updated. Please login again to continue.</string>
     <string name="password_updated">Password updated</string>
     <string name="delete">Delete</string>

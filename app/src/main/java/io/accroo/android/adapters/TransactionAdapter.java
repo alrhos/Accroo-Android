@@ -18,6 +18,7 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.RootCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.other.Constants;
 import io.accroo.android.services.DataProvider;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private Context context;
     private AdapterInteractionListener adapterInteractionListener;
     private ArrayList<Transaction> transactions;
-    private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
     public TransactionAdapter(Context context, AdapterInteractionListener adapterInteractionListener) {
         this.context = context;
@@ -70,7 +70,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         if (position > 0 && transactions.get(position - 1).getDateWithoutTime().isEqual(transaction.getDateWithoutTime())) {
             holder.dateHeader.setVisibility(View.GONE);
         } else {
-            String formattedDate = transaction.getDateWithoutTime().toString(dateFormat);
+            String formattedDate = transaction.getDateWithoutTime().toString(Constants.DATE_FORMAT);
             holder.dateHeader.setText(formattedDate);
             holder.dateHeader.setVisibility(View.VISIBLE);
         }

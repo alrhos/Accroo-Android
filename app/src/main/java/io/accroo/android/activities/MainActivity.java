@@ -1,17 +1,24 @@
 package io.accroo.android.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.opencsv.CSVWriter;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +32,11 @@ import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import io.accroo.android.R;
 import io.accroo.android.fragments.CategoryOverviewFragment;
 import io.accroo.android.fragments.SummaryFragment;
@@ -32,9 +44,11 @@ import io.accroo.android.fragments.TransactionsFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.model.TransactionComparator;
+import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.services.ApiService;
-import io.accroo.android.services.CredentialService;
+import io.accroo.android.services.DataProvider;
 
 public class MainActivity extends AppCompatActivity implements SummaryFragment.FragmentInteractionListener,
         TransactionsFragment.FragmentInteractionListener, CategoryOverviewFragment.FragmentInteractionListener,
@@ -51,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         R.color.colorAccent,
         R.color.colorAccentSecondary
     };
+    private static final int CREATE_FILE = 1;
+    private static final String EXPORT_FILE_NAME = "Accroo data.csv";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +194,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             case R.id.about:
                 startActivity(new Intent(getApplicationContext(), AboutActivity.class));
                 return true;
+            case R.id.export_data:
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("application/csv");
+                intent.putExtra(Intent.EXTRA_TITLE, EXPORT_FILE_NAME);
+                startActivityForResult(intent, CREATE_FILE);
+                return true;
             case R.id.settings:
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
@@ -187,6 +210,21 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CREATE_FILE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    new DataExportTask(uri).execute();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.data_export_error, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -373,6 +411,68 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         hideRefreshing();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         relaunch();
+    }
+
+    class DataExportTask extends AsyncTask<Void, Void, Boolean> {
+
+        private Uri exportFileUri;
+
+        public DataExportTask(Uri exportFileUri) {
+            this.exportFileUri = exportFileUri;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(exportFileUri, "w");
+                if (parcelFileDescriptor != null) {
+                    FileWriter fileWriter = new FileWriter(parcelFileDescriptor.getFileDescriptor());
+                    CSVWriter csvWriter = new CSVWriter(fileWriter);
+                    String[] headers = {
+                            getResources().getString(R.string.type),
+                            getResources().getString(R.string.general_category),
+                            getResources().getString(R.string.sub_category),
+                            getResources().getString(R.string.date),
+                            getResources().getString(R.string.amount),
+                            getResources().getString(R.string.description_csv)
+                    };
+                    csvWriter.writeNext(headers);
+                    GeneralCategory generalCategory;
+                    SubCategory subCategory;
+                    ArrayList<Transaction> transactions = DataProvider.getTransactions();
+                    Collections.sort(transactions, new TransactionComparator());
+                    for (Transaction transaction : transactions) {
+                        subCategory = (SubCategory) transaction.getParent();
+                        generalCategory = (GeneralCategory) subCategory.getParent();
+                        String[] row = {
+                                generalCategory.getRootCategory(),
+                                generalCategory.getCategoryName(),
+                                subCategory.getCategoryName(),
+                                transaction.getDateWithoutTime().toString(Constants.DATE_FORMAT),
+                                transaction.getFormattedAmount(),
+                                transaction.getDescription()
+                        };
+                        csvWriter.writeNext(row);
+                    }
+                    csvWriter.close();
+                    fileWriter.close();
+                    parcelFileDescriptor.close();
+                    return true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                Toast.makeText(getApplicationContext(), R.string.data_exported, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.data_export_error, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 }
