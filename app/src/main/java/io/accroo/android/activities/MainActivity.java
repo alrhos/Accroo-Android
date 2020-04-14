@@ -417,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
         private Uri exportFileUri;
 
-        public DataExportTask(Uri exportFileUri) {
+        private DataExportTask(Uri exportFileUri) {
             this.exportFileUri = exportFileUri;
         }
 
