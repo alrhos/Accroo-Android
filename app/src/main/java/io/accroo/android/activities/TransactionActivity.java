@@ -25,6 +25,7 @@ import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
+import io.accroo.android.other.Constants;
 import io.accroo.android.other.MaintenanceDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
@@ -43,7 +44,6 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
     private ApiService apiService;
-    private DateTimeFormatter dateFormat = DateTimeFormat.forPattern("dd MMM yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 setTitle(R.string.title_activity_edit_transaction);
 
                 amountField.setText(String.valueOf(existingTransaction.getFormattedAmount()));
-                dateField.setText(existingTransaction.getDate().toString(dateFormat));
+                dateField.setText(existingTransaction.getDate().toString(Constants.DATE_FORMAT));
                 descriptionField.setText(existingTransaction.getDescription());
 
                 String icon = ((GeneralCategory) ((SubCategory) existingTransaction.getParent()).getParent()).getIconFile();
@@ -206,7 +206,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     private void updateDate() {
-        dateField.setText(date.toString(dateFormat));
+        dateField.setText(date.toString(Constants.DATE_FORMAT));
     }
 
     private void deleteTransaction() {
