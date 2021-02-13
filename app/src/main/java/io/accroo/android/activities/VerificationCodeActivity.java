@@ -28,7 +28,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import io.accroo.android.R;
 import io.accroo.android.model.Account;
 import io.accroo.android.other.Constants;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -204,7 +204,13 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         resendCode.setOnClickListener(resendCodeListener);
         next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(VerificationCodeActivity.this);
+            MessageDialog.show(VerificationCodeActivity.this,
+                    getResources().getString(R.string.maintenance_title),
+                    getResources().getString(R.string.maintenance_message));
+        } else if (errorCode == ApiService.GONE) {
+            MessageDialog.show(VerificationCodeActivity.this,
+                    getResources().getString(R.string.upgrade_required_title),
+                    getResources().getString(R.string.upgrade_required_message));
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)

@@ -64,6 +64,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int NOT_FOUND =                 1008;
     public final static int SERVICE_UNAVAILABLE =       1009;
     public final static int FORBIDDEN =                 1010;
+    public final static int GONE =                      1011;
 
     private RequestOutcome                              requestOutcome;
     private Context                                     context;

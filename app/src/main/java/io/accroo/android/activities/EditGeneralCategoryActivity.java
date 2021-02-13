@@ -13,7 +13,7 @@ import android.widget.Toast;
 import io.accroo.android.R;
 import io.accroo.android.fragments.GeneralCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -106,7 +106,13 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(EditGeneralCategoryActivity.this);
+            MessageDialog.show(EditGeneralCategoryActivity.this,
+                    getResources().getString(R.string.maintenance_title),
+                    getResources().getString(R.string.maintenance_message));
+        } else if (errorCode == ApiService.GONE) {
+            MessageDialog.show(EditGeneralCategoryActivity.this,
+                    getResources().getString(R.string.upgrade_required_title),
+                    getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

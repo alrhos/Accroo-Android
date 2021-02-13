@@ -28,7 +28,7 @@ import org.joda.time.DateTime;
 
 import io.accroo.android.R;
 import io.accroo.android.other.Constants;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -155,9 +155,17 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
         } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.NOT_FOUND) {
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
-                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE) {
+                errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE ||
+                errorCode == ApiService.GONE) {
             if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-                MaintenanceDialog.show(LaunchActivity.this);
+                MessageDialog.show(LaunchActivity.this,
+                        getResources().getString(R.string.maintenance_title),
+                        getResources().getString(R.string.maintenance_message));
+            }
+            if (errorCode == ApiService.GONE) {
+                MessageDialog.show(LaunchActivity.this,
+                        getResources().getString(R.string.upgrade_required_title),
+                        getResources().getString(R.string.upgrade_required_message));
             }
             if (apiService.userLoggedIn()) {
                 setContentView(R.layout.activity_no_connection);

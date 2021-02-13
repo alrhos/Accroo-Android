@@ -46,7 +46,7 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.model.TransactionComparator;
 import io.accroo.android.other.Constants;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.services.ApiService;
 import io.accroo.android.services.DataProvider;
 
@@ -380,7 +380,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(MainActivity.this);
+            MessageDialog.show(MainActivity.this,
+                    getResources().getString(R.string.maintenance_title),
+                    getResources().getString(R.string.maintenance_message));
+        } else if (errorCode == ApiService.GONE) {
+            MessageDialog.show(MainActivity.this,
+                    getResources().getString(R.string.upgrade_required_title),
+                    getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

@@ -1,7 +1,5 @@
 package io.accroo.android.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +15,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
 import io.accroo.android.other.Constants;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -154,7 +152,13 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
         progressBar.setVisibility(View.INVISIBLE);
         next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(KeyDecryptionActivity.this);
+            MessageDialog.show(KeyDecryptionActivity.this,
+                    getResources().getString(R.string.maintenance_title),
+                    getResources().getString(R.string.maintenance_message));
+        } else if (errorCode == ApiService.GONE) {
+            MessageDialog.show(KeyDecryptionActivity.this,
+                    getResources().getString(R.string.upgrade_required_title),
+                    getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

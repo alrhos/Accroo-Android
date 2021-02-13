@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -100,7 +100,13 @@ public class ChangeEmailActivity extends AppCompatActivity implements ApiService
             progressBar.setVisibility(View.INVISIBLE);
             next.setOnClickListener(nextListener);
             if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-                MaintenanceDialog.show(ChangeEmailActivity.this);
+                MessageDialog.show(ChangeEmailActivity.this,
+                        getResources().getString(R.string.maintenance_title),
+                        getResources().getString(R.string.maintenance_message));
+            } else if (errorCode == ApiService.GONE) {
+                MessageDialog.show(ChangeEmailActivity.this,
+                        getResources().getString(R.string.upgrade_required_title),
+                        getResources().getString(R.string.upgrade_required_message));
             } else if (errorCode == ApiService.UNAUTHORIZED) {
                 apiService.logout();
                 relaunch();
