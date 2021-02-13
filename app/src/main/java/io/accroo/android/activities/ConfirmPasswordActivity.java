@@ -24,7 +24,7 @@ import io.accroo.android.R;
 import io.accroo.android.model.Account;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.other.Constants;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -179,7 +179,13 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
         progressBar.setVisibility(View.INVISIBLE);
         next.setOnClickListener(nextListener);
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(ConfirmPasswordActivity.this);
+            MessageDialog.show(ConfirmPasswordActivity.this,
+                    getResources().getString(R.string.maintenance_title),
+                    getResources().getString(R.string.maintenance_message));
+        } else if (errorCode == ApiService.GONE) {
+            MessageDialog.show(ConfirmPasswordActivity.this,
+                    getResources().getString(R.string.upgrade_required_title),
+                    getResources().getString(R.string.upgrade_required_message));
         } else {
             String message;
             switch (errorCode) {

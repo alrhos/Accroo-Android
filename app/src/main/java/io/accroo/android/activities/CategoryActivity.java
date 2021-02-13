@@ -21,7 +21,7 @@ import io.accroo.android.fragments.GeneralCategoryFragment;
 import io.accroo.android.fragments.SubCategoryFragment;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
-import io.accroo.android.other.MaintenanceDialog;
+import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
 import io.accroo.android.services.ApiService;
 
@@ -172,7 +172,13 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
     public void onFailure(int requestType, int errorCode) {
         progressDialog.dismiss();
         if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
-            MaintenanceDialog.show(CategoryActivity.this);
+            MessageDialog.show(CategoryActivity.this,
+                    getResources().getString(R.string.maintenance_title),
+                    getResources().getString(R.string.maintenance_message));
+        } else if (errorCode == ApiService.GONE) {
+            MessageDialog.show(CategoryActivity.this,
+                    getResources().getString(R.string.upgrade_required_title),
+                    getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
             apiService.logout();
             relaunch();

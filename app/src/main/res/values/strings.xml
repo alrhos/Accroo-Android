@@ -72,6 +72,8 @@
     <string name="too_many_requests">Please try again in a few minutes</string>
     <string name="maintenance_title">Down for maintenance</string>
     <string name="maintenance_message">Accroo is temporarily down for maintenance but should be back again soon. Please try again later.</string>
+    <string name="upgrade_required_title">Upgrade Required</string>
+    <string name="upgrade_required_message">The version of Accroo you have installed is no longer supported. Please install the latest version of the app from the Google Play store.</string>
     <string name="invalid_input">Invalid input provided</string>
     <string name="email_in_use">This email address is already being used</string>
     <string name="account_locked">This account is locked</string>
