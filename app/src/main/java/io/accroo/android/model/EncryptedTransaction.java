@@ -1,39 +1,41 @@
 package io.accroo.android.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
 public class EncryptedTransaction {
 
-    @Expose (serialize = false) private int id;
-    @Expose private int subCategoryId;
+    @Expose (serialize = false) private UUID id;
+    @Expose @SerializedName("sub_category_id") private UUID subCategoryId;
     @Expose private String data;
     @Expose private String nonce;
 
-    public EncryptedTransaction(int id, int subCategoryId, String data, String nonce) {
+    public EncryptedTransaction(UUID id, UUID subCategoryId, String data, String nonce) {
         this.id = id;
         this.subCategoryId = subCategoryId;
         this.data = data;
         this.nonce = nonce;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public int getSubCategoryId() {
+    public UUID getSubCategoryId() {
         return subCategoryId;
     }
 
-    public void setSubCategoryId(int subCategoryId) {
+    public void setSubCategoryId(UUID subCategoryId) {
         this.subCategoryId = subCategoryId;
     }
 

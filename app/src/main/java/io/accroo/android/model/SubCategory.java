@@ -10,6 +10,7 @@ import io.accroo.android.other.GsonUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by oscar on 24/03/17.
@@ -17,15 +18,15 @@ import java.util.ArrayList;
 
 public class SubCategory implements Relationship, Parcelable {
 
-    private int id;
-    private int generalCategoryId;
+    private UUID id;
+    private UUID generalCategoryId;
     @Expose private String categoryName;
     private String generalCategoryName;
     private GeneralCategory parent;
     private ArrayList<Transaction> transactions;
     private static DecimalFormat df = new DecimalFormat("0.00");
 
-    public SubCategory(String categoryName, int generalCategoryId) {
+    public SubCategory(String categoryName, UUID generalCategoryId) {
         this.categoryName = categoryName;
         this.generalCategoryId = generalCategoryId;
     }
@@ -35,19 +36,19 @@ public class SubCategory implements Relationship, Parcelable {
         this.generalCategoryName = generalCategoryName;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public int getGeneralCategoryId() {
+    public UUID getGeneralCategoryId() {
         return generalCategoryId;
     }
 
-    public void setGeneralCategoryId(int generalCategoryId) {
+    public void setGeneralCategoryId(UUID generalCategoryId) {
         this.generalCategoryId = generalCategoryId;
     }
 
@@ -114,15 +115,15 @@ public class SubCategory implements Relationship, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeInt(this.generalCategoryId);
+        dest.writeSerializable(this.id);
+        dest.writeSerializable(this.generalCategoryId);
         dest.writeString(this.categoryName);
         dest.writeParcelable(this.parent, flags);
     }
 
     protected SubCategory(Parcel in) {
-        this.id = in.readInt();
-        this.generalCategoryId = in.readInt();
+        this.id = (UUID) in.readSerializable();
+        this.generalCategoryId = (UUID) in.readSerializable();
         this.categoryName = in.readString();
         this.parent = in.readParcelable(GeneralCategory.class.getClassLoader());
     }

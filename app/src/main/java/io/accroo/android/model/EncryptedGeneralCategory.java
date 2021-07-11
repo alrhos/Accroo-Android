@@ -4,28 +4,29 @@ import com.google.gson.annotations.Expose;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
 public class EncryptedGeneralCategory {
 
-    @Expose(serialize = false) private int id;
+    @Expose(serialize = false) private UUID id;
     @Expose private String data;
     @Expose private String nonce;
     @Expose (serialize = false) private ArrayList<EncryptedSubCategory> subCategories = new ArrayList<>();
 
-    public EncryptedGeneralCategory(int id, String data, String nonce) {
+    public EncryptedGeneralCategory(UUID id, String data, String nonce) {
         this.id = id;
         this.data = data;
         this.nonce = nonce;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

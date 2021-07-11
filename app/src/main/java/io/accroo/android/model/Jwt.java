@@ -3,11 +3,11 @@ package io.accroo.android.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AccessToken {
+public class Jwt {
     @Expose private String token;
     @Expose @SerializedName("expires_at") private String expiresAt;
 
-    public AccessToken(String token, String expiresAt) {
+    public Jwt(String token, String expiresAt) {
         this.token = token;
         this.expiresAt = expiresAt;
     }
@@ -30,7 +30,7 @@ public class AccessToken {
 
     @Override
     public String toString() {
-        return "AccessToken{" +
+        return "Jwt{" +
                 "token='" + token + '\'' +
                 ", expiresAt='" + expiresAt + '\'' +
                 '}';
