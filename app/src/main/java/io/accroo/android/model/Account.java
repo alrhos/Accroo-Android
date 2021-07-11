@@ -21,6 +21,7 @@ public class Account {
     }
 
     private String generateVerificationToken() {
+        // TODO: change to 6 digit code
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[5];
         random.nextBytes(bytes);
