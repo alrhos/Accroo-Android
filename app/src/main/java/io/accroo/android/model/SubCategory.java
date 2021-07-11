@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
@@ -24,7 +25,7 @@ public class SubCategory implements Relationship, Parcelable {
     private String generalCategoryName;
     private GeneralCategory parent;
     private ArrayList<Transaction> transactions;
-    private static DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public SubCategory(String categoryName, UUID generalCategoryId) {
         this.categoryName = categoryName;
@@ -94,8 +95,9 @@ public class SubCategory implements Relationship, Parcelable {
     public EncryptedSubCategory encrypt() {
         String categoryJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
-        return new EncryptedSubCategory(this.id, this.generalCategoryId,
-                securePayload.getData(), securePayload.getNonce());
+        securePayload.setId(this.id);
+        return new EncryptedSubCategory(securePayload.getId(), securePayload.getData(),
+                securePayload.getNonce(), this.generalCategoryId);
     }
 
     @Override

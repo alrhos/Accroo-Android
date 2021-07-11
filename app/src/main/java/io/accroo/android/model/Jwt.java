@@ -4,8 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Jwt {
-    @Expose private String token;
-    @Expose @SerializedName("expires_at") private String expiresAt;
+
+    @Expose(serialize = false) private String token;
+    @Expose(serialize = false) @SerializedName("expires_at") private String expiresAt;
 
     public Jwt(String token, String expiresAt) {
         this.token = token;

@@ -23,7 +23,7 @@ public class GeneralCategory implements Parcelable {
     @Expose private String rootCategory;
     @Expose private String iconFile;
     private ArrayList<SubCategory> subCategories;
-    private static DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public GeneralCategory(String categoryName, String rootCategory, String iconFile) {
         this.categoryName = categoryName;
@@ -89,7 +89,8 @@ public class GeneralCategory implements Parcelable {
     public EncryptedGeneralCategory encrypt() {
         String categoryJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
-        return new EncryptedGeneralCategory(this.id, securePayload.getData(), securePayload.getNonce());
+        securePayload.setId(this.id);
+        return new EncryptedGeneralCategory(securePayload.getId(), securePayload.getData(), securePayload.getNonce());
     }
 
     @Override
@@ -124,14 +125,4 @@ public class GeneralCategory implements Parcelable {
         }
     };
 
-    @Override
-    public String toString() {
-        return "GeneralCategory{" +
-                "id=" + id +
-                ", categoryName='" + categoryName + '\'' +
-                ", rootCategory='" + rootCategory + '\'' +
-                ", iconFile='" + iconFile + '\'' +
-                ", subCategories=" + subCategories +
-                '}';
-    }
 }

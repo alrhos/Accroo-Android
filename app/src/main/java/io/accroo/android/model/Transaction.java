@@ -28,8 +28,8 @@ public class Transaction implements Relationship, Parcelable {
     @Expose private double amount;
     @Expose private String description = "";
     private SubCategory parent;
-    private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
     public Transaction(UUID subCategoryId, DateTime date, double amount, String description) {
         this.subCategoryId = subCategoryId;
@@ -108,8 +108,9 @@ public class Transaction implements Relationship, Parcelable {
     public EncryptedTransaction encrypt() {
         String transactionJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(transactionJson);
-        return new EncryptedTransaction(this.id, this.subCategoryId,
-                securePayload.getData(), securePayload.getNonce());
+        securePayload.setId(this.id);
+        return new EncryptedTransaction(securePayload.getId(), securePayload.getData(),
+                securePayload.getNonce(), this.subCategoryId);
     }
 
     @Override
@@ -148,15 +149,4 @@ public class Transaction implements Relationship, Parcelable {
         }
     };
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", subCategoryId=" + subCategoryId +
-                ", date=" + date +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                ", dateFormat=" + dateFormat +
-                '}';
-    }
 }
