@@ -281,7 +281,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            apiService.logout();
+            apiService.invalidateSession();
             relaunch();
         } else if (requestType == ApiService.DELETE_TRANSACTION && errorCode == ApiService.NOT_FOUND) {
             // The transaction has already been deleted

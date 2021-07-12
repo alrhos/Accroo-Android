@@ -39,7 +39,6 @@ public class RequestBuilder {
     private final static String RECAPTCHA_TOKEN_KEY =    "Recaptcha-Token";
 
     private final static String USERS = "users";
-    private final static String USER = "users/<id>";
     private final static String EMAIL = "users/<id>/email";
     private final static String EMAIL_SEARCH = "users/email/<email>";
     private final static String KEY = "users/<id>/key";
@@ -125,9 +124,8 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest postVerificationToken(int index, final RequestCoordinator coordinator,
-                                                          final String accessToken, String json) throws JSONException {
+                                                          final String accessToken, JSONObject object) throws JSONException {
         String url = BASE_URL + VERIFICATION_TOKENS;
-        JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -586,6 +584,8 @@ public class RequestBuilder {
             switch (statusCode) {
                 case 400:
                     return ApiService.INVALID_REQUEST;
+                case 403:
+                    return ApiService.FORBIDDEN;
                 case 404:
                     return ApiService.NOT_FOUND;
                 case 409:

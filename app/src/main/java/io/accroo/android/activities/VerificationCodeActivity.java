@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
-import io.accroo.android.model.Account;
+import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
@@ -161,7 +161,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
             verificationCodeInput.setError(getResources().getString(R.string.new_verification_code_sent));
-        } else if (requestType == ApiService.LOGIN) {
+        } else if (requestType == ApiService.CREATE_SESSION) {
             apiService.getKey();
         } else if (requestType == ApiService.GET_KEY) {
             verificationCodeField.getText().clear();
@@ -173,7 +173,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             intent.putExtra("username", username);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else if (requestType == ApiService.REAUTHENTICATE) {
+        } else if (requestType == ApiService.REAUTHENTICATE_SESSION) {
             if (action == UPDATE_EMAIL) {
                 apiService.updateEmail(email);
             } else if (action == UPDATE_PASSWORD) {
@@ -266,10 +266,10 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 resendCode.setOnClickListener(null);
                 next.setOnClickListener(null);
                 if (action == LOGIN) {
-                    Account account = new Account(username, verificationCodeField.getText().toString());
-                    apiService.login(account);
+                    AuthCredentials authCredentials = new AuthCredentials(username, verificationCodeField.getText().toString());
+                    apiService.createSession(authCredentials);
                 } else if (action == UPDATE_EMAIL || action == UPDATE_PASSWORD) {
-                    apiService.reauthenticate(verificationCodeField.getText().toString());
+                    apiService.reauthenticateSession(verificationCodeField.getText().toString());
                 }
             }
         }

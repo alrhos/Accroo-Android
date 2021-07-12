@@ -180,7 +180,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            apiService.logout();
+            apiService.invalidateSession();
             relaunch();
         } else {
             String message;

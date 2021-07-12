@@ -11,10 +11,11 @@ import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
 import io.accroo.android.crypto.CryptoManager;
-import io.accroo.android.model.AccessToken;
-import io.accroo.android.model.Account;
+import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.GeneralCategory;
+import io.accroo.android.model.Jwt;
 import io.accroo.android.model.Preferences;
+import io.accroo.android.model.Session;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.network.RequestBuilder;
@@ -45,13 +46,16 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int UPDATE_PASSWORD =           14;
     public final static int GET_VERIFICATION_CODE =     15;
     public final static int CREATE_ACCOUNT =            16;
-    public final static int LOGIN =                     17;
-    public final static int UPDATE_PREFERENCES =        18;
-    public final static int CREATE_KEY =                19;
-    public final static int REAUTHENTICATE =            20;
-    public final static int GET_ANONYMOUS_TOKEN =       21;
+    public final static int CREATE_SESSION =            17;
+    public final static int UPDATE_SESSION_DATA =       18;
+    public final static int REFRESH_SESSION =           19;
+    public final static int REAUTHENTICATE_SESSION =    20;
+    public final static int INVALIDATE_SESSION =        21;
+    public final static int UPDATE_PREFERENCES =        22;
+    public final static int CREATE_KEY =                23;
     public final static int CHECK_EMAIL_AVAILABILITY =  22;
     public final static int INITIALIZE_ACCOUNT_DATA =   23;
+    public final static int GET_VISITOR_TOKEN =         24;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -103,7 +107,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public boolean userLoggedIn() {
         try {
-            CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
             CryptoManager.getInstance().initMasterKey(context);
             return true;
         } catch (Exception e) {
@@ -178,71 +182,71 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         submitRequest();
     }
 
-    public void getAnonymousToken(final String recaptchaToken) {
+    public void getVisitorToken(final String recaptchaToken) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(GET_ANONYMOUS_TOKEN, ApiService.this, context,
+                new PostRequestTask(GET_VISITOR_TOKEN, ApiService.this, context,
                         null).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(GET_ANONYMOUS_TOKEN, errorCode);
+                requestOutcome.onFailure(GET_VISITOR_TOKEN, errorCode);
             }
         };
 
         preRequestVariables.clear();
         preRequestVariables.put("recaptchaToken", recaptchaToken);
 
-        new PreRequestTask(GET_ANONYMOUS_TOKEN, this, context, coordinator,
+        new PreRequestTask(GET_VISITOR_TOKEN, this, context, coordinator,
                 preRequestVariables).execute();
     }
 
-    public void login(final Account account) {
+    public void createSession(final AuthCredentials authCredentials) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
                 postRequestVariables.clear();
-                postRequestVariables.put("account", account);
-                new PostRequestTask(LOGIN, ApiService.this, context,
+                postRequestVariables.put("authCredentials", authCredentials);
+                new PostRequestTask(CREATE_SESSION, ApiService.this, context,
                         postRequestVariables).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(LOGIN, errorCode);
+                requestOutcome.onFailure(CREATE_SESSION, errorCode);
             }
         };
 
         preRequestVariables.clear();
-        preRequestVariables.put("account", account);
+        preRequestVariables.put("authCredentials", authCredentials);
 
-        new PreRequestTask(LOGIN, this, context, coordinator,
+        new PreRequestTask(CREATE_SESSION, this, context, coordinator,
                 preRequestVariables).execute();
     }
 
-    public void reauthenticate(final String password) {
+    public void reauthenticateSession(final String password) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                new PostRequestTask(REAUTHENTICATE, ApiService.this, context,
+                new PostRequestTask(REAUTHENTICATE_SESSION, ApiService.this, context,
                         null).execute(dataReceiver);
             }
 
             @Override
             protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(REAUTHENTICATE, errorCode);
+                requestOutcome.onFailure(REAUTHENTICATE_SESSION, errorCode);
             }
         };
 
         preRequestVariables.clear();
         preRequestVariables.put("loginCode", password);
 
-        new PreRequestTask(REAUTHENTICATE, this, context, coordinator,
+        new PreRequestTask(REAUTHENTICATE_SESSION, this, context, coordinator,
                 preRequestVariables).execute();
     }
 
@@ -250,25 +254,26 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         if (userLoggedIn()) {
             try {
                 String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
-                String tokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
-                DateTime tokenExpiryTime = new DateTime(tokenExpiry);
+                String currentAccessTokenExpiry = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY);
+                DateTime currentAccessTokenExpiryTime = new DateTime(currentAccessTokenExpiry);
                 DateTime currentTime = new DateTime();
-                if (Seconds.secondsBetween(currentTime, tokenExpiryTime).getSeconds() <= 60) {
-                    // Access token needs to be refreshed
-                    final String[] accessTokenReceiver = new String[1];
-                    RequestCoordinator accessTokenCoordinator = new RequestCoordinator(context,
-                            this, accessTokenReceiver) {
+                if (Seconds.secondsBetween(currentTime, currentAccessTokenExpiryTime).getSeconds() <= 60) {
+                    // Session needs to be refreshed
+                    final String[] sessionRefreshReceiver = new String[1];
+                    RequestCoordinator sessionRefreshCoordinator = new RequestCoordinator(context,
+                            this, sessionRefreshReceiver) {
                         @Override
                         protected void onSuccess() {
-                            String response = accessTokenReceiver[0];
-                            AccessToken accessToken = GsonUtil.getInstance().fromJson(response, AccessToken.class);
-                            DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
-                            // Update access token in local storage
+                            String response = sessionRefreshReceiver[0];
+                            Session session = GsonUtil.getInstance().fromJson(response, Session.class);
+                            DateTime newRefreshTokenExpiryTime = new DateTime(session.getRefreshToken().getExpiresAt());
+                            DateTime newAccessTokenExpiryTime = new DateTime(session.getAccessToken().getExpiresAt());
+                            // Save new tokens to local storage
                             try {
-                                CredentialService.getInstance(context)
-                                        .saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
-                                CredentialService.getInstance(context)
-                                        .saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
+                                CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, session.getRefreshToken().getToken());
+                                CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, newRefreshTokenExpiryTime.toString());
+                                CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());
+                                CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, newAccessTokenExpiryTime.toString());
                                 // Execute queued task
                                 preRequestTask.execute();
                             } catch (Exception e) {
@@ -284,10 +289,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     };
 
                     try {
-                        JsonObjectRequest accessTokenRequest = RequestBuilder.postAccessToken(0,
-                                accessTokenCoordinator, refreshToken);
-                        accessTokenCoordinator.addRequests(accessTokenRequest);
-                        accessTokenCoordinator.start();
+                        String sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
+                        JsonObjectRequest accessTokenRequest = RequestBuilder.postSessionRefresh(0,
+                                sessionRefreshCoordinator, sessionId, refreshToken);
+                        sessionRefreshCoordinator.addRequests(accessTokenRequest);
+                        sessionRefreshCoordinator.start();
                     } catch (Exception e) {
                         e.printStackTrace();
                         requestOutcome.onError();
@@ -307,7 +313,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void logout() {
+    public void invalidateSession() {
         try {
             dataReceiver = new String[1];
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
@@ -318,11 +324,12 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 protected void onFailure(int errorCode) {}
             };
 
-            String refreshToken = CredentialService.getInstance(context).getEntry(CredentialService.REFRESH_TOKEN_KEY);
+            String sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
+            String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
             CredentialService.getInstance(context).clearSavedData();
             PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
-            JsonObjectRequest deleteRefreshToken = RequestBuilder.deleteRefreshToken(0, coordinator, refreshToken);
-            coordinator.addRequests(deleteRefreshToken);
+            JsonObjectRequest invalidateSession = RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken);
+            coordinator.addRequests(invalidateSession);
             coordinator.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -382,7 +389,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void createAccount(final Account account) {
+    public void createAccount(final AuthCredentials authCredentials) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -397,7 +404,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         preRequestVariables.clear();
-        preRequestVariables.put("account", account);
+        preRequestVariables.put("authCredentials", authCredentials);
 
         new PreRequestTask(CREATE_ACCOUNT, this, context, coordinator,
                 preRequestVariables).execute();
@@ -780,13 +787,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     @Override
     public void onPreRequestTaskFailure() {
-        logout();
+        invalidateSession();
         requestOutcome.onError();
     }
 
     @Override
     public void onPostRequestTaskFailure() {
-        logout();
+        invalidateSession();
         requestOutcome.onError();
     }
 

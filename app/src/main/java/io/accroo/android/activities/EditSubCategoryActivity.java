@@ -148,7 +148,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            apiService.logout();
+            apiService.invalidateSession();
             relaunch();
         } else if (requestType == ApiService.DELETE_SUB_CATEGORY && errorCode == ApiService.NOT_FOUND) {
             // The category has already been deleted

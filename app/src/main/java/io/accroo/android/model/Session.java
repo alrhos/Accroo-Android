@@ -13,18 +13,28 @@ import io.accroo.android.other.GsonUtil;
 
 public class Session extends SecurePayload {
 
+    @Expose(serialize = false) @SerializedName("user_id") private UUID userId;
     @Expose(serialize = false) @SerializedName("date_created") private DateTime dateCreated;
     @Expose(serialize = false) @SerializedName("date_last_refreshed") private DateTime dateLastRefreshed;
     @Expose(serialize = false) @SerializedName("refresh_token") private Jwt refreshToken;
     @Expose(serialize = false) @SerializedName("access_token") private Jwt accessToken;
 
-    public Session(UUID id, String data, String nonce, DateTime dateCreated,
+    public Session(UUID id, String data, String nonce, UUID userId, DateTime dateCreated,
                    DateTime dateLastRefreshed, Jwt refreshToken, Jwt accessToken) {
         super(id, data, nonce);
+        this.userId = userId;
         this.dateCreated = dateCreated;
         this.dateLastRefreshed = dateLastRefreshed;
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public DateTime getDateCreated() {

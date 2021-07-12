@@ -21,7 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
-import io.accroo.android.model.Account;
+import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MessageDialog;
@@ -40,7 +40,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
     private EditText passwordField;
     private Button next;
     private ApiService apiService;
-    private Account account;
+    private AuthCredentials authCredentials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                     public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
                         if (!response.getTokenResult().isEmpty()) {
                             progressBar.setVisibility(View.VISIBLE);
-                            apiService.getAnonymousToken(response.getTokenResult());
+                            apiService.getVisitorToken(response.getTokenResult());
                         }
                     }
                 })
@@ -120,8 +120,8 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                 if (action == REGISTER) {
                     if (apiService.hasActiveAccessToken()) {
                         progressBar.setVisibility(View.VISIBLE);
-                        account = new Account(username);
-                        apiService.createAccount(account);
+                        authCredentials = new AuthCredentials(username);
+                        apiService.createAccount(authCredentials);
                     } else {
                         recaptchaChallenge();
                     }
@@ -146,12 +146,12 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_ANONYMOUS_TOKEN) {
-            account = new Account(username);
-            apiService.createAccount(account);
+        if (requestType == ApiService.GET_VISITOR_TOKEN) {
+            authCredentials = new AuthCredentials(username);
+            apiService.createAccount(authCredentials);
         } else if (requestType == ApiService.CREATE_ACCOUNT) {
-            apiService.login(account);
-        } else if (requestType == ApiService.LOGIN) {
+            apiService.createSession(authCredentials);
+        } else if (requestType == ApiService.CREATE_SESSION) {
             char[] pwd = new char[password.length()];
             password.getChars(0, password.length(), pwd, 0);
             apiService.initializeAccountData(pwd, new Preferences());

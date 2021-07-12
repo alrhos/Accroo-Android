@@ -11,7 +11,7 @@ import io.accroo.android.other.GsonUtil;
 
 public class SessionData {
 
-    private UUID id;
+    private UUID id, userId;
     @Expose private String deviceName;
     @Expose private String deviceOs;
     private DateTime dateCreated, dateLastRefreshed;
@@ -27,6 +27,14 @@ public class SessionData {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getDeviceName() {

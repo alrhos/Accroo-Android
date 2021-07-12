@@ -183,7 +183,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onError() {
-        apiService.logout();
+        apiService.invalidateSession();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -197,7 +197,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                     public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
                         if (!response.getTokenResult().isEmpty()) {
                             progressBar.setVisibility(View.VISIBLE);
-                            apiService.getAnonymousToken(response.getTokenResult());
+                            apiService.getVisitorToken(response.getTokenResult());
                         }
                     }
                 })

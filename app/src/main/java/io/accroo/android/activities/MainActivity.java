@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
             case R.id.sign_out:
-                apiService.logout();
+                apiService.invalidateSession();
                 relaunch();
                 return true;
             default:
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            apiService.logout();
+            apiService.invalidateSession();
             relaunch();
         } else {
             String message;
