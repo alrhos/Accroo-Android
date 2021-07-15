@@ -254,11 +254,8 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             String verificationCode = verificationCodeField.getText().toString();
             if (verificationCode.length() == 0) {
                 verificationCodeInput.setError(getResources().getString(R.string.enter_verification_code));
-            } else if (verificationCode.length() != 8) {
-                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_length));
-            } else if (!verificationCode.matches("^[A-Z2-7]{8}$")) {
-                // Verification code is a Base32 encoded string
-                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_format));
+            } else if (!verificationCode.matches("^[0-9]{6}$")) {
+                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code));
             } else {
                 verificationCodeInput.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);

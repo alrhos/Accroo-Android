@@ -1,6 +1,7 @@
 package io.accroo.android.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
@@ -8,7 +9,8 @@ public class EncryptedDefaultGeneralCategory {
 
     @Expose private String data;
     @Expose private String nonce;
-    @Expose private ArrayList<EncryptedDefaultSubCategory> subCategories = new ArrayList<>();
+    @Expose @SerializedName("sub_categories")
+    private ArrayList<EncryptedDefaultSubCategory> subCategories = new ArrayList<>();
 
     public EncryptedDefaultGeneralCategory(String data, String nonce) {
         this.data = data;

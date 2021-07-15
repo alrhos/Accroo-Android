@@ -631,7 +631,13 @@ public class RequestBuilder {
 
     private static Response.Listener<JSONObject> createJsonObjectResponseListener(
             final int index, final RequestCoordinator coordinator) {
-        return response -> coordinator.done(index, response);
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response.toString());
+                coordinator.done(index, response);
+            }
+        };
     }
 
     private static Response.Listener<JSONArray> createJsonArrayResponseListener(

@@ -107,7 +107,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.GET_DEFAULT_DATA:
 
-                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.getGeneralCategories(0, coordinator, accessToken));
                     requests.add(RequestBuilder.getSubCategories(1, coordinator, accessToken));
@@ -117,7 +116,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_ACCOUNT:
 
-                    authCredentials = (AuthCredentials) requestVariables.get("account");
+                    authCredentials = (AuthCredentials) requestVariables.get("authCredentials");
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.postAccount(0, coordinator,
                             GsonUtil.getInstance().toJson(authCredentials), accessToken));
@@ -126,7 +125,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.CREATE_SESSION:
 
-                    authCredentials = (AuthCredentials) requestVariables.get("account");
+                    authCredentials = (AuthCredentials) requestVariables.get("authCredentials");
                     accountJson = GsonUtil.getInstance().toJson(authCredentials);
                     requests.add(RequestBuilder.postSession(0, coordinator, accountJson));
 
@@ -161,6 +160,7 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.INITIALIZE_ACCOUNT_DATA:
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
 
                     // Generate and save data encryption key details

@@ -125,4 +125,14 @@ public class GeneralCategory implements Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "GeneralCategory{" +
+                "id=" + id +
+                ", categoryName='" + categoryName + '\'' +
+                ", rootCategory='" + rootCategory + '\'' +
+                ", iconFile='" + iconFile + '\'' +
+                ", subCategories=" + subCategories +
+                '}';
+    }
 }

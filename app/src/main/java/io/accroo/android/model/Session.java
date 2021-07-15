@@ -3,8 +3,6 @@ package io.accroo.android.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
-
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
@@ -14,13 +12,13 @@ import io.accroo.android.other.GsonUtil;
 public class Session extends SecurePayload {
 
     @Expose(serialize = false) @SerializedName("user_id") private UUID userId;
-    @Expose(serialize = false) @SerializedName("date_created") private DateTime dateCreated;
-    @Expose(serialize = false) @SerializedName("date_last_refreshed") private DateTime dateLastRefreshed;
+    @Expose(serialize = false) @SerializedName("date_created") private String dateCreated;
+    @Expose(serialize = false) @SerializedName("date_last_refreshed") private String dateLastRefreshed;
     @Expose(serialize = false) @SerializedName("refresh_token") private Jwt refreshToken;
     @Expose(serialize = false) @SerializedName("access_token") private Jwt accessToken;
 
-    public Session(UUID id, String data, String nonce, UUID userId, DateTime dateCreated,
-                   DateTime dateLastRefreshed, Jwt refreshToken, Jwt accessToken) {
+    public Session(UUID id, String data, String nonce, UUID userId, String dateCreated,
+                   String dateLastRefreshed, Jwt refreshToken, Jwt accessToken) {
         super(id, data, nonce);
         this.userId = userId;
         this.dateCreated = dateCreated;
@@ -37,19 +35,19 @@ public class Session extends SecurePayload {
         this.userId = userId;
     }
 
-    public DateTime getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(DateTime dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public DateTime getDateLastRefreshed() {
+    public String getDateLastRefreshed() {
         return dateLastRefreshed;
     }
 
-    public void setDateLastRefreshed(DateTime dateLastRefreshed) {
+    public void setDateLastRefreshed(String dateLastRefreshed) {
         this.dateLastRefreshed = dateLastRefreshed;
     }
 

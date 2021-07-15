@@ -2,8 +2,6 @@ package io.accroo.android.model;
 
 import com.google.gson.annotations.Expose;
 
-import org.joda.time.DateTime;
-
 import java.util.UUID;
 
 import io.accroo.android.crypto.CryptoManager;
@@ -14,7 +12,7 @@ public class SessionData {
     private UUID id, userId;
     @Expose private String deviceName;
     @Expose private String deviceOs;
-    private DateTime dateCreated, dateLastRefreshed;
+    private String dateCreated, dateLastRefreshed;
 
 //    public SessionData(String deviceName, String deviceOs) {
 //        this.deviceName = deviceName;
@@ -53,19 +51,19 @@ public class SessionData {
         this.deviceOs = deviceOs;
     }
 
-    public DateTime getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(DateTime dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public DateTime getDateLastRefreshed() {
+    public String getDateLastRefreshed() {
         return dateLastRefreshed;
     }
 
-    public void setDateLastRefreshed(DateTime dateLastRefreshed) {
+    public void setDateLastRefreshed(String dateLastRefreshed) {
         this.dateLastRefreshed = dateLastRefreshed;
     }
 

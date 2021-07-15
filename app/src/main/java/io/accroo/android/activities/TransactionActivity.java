@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
+import java.util.UUID;
+
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.SubCategory;
@@ -37,7 +39,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private DatePickerDialog.OnDateSetListener datePicker;
     private DateTime date;
     private Transaction newTransaction, existingTransaction;
-    private int selectedSubCategoryID;
+    private UUID selectedSubCategoryID;
     private ProgressDialog progressDialog;
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
@@ -239,7 +241,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     private boolean isCategorySelected() {
-        if (selectedSubCategoryID == 0) {
+        if (selectedSubCategoryID == null) {
             Toast.makeText(getApplicationContext(), R.string.select_sub_category, Toast.LENGTH_SHORT).show();
             return false;
         }

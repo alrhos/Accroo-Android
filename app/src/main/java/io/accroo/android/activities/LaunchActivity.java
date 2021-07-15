@@ -104,7 +104,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_ANONYMOUS_TOKEN) {
+        if (requestType == ApiService.GET_VISITOR_TOKEN) {
             String email = emailAddress.getText().toString().trim();
             if (action == CREATE_ACCOUNT) {
                 apiService.checkEmailAvailability(email);
