@@ -73,14 +73,13 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                 case ApiService.CREATE_SESSION:
 
-                    authCredentials = (AuthCredentials) requestVariables.get("authCredentials");
                     session = GsonUtil.getInstance().fromJson(dataReceiver[0][0], Session.class);
 
                     refreshTokenExpiry = new DateTime(session.getRefreshToken().getExpiresAt());
                     accessTokenExpiry = new DateTime(session.getAccessToken().getExpiresAt());
 
                     CredentialService.getInstance(context).saveEntry(CredentialService.SESSION_ID_KEY, session.getId().toString());
-                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, authCredentials.getEmail());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, session.getEmail());
                     CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, session.getUserId().toString());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, session.getRefreshToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
@@ -100,6 +99,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     refreshTokenExpiry = new DateTime(session.getRefreshToken().getExpiresAt());
                     accessTokenExpiry = new DateTime(session.getAccessToken().getExpiresAt());
 
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, session.getEmail());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, session.getRefreshToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());

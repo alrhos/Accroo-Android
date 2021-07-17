@@ -299,11 +299,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.UPDATE_EMAIL:
 
+                    userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);
+
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     newEmail = (String) requestVariables.get("newEmail");
                     emailJson = new JSONObject();
                     emailJson.put("email", newEmail);
-                    requests.add(RequestBuilder.putEmail(0, coordinator, accessToken, emailJson));
+                    requests.add(RequestBuilder.putEmail(0, coordinator, userId, accessToken, emailJson));
 
                     return true;
 

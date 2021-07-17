@@ -48,7 +48,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CREATE_ACCOUNT =            16;
     public final static int CREATE_SESSION =            17;
     public final static int UPDATE_SESSION_DATA =       18;
-    public final static int REFRESH_SESSION =           19;
     public final static int REAUTHENTICATE_SESSION =    20;
     public final static int INVALIDATE_SESSION =        21;
     public final static int UPDATE_PREFERENCES =        22;
@@ -209,8 +208,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
             protected void onSuccess() {
-                postRequestVariables.clear();
-                postRequestVariables.put("authCredentials", authCredentials);
                 new PostRequestTask(CREATE_SESSION, ApiService.this, context,
                         postRequestVariables).execute(dataReceiver);
             }
@@ -228,7 +225,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 preRequestVariables).execute();
     }
 
-    public void reauthenticateSession(final String password) {
+    public void reauthenticateSession(AuthCredentials authCredentials) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
             @Override
@@ -244,7 +241,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         };
 
         preRequestVariables.clear();
-        preRequestVariables.put("loginCode", password);
+        preRequestVariables.put("authCredentials", authCredentials);
 
         new PreRequestTask(REAUTHENTICATE_SESSION, this, context, coordinator,
                 preRequestVariables).execute();
@@ -270,6 +267,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                             DateTime newAccessTokenExpiryTime = new DateTime(session.getAccessToken().getExpiresAt());
                             // Save new tokens to local storage
                             try {
+                                CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, session.getEmail());
                                 CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, session.getRefreshToken().getToken());
                                 CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, newRefreshTokenExpiryTime.toString());
                                 CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());

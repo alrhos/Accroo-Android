@@ -1,7 +1,5 @@
 package io.accroo.android.network;
 
-import android.util.Base64;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -48,7 +46,7 @@ public class RequestBuilder {
     private final static String SESSIONS = "sessions";
     private final static String SESSION = "sessions/<id>";
     private final static String SESSION_REFRESH = "sessions/<id>/refresh";
-    private final static String SESSION_AUTHENTICATION = "sessions/<id>/authenticate";
+    private final static String SESSION_REAUTHENTICATION = "sessions/<id>/reauthenticate";
     private final static String SESSION_INVALIDATION = "sessions/<id>/invalidate";
     private final static String CATEGORIES = "categories";
     private final static String GENERAL_CATEGORIES = "categories/general";
@@ -196,7 +194,7 @@ public class RequestBuilder {
 
     public static JsonObjectRequest postSessionAuthentication(int index, final RequestCoordinator coordinator,
                                                               String sessionId, String json) throws JSONException {
-        String url = BASE_URL + SESSION_AUTHENTICATION;
+        String url = BASE_URL + SESSION_REAUTHENTICATION;
         url = url.replace("<id>", sessionId);
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
@@ -237,8 +235,9 @@ public class RequestBuilder {
     }
 
     public static JsonObjectRequest putEmail(int index, final RequestCoordinator coordinator,
-                                             final String accessToken, JSONObject json) {
+                                             String userId, final String accessToken, JSONObject json) {
         String url = BASE_URL + EMAIL;
+        url = url.replace("<id>", userId);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, json,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -382,6 +381,7 @@ public class RequestBuilder {
                                                     String json, final String accessToken) throws JSONException {
         String url = BASE_URL + TRANSACTIONS;
         JSONObject object = new JSONObject(json);
+        System.out.println(object.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override

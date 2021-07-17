@@ -121,9 +121,8 @@
     <string name="saving">Saving...</string>
     <string name="signing_out">Signing out...</string>
     <string name="registering_account">Registering account...</string>
-    <string name="email_updated_title">Email updated</string>
+    <string name="email_updated">Email updated</string>
     <string name="data_exported">Your data has been exported</string>
-    <string name="email_updated_message">Your email address was successfully updated. Please login again to continue.</string>
     <string name="password_updated">Password updated</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
@@ -143,7 +142,7 @@
     <string name="invalid_verification_code">Your verification code is 6 digits</string>
     <string name="incorrect_verification_code">Incorrect or expired verification code</string>
     <string name="where_is_my_code">Where is my code?</string>
-    <string name="verification_code_explanation">We sent you an 6-digit verification code via email.\n\nSometimes it can take a couple of minutes for you to receive it, or it may end up in your spam folder.\n\nIf, however, you don\'t receive the code, you can request another one.</string>
+    <string name="verification_code_explanation">We sent you a 6-digit verification code via email.\n\nSometimes it can take a couple of minutes for you to receive it, or it may end up in your spam folder.\n\nIf, however, you don\'t receive the code, you can request another one.</string>
     <string name="new_verification_code_sent">We\'ve sent you a new verification code</string>
     <string name="key_decryption_message">Enter your Accroo password to decrypt your data.</string>
     <string name="no_connection">No connection</string>

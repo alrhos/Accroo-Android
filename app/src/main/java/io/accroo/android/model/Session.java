@@ -12,15 +12,17 @@ import io.accroo.android.other.GsonUtil;
 public class Session extends SecurePayload {
 
     @Expose(serialize = false) @SerializedName("user_id") private UUID userId;
+    @Expose(serialize = false) private String email;
     @Expose(serialize = false) @SerializedName("date_created") private String dateCreated;
     @Expose(serialize = false) @SerializedName("date_last_refreshed") private String dateLastRefreshed;
     @Expose(serialize = false) @SerializedName("refresh_token") private Jwt refreshToken;
     @Expose(serialize = false) @SerializedName("access_token") private Jwt accessToken;
 
-    public Session(UUID id, String data, String nonce, UUID userId, String dateCreated,
+    public Session(UUID id, String email, String data, String nonce, UUID userId, String dateCreated,
                    String dateLastRefreshed, Jwt refreshToken, Jwt accessToken) {
         super(id, data, nonce);
         this.userId = userId;
+        this.email = email;
         this.dateCreated = dateCreated;
         this.dateLastRefreshed = dateLastRefreshed;
         this.refreshToken = refreshToken;
@@ -33,6 +35,14 @@ public class Session extends SecurePayload {
 
     public void setUserId(UUID userId) {
         this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDateCreated() {

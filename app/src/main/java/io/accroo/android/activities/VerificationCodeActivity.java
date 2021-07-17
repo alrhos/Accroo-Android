@@ -180,20 +180,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 apiService.updatePassword(password);
             }
         } else if (requestType == ApiService.UPDATE_EMAIL) {
-            verificationCodeField.getText().clear();
-            progressBar.setVisibility(View.INVISIBLE);
-            AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
-            builder.setTitle(R.string.email_updated_title)
-                    .setMessage(R.string.email_updated_message)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                            relaunch();
-                        }
-                    }).create().show();
-        } else if (requestType == ApiService.UPDATE_PASSWORD) {
-            Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
     }
@@ -262,11 +249,11 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                 resendCode.setOnClickListener(null);
                 next.setOnClickListener(null);
+                AuthCredentials authCredentials = new AuthCredentials(username, verificationCodeField.getText().toString());
                 if (action == LOGIN) {
-                    AuthCredentials authCredentials = new AuthCredentials(username, verificationCodeField.getText().toString());
                     apiService.createSession(authCredentials);
                 } else if (action == UPDATE_EMAIL || action == UPDATE_PASSWORD) {
-                    apiService.reauthenticateSession(verificationCodeField.getText().toString());
+                    apiService.reauthenticateSession(authCredentials);
                 }
             }
         }
