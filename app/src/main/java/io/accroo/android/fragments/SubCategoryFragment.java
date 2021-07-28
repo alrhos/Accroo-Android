@@ -68,41 +68,28 @@ public class SubCategoryFragment extends Fragment {
             Utils.showSoftKeyboard(requireActivity());
         }
 
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentListener.selectGeneralCategory();
+        icon.setOnClickListener(view -> fragmentListener.selectGeneralCategory());
+
+        generalCategoryName.setOnClickListener(view -> fragmentListener.selectGeneralCategory());
+
+        submit.setOnClickListener(view -> {
+            if (!isGeneralCategorySelected()) {
+                return;
             }
-        });
 
-        generalCategoryName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentListener.selectGeneralCategory();
+            if (!isValidSubCategory()) {
+                return;
             }
-        });
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isGeneralCategorySelected()) {
-                    return;
-                }
+            String formattedName = Utils.capitaliseAndTrim(subCategoryName.getText().toString());
 
-                if (!isValidSubCategory()) {
-                    return;
-                }
-
-                String formattedName = Utils.capitaliseAndTrim(subCategoryName.getText().toString());
-
-                if (editing) {
-                    existingCategory.setCategoryName(formattedName);
-                    existingCategory.setGeneralCategoryId(generalCategory.getId());
-                    fragmentListener.updateSubCategory(existingCategory);
-                } else {
-                    SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
-                    fragmentListener.createSubCategory(subCategory);
-                }
+            if (editing) {
+                existingCategory.setCategoryName(formattedName);
+                existingCategory.setGeneralCategoryId(generalCategory.getId());
+                fragmentListener.updateSubCategory(existingCategory);
+            } else {
+                SubCategory subCategory = new SubCategory(formattedName, generalCategory.getId());
+                fragmentListener.createSubCategory(subCategory);
             }
         });
 

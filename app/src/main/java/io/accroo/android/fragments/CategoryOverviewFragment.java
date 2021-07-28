@@ -64,12 +64,7 @@ public class CategoryOverviewFragment extends Fragment implements CategoryOvervi
 
         swipeRefreshLayout = fragmentView.findViewById(R.id.category_overview_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fragmentListener.onCategorySwipeRefresh();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> fragmentListener.onCategorySwipeRefresh());
 
         categoryOverviewAdapter.refreshDataSource();
         return fragmentView;

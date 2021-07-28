@@ -74,17 +74,14 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
 
-            noCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constants.ACCROO_SUPPORT_EMAIL, null));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
-                    try {
-                        startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
-                    }
+            noCode.setOnClickListener(view -> {
+                Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constants.ACCROO_SUPPORT_EMAIL, null));
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
+                try {
+                    startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -116,40 +113,34 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        if (!response.getTokenResult().isEmpty()) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getVerificationCode(username);
-                        }
+                .addOnSuccessListener(this, response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        apiService.getVerificationCode(username);
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            String message;
-                            switch (statusCode) {
-                                case SafetyNetStatusCodes.TIMEOUT:
-                                    message = getResources().getString(R.string.timeout_error);
-                                    break;
-                                case SafetyNetStatusCodes.NETWORK_ERROR:
-                                    message = getResources().getString(R.string.no_network_connection);
-                                    break;
-                                default:
-                                    message = getResources().getString(R.string.general_error);
-                            }
-                            verificationCodeInput.setError(message);
-                        } else {
-                            verificationCodeInput.setError(getResources().getString(R.string.general_error));
+                .addOnFailureListener(this, e -> {
+                    e.printStackTrace();
+                    if (e instanceof ApiException) {
+                        ApiException apiException = (ApiException) e;
+                        int statusCode = apiException.getStatusCode();
+                        String message;
+                        switch (statusCode) {
+                            case SafetyNetStatusCodes.TIMEOUT:
+                                message = getResources().getString(R.string.timeout_error);
+                                break;
+                            case SafetyNetStatusCodes.NETWORK_ERROR:
+                                message = getResources().getString(R.string.no_network_connection);
+                                break;
+                            default:
+                                message = getResources().getString(R.string.general_error);
                         }
-                        resendCode.setOnClickListener(resendCodeListener);
-                        next.setOnClickListener(nextListener);
+                        verificationCodeInput.setError(message);
+                    } else {
+                        verificationCodeInput.setError(getResources().getString(R.string.general_error));
                     }
+                    resendCode.setOnClickListener(resendCodeListener);
+                    next.setOnClickListener(nextListener);
                 });
     }
 
@@ -201,12 +192,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    }).create().show();
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> finish()).create().show();
         } else {
             String message;
             switch (errorCode) {
@@ -264,25 +250,19 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.verification_code_explanation)
                     .setTitle(R.string.where_is_my_code)
-                    .setPositiveButton(R.string.new_code, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            verificationCodeInput.setError(" ");
-                            Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                            resendCode.setOnClickListener(null);
-                            next.setOnClickListener(null);
-                            if (apiService.hasActiveAccessToken()) {
-                                progressBar.setVisibility(View.VISIBLE);
-                                apiService.getVerificationCode(username);
-                            } else {
-                                recaptchaChallenge();
-                            }
+                    .setPositiveButton(R.string.new_code, (dialogInterface, i) -> {
+                        verificationCodeInput.setError(" ");
+                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+                        resendCode.setOnClickListener(null);
+                        next.setOnClickListener(null);
+                        if (apiService.hasActiveAccessToken()) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            apiService.getVerificationCode(username);
+                        } else {
+                            recaptchaChallenge();
                         }
                     })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {}
-                    }).create().show();
+                    .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {}).create().show();
         }
     };
 

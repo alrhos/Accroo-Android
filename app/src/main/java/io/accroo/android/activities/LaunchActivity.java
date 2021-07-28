@@ -82,7 +82,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                     endDate = new DateTime().withMonthOfYear(12).withDayOfMonth(31).withTime(23, 59, 59, 999);
                     break;
             }
-            apiService.getDefaultData(startDate, endDate);
+            apiService.loadDefaultData(startDate, endDate);
         } else {
             initLayout();
         }
@@ -127,7 +127,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             intent.putExtra("action", VerificationCodeActivity.LOGIN);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else if (requestType == ApiService.GET_DEFAULT_DATA) {
+        } else if (requestType == ApiService.LOAD_DEFAULT_DATA) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("startDate", startDate.getMillis());
             intent.putExtra("endDate", endDate.getMillis());
@@ -183,7 +183,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onError() {
-        apiService.invalidateSession();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -192,40 +191,34 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        if (!response.getTokenResult().isEmpty()) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getVisitorToken(response.getTokenResult());
-                        }
+                .addOnSuccessListener(this, response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        apiService.getVisitorToken(response.getTokenResult());
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            String message;
-                            switch (statusCode) {
-                                case SafetyNetStatusCodes.TIMEOUT:
-                                    message = getResources().getString(R.string.timeout_error);
-                                    break;
-                                case SafetyNetStatusCodes.NETWORK_ERROR:
-                                    message = getResources().getString(R.string.no_network_connection);
-                                    break;
-                                default:
-                                    message = getResources().getString(R.string.general_error);
-                            }
-                            inputEmailAddress.setError(message);
-                        } else {
-                            inputEmailAddress.setError(getResources().getString(R.string.general_error));
+                .addOnFailureListener(this, e -> {
+                    e.printStackTrace();
+                    if (e instanceof ApiException) {
+                        ApiException apiException = (ApiException) e;
+                        int statusCode = apiException.getStatusCode();
+                        String message;
+                        switch (statusCode) {
+                            case SafetyNetStatusCodes.TIMEOUT:
+                                message = getResources().getString(R.string.timeout_error);
+                                break;
+                            case SafetyNetStatusCodes.NETWORK_ERROR:
+                                message = getResources().getString(R.string.no_network_connection);
+                                break;
+                            default:
+                                message = getResources().getString(R.string.general_error);
                         }
-                        createAccount.setOnClickListener(createAccountListener);
-                        signIn.setOnClickListener(signInListener);
+                        inputEmailAddress.setError(message);
+                    } else {
+                        inputEmailAddress.setError(getResources().getString(R.string.general_error));
                     }
+                    createAccount.setOnClickListener(createAccountListener);
+                    signIn.setOnClickListener(signInListener);
                 });
     }
 

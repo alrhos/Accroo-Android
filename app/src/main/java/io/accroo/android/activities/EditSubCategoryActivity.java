@@ -95,17 +95,11 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     private void deleteSubCategory() {
         AlertDialog.Builder builder = new AlertDialog.Builder(EditSubCategoryActivity.this);
         builder.setMessage(R.string.delete_sub_category)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.show();
-                        apiService.deleteSubCategory(subCategory);
-                    }
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    progressDialog.show();
+                    apiService.deleteSubCategory(subCategory);
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                }).create().show();
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {}).create().show();
     }
 
     @Override

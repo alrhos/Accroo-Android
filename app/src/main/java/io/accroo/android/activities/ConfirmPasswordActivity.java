@@ -70,39 +70,33 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
 
     private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        if (!response.getTokenResult().isEmpty()) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getVisitorToken(response.getTokenResult());
-                        }
+                .addOnSuccessListener(this, response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        apiService.getVisitorToken(response.getTokenResult());
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            String message;
-                            switch (statusCode) {
-                                case SafetyNetStatusCodes.TIMEOUT:
-                                    message = getResources().getString(R.string.timeout_error);
-                                    break;
-                                case SafetyNetStatusCodes.NETWORK_ERROR:
-                                    message = getResources().getString(R.string.no_network_connection);
-                                    break;
-                                default:
-                                    message = getResources().getString(R.string.general_error);
-                            }
-                            confirmPasswordField.setError(message);
-                        } else {
-                            confirmPasswordField.setError(getResources().getString(R.string.general_error));
+                .addOnFailureListener(this, e -> {
+                    e.printStackTrace();
+                    if (e instanceof ApiException) {
+                        ApiException apiException = (ApiException) e;
+                        int statusCode = apiException.getStatusCode();
+                        String message;
+                        switch (statusCode) {
+                            case SafetyNetStatusCodes.TIMEOUT:
+                                message = getResources().getString(R.string.timeout_error);
+                                break;
+                            case SafetyNetStatusCodes.NETWORK_ERROR:
+                                message = getResources().getString(R.string.no_network_connection);
+                                break;
+                            default:
+                                message = getResources().getString(R.string.general_error);
                         }
-                        next.setOnClickListener(nextListener);
+                        confirmPasswordField.setError(message);
+                    } else {
+                        confirmPasswordField.setError(getResources().getString(R.string.general_error));
                     }
+                    next.setOnClickListener(nextListener);
                 });
     }
 

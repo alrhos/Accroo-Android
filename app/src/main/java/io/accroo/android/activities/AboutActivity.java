@@ -36,40 +36,26 @@ public class AboutActivity extends AppCompatActivity {
 
         versionString.setText(BuildConfig.VERSION_NAME);
 
-        terms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(TERMS_OF_USE));
-                startActivity(intent);
-            }
+        terms.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(TERMS_OF_USE));
+            startActivity(intent);
         });
 
-        privacyPolicy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(PRIVACY_POLICY));
-                startActivity(intent);
-            }
+        privacyPolicy.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(PRIVACY_POLICY));
+            startActivity(intent);
         });
 
-        licenses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), OssLicensesMenuActivity.class));
-            }
-        });
+        licenses.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), OssLicensesMenuActivity.class)));
 
-        contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
-                try {
-                    startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
-                }
+        contact.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", ACCROO_SUPPORT, null));
+            try {
+                startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
             }
         });
 

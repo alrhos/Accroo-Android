@@ -10,14 +10,16 @@ import io.accroo.android.other.GsonUtil;
 public class SessionData {
 
     private UUID id, userId;
+    @Expose private String deviceBrand;
+    @Expose private String deviceModel;
     @Expose private String deviceName;
-    @Expose private String deviceOs;
     private String dateCreated, dateLastRefreshed;
 
-//    public SessionData(String deviceName, String deviceOs) {
-//        this.deviceName = deviceName;
-//        this.deviceOs = deviceOs;
-//    }
+    public SessionData(String deviceBrand, String deviceModel, String deviceName) {
+        this.deviceBrand = deviceBrand;
+        this.deviceModel = deviceModel;
+        this.deviceName = deviceName;
+    }
 
     public UUID getId() {
         return id;
@@ -35,20 +37,28 @@ public class SessionData {
         this.userId = userId;
     }
 
+    public String getDeviceBrand() {
+        return deviceBrand;
+    }
+
+    public void setDeviceBrand(String deviceBrand) {
+        this.deviceBrand = deviceBrand;
+    }
+
+    public String getDeviceModel() {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
+    }
+
     public String getDeviceName() {
         return deviceName;
     }
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
-    }
-
-    public String getDeviceOs() {
-        return deviceOs;
-    }
-
-    public void setDeviceOs(String deviceOs) {
-        this.deviceOs = deviceOs;
     }
 
     public String getDateCreated() {
@@ -74,4 +84,16 @@ public class SessionData {
         return securePayload;
     }
 
+    @Override
+    public String toString() {
+        return "SessionData{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", deviceBrand='" + deviceBrand + '\'' +
+                ", deviceModel='" + deviceModel + '\'' +
+                ", deviceName='" + deviceName + '\'' +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", dateLastRefreshed='" + dateLastRefreshed + '\'' +
+                '}';
+    }
 }

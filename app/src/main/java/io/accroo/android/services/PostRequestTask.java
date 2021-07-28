@@ -29,7 +29,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private PostRequestOutcome postRequestOutcome;
     private Context context;
     private DateTime startDate, endDate;
-    private AuthCredentials authCredentials;
     private Session session;
     private DateTime refreshTokenExpiry, accessTokenExpiry;
     private EncryptedTransaction encryptedTransaction;
@@ -88,9 +87,9 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.UPDATE_SESSION_DATA:
-
-                    return true;
+//                case ApiService.UPDATE_SESSION_DATA:
+//
+//                    return true;
 
                 case ApiService.REAUTHENTICATE_SESSION:
 
@@ -107,27 +106,27 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.GET_DEFAULT_DATA:
+                case ApiService.LOAD_DEFAULT_DATA:
 
                     startDate = (DateTime) requestVariables.get("startDate");
                     endDate = (DateTime) requestVariables.get("endDate");
 
                     ArrayList<EncryptedGeneralCategory> encryptedGeneralCategories = GsonUtil.getInstance()
-                            .listFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
+                            .listFromJson(dataReceiver[0][1], EncryptedGeneralCategory.class);
 
                     for (EncryptedGeneralCategory encryptedGeneralCategory : encryptedGeneralCategories) {
                         generalCategories.add(encryptedGeneralCategory.decrypt());
                     }
 
                     ArrayList<EncryptedSubCategory> encryptedSubCategories = GsonUtil.getInstance()
-                            .listFromJson(dataReceiver[0][1], EncryptedSubCategory.class);
+                            .listFromJson(dataReceiver[0][2], EncryptedSubCategory.class);
 
                     for (EncryptedSubCategory encryptedSubCategory : encryptedSubCategories) {
                         subCategories.add(encryptedSubCategory.decrypt());
                     }
 
                     ArrayList<EncryptedTransaction> encryptedTransactions = GsonUtil.getInstance()
-                            .listFromJson(dataReceiver[0][2], EncryptedTransaction.class);
+                            .listFromJson(dataReceiver[0][3], EncryptedTransaction.class);
 
                     for (EncryptedTransaction encryptedTransaction : encryptedTransactions) {
                         Transaction transaction = encryptedTransaction.decrypt();

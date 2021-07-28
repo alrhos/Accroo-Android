@@ -66,13 +66,10 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             apiService = new ApiService(this, getApplicationContext());
 
             next.setOnClickListener(nextListener);
-            forgotPassword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-                    Uri uri = Uri.parse(Constants.FORGOT_PASSWORD_URL);
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                }
+            forgotPassword.setOnClickListener(view -> {
+                Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
+                Uri uri = Uri.parse(Constants.FORGOT_PASSWORD_URL);
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
             });
         }
     }

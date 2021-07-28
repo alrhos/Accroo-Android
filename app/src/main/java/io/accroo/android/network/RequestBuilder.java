@@ -381,7 +381,6 @@ public class RequestBuilder {
                                                     String json, final String accessToken) throws JSONException {
         String url = BASE_URL + TRANSACTIONS;
         JSONObject object = new JSONObject(json);
-        System.out.println(object.toString());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
@@ -631,13 +630,7 @@ public class RequestBuilder {
 
     private static Response.Listener<JSONObject> createJsonObjectResponseListener(
             final int index, final RequestCoordinator coordinator) {
-        return new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println(response.toString());
-                coordinator.done(index, response);
-            }
-        };
+        return response -> coordinator.done(index, response);
     }
 
     private static Response.Listener<JSONArray> createJsonArrayResponseListener(

@@ -98,32 +98,22 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 Utils.showSoftKeyboard(TransactionActivity.this);
             }
 
-            datePicker = new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    date = new DateTime()
-                            .withYear(year)
-                            .withMonthOfYear(monthOfYear + 1)
-                            .withDayOfMonth(dayOfMonth);
-                    updateDate();
-                }
+            datePicker = (view, year, monthOfYear, dayOfMonth) -> {
+                date = new DateTime()
+                        .withYear(year)
+                        .withMonthOfYear(monthOfYear + 1)
+                        .withDayOfMonth(dayOfMonth);
+                updateDate();
             };
 
-            dateField.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new DatePickerDialog(TransactionActivity.this, datePicker, date.getYear(),
-                            date.getMonthOfYear() - 1, date.getDayOfMonth()).show();
-                }
-            });
+            dateField.setOnClickListener(view -> new DatePickerDialog(TransactionActivity.this, datePicker, date.getYear(),
+                    date.getMonthOfYear() - 1, date.getDayOfMonth()).show());
 
-            categoryField.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.hideSoftKeyboard(TransactionActivity.this);
-                    Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
-                    startActivityForResult(intent, SUB_CATEGORY_REQUEST);
-                    overridePendingTransition(R.anim.enter, R.anim.exit);
-                }
+            categoryField.setOnClickListener(view -> {
+                Utils.hideSoftKeyboard(TransactionActivity.this);
+                Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
+                startActivityForResult(intent, SUB_CATEGORY_REQUEST);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
             });
 
             submitButton.setOnClickListener(new View.OnClickListener() {
@@ -219,10 +209,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         apiService.deleteTransaction(existingTransaction);
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                }).create().show();
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {}).create().show();
     }
 
     private boolean isValidAmount() {

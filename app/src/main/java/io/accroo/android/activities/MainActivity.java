@@ -113,15 +113,12 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
                 fab = findViewById(R.id.fab);
 
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int selectedTab = tabLayout.getSelectedTabPosition();
-                        if (selectedTab == 0 || selectedTab == 1) {
-                            startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
-                        } else if (selectedTab == 2) {
-                            startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
-                        }
+                fab.setOnClickListener(view -> {
+                    int selectedTab = tabLayout.getSelectedTabPosition();
+                    if (selectedTab == 0 || selectedTab == 1) {
+                        startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
+                    } else if (selectedTab == 2) {
+                        startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
                     }
                 });
 
@@ -295,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSummarySwipeRefresh() {
         summaryFragment.setRefreshStatus(true);
-        apiService.getDefaultData(startDate, endDate);
+        apiService.loadDefaultData(startDate, endDate);
     }
 
     @Override
@@ -313,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onTransactionSwipeRefresh() {
         transactionsFragment.setRefreshStatus(true);
-        apiService.getDefaultData(startDate, endDate);
+        apiService.loadDefaultData(startDate, endDate);
     }
 
     @Override
@@ -326,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onCategorySwipeRefresh() {
         categoryOverviewFragment.setRefreshStatus(true);
-        apiService.getDefaultData(startDate, endDate);
+        apiService.loadDefaultData(startDate, endDate);
     }
 
     @Override
@@ -358,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onSuccess(int requestType) {
         hideRefreshing();
-        if (requestType == ApiService.GET_DEFAULT_DATA) {
+        if (requestType == ApiService.LOAD_DEFAULT_DATA) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {

@@ -1,6 +1,9 @@
 package io.accroo.android.services;
 
 import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
@@ -13,14 +16,15 @@ import org.joda.time.Seconds;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.model.Jwt;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.model.Session;
+import io.accroo.android.model.SessionData;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
+import io.accroo.android.other.Utils;
 
 import java.util.HashMap;
 
@@ -30,7 +34,7 @@ import java.util.HashMap;
 
 public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequestTask.PostRequestOutcome {
 
-    public final static int GET_DEFAULT_DATA =          1;
+    public final static int LOAD_DEFAULT_DATA =         1;
     public final static int CREATE_DEFAULT_CATEGORIES = 2;
     public final static int CREATE_TRANSACTION =        3;
     public final static int UPDATE_TRANSACTION =        4;
@@ -47,14 +51,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int GET_VERIFICATION_CODE =     15;
     public final static int CREATE_ACCOUNT =            16;
     public final static int CREATE_SESSION =            17;
-    public final static int UPDATE_SESSION_DATA =       18;
-    public final static int REAUTHENTICATE_SESSION =    20;
-    public final static int INVALIDATE_SESSION =        21;
-    public final static int UPDATE_PREFERENCES =        22;
-    public final static int CREATE_KEY =                23;
-    public final static int CHECK_EMAIL_AVAILABILITY =  22;
-    public final static int INITIALIZE_ACCOUNT_DATA =   23;
-    public final static int GET_VISITOR_TOKEN =         24;
+    public final static int REAUTHENTICATE_SESSION =    18;
+    public final static int INVALIDATE_SESSION =        19;
+    public final static int CHECK_EMAIL_AVAILABILITY =  20;
+    public final static int INITIALIZE_ACCOUNT_DATA =   21;
+    public final static int GET_VISITOR_TOKEN =         22;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -358,32 +359,38 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         submitRequest();
     }
 
-    public void getDefaultData(@NonNull final DateTime startDate, @NonNull final DateTime endDate) {
+    public void loadDefaultData(@NonNull final DateTime startDate, @NonNull final DateTime endDate) {
         if (startDate.isBefore(endDate)) {
             DataProvider.setStartDate(startDate);
             DataProvider.setEndDate(endDate);
-            dataReceiver = new String[3];
+            dataReceiver = new String[4];
             coordinator = new RequestCoordinator(context, this, dataReceiver) {
                 @Override
                 protected void onSuccess() {
                     postRequestVariables.clear();
                     postRequestVariables.put("startDate", startDate);
                     postRequestVariables.put("endDate", endDate);
-                    new PostRequestTask(GET_DEFAULT_DATA, ApiService.this,
+                    new PostRequestTask(LOAD_DEFAULT_DATA, ApiService.this,
                             context, postRequestVariables).execute(dataReceiver);
                 }
 
                 @Override
                 protected void onFailure(int errorCode) {
-                    requestOutcome.onFailure(GET_DEFAULT_DATA, errorCode);
+                    requestOutcome.onFailure(LOAD_DEFAULT_DATA, errorCode);
                 }
             };
-            preRequestTask = new PreRequestTask(GET_DEFAULT_DATA, this, context,
-                    coordinator, null);
-            requestType = GET_DEFAULT_DATA;
+            String deviceBrand = Utils.capitaliseAndTrim(Build.BRAND);
+            String deviceModel = Build.MODEL;
+            String deviceName = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
+            SessionData sessionData = new SessionData(deviceBrand, deviceModel, deviceName);
+            preRequestVariables.clear();
+            preRequestVariables.put("sessionData", sessionData);
+            preRequestTask = new PreRequestTask(LOAD_DEFAULT_DATA, this, context,
+                    coordinator, preRequestVariables);
+            requestType = LOAD_DEFAULT_DATA;
             submitRequest();
         } else {
-            requestOutcome.onFailure(GET_DEFAULT_DATA, INVALID_DATE_RANGE);
+            requestOutcome.onFailure(LOAD_DEFAULT_DATA, INVALID_DATE_RANGE);
         }
     }
 
@@ -406,52 +413,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
         new PreRequestTask(CREATE_ACCOUNT, this, context, coordinator,
                 preRequestVariables).execute();
-    }
-
-    public void createKey(final char[] password) {
-        dataReceiver = new String[1];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                requestOutcome.onSuccess(CREATE_KEY);
-            }
-
-            @Override
-            protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(CREATE_KEY, errorCode);
-            }
-        };
-
-        preRequestVariables.clear();
-        preRequestVariables.put("password", password);
-
-        preRequestTask = new PreRequestTask(CREATE_KEY, this, context, coordinator,
-                preRequestVariables);
-        requestType = CREATE_KEY;
-        submitRequest();
-    }
-
-    public void updatePreferences(final Preferences preferences) {
-        dataReceiver = new String[1];
-        coordinator = new RequestCoordinator(context, this, dataReceiver) {
-            @Override
-            protected void onSuccess() {
-                requestOutcome.onSuccess(UPDATE_PREFERENCES);
-            }
-
-            @Override
-            protected void onFailure(int errorCode) {
-                requestOutcome.onFailure(UPDATE_PREFERENCES, errorCode);
-            }
-        };
-
-        preRequestVariables.clear();
-        preRequestVariables.put("preferences", preferences);
-
-        preRequestTask = new PreRequestTask(UPDATE_PREFERENCES, this, context, coordinator,
-                preRequestVariables);
-        requestType = UPDATE_PREFERENCES;
-        submitRequest();
     }
 
     public void createDefaultCategories() {
