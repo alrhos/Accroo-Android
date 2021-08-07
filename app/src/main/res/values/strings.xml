@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Accroo</string>
-
     <string name="account">Account</string>
     <string name="general">General</string>
     <string name="email">Email address</string>
@@ -30,7 +29,6 @@
     <string name="important">Important!</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
     <string name="verification_code_description">We\'ve sent you a verification code via email. Please enter it below to verify your identity.</string>
-
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_transaction">Add Transaction</string>
     <string name="title_activity_edit_transaction">Edit Transaction</string>
@@ -46,7 +44,6 @@
     <string name="title_activity_change_email">Change Email</string>
     <string name="title_activity_change_password">Change Password</string>
     <string name="title_activity_account_verification">Account Verification</string>
-
     <string name="activity_overview">Activity Overview</string>
     <string name="type">Type</string>
     <string name="income">Income</string>
@@ -63,13 +60,14 @@
     <string name="date">Date</string>
     <string name="description">Description (optional)</string>
     <string name="description_csv">Description</string>
-
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">Couldn\'t connect to server</string>
     <string name="no_network_connection">No network connection</string>
     <string name="general_error">An error occurred</string>
     <string name="data_export_error">Data could not be exported</string>
     <string name="too_many_requests">Please try again in a few minutes</string>
+    <string name="auth_not_allowed_title">Verification temporarily suspended</string>
+    <string name="auth_not_allowed_message">Verification has been temporarily suspended for this account due to repeated incorrect verification codes being entered.\n\nPlease wait 10 minutes before requesting a new verification code and trying again.</string>
     <string name="maintenance_title">Down for maintenance</string>
     <string name="maintenance_message">Accroo is temporarily down for maintenance but should be back again soon. Please try again later.</string>
     <string name="upgrade_required_title">Upgrade Required</string>

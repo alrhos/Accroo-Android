@@ -170,11 +170,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             if (apiService.userLoggedIn()) {
                 setContentView(R.layout.activity_no_connection);
                 Button tryAgain = findViewById(R.id.try_again);
-                tryAgain.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        startUp();
-                    }
-                });
+                tryAgain.setOnClickListener(view -> startUp());
             }
         } else {
             onError();

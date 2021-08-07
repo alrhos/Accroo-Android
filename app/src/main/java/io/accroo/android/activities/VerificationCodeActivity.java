@@ -116,7 +116,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
                 .addOnSuccessListener(this, response -> {
                     if (!response.getTokenResult().isEmpty()) {
                         progressBar.setVisibility(View.VISIBLE);
-                        apiService.getVerificationCode(username);
+                        apiService.getVisitorToken(response.getTokenResult());
                     }
                 })
                 .addOnFailureListener(this, e -> {
@@ -146,7 +146,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_VERIFICATION_CODE) {
+        if (requestType == ApiService.GET_VISITOR_TOKEN) {
+            apiService.getVerificationCode(username);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
             verificationCodeField.setText("");
             progressBar.setVisibility(View.INVISIBLE);
             resendCode.setOnClickListener(resendCodeListener);
@@ -189,6 +191,10 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             MessageDialog.show(VerificationCodeActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
+        } else if (errorCode == ApiService.IM_A_TEAPOT) {
+            MessageDialog.show(VerificationCodeActivity.this,
+                    getResources().getString(R.string.auth_not_allowed_title),
+                    getResources().getString(R.string.auth_not_allowed_message));
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)

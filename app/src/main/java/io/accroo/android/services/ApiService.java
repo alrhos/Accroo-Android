@@ -283,6 +283,14 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
                         @Override
                         protected void onFailure(int errorCode) {
+                            if (errorCode == ApiService.UNAUTHORIZED) {
+                                try {
+                                    CredentialService.getInstance(context).clearSavedData();
+                                    PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             requestOutcome.onFailure(requestType, errorCode);
                         }
                     };
