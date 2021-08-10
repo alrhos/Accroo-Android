@@ -671,7 +671,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             @Override
             protected void onSuccess() {
                 try {
-                    CredentialService.getInstance(context).clearSavedData();
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, newEmail);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

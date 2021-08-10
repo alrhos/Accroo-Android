@@ -175,6 +175,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
         } else if (requestType == ApiService.UPDATE_EMAIL) {
             Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        } else if (requestType == ApiService.UPDATE_PASSWORD) {
+            Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
     }
 
