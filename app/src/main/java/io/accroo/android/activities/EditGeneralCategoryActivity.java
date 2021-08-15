@@ -2,7 +2,6 @@ package io.accroo.android.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -114,7 +113,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            apiService.invalidateSession();
+            apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY && errorCode == ApiService.NOT_FOUND) {
             // The category has already been deleted

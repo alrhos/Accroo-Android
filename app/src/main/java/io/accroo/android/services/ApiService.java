@@ -115,6 +115,29 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
+    public void logout() {
+        try {
+            dataReceiver = new String[1];
+            coordinator = new RequestCoordinator(context, this, dataReceiver) {
+                @Override
+                protected void onSuccess() {}
+
+                @Override
+                protected void onFailure(int errorCode) {}
+            };
+
+            String sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
+            String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+            CredentialService.getInstance(context).clearSavedData();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
+            JsonObjectRequest invalidateSession = RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken);
+            coordinator.addRequests(invalidateSession);
+            coordinator.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean initializeKey(@NonNull char[] password) {
         try {
             CryptoManager.getInstance().decryptMasterKey(password, DataProvider.getKey());
@@ -320,28 +343,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
-    public void invalidateSession() {
-        try {
-            dataReceiver = new String[1];
-            coordinator = new RequestCoordinator(context, this, dataReceiver) {
-                @Override
-                protected void onSuccess() {}
-
-                @Override
-                protected void onFailure(int errorCode) {}
-            };
-
-            String sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
-            String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-            CredentialService.getInstance(context).clearSavedData();
-            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
-            JsonObjectRequest invalidateSession = RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken);
-            coordinator.addRequests(invalidateSession);
-            coordinator.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//
 
     public void initializeAccountData(final char[] password, final Preferences preferences) {
         dataReceiver = new String[3];
@@ -754,13 +756,13 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     @Override
     public void onPreRequestTaskFailure() {
-        invalidateSession();
+        logout();
         requestOutcome.onError();
     }
 
     @Override
     public void onPostRequestTaskFailure() {
-        invalidateSession();
+        logout();
         requestOutcome.onError();
     }
 

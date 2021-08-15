@@ -31,7 +31,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     private EditText keyPassword;
     private Button next;
     private ApiService apiService;
-    private int passwordLength;
     private char[] password;
 
     @Override
@@ -79,7 +78,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             if (keyPassword.getText().length() > 0) {
                 next.setOnClickListener(null);
                 keyPasswordInput.setError(" ");
-                passwordLength = keyPassword.length();
+                int passwordLength = keyPassword.length();
                 password = new char[passwordLength];
                 keyPassword.getText().getChars(0, passwordLength, password, 0);
                 if (action == LOGIN) {
@@ -157,7 +156,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
         } else if (errorCode == ApiService.UNAUTHORIZED) {
-            apiService.invalidateSession();
+            apiService.logout();
             relaunch();
         } else {
             String message;

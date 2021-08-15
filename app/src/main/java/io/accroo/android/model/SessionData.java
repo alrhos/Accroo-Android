@@ -9,7 +9,7 @@ import io.accroo.android.other.GsonUtil;
 
 public class SessionData {
 
-    private UUID id, userId;
+    private UUID id;
     @Expose private String deviceBrand;
     @Expose private String deviceModel;
     @Expose private String deviceName;
@@ -27,14 +27,6 @@ public class SessionData {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
     }
 
     public String getDeviceBrand() {
@@ -88,7 +80,6 @@ public class SessionData {
     public String toString() {
         return "SessionData{" +
                 "id=" + id +
-                ", userId=" + userId +
                 ", deviceBrand='" + deviceBrand + '\'' +
                 ", deviceModel='" + deviceModel + '\'' +
                 ", deviceName='" + deviceName + '\'' +
