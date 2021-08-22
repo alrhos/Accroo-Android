@@ -593,6 +593,8 @@ public class RequestBuilder {
                     return ApiService.GONE;
                 case 418:
                     return ApiService.IM_A_TEAPOT;
+                case 422:
+                    return ApiService.UNPROCESSABLE_ENTITY;
                 case 429:
                     return ApiService.TOO_MANY_REQUESTS;
                 case 500:

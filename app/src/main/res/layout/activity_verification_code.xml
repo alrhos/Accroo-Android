@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/verification_code"
             android:inputType="numberDecimal|textNoSuggestions"
-            android:maxLength="8"
+            android:maxLength="6"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>

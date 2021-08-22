@@ -112,7 +112,7 @@ public class EditGeneralCategoryActivity extends AppCompatActivity implements Ap
             MessageDialog.show(EditGeneralCategoryActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_GENERAL_CATEGORY && errorCode == ApiService.NOT_FOUND) {

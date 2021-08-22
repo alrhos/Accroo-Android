@@ -1,6 +1,7 @@
 package io.accroo.android.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     private ApiService apiService;
     private DateTime startDate, endDate;
     private FloatingActionButton fab;
+    private ProgressDialog progressDialog;
     private final int[] fabColorArray = {
         R.color.colorAccent,
         R.color.colorAccent,
@@ -121,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                         startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
                     }
                 });
+
+                progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage(getResources().getString(R.string.signing_out));
+                progressDialog.setCancelable(false);
 
                 apiService = new ApiService(this, getApplicationContext());
             }
@@ -202,8 +208,13 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
             case R.id.sign_out:
-                apiService.logout();
-                relaunch();
+                progressDialog.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        apiService.invalidateSession();
+                    }
+                }, 1500);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -357,26 +368,32 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         hideRefreshing();
         if (requestType == ApiService.LOAD_DEFAULT_DATA) {
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    if (summaryFragment != null) {
-                        summaryFragment.refreshAdapter();
-                    }
-                    if (transactionsFragment != null) {
-                        transactionsFragment.refreshAdapter();
-                    }
-                    if (categoryOverviewFragment != null) {
-                        categoryOverviewFragment.refreshAdapter();
-                    }
+            handler.postDelayed(() -> {
+                if (summaryFragment != null) {
+                    summaryFragment.refreshAdapter();
+                }
+                if (transactionsFragment != null) {
+                    transactionsFragment.refreshAdapter();
+                }
+                if (categoryOverviewFragment != null) {
+                    categoryOverviewFragment.refreshAdapter();
                 }
             }, 250);
+        } else if (requestType == ApiService.INVALIDATE_SESSION) {
+            apiService.logout();
+            progressDialog.dismiss();
+            relaunch();
         }
     }
 
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
+        if (requestType == ApiService.INVALIDATE_SESSION) {
+            apiService.logout();
+            progressDialog.dismiss();
+            relaunch();
+        } else if (errorCode == ApiService.SERVICE_UNAVAILABLE) {
             MessageDialog.show(MainActivity.this,
                     getResources().getString(R.string.maintenance_title),
                     getResources().getString(R.string.maintenance_message));
@@ -384,7 +401,8 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             MessageDialog.show(MainActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.NOT_FOUND) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.NOT_FOUND ||
+                errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else {

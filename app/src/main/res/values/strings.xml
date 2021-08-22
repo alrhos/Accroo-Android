@@ -104,6 +104,7 @@
     <string name="change_email">Change email</string>
     <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
+    <string name="signing_out">Signing out...</string>
     <string name="about">About</string>
     <string name="export_data">Export data</string>
     <string name="new_email">New email address</string>
@@ -117,7 +118,6 @@
     <string name="submitting">Submitting...</string>
     <string name="loading">Loading...</string>
     <string name="saving">Saving...</string>
-    <string name="signing_out">Signing out...</string>
     <string name="registering_account">Registering account...</string>
     <string name="email_updated">Email updated</string>
     <string name="data_exported">Your data has been exported</string>

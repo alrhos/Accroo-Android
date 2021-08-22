@@ -135,16 +135,6 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-//                case ApiService.UPDATE_SESSION_DATA:
-//
-//                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-//                    sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
-//                    sessionData = (SessionData) requestVariables.get("sessionData");
-//                    json = GsonUtil.getInstance().toJson(sessionData.encrypt());
-//                    requests.add(RequestBuilder.putSession(0, coordinator, sessionId, accessToken, json));
-//
-//                    return true;
-
                 case ApiService.REAUTHENTICATE_SESSION:
 
                     sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
@@ -156,8 +146,8 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                 case ApiService.INVALIDATE_SESSION:
 
+                    sessionId = (String) requestVariables.get("sessionId");
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
-                    sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
                     requests.add(RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken));
 
                     return true;

@@ -87,10 +87,6 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                     return true;
 
-//                case ApiService.UPDATE_SESSION_DATA:
-//
-//                    return true;
-
                 case ApiService.REAUTHENTICATE_SESSION:
 
                     session = GsonUtil.getInstance().fromJson(dataReceiver[0][0], Session.class);

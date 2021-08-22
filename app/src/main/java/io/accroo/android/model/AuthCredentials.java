@@ -1,7 +1,5 @@
 package io.accroo.android.model;
 
-import android.util.Base64;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,13 +21,7 @@ public class AuthCredentials {
     }
 
     private String generateVerificationToken() {
-        // TODO: change to 6 digit code
         return new DecimalFormat("000000").format(new SecureRandom().nextInt(999999));
-//        SecureRandom random = new SecureRandom();
-//        byte[] bytes = new byte[5];
-//        random.nextBytes(bytes);
-
-  //      return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 
     public String getEmail() {

@@ -9,11 +9,6 @@ import java.util.Comparator;
 public class TransactionComparator implements Comparator<Transaction> {
     @Override
     public int compare(Transaction t1, Transaction t2) {
-        int value1 = t1.getDate().compareTo(t2.getDate());
-        // TODO: needs to be handled differently
-//        if (value1 == 0) {
-//            return ((Integer) t1.getId()).compareTo((Integer) t2.getId());
-//        }
-        return value1;
+        return t1.getDate().compareTo(t2.getDate());
     }
 }

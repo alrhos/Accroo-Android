@@ -70,6 +70,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int FORBIDDEN =                 1010;
     public final static int GONE =                      1011;
     public final static int IM_A_TEAPOT =               1012;
+    public final static int UNPROCESSABLE_ENTITY =      1013;
 
     private RequestOutcome                              requestOutcome;
     private Context                                     context;
@@ -117,22 +118,8 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
     public void logout() {
         try {
-            dataReceiver = new String[1];
-            coordinator = new RequestCoordinator(context, this, dataReceiver) {
-                @Override
-                protected void onSuccess() {}
-
-                @Override
-                protected void onFailure(int errorCode) {}
-            };
-
-            String sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
-            String accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
             CredentialService.getInstance(context).clearSavedData();
             PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
-            JsonObjectRequest invalidateSession = RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken);
-            coordinator.addRequests(invalidateSession);
-            coordinator.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -271,6 +258,33 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                 preRequestVariables).execute();
     }
 
+    public void invalidateSession() {
+        try {
+            dataReceiver = new String[1];
+            coordinator = new RequestCoordinator(context, this, dataReceiver) {
+                @Override
+                protected void onSuccess() {
+                    requestOutcome.onSuccess(INVALIDATE_SESSION);
+                }
+
+                @Override
+                protected void onFailure(int errorCode) {
+                    requestOutcome.onFailure(INVALIDATE_SESSION, errorCode);
+                }
+            };
+
+            preRequestVariables.clear();
+            String sessionId = CredentialService.getInstance(context).getEntry(CredentialService.SESSION_ID_KEY);
+            preRequestVariables.put("sessionId", sessionId);
+            preRequestTask = new PreRequestTask(INVALIDATE_SESSION, this, context, coordinator, preRequestVariables);
+            requestType = INVALIDATE_SESSION;
+            submitRequest();
+        } catch (Exception e) {
+            e.printStackTrace();
+            requestOutcome.onError();
+        }
+    }
+
     private void submitRequest() {
         if (userLoggedIn()) {
             try {
@@ -306,14 +320,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
 
                         @Override
                         protected void onFailure(int errorCode) {
-                            if (errorCode == ApiService.UNAUTHORIZED) {
-                                try {
-                                    CredentialService.getInstance(context).clearSavedData();
-                                    PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
                             requestOutcome.onFailure(requestType, errorCode);
                         }
                     };
@@ -342,8 +348,6 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
             preRequestTask.execute();
         }
     }
-
-//
 
     public void initializeAccountData(final char[] password, final Preferences preferences) {
         dataReceiver = new String[3];

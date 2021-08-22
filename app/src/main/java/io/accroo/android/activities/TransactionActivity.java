@@ -268,7 +268,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             MessageDialog.show(TransactionActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_TRANSACTION && errorCode == ApiService.NOT_FOUND) {

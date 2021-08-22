@@ -38,6 +38,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private ApiService apiService;
     private ProgressBar progressBar;
     private TextInputLayout inputEmailAddress;
+    private TextView acceptTerms;
     private EditText emailAddress;
     private Button createAccount, signIn;
     private int action;
@@ -138,7 +139,8 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             createAccount.setOnClickListener(createAccountListener);
             signIn.setOnClickListener(signInListener);
         }
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (requestType == ApiService.LOAD_DEFAULT_DATA && (errorCode == ApiService.UNAUTHORIZED ||
+                errorCode == ApiService.UNPROCESSABLE_ENTITY || errorCode == ApiService.NOT_FOUND)) {
             apiService.logout();
             initLayout();
         } else if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY && errorCode == ApiService.NOT_FOUND) {

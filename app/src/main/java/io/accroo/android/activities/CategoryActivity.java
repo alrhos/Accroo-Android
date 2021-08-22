@@ -179,7 +179,7 @@ public class CategoryActivity extends AppCompatActivity implements ApiService.Re
             MessageDialog.show(CategoryActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else {
