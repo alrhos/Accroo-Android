@@ -11,13 +11,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
+
+import java.util.UUID;
 
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
@@ -37,7 +38,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private DatePickerDialog.OnDateSetListener datePicker;
     private DateTime date;
     private Transaction newTransaction, existingTransaction;
-    private int selectedSubCategoryID;
+    private UUID selectedSubCategoryID;
     private ProgressDialog progressDialog;
     private final int SUB_CATEGORY_REQUEST = 1;
     private boolean editing = false;
@@ -96,32 +97,22 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 Utils.showSoftKeyboard(TransactionActivity.this);
             }
 
-            datePicker = new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    date = new DateTime()
-                            .withYear(year)
-                            .withMonthOfYear(monthOfYear + 1)
-                            .withDayOfMonth(dayOfMonth);
-                    updateDate();
-                }
+            datePicker = (view, year, monthOfYear, dayOfMonth) -> {
+                date = new DateTime()
+                        .withYear(year)
+                        .withMonthOfYear(monthOfYear + 1)
+                        .withDayOfMonth(dayOfMonth);
+                updateDate();
             };
 
-            dateField.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new DatePickerDialog(TransactionActivity.this, datePicker, date.getYear(),
-                            date.getMonthOfYear() - 1, date.getDayOfMonth()).show();
-                }
-            });
+            dateField.setOnClickListener(view -> new DatePickerDialog(TransactionActivity.this, datePicker, date.getYear(),
+                    date.getMonthOfYear() - 1, date.getDayOfMonth()).show());
 
-            categoryField.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.hideSoftKeyboard(TransactionActivity.this);
-                    Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
-                    startActivityForResult(intent, SUB_CATEGORY_REQUEST);
-                    overridePendingTransition(R.anim.enter, R.anim.exit);
-                }
+            categoryField.setOnClickListener(view -> {
+                Utils.hideSoftKeyboard(TransactionActivity.this);
+                Intent intent = new Intent(getApplicationContext(), SelectSubCategoryActivity.class);
+                startActivityForResult(intent, SUB_CATEGORY_REQUEST);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
             });
 
             submitButton.setOnClickListener(new View.OnClickListener() {
@@ -217,10 +208,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                         apiService.deleteTransaction(existingTransaction);
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                }).create().show();
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {}).create().show();
     }
 
     private boolean isValidAmount() {
@@ -239,7 +227,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     }
 
     private boolean isCategorySelected() {
-        if (selectedSubCategoryID == 0) {
+        if (selectedSubCategoryID == null) {
             Toast.makeText(getApplicationContext(), R.string.select_sub_category, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -280,7 +268,7 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
             MessageDialog.show(TransactionActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_TRANSACTION && errorCode == ApiService.NOT_FOUND) {

@@ -10,6 +10,7 @@ import io.accroo.android.other.GsonUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by oscar on 4/03/17.
@@ -17,12 +18,12 @@ import java.util.ArrayList;
 
 public class GeneralCategory implements Parcelable {
 
-    private int id;
+    private UUID id;
     @Expose private String categoryName;
     @Expose private String rootCategory;
     @Expose private String iconFile;
     private ArrayList<SubCategory> subCategories;
-    private static DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public GeneralCategory(String categoryName, String rootCategory, String iconFile) {
         this.categoryName = categoryName;
@@ -30,11 +31,11 @@ public class GeneralCategory implements Parcelable {
         this.iconFile = iconFile;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -88,7 +89,8 @@ public class GeneralCategory implements Parcelable {
     public EncryptedGeneralCategory encrypt() {
         String categoryJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(categoryJson);
-        return new EncryptedGeneralCategory(this.id, securePayload.getData(), securePayload.getNonce());
+        securePayload.setId(this.id);
+        return new EncryptedGeneralCategory(securePayload.getId(), securePayload.getData(), securePayload.getNonce());
     }
 
     @Override
@@ -98,14 +100,14 @@ public class GeneralCategory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeSerializable(this.id);
         dest.writeString(this.categoryName);
         dest.writeString(this.rootCategory);
         dest.writeString(this.iconFile);
     }
 
     protected GeneralCategory(Parcel in) {
-        this.id = in.readInt();
+        this.id = (UUID) in.readSerializable();
         this.categoryName = in.readString();
         this.rootCategory = in.readString();
         this.iconFile = in.readString();

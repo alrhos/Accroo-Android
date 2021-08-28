@@ -1,30 +1,27 @@
 package io.accroo.android.model;
 
-import android.util.Base64;
-
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
 
-public class Account {
+public class AuthCredentials {
     @Expose private String email;
-    @Expose private String verificationToken;
+    @Expose @SerializedName("verification_token") private String verificationToken;
 
-    public Account(String email) {
+    public AuthCredentials(String email) {
         this.email = email;
         this.verificationToken = generateVerificationToken();
     }
 
-    public Account(String email, String verificationToken) {
+    public AuthCredentials(String email, String verificationToken) {
         this.email = email;
         this.verificationToken = verificationToken;
     }
 
     private String generateVerificationToken() {
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[5];
-        random.nextBytes(bytes);
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
+        return new DecimalFormat("000000").format(new SecureRandom().nextInt(999999));
     }
 
     public String getEmail() {

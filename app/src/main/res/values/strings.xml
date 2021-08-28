@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Accroo</string>
-
     <string name="account">Account</string>
     <string name="general">General</string>
     <string name="email">Email address</string>
@@ -30,7 +29,6 @@
     <string name="important">Important!</string>
     <string name="password_warning">Your password is never sent to Accroo servers so it cannot be reset or recovered if you forget it.</string>
     <string name="verification_code_description">We\'ve sent you a verification code via email. Please enter it below to verify your identity.</string>
-
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_transaction">Add Transaction</string>
     <string name="title_activity_edit_transaction">Edit Transaction</string>
@@ -46,7 +44,6 @@
     <string name="title_activity_change_email">Change Email</string>
     <string name="title_activity_change_password">Change Password</string>
     <string name="title_activity_account_verification">Account Verification</string>
-
     <string name="activity_overview">Activity Overview</string>
     <string name="type">Type</string>
     <string name="income">Income</string>
@@ -63,13 +60,14 @@
     <string name="date">Date</string>
     <string name="description">Description (optional)</string>
     <string name="description_csv">Description</string>
-
     <string name="timeout_error">The connection timed out</string>
     <string name="connection_error">Couldn\'t connect to server</string>
     <string name="no_network_connection">No network connection</string>
     <string name="general_error">An error occurred</string>
     <string name="data_export_error">Data could not be exported</string>
     <string name="too_many_requests">Please try again in a few minutes</string>
+    <string name="auth_not_allowed_title">Verification temporarily suspended</string>
+    <string name="auth_not_allowed_message">Verification has been temporarily suspended for this account due to repeated incorrect verification codes being entered.\n\nPlease wait 10 minutes before requesting a new verification code and trying again.</string>
     <string name="maintenance_title">Down for maintenance</string>
     <string name="maintenance_message">Accroo is temporarily down for maintenance but should be back again soon. Please try again later.</string>
     <string name="upgrade_required_title">Upgrade Required</string>
@@ -106,6 +104,7 @@
     <string name="change_email">Change email</string>
     <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
+    <string name="signing_out">Signing out...</string>
     <string name="about">About</string>
     <string name="export_data">Export data</string>
     <string name="new_email">New email address</string>
@@ -119,11 +118,9 @@
     <string name="submitting">Submitting...</string>
     <string name="loading">Loading...</string>
     <string name="saving">Saving...</string>
-    <string name="signing_out">Signing out...</string>
     <string name="registering_account">Registering account...</string>
-    <string name="email_updated_title">Email updated</string>
+    <string name="email_updated">Email updated</string>
     <string name="data_exported">Your data has been exported</string>
-    <string name="email_updated_message">Your email address was successfully updated. Please login again to continue.</string>
     <string name="password_updated">Password updated</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
@@ -140,11 +137,10 @@
     <string name="no_categories">No categories</string>
     <string name="no_sub_categories">No sub categories</string>
     <string name="enter_verification_code">Enter your verification code</string>
-    <string name="invalid_verification_code_length">The verification code is 8 characters</string>
-    <string name="invalid_verification_code_format">Invalid verification code format</string>
+    <string name="invalid_verification_code">Your verification code is 6 digits</string>
     <string name="incorrect_verification_code">Incorrect or expired verification code</string>
     <string name="where_is_my_code">Where is my code?</string>
-    <string name="verification_code_explanation">We sent you an 8-character verification code via email.\n\nSometimes it can take a couple of minutes for you to receive it, or it may end up in your spam folder.\n\nIf, however, you don\'t receive the code, you can request another one.</string>
+    <string name="verification_code_explanation">We sent you a 6-digit verification code via email.\n\nSometimes it can take a couple of minutes for you to receive it, or it may end up in your spam folder.\n\nIf, however, you don\'t receive the code, you can request another one.</string>
     <string name="new_verification_code_sent">We\'ve sent you a new verification code</string>
     <string name="key_decryption_message">Enter your Accroo password to decrypt your data.</string>
     <string name="no_connection">No connection</string>

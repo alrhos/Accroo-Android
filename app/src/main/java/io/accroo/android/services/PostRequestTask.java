@@ -3,14 +3,14 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import io.accroo.android.model.AccessToken;
-import io.accroo.android.model.Account;
+import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.EncryptedGeneralCategory;
 import io.accroo.android.model.EncryptedSubCategory;
 import io.accroo.android.model.EncryptedTransaction;
 import io.accroo.android.model.GeneralCategory;
+import io.accroo.android.model.Jwt;
 import io.accroo.android.model.Key;
-import io.accroo.android.model.LoginSession;
+import io.accroo.android.model.Session;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.GsonUtil;
@@ -29,8 +29,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private PostRequestOutcome postRequestOutcome;
     private Context context;
     private DateTime startDate, endDate;
-    private Account account;
-    private LoginSession loginSession;
+    private Session session;
     private DateTime refreshTokenExpiry, accessTokenExpiry;
     private EncryptedTransaction encryptedTransaction;
     private Transaction transaction;
@@ -62,68 +61,68 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
         try {
             switch (requestType) {
 
-                case ApiService.GET_ANONYMOUS_TOKEN:
+                case ApiService.GET_VISITOR_TOKEN:
 
-                    AccessToken accessToken = GsonUtil.getInstance().fromJson(dataReceiver[0][0], AccessToken.class);
-
+                    Jwt accessToken = GsonUtil.getInstance().fromJson(dataReceiver[0][0], Jwt.class);
                     DateTime tokenExpiry = new DateTime(accessToken.getExpiresAt());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, accessToken.getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, tokenExpiry.toString());
 
                     return true;
 
-                case ApiService.LOGIN:
+                case ApiService.CREATE_SESSION:
 
-                    account = (Account) requestVariables.get("account");
-                    loginSession = GsonUtil.getInstance().fromJson(dataReceiver[0][0], LoginSession.class);
+                    session = GsonUtil.getInstance().fromJson(dataReceiver[0][0], Session.class);
 
-                    refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
-                    accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
+                    refreshTokenExpiry = new DateTime(session.getRefreshToken().getExpiresAt());
+                    accessTokenExpiry = new DateTime(session.getAccessToken().getExpiresAt());
 
-                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, account.getEmail());
-                    CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, loginSession.getUserId());
-                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, loginSession.getRefreshToken().getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.SESSION_ID_KEY, session.getId().toString());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, session.getEmail());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USER_ID_KEY, session.getUserId().toString());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, session.getRefreshToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
-                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, loginSession.getAccessToken().getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, accessTokenExpiry.toString());
 
                     return true;
 
-                case ApiService.REAUTHENTICATE:
+                case ApiService.REAUTHENTICATE_SESSION:
 
-                    loginSession = GsonUtil.getInstance().fromJson(dataReceiver[0][0], LoginSession.class);
+                    session = GsonUtil.getInstance().fromJson(dataReceiver[0][0], Session.class);
 
-                    refreshTokenExpiry = new DateTime(loginSession.getRefreshToken().getExpiresAt());
-                    accessTokenExpiry = new DateTime(loginSession.getAccessToken().getExpiresAt());
+                    refreshTokenExpiry = new DateTime(session.getRefreshToken().getExpiresAt());
+                    accessTokenExpiry = new DateTime(session.getAccessToken().getExpiresAt());
 
-                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, loginSession.getRefreshToken().getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.USERNAME_KEY, session.getEmail());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_KEY, session.getRefreshToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.REFRESH_TOKEN_EXPIRY_KEY, refreshTokenExpiry.toString());
-                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, loginSession.getAccessToken().getToken());
+                    CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, accessTokenExpiry.toString());
 
                     return true;
 
-                case ApiService.GET_DEFAULT_DATA:
+                case ApiService.LOAD_DEFAULT_DATA:
 
                     startDate = (DateTime) requestVariables.get("startDate");
                     endDate = (DateTime) requestVariables.get("endDate");
 
                     ArrayList<EncryptedGeneralCategory> encryptedGeneralCategories = GsonUtil.getInstance()
-                            .listFromJson(dataReceiver[0][0], EncryptedGeneralCategory.class);
+                            .listFromJson(dataReceiver[0][1], EncryptedGeneralCategory.class);
 
                     for (EncryptedGeneralCategory encryptedGeneralCategory : encryptedGeneralCategories) {
                         generalCategories.add(encryptedGeneralCategory.decrypt());
                     }
 
                     ArrayList<EncryptedSubCategory> encryptedSubCategories = GsonUtil.getInstance()
-                            .listFromJson(dataReceiver[0][1], EncryptedSubCategory.class);
+                            .listFromJson(dataReceiver[0][2], EncryptedSubCategory.class);
 
                     for (EncryptedSubCategory encryptedSubCategory : encryptedSubCategories) {
                         subCategories.add(encryptedSubCategory.decrypt());
                     }
 
                     ArrayList<EncryptedTransaction> encryptedTransactions = GsonUtil.getInstance()
-                            .listFromJson(dataReceiver[0][2], EncryptedTransaction.class);
+                            .listFromJson(dataReceiver[0][3], EncryptedTransaction.class);
 
                     for (EncryptedTransaction encryptedTransaction : encryptedTransactions) {
                         Transaction transaction = encryptedTransaction.decrypt();

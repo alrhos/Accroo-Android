@@ -1,9 +1,12 @@
 package io.accroo.android.other;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
+import android.provider.Settings;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.Comparator;
@@ -11,6 +14,8 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import io.accroo.android.model.SessionData;
 
 public class Utils {
 
@@ -26,14 +31,12 @@ public class Utils {
             try {
                 Currency currency = Currency.getInstance(locale);
                 currencyLocaleMap.put(currency, locale);
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
     }
 
     public static String getCurrencySymbol(String currencyCode) {
         Currency currency = Currency.getInstance(currencyCode);
-        System.out.println(currencyCode + ":-" + currency.getSymbol(currencyLocaleMap.get(currency)));
         return currency.getSymbol(currencyLocaleMap.get(currency));
     }
 
@@ -76,6 +79,13 @@ public class Utils {
         if (imm != null) {
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
         }
+    }
+
+    public static SessionData generateSessionData(Context context) {
+        String deviceBrand = capitaliseAndTrim(Build.BRAND);
+        String deviceModel = Build.MODEL;
+        String deviceName = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
+        return new SessionData(deviceBrand, deviceModel, deviceName);
     }
 
 }

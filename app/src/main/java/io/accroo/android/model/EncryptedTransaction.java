@@ -1,63 +1,36 @@
 package io.accroo.android.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
-public class EncryptedTransaction {
+public class EncryptedTransaction extends SecurePayload {
 
-    @Expose (serialize = false) private int id;
-    @Expose private int subCategoryId;
-    @Expose private String data;
-    @Expose private String nonce;
+    @Expose @SerializedName("sub_category_id") private UUID subCategoryId;
 
-    public EncryptedTransaction(int id, int subCategoryId, String data, String nonce) {
-        this.id = id;
+    public EncryptedTransaction(UUID id, String data, String nonce, UUID subCategoryId) {
+        super(id, data, nonce);
         this.subCategoryId = subCategoryId;
-        this.data = data;
-        this.nonce = nonce;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getSubCategoryId() {
+    public UUID getSubCategoryId() {
         return subCategoryId;
     }
 
-    public void setSubCategoryId(int subCategoryId) {
+    public void setSubCategoryId(UUID subCategoryId) {
         this.subCategoryId = subCategoryId;
     }
 
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getNonce() {
-        return nonce;
-    }
-
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
-    }
-
     public Transaction decrypt() throws UnsupportedEncodingException {
-        SecurePayload securePayload = new SecurePayload(this.data, this.nonce);
+        SecurePayload securePayload = new SecurePayload(getId(), getData(), getNonce());
         String transactionJson = CryptoManager.getInstance().decrypt(securePayload);
         Transaction transaction = GsonUtil.getInstance().fromJson(transactionJson, Transaction.class);
-        transaction.setId(this.id);
+        transaction.setId(getId());
         transaction.setSubCategoryId(this.subCategoryId);
         return transaction;
     }

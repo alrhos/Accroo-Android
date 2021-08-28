@@ -2,11 +2,9 @@ package io.accroo.android.activities;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -19,14 +17,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.safetynet.SafetyNet;
-import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetStatusCodes;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
-import io.accroo.android.model.Account;
+import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MessageDialog;
 import io.accroo.android.other.Utils;
@@ -74,17 +69,14 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
 
-            noCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constants.ACCROO_SUPPORT_EMAIL, null));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
-                    try {
-                        startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
-                    }
+            noCode.setOnClickListener(view -> {
+                Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Constants.ACCROO_SUPPORT_EMAIL, null));
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Not receiving verification codes");
+                try {
+                    startActivity(Intent.createChooser(intent, getResources().getString(R.string.email_chooser)));
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getApplicationContext(), R.string.no_email_client, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -116,52 +108,48 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
 
     private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        if (!response.getTokenResult().isEmpty()) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getVerificationCode(username);
-                        }
+                .addOnSuccessListener(this, response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        apiService.getVisitorToken(response.getTokenResult());
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            String message;
-                            switch (statusCode) {
-                                case SafetyNetStatusCodes.TIMEOUT:
-                                    message = getResources().getString(R.string.timeout_error);
-                                    break;
-                                case SafetyNetStatusCodes.NETWORK_ERROR:
-                                    message = getResources().getString(R.string.no_network_connection);
-                                    break;
-                                default:
-                                    message = getResources().getString(R.string.general_error);
-                            }
-                            verificationCodeInput.setError(message);
-                        } else {
-                            verificationCodeInput.setError(getResources().getString(R.string.general_error));
+                .addOnFailureListener(this, e -> {
+                    e.printStackTrace();
+                    if (e instanceof ApiException) {
+                        ApiException apiException = (ApiException) e;
+                        int statusCode = apiException.getStatusCode();
+                        String message;
+                        switch (statusCode) {
+                            case SafetyNetStatusCodes.TIMEOUT:
+                                message = getResources().getString(R.string.timeout_error);
+                                break;
+                            case SafetyNetStatusCodes.NETWORK_ERROR:
+                                message = getResources().getString(R.string.no_network_connection);
+                                break;
+                            default:
+                                message = getResources().getString(R.string.general_error);
                         }
-                        resendCode.setOnClickListener(resendCodeListener);
-                        next.setOnClickListener(nextListener);
+                        verificationCodeInput.setError(message);
+                    } else {
+                        verificationCodeInput.setError(getResources().getString(R.string.general_error));
                     }
+                    resendCode.setOnClickListener(resendCodeListener);
+                    next.setOnClickListener(nextListener);
                 });
     }
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_VERIFICATION_CODE) {
+        if (requestType == ApiService.GET_VISITOR_TOKEN) {
+            apiService.getVerificationCode(username);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE) {
             verificationCodeField.setText("");
             progressBar.setVisibility(View.INVISIBLE);
             resendCode.setOnClickListener(resendCodeListener);
             next.setOnClickListener(nextListener);
             verificationCodeInput.setError(getResources().getString(R.string.new_verification_code_sent));
-        } else if (requestType == ApiService.LOGIN) {
+        } else if (requestType == ApiService.CREATE_SESSION) {
             apiService.getKey();
         } else if (requestType == ApiService.GET_KEY) {
             verificationCodeField.getText().clear();
@@ -173,25 +161,15 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             intent.putExtra("username", username);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else if (requestType == ApiService.REAUTHENTICATE) {
+        } else if (requestType == ApiService.REAUTHENTICATE_SESSION) {
             if (action == UPDATE_EMAIL) {
                 apiService.updateEmail(email);
             } else if (action == UPDATE_PASSWORD) {
                 apiService.updatePassword(password);
             }
         } else if (requestType == ApiService.UPDATE_EMAIL) {
-            verificationCodeField.getText().clear();
-            progressBar.setVisibility(View.INVISIBLE);
-            AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
-            builder.setTitle(R.string.email_updated_title)
-                    .setMessage(R.string.email_updated_message)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                            relaunch();
-                        }
-                    }).create().show();
+            Toast.makeText(getApplicationContext(), R.string.email_updated, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         } else if (requestType == ApiService.UPDATE_PASSWORD) {
             Toast.makeText(getApplicationContext(), R.string.password_updated, Toast.LENGTH_LONG).show();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -211,15 +189,14 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             MessageDialog.show(VerificationCodeActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
+        } else if (errorCode == ApiService.IM_A_TEAPOT) {
+            MessageDialog.show(VerificationCodeActivity.this,
+                    getResources().getString(R.string.auth_not_allowed_title),
+                    getResources().getString(R.string.auth_not_allowed_message));
         } else if (requestType == ApiService.UPDATE_EMAIL && errorCode == ApiService.CONFLICT) {
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.email_in_use)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    }).create().show();
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> finish()).create().show();
         } else {
             String message;
             switch (errorCode) {
@@ -254,22 +231,19 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             String verificationCode = verificationCodeField.getText().toString();
             if (verificationCode.length() == 0) {
                 verificationCodeInput.setError(getResources().getString(R.string.enter_verification_code));
-            } else if (verificationCode.length() != 8) {
-                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_length));
-            } else if (!verificationCode.matches("^[A-Z2-7]{8}$")) {
-                // Verification code is a Base32 encoded string
-                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code_format));
+            } else if (!verificationCode.matches("^[0-9]{6}$")) {
+                verificationCodeInput.setError(getResources().getString(R.string.invalid_verification_code));
             } else {
                 verificationCodeInput.setError(" ");
                 progressBar.setVisibility(View.VISIBLE);
                 Utils.hideSoftKeyboard(VerificationCodeActivity.this);
                 resendCode.setOnClickListener(null);
                 next.setOnClickListener(null);
+                AuthCredentials authCredentials = new AuthCredentials(username, verificationCodeField.getText().toString());
                 if (action == LOGIN) {
-                    Account account = new Account(username, verificationCodeField.getText().toString());
-                    apiService.login(account);
+                    apiService.createSession(authCredentials);
                 } else if (action == UPDATE_EMAIL || action == UPDATE_PASSWORD) {
-                    apiService.reauthenticate(verificationCodeField.getText().toString());
+                    apiService.reauthenticateSession(authCredentials);
                 }
             }
         }
@@ -280,25 +254,19 @@ public class VerificationCodeActivity extends AppCompatActivity implements ApiSe
             AlertDialog.Builder builder = new AlertDialog.Builder(VerificationCodeActivity.this);
             builder.setMessage(R.string.verification_code_explanation)
                     .setTitle(R.string.where_is_my_code)
-                    .setPositiveButton(R.string.new_code, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            verificationCodeInput.setError(" ");
-                            Utils.hideSoftKeyboard(VerificationCodeActivity.this);
-                            resendCode.setOnClickListener(null);
-                            next.setOnClickListener(null);
-                            if (apiService.hasActiveAccessToken()) {
-                                progressBar.setVisibility(View.VISIBLE);
-                                apiService.getVerificationCode(username);
-                            } else {
-                                recaptchaChallenge();
-                            }
+                    .setPositiveButton(R.string.new_code, (dialogInterface, i) -> {
+                        verificationCodeInput.setError(" ");
+                        Utils.hideSoftKeyboard(VerificationCodeActivity.this);
+                        resendCode.setOnClickListener(null);
+                        next.setOnClickListener(null);
+                        if (apiService.hasActiveAccessToken()) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            apiService.getVerificationCode(username);
+                        } else {
+                            recaptchaChallenge();
                         }
                     })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {}
-                    }).create().show();
+                    .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {}).create().show();
         }
     };
 

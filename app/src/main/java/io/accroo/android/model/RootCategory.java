@@ -16,7 +16,7 @@ public class RootCategory implements Parcelable {
     public static final String EXPENSE = "Expense";
     private String categoryName;
     private ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
-    private static DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public RootCategory(String categoryName) {
         this.categoryName = categoryName;

@@ -2,7 +2,6 @@ package io.accroo.android.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,17 +94,11 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
     private void deleteSubCategory() {
         AlertDialog.Builder builder = new AlertDialog.Builder(EditSubCategoryActivity.this);
         builder.setMessage(R.string.delete_sub_category)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.show();
-                        apiService.deleteSubCategory(subCategory);
-                    }
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    progressDialog.show();
+                    apiService.deleteSubCategory(subCategory);
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                }).create().show();
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {}).create().show();
     }
 
     @Override
@@ -147,7 +140,7 @@ public class EditSubCategoryActivity extends AppCompatActivity implements ApiSer
             MessageDialog.show(EditSubCategoryActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else if (requestType == ApiService.DELETE_SUB_CATEGORY && errorCode == ApiService.NOT_FOUND) {

@@ -18,38 +18,32 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         Preference emailPreference = findPreference("change_email");
-        emailPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(requireActivity(), ChangeEmailActivity.class);
-                try {
-                    String username = CredentialService.getInstance(requireActivity())
-                            .getEntry(CredentialService.USERNAME_KEY);
-                    intent.putExtra("username", username);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(requireActivity(), R.string.general_error, Toast.LENGTH_LONG).show();
-                }
-                return true;
+        emailPreference.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(requireActivity(), ChangeEmailActivity.class);
+            try {
+                String username = CredentialService.getInstance(requireActivity())
+                        .getEntry(CredentialService.USERNAME_KEY);
+                intent.putExtra("username", username);
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(requireActivity(), R.string.general_error, Toast.LENGTH_LONG).show();
             }
+            return true;
         });
 
         Preference passwordPreference = findPreference("change_password");
-        passwordPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(requireActivity(), KeyDecryptionActivity.class);
-                intent.putExtra("action", KeyDecryptionActivity.UPDATE_PASSWORD);
-                try {
-                    String username = CredentialService.getInstance(requireActivity())
-                            .getEntry(CredentialService.USERNAME_KEY);
-                    intent.putExtra("username", username);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(requireActivity(), R.string.general_error, Toast.LENGTH_LONG).show();
-                }
-                return true;
+        passwordPreference.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(requireActivity(), KeyDecryptionActivity.class);
+            intent.putExtra("action", KeyDecryptionActivity.UPDATE_PASSWORD);
+            try {
+                String username = CredentialService.getInstance(requireActivity())
+                        .getEntry(CredentialService.USERNAME_KEY);
+                intent.putExtra("username", username);
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(requireActivity(), R.string.general_error, Toast.LENGTH_LONG).show();
             }
+            return true;
         });
     }
 

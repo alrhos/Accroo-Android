@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by oscar on 4/03/17.
@@ -11,7 +12,7 @@ import com.google.gson.annotations.Expose;
 
 public class Key implements Parcelable {
 
-    @Expose private String encryptedKey;
+    @Expose @SerializedName("encrypted_key") private String encryptedKey;
     @Expose private String nonce;
     @Expose private String salt;
     @Expose private int algorithm;

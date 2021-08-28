@@ -77,50 +77,42 @@ public class GeneralCategoryFragment extends Fragment {
             }
         }
 
-        icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentListener.onIconClicked();
+        icon.setOnClickListener(view -> fragmentListener.onIconClicked());
+
+        submit.setOnClickListener(view -> {
+
+            if (!isValidCategoryName()) {
+                return;
             }
-        });
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!isValidCategoryName()) {
-                    return;
-                }
-
-                if (!isIconSelected()) {
-                    return;
-                }
-
-                int radioID = radioGroup.getCheckedRadioButtonId();
-                View radioButton = radioGroup.findViewById(radioID);
-                int radioButtonIndex = radioGroup.indexOfChild(radioButton);
-                String rootCategory = "";
-
-                if (radioButtonIndex == 0) {
-                    rootCategory = RootCategory.INCOME;
-                } else if (radioButtonIndex == 1) {
-                    rootCategory = RootCategory.EXPENSE;
-                }
-
-                String formattedName = Utils.capitaliseAndTrim(categoryName.getText().toString());
-
-                if (editing) {
-                    existingCategory.setIconFile(iconName);
-                    existingCategory.setCategoryName(formattedName);
-                    existingCategory.setRootCategory(rootCategory);
-                    fragmentListener.updateGeneralCategory(existingCategory);
-                } else {
-                    GeneralCategory generalCategory = new GeneralCategory(formattedName,
-                            rootCategory, iconName);
-                    fragmentListener.createGeneralCategory(generalCategory);
-                }
-
+            if (!isIconSelected()) {
+                return;
             }
+
+            int radioID = radioGroup.getCheckedRadioButtonId();
+            View radioButton = radioGroup.findViewById(radioID);
+            int radioButtonIndex = radioGroup.indexOfChild(radioButton);
+            String rootCategory = "";
+
+            if (radioButtonIndex == 0) {
+                rootCategory = RootCategory.INCOME;
+            } else if (radioButtonIndex == 1) {
+                rootCategory = RootCategory.EXPENSE;
+            }
+
+            String formattedName = Utils.capitaliseAndTrim(categoryName.getText().toString());
+
+            if (editing) {
+                existingCategory.setIconFile(iconName);
+                existingCategory.setCategoryName(formattedName);
+                existingCategory.setRootCategory(rootCategory);
+                fragmentListener.updateGeneralCategory(existingCategory);
+            } else {
+                GeneralCategory generalCategory = new GeneralCategory(formattedName,
+                        rootCategory, iconName);
+                fragmentListener.createGeneralCategory(generalCategory);
+            }
+
         });
 
         return fragmentView;

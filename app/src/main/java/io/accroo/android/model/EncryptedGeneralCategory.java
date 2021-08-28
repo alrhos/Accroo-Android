@@ -1,48 +1,22 @@
 package io.accroo.android.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.other.GsonUtil;
 
-public class EncryptedGeneralCategory {
+public class EncryptedGeneralCategory extends SecurePayload {
 
-    @Expose(serialize = false) private int id;
-    @Expose private String data;
-    @Expose private String nonce;
-    @Expose (serialize = false) private ArrayList<EncryptedSubCategory> subCategories = new ArrayList<>();
+    @Expose(serialize = false) @SerializedName("sub_categories")
+    private ArrayList<EncryptedSubCategory> subCategories = new ArrayList<>();
 
-    public EncryptedGeneralCategory(int id, String data, String nonce) {
-        this.id = id;
-        this.data = data;
-        this.nonce = nonce;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getNonce() {
-        return nonce;
-    }
-
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
+    public EncryptedGeneralCategory(UUID id, String data, String nonce) {
+        super(id, data, nonce);
     }
 
     public ArrayList<EncryptedSubCategory> getSubCategories() {
@@ -54,20 +28,11 @@ public class EncryptedGeneralCategory {
     }
 
     public GeneralCategory decrypt() throws UnsupportedEncodingException {
-        SecurePayload securePayload = new SecurePayload(this.data, this.nonce);
+        SecurePayload securePayload = new SecurePayload(getId(), getData(), getNonce());
         String categoryString = CryptoManager.getInstance().decrypt(securePayload);
         GeneralCategory generalCategory = GsonUtil.getInstance().fromJson(categoryString, GeneralCategory.class);
-        generalCategory.setId(this.id);
+        generalCategory.setId(getId());
         return generalCategory;
     }
 
-    @Override
-    public String toString() {
-        return "EncryptedGeneralCategory{" +
-                "id=" + id +
-                ", data='" + data + '\'' +
-                ", nonce='" + nonce + '\'' +
-                ", subCategories=" + subCategories +
-                '}';
-    }
 }

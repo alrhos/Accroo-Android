@@ -17,6 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Created by oscar on 4/03/17.

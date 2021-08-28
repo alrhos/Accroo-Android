@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
@@ -13,6 +14,7 @@ import io.accroo.android.other.GsonUtil;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by oscar on 25/03/17.
@@ -20,16 +22,16 @@ import java.util.Locale;
 
 public class Transaction implements Relationship, Parcelable {
 
-    private int id;
-    private int subCategoryId;
+    private UUID id;
+    private UUID subCategoryId;
     @Expose private DateTime date;
     @Expose private double amount;
     @Expose private String description = "";
     private SubCategory parent;
-    private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public Transaction(int subCategoryId, DateTime date, double amount, String description) {
+    public Transaction(UUID subCategoryId, DateTime date, double amount, String description) {
         this.subCategoryId = subCategoryId;
         this.date = date;
         this.amount = amount;
@@ -38,19 +40,19 @@ public class Transaction implements Relationship, Parcelable {
         }
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public int getSubCategoryId() {
+    public UUID getSubCategoryId() {
         return subCategoryId;
     }
 
-    public void setSubCategoryId(int subCategoryId) {
+    public void setSubCategoryId(UUID subCategoryId) {
         this.subCategoryId = subCategoryId;
     }
 
@@ -106,8 +108,9 @@ public class Transaction implements Relationship, Parcelable {
     public EncryptedTransaction encrypt() {
         String transactionJson = GsonUtil.getInstance().toJson(this);
         SecurePayload securePayload = CryptoManager.getInstance().encrypt(transactionJson);
-        return new EncryptedTransaction(this.id, this.subCategoryId,
-                securePayload.getData(), securePayload.getNonce());
+        securePayload.setId(this.id);
+        return new EncryptedTransaction(securePayload.getId(), securePayload.getData(),
+                securePayload.getNonce(), this.subCategoryId);
     }
 
     @Override
@@ -117,8 +120,8 @@ public class Transaction implements Relationship, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeInt(this.subCategoryId);
+        dest.writeSerializable(id);
+        dest.writeSerializable(this.subCategoryId);
         dest.writeSerializable(date);
         dest.writeDouble(this.amount);
         dest.writeString(this.description);
@@ -126,8 +129,8 @@ public class Transaction implements Relationship, Parcelable {
     }
 
     protected Transaction(Parcel in) {
-        this.id = in.readInt();
-        this.subCategoryId = in.readInt();
+        this.id = (UUID) in.readSerializable();
+        this.subCategoryId = (UUID) in.readSerializable();
         this.date = (DateTime) in.readSerializable();
         this.amount = in.readDouble();
         this.description = in.readString();
@@ -146,15 +149,4 @@ public class Transaction implements Relationship, Parcelable {
         }
     };
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", subCategoryId=" + subCategoryId +
-                ", date=" + date +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                ", dateFormat=" + dateFormat +
-                '}';
-    }
 }

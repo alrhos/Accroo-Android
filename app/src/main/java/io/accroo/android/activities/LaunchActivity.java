@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -18,10 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.safetynet.SafetyNet;
-import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetStatusCodes;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.joda.time.DateTime;
@@ -42,6 +38,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
     private ApiService apiService;
     private ProgressBar progressBar;
     private TextInputLayout inputEmailAddress;
+    private TextView acceptTerms;
     private EditText emailAddress;
     private Button createAccount, signIn;
     private int action;
@@ -82,7 +79,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
                     endDate = new DateTime().withMonthOfYear(12).withDayOfMonth(31).withTime(23, 59, 59, 999);
                     break;
             }
-            apiService.getDefaultData(startDate, endDate);
+            apiService.loadDefaultData(startDate, endDate);
         } else {
             initLayout();
         }
@@ -104,7 +101,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_ANONYMOUS_TOKEN) {
+        if (requestType == ApiService.GET_VISITOR_TOKEN) {
             String email = emailAddress.getText().toString().trim();
             if (action == CREATE_ACCOUNT) {
                 apiService.checkEmailAvailability(email);
@@ -127,7 +124,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             intent.putExtra("action", VerificationCodeActivity.LOGIN);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else if (requestType == ApiService.GET_DEFAULT_DATA) {
+        } else if (requestType == ApiService.LOAD_DEFAULT_DATA) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("startDate", startDate.getMillis());
             intent.putExtra("endDate", endDate.getMillis());
@@ -142,7 +139,9 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             createAccount.setOnClickListener(createAccountListener);
             signIn.setOnClickListener(signInListener);
         }
-        if (errorCode == ApiService.UNAUTHORIZED) {
+        if (requestType == ApiService.LOAD_DEFAULT_DATA && (errorCode == ApiService.UNAUTHORIZED ||
+                errorCode == ApiService.UNPROCESSABLE_ENTITY || errorCode == ApiService.NOT_FOUND)) {
+            apiService.logout();
             initLayout();
         } else if (requestType == ApiService.CHECK_EMAIL_AVAILABILITY && errorCode == ApiService.NOT_FOUND) {
             // Email is not being used
@@ -152,7 +151,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             intent.putExtra("username", emailAddress.getText().toString().trim());
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.NOT_FOUND) {
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
                 errorCode == ApiService.TOO_MANY_REQUESTS || errorCode == ApiService.SERVICE_UNAVAILABLE ||
@@ -170,11 +169,7 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             if (apiService.userLoggedIn()) {
                 setContentView(R.layout.activity_no_connection);
                 Button tryAgain = findViewById(R.id.try_again);
-                tryAgain.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        startUp();
-                    }
-                });
+                tryAgain.setOnClickListener(view -> startUp());
             }
         } else {
             onError();
@@ -183,7 +178,6 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     @Override
     public void onError() {
-        apiService.logout();
         Toast.makeText(getApplicationContext(), R.string.general_error, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -192,40 +186,34 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
 
     private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        if (!response.getTokenResult().isEmpty()) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getAnonymousToken(response.getTokenResult());
-                        }
+                .addOnSuccessListener(this, response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        apiService.getVisitorToken(response.getTokenResult());
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            String message;
-                            switch (statusCode) {
-                                case SafetyNetStatusCodes.TIMEOUT:
-                                    message = getResources().getString(R.string.timeout_error);
-                                    break;
-                                case SafetyNetStatusCodes.NETWORK_ERROR:
-                                    message = getResources().getString(R.string.no_network_connection);
-                                    break;
-                                default:
-                                    message = getResources().getString(R.string.general_error);
-                            }
-                            inputEmailAddress.setError(message);
-                        } else {
-                            inputEmailAddress.setError(getResources().getString(R.string.general_error));
+                .addOnFailureListener(this, e -> {
+                    e.printStackTrace();
+                    if (e instanceof ApiException) {
+                        ApiException apiException = (ApiException) e;
+                        int statusCode = apiException.getStatusCode();
+                        String message;
+                        switch (statusCode) {
+                            case SafetyNetStatusCodes.TIMEOUT:
+                                message = getResources().getString(R.string.timeout_error);
+                                break;
+                            case SafetyNetStatusCodes.NETWORK_ERROR:
+                                message = getResources().getString(R.string.no_network_connection);
+                                break;
+                            default:
+                                message = getResources().getString(R.string.general_error);
                         }
-                        createAccount.setOnClickListener(createAccountListener);
-                        signIn.setOnClickListener(signInListener);
+                        inputEmailAddress.setError(message);
+                    } else {
+                        inputEmailAddress.setError(getResources().getString(R.string.general_error));
                     }
+                    createAccount.setOnClickListener(createAccountListener);
+                    signIn.setOnClickListener(signInListener);
                 });
     }
 

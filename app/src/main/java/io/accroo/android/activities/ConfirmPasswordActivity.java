@@ -1,6 +1,5 @@
 package io.accroo.android.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,14 +13,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.safetynet.SafetyNet;
-import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetStatusCodes;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.accroo.android.R;
-import io.accroo.android.model.Account;
+import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.Preferences;
 import io.accroo.android.other.Constants;
 import io.accroo.android.other.MessageDialog;
@@ -40,7 +36,7 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
     private EditText passwordField;
     private Button next;
     private ApiService apiService;
-    private Account account;
+    private AuthCredentials authCredentials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,39 +66,33 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
 
     private void recaptchaChallenge() {
         SafetyNet.getClient(this).verifyWithRecaptcha(Constants.RECAPTCHA_SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        if (!response.getTokenResult().isEmpty()) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            apiService.getAnonymousToken(response.getTokenResult());
-                        }
+                .addOnSuccessListener(this, response -> {
+                    if (!response.getTokenResult().isEmpty()) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        apiService.getVisitorToken(response.getTokenResult());
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                        if (e instanceof ApiException) {
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            String message;
-                            switch (statusCode) {
-                                case SafetyNetStatusCodes.TIMEOUT:
-                                    message = getResources().getString(R.string.timeout_error);
-                                    break;
-                                case SafetyNetStatusCodes.NETWORK_ERROR:
-                                    message = getResources().getString(R.string.no_network_connection);
-                                    break;
-                                default:
-                                    message = getResources().getString(R.string.general_error);
-                            }
-                            confirmPasswordField.setError(message);
-                        } else {
-                            confirmPasswordField.setError(getResources().getString(R.string.general_error));
+                .addOnFailureListener(this, e -> {
+                    e.printStackTrace();
+                    if (e instanceof ApiException) {
+                        ApiException apiException = (ApiException) e;
+                        int statusCode = apiException.getStatusCode();
+                        String message;
+                        switch (statusCode) {
+                            case SafetyNetStatusCodes.TIMEOUT:
+                                message = getResources().getString(R.string.timeout_error);
+                                break;
+                            case SafetyNetStatusCodes.NETWORK_ERROR:
+                                message = getResources().getString(R.string.no_network_connection);
+                                break;
+                            default:
+                                message = getResources().getString(R.string.general_error);
                         }
-                        next.setOnClickListener(nextListener);
+                        confirmPasswordField.setError(message);
+                    } else {
+                        confirmPasswordField.setError(getResources().getString(R.string.general_error));
                     }
+                    next.setOnClickListener(nextListener);
                 });
     }
 
@@ -120,8 +110,8 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
                 if (action == REGISTER) {
                     if (apiService.hasActiveAccessToken()) {
                         progressBar.setVisibility(View.VISIBLE);
-                        account = new Account(username);
-                        apiService.createAccount(account);
+                        authCredentials = new AuthCredentials(username);
+                        apiService.createAccount(authCredentials);
                     } else {
                         recaptchaChallenge();
                     }
@@ -146,12 +136,12 @@ public class ConfirmPasswordActivity extends AppCompatActivity implements ApiSer
 
     @Override
     public void onSuccess(int requestType) {
-        if (requestType == ApiService.GET_ANONYMOUS_TOKEN) {
-            account = new Account(username);
-            apiService.createAccount(account);
+        if (requestType == ApiService.GET_VISITOR_TOKEN) {
+            authCredentials = new AuthCredentials(username);
+            apiService.createAccount(authCredentials);
         } else if (requestType == ApiService.CREATE_ACCOUNT) {
-            apiService.login(account);
-        } else if (requestType == ApiService.LOGIN) {
+            apiService.createSession(authCredentials);
+        } else if (requestType == ApiService.CREATE_SESSION) {
             char[] pwd = new char[password.length()];
             password.getChars(0, password.length(), pwd, 0);
             apiService.initializeAccountData(pwd, new Preferences());

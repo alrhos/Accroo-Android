@@ -32,6 +32,7 @@ public class CredentialService {
     private static final String             APP = "io.accroo.android";
     public static final String              USERNAME_KEY = "usernameKey";
     public static final String              USER_ID_KEY = "userId";
+    public static final String              SESSION_ID_KEY = "sessionId";
     public static final String              REFRESH_TOKEN_KEY = "refreshToken";
     public static final String              REFRESH_TOKEN_EXPIRY_KEY = "refreshTokenExpiry";
     public static final String              ACCESS_TOKEN_KEY = "accessToken";

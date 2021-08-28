@@ -31,7 +31,6 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
     private EditText keyPassword;
     private Button next;
     private ApiService apiService;
-    private int passwordLength;
     private char[] password;
 
     @Override
@@ -66,13 +65,10 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             apiService = new ApiService(this, getApplicationContext());
 
             next.setOnClickListener(nextListener);
-            forgotPassword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
-                    Uri uri = Uri.parse(Constants.FORGOT_PASSWORD_URL);
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                }
+            forgotPassword.setOnClickListener(view -> {
+                Utils.hideSoftKeyboard(KeyDecryptionActivity.this);
+                Uri uri = Uri.parse(Constants.FORGOT_PASSWORD_URL);
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
             });
         }
     }
@@ -82,7 +78,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             if (keyPassword.getText().length() > 0) {
                 next.setOnClickListener(null);
                 keyPasswordInput.setError(" ");
-                passwordLength = keyPassword.length();
+                int passwordLength = keyPassword.length();
                 password = new char[passwordLength];
                 keyPassword.getText().getChars(0, passwordLength, password, 0);
                 if (action == LOGIN) {
@@ -159,7 +155,7 @@ public class KeyDecryptionActivity extends AppCompatActivity implements ApiServi
             MessageDialog.show(KeyDecryptionActivity.this,
                     getResources().getString(R.string.upgrade_required_title),
                     getResources().getString(R.string.upgrade_required_message));
-        } else if (errorCode == ApiService.UNAUTHORIZED) {
+        } else if (errorCode == ApiService.UNAUTHORIZED || errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             apiService.logout();
             relaunch();
         } else {

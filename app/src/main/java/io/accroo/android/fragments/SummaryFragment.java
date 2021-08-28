@@ -81,14 +81,7 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
 
         swipeRefreshLayout = fragmentView.findViewById(R.id.summary_swipe_refresh);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
-        swipeRefreshLayout.setOnRefreshListener(
-            new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    fragmentListener.onSummarySwipeRefresh();
-                }
-            }
-        );
+        swipeRefreshLayout.setOnRefreshListener(() -> fragmentListener.onSummarySwipeRefresh());
 
         startDatePicker = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -100,14 +93,11 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
             }
         };
 
-        endDatePicker = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                endDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
-                        23, 59, 59, 999);
-                summaryListAdapter.updateEndDate(endDate);
-                fragmentListener.onEndDateUpdated(endDate);
-            }
+        endDatePicker = (view, year, monthOfYear, dayOfMonth) -> {
+            endDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
+                    23, 59, 59, 999);
+            summaryListAdapter.updateEndDate(endDate);
+            fragmentListener.onEndDateUpdated(endDate);
         };
 
         return fragmentView;
