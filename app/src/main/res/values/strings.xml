@@ -103,6 +103,7 @@
     <string name="settings">Settings</string>
     <string name="change_email">Change email</string>
     <string name="change_password">Change password</string>
+    <string name="manage_sessions">Manage sessions</string>
     <string name="sign_out">Sign out</string>
     <string name="signing_out">Signing out...</string>
     <string name="about">About</string>
@@ -229,5 +230,7 @@
     <!-- Preference Messages -->
     <string name="change_email_message">Change your account email address.</string>
     <string name="change_password_message">Change your account password.</string>
+    <string name="manage_sessions_message">Manage the connected devices for your account.</string>
+    <string name="title_activity_sessions">Sessions</string>
 
 </resources>

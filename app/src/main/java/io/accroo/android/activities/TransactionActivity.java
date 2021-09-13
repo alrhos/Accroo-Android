@@ -115,33 +115,30 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 overridePendingTransition(R.anim.enter, R.anim.exit);
             });
 
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!isValidAmount()) {
-                        return;
-                    }
-                    if (!isCategorySelected()) {
-                        return;
-                    }
+            submitButton.setOnClickListener(view -> {
+                if (!isValidAmount()) {
+                    return;
+                }
+                if (!isCategorySelected()) {
+                    return;
+                }
 
-                    progressDialog.show();
+                progressDialog.show();
 
-                    String formattedDescription = Utils.capitaliseAndTrim(descriptionField.getText().toString());
+                String formattedDescription = Utils.capitaliseAndTrim(descriptionField.getText().toString());
 
-                    if (editing) {
-                        existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
-                        existingTransaction.setSubCategoryId(selectedSubCategoryID);
-                        existingTransaction.setDate(date);
-                        existingTransaction.setDescription(formattedDescription);
-                        apiService.updateTransaction(existingTransaction);
-                    } else {
-                        newTransaction = new Transaction(selectedSubCategoryID,
-                                date.toDateTime(),
-                                Double.parseDouble(amountField.getText().toString()),
-                                formattedDescription);
-                        apiService.createTransaction(newTransaction);
-                    }
+                if (editing) {
+                    existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
+                    existingTransaction.setSubCategoryId(selectedSubCategoryID);
+                    existingTransaction.setDate(date);
+                    existingTransaction.setDescription(formattedDescription);
+                    apiService.updateTransaction(existingTransaction);
+                } else {
+                    newTransaction = new Transaction(selectedSubCategoryID,
+                            date.toDateTime(),
+                            Double.parseDouble(amountField.getText().toString()),
+                            formattedDescription);
+                    apiService.createTransaction(newTransaction);
                 }
             });
         }

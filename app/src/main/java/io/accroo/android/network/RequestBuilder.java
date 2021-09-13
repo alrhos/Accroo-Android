@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class RequestBuilder {
 
-    private final static String BASE_URL =               "https://api.accroo.io/v2/";
+    private final static String BASE_URL =               "https://api-dev.accroo.io/v2/";
     private final static String CLIENT_VERSION_KEY =     "Accroo-Client";
     private final static String CLIENT_VERSION_VALUE =   "Android " + BuildConfig.VERSION_NAME;
     private final static String RECAPTCHA_TOKEN_KEY =    "Recaptcha-Token";
@@ -162,6 +162,23 @@ public class RequestBuilder {
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonArrayRequest getSessions(int index, final RequestCoordinator coordinator,
+                                               final String accessToken) throws JSONException {
+        String url = BASE_URL + SESSIONS;
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();

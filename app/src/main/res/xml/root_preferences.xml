@@ -32,6 +32,14 @@
             app:summary="@string/change_password_message">
         </Preference>
 
+        <Preference
+            app:key="manage_sessions"
+            app:icon="@drawable/ic_phone"
+            app:title="@string/manage_sessions"
+            app:summary="@string/manage_sessions_message">
+
+        </Preference>
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/general">

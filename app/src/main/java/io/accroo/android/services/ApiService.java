@@ -408,6 +408,10 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
         }
     }
 
+    public void getSessions() {
+
+    }
+
     public void createAccount(final AuthCredentials authCredentials) {
         dataReceiver = new String[1];
         coordinator = new RequestCoordinator(context, this, dataReceiver) {
