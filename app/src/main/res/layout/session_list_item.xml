@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/device_icon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="13dp"
+        app:srcCompat="@drawable/ic_android"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:textAppearance="@style/Heading"
+        app:layout_constraintStart_toEndOf="@+id/device_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/last_active"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="@style/SmallFont"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/device_icon"
+        app:layout_constraintTop_toBottomOf="@+id/device_name" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/revoke_session"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="13dp"-->
+<!--        app:tint="@color/colorPrimary"-->
+<!--        android:paddingTop="3dp"-->
+<!--        app:srcCompat="@drawable/ic_delete"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

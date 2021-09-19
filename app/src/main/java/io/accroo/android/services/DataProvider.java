@@ -6,6 +6,7 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.GeneralCategoryComparator;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.RootCategory;
+import io.accroo.android.model.SessionData;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.SubCategoryComparator;
 import io.accroo.android.model.Transaction;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 public class DataProvider {
 
+    public static ArrayList<SessionData> sessions = new ArrayList<>();
     private static ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private static ArrayList<SubCategory> subCategories = new ArrayList<>();
     private static ArrayList<Transaction> transactions = new ArrayList<>();
@@ -86,6 +88,14 @@ public class DataProvider {
 
         Collections.sort(generalCategories, new GeneralCategoryComparator());
         Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
+    }
+
+    public static ArrayList<SessionData> getSessions() {
+        return sessions;
+    }
+
+    public static void setSessions(ArrayList<SessionData> sessions) {
+        DataProvider.sessions = sessions;
     }
 
     public static RootCategory[] getRootCategories() {

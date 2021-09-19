@@ -152,6 +152,13 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
+                case ApiService.GET_SESSIONS:
+
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.getSessions(0, coordinator, accessToken));
+
+                    return true;
+
                 case ApiService.INITIALIZE_ACCOUNT_DATA:
 
                     userId = CredentialService.getInstance(context).getEntry(CredentialService.USER_ID_KEY);

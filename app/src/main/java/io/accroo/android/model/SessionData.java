@@ -87,4 +87,5 @@ public class SessionData {
                 ", dateLastRefreshed='" + dateLastRefreshed + '\'' +
                 '}';
     }
+
 }

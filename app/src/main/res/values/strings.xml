@@ -154,6 +154,9 @@
     <string name="accroo_support_email">support@accroo.io</string>
     <string name="email_chooser">Contact via</string>
     <string name="no_email_client">No email app available</string>
+    <string name="unknown">Unknown</string>
+    <string name="revoke">Revoke</string>
+
 
     <string name="licenses_info">
         <![CDATA[

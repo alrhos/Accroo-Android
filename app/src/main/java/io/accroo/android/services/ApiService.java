@@ -56,6 +56,7 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     public final static int CHECK_EMAIL_AVAILABILITY =  20;
     public final static int INITIALIZE_ACCOUNT_DATA =   21;
     public final static int GET_VISITOR_TOKEN =         22;
+    public final static int GET_SESSIONS =              23;
 
     public final static int GENERIC_ERROR =             1000;
     public final static int TIMEOUT_ERROR =             1001;
@@ -409,7 +410,24 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
     }
 
     public void getSessions() {
+        dataReceiver = new String[1];
+        coordinator = new RequestCoordinator(context, this, dataReceiver) {
+            @Override
+            protected void onSuccess() {
+                new PostRequestTask(GET_SESSIONS, ApiService.this, context,
+                        null).execute(dataReceiver);
+            }
 
+            @Override
+            protected void onFailure(int errorCode) {
+                requestOutcome.onFailure(GET_SESSIONS, errorCode);
+            }
+        };
+
+        preRequestTask = new PreRequestTask(GET_SESSIONS, this, context,
+                coordinator, null);
+        requestType = GET_SESSIONS;
+        submitRequest();
     }
 
     public void createAccount(final AuthCredentials authCredentials) {

@@ -3,7 +3,6 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.EncryptedGeneralCategory;
 import io.accroo.android.model.EncryptedSubCategory;
 import io.accroo.android.model.EncryptedTransaction;
@@ -11,6 +10,7 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Jwt;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.Session;
+import io.accroo.android.model.SessionData;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.GsonUtil;
@@ -100,6 +100,19 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, accessTokenExpiry.toString());
 
+                    return true;
+
+                case ApiService.GET_SESSIONS:
+
+                    //System.out.println(dataReceiver[0][0]);
+                    ArrayList<Session> sessions = GsonUtil.getInstance().listFromJson(dataReceiver[0][0], Session.class);
+                    ArrayList<SessionData> sessionData = new ArrayList<>();
+
+                    for (Session session : sessions) {
+                        sessionData.add(session.decrypt());
+                    }
+
+                    DataProvider.setSessions(sessionData);
                     return true;
 
                 case ApiService.LOAD_DEFAULT_DATA:

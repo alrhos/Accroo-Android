@@ -77,10 +77,16 @@ public class Session extends SecurePayload {
         this.accessToken = accessToken;
     }
 
-    public SessionData decrypt() throws UnsupportedEncodingException {
+    public SessionData decrypt() {
         SecurePayload securePayload = new SecurePayload(getId(), getData(), getNonce());
-        String sessionJson = CryptoManager.getInstance().decrypt(securePayload);
-        SessionData sessionData = GsonUtil.getInstance().fromJson(sessionJson, SessionData.class);
+        SessionData sessionData;
+        try {
+            String sessionJson = CryptoManager.getInstance().decrypt(securePayload);
+            sessionData = GsonUtil.getInstance().fromJson(sessionJson, SessionData.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionData = new SessionData(null, null, null);
+        }
         sessionData.setId(getId());
         sessionData.setDateCreated(this.dateCreated);
         sessionData.setDateLastRefreshed(this.dateLastRefreshed);
