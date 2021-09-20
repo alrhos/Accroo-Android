@@ -91,12 +91,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapterInteractionListener.onTransactionSelected(transaction);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> adapterInteractionListener.onTransactionSelected(transaction));
     }
 
     @Override

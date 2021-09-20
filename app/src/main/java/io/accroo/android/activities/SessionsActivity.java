@@ -2,6 +2,7 @@ package io.accroo.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -11,10 +12,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import io.accroo.android.R;
 import io.accroo.android.adapters.SessionAdapter;
+import io.accroo.android.model.SessionData;
 import io.accroo.android.services.ApiService;
+import io.accroo.android.services.CredentialService;
 
 
-public class SessionsActivity extends AppCompatActivity implements ApiService.RequestOutcome {
+public class SessionsActivity extends AppCompatActivity implements SessionAdapter.AdapterInteractionListener, ApiService.RequestOutcome {
 
     private SessionAdapter sessionAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -32,7 +35,18 @@ public class SessionsActivity extends AppCompatActivity implements ApiService.Re
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
-        sessionAdapter = new SessionAdapter();
+
+        swipeRefreshLayout = findViewById(R.id.session_swipe_refresh);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        swipeRefreshLayout.setOnRefreshListener(this::refreshSessions);
+
+        String currentSessionId = null;
+        try {
+            currentSessionId = CredentialService.getInstance(getApplicationContext()).getEntry(CredentialService.SESSION_ID_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sessionAdapter = new SessionAdapter(getApplicationContext(), this, currentSessionId);
         recyclerView = findViewById(R.id.session_recycler_view);
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(sessionAdapter);
@@ -40,19 +54,24 @@ public class SessionsActivity extends AppCompatActivity implements ApiService.Re
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        swipeRefreshLayout = findViewById(R.id.session_swipe_refresh);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-
         apiService = new ApiService(this, getApplicationContext());
-
-        swipeRefreshLayout.setRefreshing(true);
-        apiService.getSessions();
+        refreshSessions();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onSessionSelected(SessionData sessionData) {
+
+    }
+
+    private void refreshSessions() {
+        swipeRefreshLayout.setRefreshing(true);
+        apiService.getSessions();
     }
 
     @Override

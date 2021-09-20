@@ -72,64 +72,64 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            if (!LaunchActivity.initialized) {
-                relaunch();
-            } else {
-                setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_main);
 
-                startDate = new DateTime(getIntent().getLongExtra("startDate", -1));
-                endDate = new DateTime(getIntent().getLongExtra("endDate", -1));
+            startDate = new DateTime(getIntent().getLongExtra("startDate", -1));
+            endDate = new DateTime(getIntent().getLongExtra("endDate", -1));
 
-                Toolbar toolbar = findViewById(R.id.main_toolbar);
-                setSupportActionBar(toolbar);
+            Toolbar toolbar = findViewById(R.id.main_toolbar);
+            setSupportActionBar(toolbar);
 
-                PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+            PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
 
-                final ViewPager viewPager = findViewById(R.id.main_viewpager);
-                viewPager.setAdapter(pagerAdapter);
+            final ViewPager viewPager = findViewById(R.id.main_viewpager);
+            viewPager.setAdapter(pagerAdapter);
 
-                final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
-                tabLayout.setupWithViewPager(viewPager);
+            final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
+            tabLayout.setupWithViewPager(viewPager);
 
-                for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                    TabLayout.Tab tab = tabLayout.getTabAt(i);
-                    if (tab != null) {
-                        tab.setCustomView(pagerAdapter.getTabView(i));
-                    }
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null) {
+                    tab.setCustomView(pagerAdapter.getTabView(i));
+                }
+            }
+
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                    animateFab(tab.getPosition());
                 }
 
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        viewPager.setCurrentItem(tab.getPosition());
-                        animateFab(tab.getPosition());
-                    }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {}
 
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {}
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {}
+            });
 
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {}
-                });
+            fab = findViewById(R.id.fab);
 
-                fab = findViewById(R.id.fab);
+            fab.setOnClickListener(view -> {
+                int selectedTab = tabLayout.getSelectedTabPosition();
+                if (selectedTab == 0 || selectedTab == 1) {
+                    startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
+                } else if (selectedTab == 2) {
+                    startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
+                }
+            });
 
-                fab.setOnClickListener(view -> {
-                    int selectedTab = tabLayout.getSelectedTabPosition();
-                    if (selectedTab == 0 || selectedTab == 1) {
-                        startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
-                    } else if (selectedTab == 2) {
-                        startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
-                    }
-                });
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.signing_out));
+            progressDialog.setCancelable(false);
 
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage(getResources().getString(R.string.signing_out));
-                progressDialog.setCancelable(false);
-
-                apiService = new ApiService(this, getApplicationContext());
-            }
+            apiService = new ApiService(this, getApplicationContext());
+        }
     }
 
     protected void animateFab(final int position) {
