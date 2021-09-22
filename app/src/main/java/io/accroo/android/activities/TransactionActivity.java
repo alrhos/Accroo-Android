@@ -198,12 +198,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private void deleteTransaction() {
         AlertDialog.Builder builder = new AlertDialog.Builder(TransactionActivity.this);
         builder.setMessage(R.string.delete_transaction)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.show();
-                        apiService.deleteTransaction(existingTransaction);
-                    }
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    progressDialog.show();
+                    apiService.deleteTransaction(existingTransaction);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {}).create().show();
     }

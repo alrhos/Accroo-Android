@@ -210,11 +210,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             case R.id.sign_out:
                 progressDialog.show();
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        apiService.invalidateSession();
-                    }
-                }, 1500);
+                handler.postDelayed(() -> apiService.invalidateCurrentSession(), 1500);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -379,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                     categoryOverviewFragment.refreshAdapter();
                 }
             }, 250);
-        } else if (requestType == ApiService.INVALIDATE_SESSION) {
+        } else if (requestType == ApiService.INVALIDATE_CURRENT_SESSION) {
             apiService.logout();
             progressDialog.dismiss();
             relaunch();
@@ -389,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (requestType == ApiService.INVALIDATE_SESSION) {
+        if (requestType == ApiService.INVALIDATE_CURRENT_SESSION) {
             apiService.logout();
             progressDialog.dismiss();
             relaunch();

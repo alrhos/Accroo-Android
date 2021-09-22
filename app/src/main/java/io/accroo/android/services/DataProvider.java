@@ -98,6 +98,15 @@ public class DataProvider {
         DataProvider.sessions = sessions;
     }
 
+    public static void deleteSession(SessionData sessionToDelete) {
+        for (SessionData session : sessions) {
+            if (session.getId().equals(sessionToDelete.getId())) {
+                sessions.remove(session);
+                break;
+            }
+        }
+    }
+
     public static RootCategory[] getRootCategories() {
         return rootCategories;
     }

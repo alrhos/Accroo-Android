@@ -156,6 +156,10 @@
     <string name="no_email_client">No email app available</string>
     <string name="unknown">Unknown</string>
     <string name="revoke">Revoke</string>
+    <string name="revoke_session">Revoke this session?</string>
+    <string name="revoking_session">Revoking session…</string>
+    <string name="session_revoked">Session revoked</string>
+    <string name="sign_out_of_device">Sign out of this device?</string>
     <string name="current_device">Current device</string>
     <string name="last_active">Last active %d %s ago</string>
     <string name="day">day</string>

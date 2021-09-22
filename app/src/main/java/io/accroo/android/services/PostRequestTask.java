@@ -30,6 +30,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private Context context;
     private DateTime startDate, endDate;
     private Session session;
+    private SessionData sessionData;
     private DateTime refreshTokenExpiry, accessTokenExpiry;
     private EncryptedTransaction encryptedTransaction;
     private Transaction transaction;
@@ -102,9 +103,15 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
 
                     return true;
 
+                case ApiService.INVALIDATE_SESSION:
+
+                    sessionData = (SessionData) requestVariables.get("sessionData");
+                    DataProvider.deleteSession(sessionData);
+
+                    return true;
+
                 case ApiService.GET_SESSIONS:
 
-                    //System.out.println(dataReceiver[0][0]);
                     ArrayList<Session> sessions = GsonUtil.getInstance().listFromJson(dataReceiver[0][0], Session.class);
                     ArrayList<SessionData> sessionData = new ArrayList<>();
 

@@ -144,11 +144,19 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.INVALIDATE_SESSION:
+                case ApiService.INVALIDATE_CURRENT_SESSION:
 
                     sessionId = (String) requestVariables.get("sessionId");
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken));
+
+                    return true;
+
+                case ApiService.INVALIDATE_SESSION:
+
+                    sessionData = (SessionData) requestVariables.get("sessionData");
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.postSessionInvalidation(0, coordinator, sessionData.getId().toString(), accessToken));
 
                     return true;
 
