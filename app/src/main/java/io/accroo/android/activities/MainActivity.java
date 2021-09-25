@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         R.color.colorAccentSecondary
     };
     private static final int CREATE_FILE = 1;
-    private static final String EXPORT_FILE_NAME = "Accroo data.csv";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("application/csv");
-                intent.putExtra(Intent.EXTRA_TITLE, EXPORT_FILE_NAME);
+                intent.putExtra(Intent.EXTRA_TITLE, Constants.EXPORT_FILE_NAME);
                 startActivityForResult(intent, CREATE_FILE);
                 return true;
             case R.id.settings:

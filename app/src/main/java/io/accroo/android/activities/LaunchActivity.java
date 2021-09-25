@@ -151,6 +151,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             intent.putExtra("username", emailAddress.getText().toString().trim());
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.IM_A_TEAPOT) {
+            MessageDialog.show(LaunchActivity.this,
+                    getResources().getString(R.string.auth_not_allowed_title),
+                    getResources().getString(R.string.auth_not_allowed_message));
         } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||
