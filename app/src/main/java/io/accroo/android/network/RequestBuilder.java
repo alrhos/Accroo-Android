@@ -13,9 +13,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import io.accroo.android.BuildConfig;
-import io.accroo.android.services.ApiService;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +21,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.accroo.android.BuildConfig;
+import io.accroo.android.services.ApiService;
 
 /**
  * Created by oscar on 11/03/17.

@@ -1,17 +1,18 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import io.accroo.android.R;
-import io.accroo.android.database.DataAccess;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import io.accroo.android.R;
+import io.accroo.android.database.DataAccess;
 
 /**
  * Created by oscar on 12/07/17.

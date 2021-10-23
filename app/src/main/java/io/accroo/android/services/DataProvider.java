@@ -2,6 +2,11 @@ package io.accroo.android.services;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.UUID;
+
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.GeneralCategoryComparator;
 import io.accroo.android.model.Key;
@@ -11,11 +16,6 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.SubCategoryComparator;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.model.TransactionComparator;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.UUID;
 
 /**
  * Created by oscar on 27/05/17.

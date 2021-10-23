@@ -4,10 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+
 import io.accroo.android.model.DefaultGeneralCategory;
 import io.accroo.android.model.DefaultSubCategory;
-
-import java.util.ArrayList;
 
 /**
  * Created by oscar on 30/04/17.

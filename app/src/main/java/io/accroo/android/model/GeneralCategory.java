@@ -5,12 +5,12 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-import io.accroo.android.crypto.CryptoManager;
-import io.accroo.android.other.GsonUtil;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import io.accroo.android.crypto.CryptoManager;
+import io.accroo.android.other.GsonUtil;
 
 /**
  * Created by oscar on 4/03/17.

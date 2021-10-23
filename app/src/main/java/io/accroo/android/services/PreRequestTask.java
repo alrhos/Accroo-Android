@@ -5,6 +5,12 @@ import android.os.AsyncTask;
 
 import com.android.volley.toolbox.JsonRequest;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.AuthCredentials;
@@ -20,12 +26,6 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.

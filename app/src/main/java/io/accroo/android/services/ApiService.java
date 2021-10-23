@@ -13,6 +13,8 @@ import com.android.volley.toolbox.JsonRequest;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
+import java.util.HashMap;
+
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.GeneralCategory;
@@ -25,8 +27,6 @@ import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
 import io.accroo.android.other.Utils;
-
-import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.

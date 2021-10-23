@@ -3,6 +3,11 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import io.accroo.android.model.EncryptedGeneralCategory;
 import io.accroo.android.model.EncryptedSubCategory;
 import io.accroo.android.model.EncryptedTransaction;
@@ -14,11 +19,6 @@ import io.accroo.android.model.SessionData;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.GsonUtil;
-
-import org.joda.time.DateTime;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.

@@ -3,10 +3,6 @@ package io.accroo.android.crypto;
 import android.content.Context;
 import android.util.Base64;
 
-import io.accroo.android.model.Key;
-import io.accroo.android.model.SecurePayload;
-import io.accroo.android.services.CredentialService;
-
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
 import org.libsodium.jni.SodiumConstants;
@@ -17,7 +13,10 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.UUID;
+
+import io.accroo.android.model.Key;
+import io.accroo.android.model.SecurePayload;
+import io.accroo.android.services.CredentialService;
 
 /**
  * Created by oscar on 4/03/17.
