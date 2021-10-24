@@ -15,6 +15,7 @@ import org.joda.time.Seconds;
 
 import java.util.HashMap;
 
+import io.accroo.android.R;
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.model.AuthCredentials;
 import io.accroo.android.model.GeneralCategory;
@@ -424,10 +425,11 @@ public class ApiService implements PreRequestTask.PreRequestOutcome, PostRequest
                     requestOutcome.onFailure(LOAD_DEFAULT_DATA, errorCode);
                 }
             };
+            String devicePlatform = context.getResources().getString(R.string.android);
             String deviceBrand = Utils.capitaliseAndTrim(Build.BRAND);
             String deviceModel = Build.MODEL;
             String deviceName = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
-            SessionData sessionData = new SessionData(deviceBrand, deviceModel, deviceName);
+            SessionData sessionData = new SessionData(devicePlatform, deviceBrand, deviceModel, deviceName);
             preRequestVariables.clear();
             preRequestVariables.put("sessionData", sessionData);
             preRequestTask = new PreRequestTask(LOAD_DEFAULT_DATA, this, context,

@@ -84,7 +84,7 @@ public class Session extends SecurePayload {
             sessionData = GsonUtil.getInstance().fromJson(sessionJson, SessionData.class);
         } catch (Exception e) {
             e.printStackTrace();
-            sessionData = new SessionData(null, null, null);
+            sessionData = new SessionData(null, null, null, null);
         }
         sessionData.setId(getId());
         sessionData.setDateCreated(this.dateCreated);

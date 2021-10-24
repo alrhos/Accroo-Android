@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import io.accroo.android.R;
 import io.accroo.android.model.SessionData;
 
 public class Utils {
@@ -82,10 +83,11 @@ public class Utils {
     }
 
     public static SessionData generateSessionData(Context context) {
+        String devicePlatform = context.getString(R.string.android);
         String deviceBrand = capitaliseAndTrim(Build.BRAND);
         String deviceModel = Build.MODEL;
         String deviceName = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
-        return new SessionData(deviceBrand, deviceModel, deviceName);
+        return new SessionData(devicePlatform, deviceBrand, deviceModel, deviceName);
     }
 
 }
