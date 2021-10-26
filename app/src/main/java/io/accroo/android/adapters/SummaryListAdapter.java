@@ -117,19 +117,9 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 summaryViewHolder.startDateView.setText(startDate.toString(dateFormat));
                 summaryViewHolder.endDateView.setText(endDate.toString(dateFormat));
 
-                summaryViewHolder.startDateView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adapterInteractionListener.onStartDateClicked();
-                    }
-                });
+                summaryViewHolder.startDateView.setOnClickListener(v -> adapterInteractionListener.onStartDateClicked());
 
-                summaryViewHolder.endDateView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adapterInteractionListener.onEndDateClicked();
-                    }
-                });
+                summaryViewHolder.endDateView.setOnClickListener(v -> adapterInteractionListener.onEndDateClicked());
 
                 break;
 
@@ -160,20 +150,17 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     ll.addView(a);
                 }
 
-                vh2.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (vh2.expanded) {
-                            vh2.details.setVisibility(View.GONE);
-                            vh2.category.setTextAppearance(R.style.Heading);
-                            vh2.amount.setTextAppearance(R.style.Heading);
-                        } else {
-                            vh2.details.setVisibility(View.VISIBLE);
-                            vh2.category.setTextAppearance(R.style.BoldSubHeading);
-                            vh2.amount.setTextAppearance(R.style.BoldSubHeading);
-                        }
-                        vh2.expanded = !vh2.expanded;
+                vh2.itemView.setOnClickListener(v -> {
+                    if (vh2.expanded) {
+                        vh2.details.setVisibility(View.GONE);
+                        vh2.category.setTextAppearance(R.style.Heading);
+                        vh2.amount.setTextAppearance(R.style.Heading);
+                    } else {
+                        vh2.details.setVisibility(View.VISIBLE);
+                        vh2.category.setTextAppearance(R.style.BoldSubHeading);
+                        vh2.amount.setTextAppearance(R.style.BoldSubHeading);
                     }
+                    vh2.expanded = !vh2.expanded;
                 });
 
                 break;

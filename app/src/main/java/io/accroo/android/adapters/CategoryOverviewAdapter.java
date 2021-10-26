@@ -76,22 +76,12 @@ public class CategoryOverviewAdapter extends RecyclerView.Adapter<CategoryOvervi
             TextView subCategory = v.findViewById(R.id.category_overview_subcategory);
             subCategory.setText(sc.getCategoryName());
 
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    adapterInteractionListener.onSubCategoryClicked(sc);
-                }
-            });
+            v.setOnClickListener(view -> adapterInteractionListener.onSubCategoryClicked(sc));
 
             ll.addView(v);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapterInteractionListener.onGeneralCategoryClicked(gc);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> adapterInteractionListener.onGeneralCategoryClicked(gc));
 
     }
 

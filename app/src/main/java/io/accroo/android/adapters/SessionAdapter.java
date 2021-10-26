@@ -81,20 +81,19 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.SessionV
             int increment;
             if (incrementDays >= 1) {
                 increment = incrementDays;
-                incrementUnit = incrementDays != 1 ? context.getString(R.string.days) : context.getString(R.string.day);
+                incrementUnit = incrementDays == 1 ? context.getString(R.string.day) : context.getString(R.string.days);
             } else if (incrementHours >= 1) {
                 increment = incrementHours;
-                incrementUnit = incrementHours != 1 ? context.getString(R.string.hours) : context.getString(R.string.hour);
+                incrementUnit = incrementHours == 1 ? context.getString(R.string.hour) : context.getString(R.string.hours);
             } else if (incrementMinutes >= 1) {
                 increment = incrementMinutes;
-                incrementUnit = incrementMinutes != 1 ? context.getString(R.string.minutes) : context.getString(R.string.minute);
+                incrementUnit = incrementMinutes == 1 ? context.getString(R.string.minute) : context.getString(R.string.minutes);
             } else {
                 increment = incrementSeconds;
-                incrementUnit = incrementSeconds != 1 ? context.getString(R.string.seconds) : context.getString(R.string.second);
+                incrementUnit = incrementSeconds == 1 ? context.getString(R.string.second) : context.getString(R.string.seconds);
             }
 
             lastActiveLabel = String.format(context.getString(R.string.last_active), increment, incrementUnit);
-            //lastActiveLabel = "Last active " + increment + " " + incrementUnit + " ago";
         }
         holder.lastActive.setText(lastActiveLabel);
         holder.itemView.setOnClickListener(view -> adapterInteractionListener.onSessionSelected(sessionData));

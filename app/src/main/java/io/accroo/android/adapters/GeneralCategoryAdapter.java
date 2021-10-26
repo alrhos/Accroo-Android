@@ -62,12 +62,7 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<GeneralCategory
                 generalCategory.getIconFile(), null, context.getPackageName());
         holder.icon.setImageResource(iconId);
         holder.category.setText(generalCategory.getCategoryName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapterInteractionListener.onGeneralCategorySelected(generalCategory);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> adapterInteractionListener.onGeneralCategorySelected(generalCategory));
     }
 
     @Override
