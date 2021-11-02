@@ -13,9 +13,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import io.accroo.android.BuildConfig;
-import io.accroo.android.services.ApiService;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +21,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.accroo.android.BuildConfig;
+import io.accroo.android.services.ApiService;
 
 /**
  * Created by oscar on 11/03/17.
@@ -162,6 +162,23 @@ public class RequestBuilder {
         JSONObject object = new JSONObject(json);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, object,
                 createJsonObjectResponseListener(index, coordinator), createErrorListener(coordinator)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerMap = new HashMap<>();
+                headerMap.put(CLIENT_VERSION_KEY, CLIENT_VERSION_VALUE);
+                headerMap.put("Authorization", "Bearer " + accessToken);
+                return headerMap;
+            }
+        };
+        request.setRetryPolicy(retryPolicy);
+        return request;
+    }
+
+    public static JsonArrayRequest getSessions(int index, final RequestCoordinator coordinator,
+                                               final String accessToken) throws JSONException {
+        String url = BASE_URL + SESSIONS;
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                createJsonArrayResponseListener(index, coordinator), createErrorListener(coordinator)) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headerMap = new HashMap<>();

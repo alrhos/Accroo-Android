@@ -4,14 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import io.accroo.android.crypto.CryptoManager;
-import io.accroo.android.other.GsonUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import io.accroo.android.crypto.CryptoManager;
+import io.accroo.android.other.GsonUtil;
 
 /**
  * Created by oscar on 24/03/17.

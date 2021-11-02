@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import io.accroo.android.R;
 import io.accroo.android.fragments.SettingsFragment;
 

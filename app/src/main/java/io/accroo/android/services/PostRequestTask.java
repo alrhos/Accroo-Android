@@ -3,7 +3,11 @@ package io.accroo.android.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import io.accroo.android.model.AuthCredentials;
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import io.accroo.android.model.EncryptedGeneralCategory;
 import io.accroo.android.model.EncryptedSubCategory;
 import io.accroo.android.model.EncryptedTransaction;
@@ -11,14 +15,10 @@ import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.model.Jwt;
 import io.accroo.android.model.Key;
 import io.accroo.android.model.Session;
+import io.accroo.android.model.SessionData;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.GsonUtil;
-
-import org.joda.time.DateTime;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.
@@ -30,6 +30,7 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
     private Context context;
     private DateTime startDate, endDate;
     private Session session;
+    private SessionData sessionData;
     private DateTime refreshTokenExpiry, accessTokenExpiry;
     private EncryptedTransaction encryptedTransaction;
     private Transaction transaction;
@@ -100,6 +101,25 @@ public class PostRequestTask extends AsyncTask<String[], Boolean, Boolean> {
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_KEY, session.getAccessToken().getToken());
                     CredentialService.getInstance(context).saveEntry(CredentialService.ACCESS_TOKEN_EXPIRY_KEY, accessTokenExpiry.toString());
 
+                    return true;
+
+                case ApiService.INVALIDATE_SESSION:
+
+                    sessionData = (SessionData) requestVariables.get("sessionData");
+                    DataProvider.deleteSession(sessionData);
+
+                    return true;
+
+                case ApiService.GET_SESSIONS:
+
+                    ArrayList<Session> sessions = GsonUtil.getInstance().listFromJson(dataReceiver[0][0], Session.class);
+                    ArrayList<SessionData> sessionData = new ArrayList<>();
+
+                    for (Session session : sessions) {
+                        sessionData.add(session.decrypt());
+                    }
+
+                    DataProvider.setSessions(sessionData);
                     return true;
 
                 case ApiService.LOAD_DEFAULT_DATA:

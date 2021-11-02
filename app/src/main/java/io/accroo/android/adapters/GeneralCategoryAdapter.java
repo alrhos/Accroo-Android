@@ -1,19 +1,20 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
 import io.accroo.android.services.DataProvider;
-
-import java.util.ArrayList;
 
 /**
  * Created by oscar on 22/07/17.
@@ -61,12 +62,7 @@ public class GeneralCategoryAdapter extends RecyclerView.Adapter<GeneralCategory
                 generalCategory.getIconFile(), null, context.getPackageName());
         holder.icon.setImageResource(iconId);
         holder.category.setText(generalCategory.getCategoryName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapterInteractionListener.onGeneralCategorySelected(generalCategory);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> adapterInteractionListener.onGeneralCategorySelected(generalCategory));
     }
 
     @Override

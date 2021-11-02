@@ -15,4 +15,5 @@ public class Constants {
     public static final String ACCROO_SUPPORT_EMAIL = "support@accroo.io";
     public static final String FORGOT_PASSWORD_URL = "https://accroo.io/forgot-password";
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("dd MMM yyyy");
+    public static final String EXPORT_FILE_NAME = "Accroo data.csv";
 }

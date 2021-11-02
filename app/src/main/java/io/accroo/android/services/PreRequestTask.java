@@ -5,6 +5,12 @@ import android.os.AsyncTask;
 
 import com.android.volley.toolbox.JsonRequest;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import io.accroo.android.crypto.CryptoManager;
 import io.accroo.android.database.DataAccess;
 import io.accroo.android.model.AuthCredentials;
@@ -20,12 +26,6 @@ import io.accroo.android.model.Transaction;
 import io.accroo.android.network.RequestBuilder;
 import io.accroo.android.network.RequestCoordinator;
 import io.accroo.android.other.GsonUtil;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * Created by oscar on 4/07/17.
@@ -144,11 +144,26 @@ public class PreRequestTask extends AsyncTask<Void, Boolean, Boolean> {
 
                     return true;
 
-                case ApiService.INVALIDATE_SESSION:
+                case ApiService.INVALIDATE_CURRENT_SESSION:
 
                     sessionId = (String) requestVariables.get("sessionId");
                     accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
                     requests.add(RequestBuilder.postSessionInvalidation(0, coordinator, sessionId, accessToken));
+
+                    return true;
+
+                case ApiService.INVALIDATE_SESSION:
+
+                    sessionData = (SessionData) requestVariables.get("sessionData");
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.postSessionInvalidation(0, coordinator, sessionData.getId().toString(), accessToken));
+
+                    return true;
+
+                case ApiService.GET_SESSIONS:
+
+                    accessToken = CredentialService.getInstance(context).getEntry(CredentialService.ACCESS_TOKEN_KEY);
+                    requests.add(RequestBuilder.getSessions(0, coordinator, accessToken));
 
                     return true;
 

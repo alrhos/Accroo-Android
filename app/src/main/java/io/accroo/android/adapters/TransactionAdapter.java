@@ -1,17 +1,17 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
@@ -20,8 +20,6 @@ import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Transaction;
 import io.accroo.android.other.Constants;
 import io.accroo.android.services.DataProvider;
-
-import java.util.ArrayList;
 
 /**
  * Created by oscar on 6/06/17.
@@ -91,12 +89,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapterInteractionListener.onTransactionSelected(transaction);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> adapterInteractionListener.onTransactionSelected(transaction));
     }
 
     @Override

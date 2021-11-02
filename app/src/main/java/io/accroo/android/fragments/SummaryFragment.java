@@ -3,16 +3,16 @@ package io.accroo.android.fragments;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.joda.time.DateTime;
 
@@ -83,14 +83,11 @@ public class SummaryFragment extends Fragment implements SummaryListAdapter.Adap
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark));
         swipeRefreshLayout.setOnRefreshListener(() -> fragmentListener.onSummarySwipeRefresh());
 
-        startDatePicker = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                startDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
-                        0, 0);
-                summaryListAdapter.updateStartDate(startDate);
-                fragmentListener.onStartDateUpdated(startDate);
-            }
+        startDatePicker = (view, year, monthOfYear, dayOfMonth) -> {
+            startDate = new DateTime(year, monthOfYear + 1, dayOfMonth,
+                    0, 0);
+            summaryListAdapter.updateStartDate(startDate);
+            fragmentListener.onStartDateUpdated(startDate);
         };
 
         endDatePicker = (view, year, monthOfYear, dayOfMonth) -> {

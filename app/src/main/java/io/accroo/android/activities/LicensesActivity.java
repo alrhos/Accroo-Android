@@ -1,8 +1,9 @@
 package io.accroo.android.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.accroo.android.R;
 

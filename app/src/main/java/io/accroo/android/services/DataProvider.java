@@ -2,19 +2,20 @@ package io.accroo.android.services;
 
 import org.joda.time.DateTime;
 
-import io.accroo.android.model.GeneralCategory;
-import io.accroo.android.model.GeneralCategoryComparator;
-import io.accroo.android.model.Key;
-import io.accroo.android.model.RootCategory;
-import io.accroo.android.model.SubCategory;
-import io.accroo.android.model.SubCategoryComparator;
-import io.accroo.android.model.Transaction;
-import io.accroo.android.model.TransactionComparator;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.UUID;
+
+import io.accroo.android.model.GeneralCategory;
+import io.accroo.android.model.GeneralCategoryComparator;
+import io.accroo.android.model.Key;
+import io.accroo.android.model.RootCategory;
+import io.accroo.android.model.SessionData;
+import io.accroo.android.model.SubCategory;
+import io.accroo.android.model.SubCategoryComparator;
+import io.accroo.android.model.Transaction;
+import io.accroo.android.model.TransactionComparator;
 
 /**
  * Created by oscar on 27/05/17.
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 public class DataProvider {
 
+    public static ArrayList<SessionData> sessions = new ArrayList<>();
     private static ArrayList<GeneralCategory> generalCategories = new ArrayList<>();
     private static ArrayList<SubCategory> subCategories = new ArrayList<>();
     private static ArrayList<Transaction> transactions = new ArrayList<>();
@@ -86,6 +88,23 @@ public class DataProvider {
 
         Collections.sort(generalCategories, new GeneralCategoryComparator());
         Collections.sort(transactions, Collections.reverseOrder(new TransactionComparator()));
+    }
+
+    public static ArrayList<SessionData> getSessions() {
+        return sessions;
+    }
+
+    public static void setSessions(ArrayList<SessionData> sessions) {
+        DataProvider.sessions = sessions;
+    }
+
+    public static void deleteSession(SessionData sessionToDelete) {
+        for (SessionData session : sessions) {
+            if (session.getId().equals(sessionToDelete.getId())) {
+                sessions.remove(session);
+                break;
+            }
+        }
     }
 
     public static RootCategory[] getRootCategories() {

@@ -3,10 +3,6 @@ package io.accroo.android.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +10,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.safetynet.SafetyNet;
@@ -151,6 +150,10 @@ public class LaunchActivity extends AppCompatActivity implements ApiService.Requ
             intent.putExtra("username", emailAddress.getText().toString().trim());
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.IM_A_TEAPOT) {
+            MessageDialog.show(LaunchActivity.this,
+                    getResources().getString(R.string.auth_not_allowed_title),
+                    getResources().getString(R.string.auth_not_allowed_message));
         } else if (requestType == ApiService.GET_VERIFICATION_CODE && errorCode == ApiService.UNPROCESSABLE_ENTITY) {
             inputEmailAddress.setError(getResources().getString(R.string.account_not_found));
         } else if (errorCode == ApiService.CONNECTION_ERROR || errorCode == ApiService.TIMEOUT_ERROR ||

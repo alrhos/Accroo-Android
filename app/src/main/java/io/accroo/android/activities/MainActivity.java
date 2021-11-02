@@ -8,17 +8,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.opencsv.CSVWriter;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +19,17 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.opencsv.CSVWriter;
 
 import org.joda.time.DateTime;
 
@@ -68,68 +68,67 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
         R.color.colorAccentSecondary
     };
     private static final int CREATE_FILE = 1;
-    private static final String EXPORT_FILE_NAME = "Accroo data.csv";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            if (!LaunchActivity.initialized) {
-                relaunch();
-            } else {
-                setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        if (!LaunchActivity.initialized) {
+            relaunch();
+        } else {
+            setContentView(R.layout.activity_main);
 
-                startDate = new DateTime(getIntent().getLongExtra("startDate", -1));
-                endDate = new DateTime(getIntent().getLongExtra("endDate", -1));
+            startDate = new DateTime(getIntent().getLongExtra("startDate", -1));
+            endDate = new DateTime(getIntent().getLongExtra("endDate", -1));
 
-                Toolbar toolbar = findViewById(R.id.main_toolbar);
-                setSupportActionBar(toolbar);
+            Toolbar toolbar = findViewById(R.id.main_toolbar);
+            setSupportActionBar(toolbar);
 
-                PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+            PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
 
-                final ViewPager viewPager = findViewById(R.id.main_viewpager);
-                viewPager.setAdapter(pagerAdapter);
+            final ViewPager viewPager = findViewById(R.id.main_viewpager);
+            viewPager.setAdapter(pagerAdapter);
 
-                final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
-                tabLayout.setupWithViewPager(viewPager);
+            final TabLayout tabLayout = findViewById(R.id.main_tab_layout);
+            tabLayout.setupWithViewPager(viewPager);
 
-                for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                    TabLayout.Tab tab = tabLayout.getTabAt(i);
-                    if (tab != null) {
-                        tab.setCustomView(pagerAdapter.getTabView(i));
-                    }
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null) {
+                    tab.setCustomView(pagerAdapter.getTabView(i));
+                }
+            }
+
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                    animateFab(tab.getPosition());
                 }
 
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        viewPager.setCurrentItem(tab.getPosition());
-                        animateFab(tab.getPosition());
-                    }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {}
 
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {}
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {}
+            });
 
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {}
-                });
+            fab = findViewById(R.id.fab);
 
-                fab = findViewById(R.id.fab);
+            fab.setOnClickListener(view -> {
+                int selectedTab = tabLayout.getSelectedTabPosition();
+                if (selectedTab == 0 || selectedTab == 1) {
+                    startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
+                } else if (selectedTab == 2) {
+                    startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
+                }
+            });
 
-                fab.setOnClickListener(view -> {
-                    int selectedTab = tabLayout.getSelectedTabPosition();
-                    if (selectedTab == 0 || selectedTab == 1) {
-                        startActivity(new Intent(getApplicationContext(), TransactionActivity.class));
-                    } else if (selectedTab == 2) {
-                        startActivity(new Intent(getApplicationContext(), CategoryActivity.class));
-                    }
-                });
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage(getResources().getString(R.string.signing_out));
+            progressDialog.setCancelable(false);
 
-                progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage(getResources().getString(R.string.signing_out));
-                progressDialog.setCancelable(false);
-
-                apiService = new ApiService(this, getApplicationContext());
-            }
+            apiService = new ApiService(this, getApplicationContext());
+        }
     }
 
     protected void animateFab(final int position) {
@@ -201,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                 Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("application/csv");
-                intent.putExtra(Intent.EXTRA_TITLE, EXPORT_FILE_NAME);
+                intent.putExtra(Intent.EXTRA_TITLE, Constants.EXPORT_FILE_NAME);
                 startActivityForResult(intent, CREATE_FILE);
                 return true;
             case R.id.settings:
@@ -210,11 +209,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
             case R.id.sign_out:
                 progressDialog.show();
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        apiService.invalidateSession();
-                    }
-                }, 1500);
+                handler.postDelayed(() -> apiService.invalidateCurrentSession(), 1500);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -379,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
                     categoryOverviewFragment.refreshAdapter();
                 }
             }, 250);
-        } else if (requestType == ApiService.INVALIDATE_SESSION) {
+        } else if (requestType == ApiService.INVALIDATE_CURRENT_SESSION) {
             apiService.logout();
             progressDialog.dismiss();
             relaunch();
@@ -389,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements SummaryFragment.F
     @Override
     public void onFailure(int requestType, int errorCode) {
         hideRefreshing();
-        if (requestType == ApiService.INVALIDATE_SESSION) {
+        if (requestType == ApiService.INVALIDATE_CURRENT_SESSION) {
             apiService.logout();
             progressDialog.dismiss();
             relaunch();

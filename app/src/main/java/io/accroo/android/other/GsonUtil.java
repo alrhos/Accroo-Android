@@ -8,8 +8,8 @@ import com.google.gson.GsonBuilder;
 import org.joda.time.DateTime;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class GsonUtil {
     private static GsonUtil instance = null;

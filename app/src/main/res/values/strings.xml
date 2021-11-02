@@ -103,6 +103,7 @@
     <string name="settings">Settings</string>
     <string name="change_email">Change email</string>
     <string name="change_password">Change password</string>
+    <string name="manage_sessions">Manage sessions</string>
     <string name="sign_out">Sign out</string>
     <string name="signing_out">Signing out...</string>
     <string name="about">About</string>
@@ -153,6 +154,24 @@
     <string name="accroo_support_email">support@accroo.io</string>
     <string name="email_chooser">Contact via</string>
     <string name="no_email_client">No email app available</string>
+    <string name="unknown">Unknown</string>
+    <string name="revoke">Revoke</string>
+    <string name="revoke_session">Revoke this session?</string>
+    <string name="revoking_session">Revoking session…</string>
+    <string name="session_revoked">Session revoked</string>
+    <string name="sign_out_of_device">Sign out of this device?</string>
+    <string name="current_device">Current device</string>
+    <string name="last_active">Last active %d %s ago</string>
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="hour">hour</string>
+    <string name="hours">hours</string>
+    <string name="minute">minute</string>
+    <string name="minutes">minutes</string>
+    <string name="second">second</string>
+    <string name="seconds">seconds</string>
+    <string name="android">Android</string>
+
 
     <string name="licenses_info">
         <![CDATA[
@@ -229,5 +248,7 @@
     <!-- Preference Messages -->
     <string name="change_email_message">Change your account email address.</string>
     <string name="change_password_message">Change your account password.</string>
+    <string name="manage_sessions_message">Manage the connected devices for your account.</string>
+    <string name="title_activity_sessions">Sessions</string>
 
 </resources>

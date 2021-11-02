@@ -10,6 +10,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import io.accroo.android.R;
 import io.accroo.android.activities.ChangeEmailActivity;
 import io.accroo.android.activities.KeyDecryptionActivity;
+import io.accroo.android.activities.SessionsActivity;
 import io.accroo.android.services.CredentialService;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -45,7 +46,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
             return true;
         });
-    }
 
+        Preference sessionPreference = findPreference("manage_sessions");
+        sessionPreference.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(requireActivity(), SessionsActivity.class);
+            startActivity(intent);
+            return true;
+        });
+    }
 
 }

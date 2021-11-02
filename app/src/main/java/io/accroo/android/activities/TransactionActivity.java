@@ -3,18 +3,17 @@ package io.accroo.android.activities;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.DateTime;
 
@@ -115,33 +114,30 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
                 overridePendingTransition(R.anim.enter, R.anim.exit);
             });
 
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!isValidAmount()) {
-                        return;
-                    }
-                    if (!isCategorySelected()) {
-                        return;
-                    }
+            submitButton.setOnClickListener(view -> {
+                if (!isValidAmount()) {
+                    return;
+                }
+                if (!isCategorySelected()) {
+                    return;
+                }
 
-                    progressDialog.show();
+                progressDialog.show();
 
-                    String formattedDescription = Utils.capitaliseAndTrim(descriptionField.getText().toString());
+                String formattedDescription = Utils.capitaliseAndTrim(descriptionField.getText().toString());
 
-                    if (editing) {
-                        existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
-                        existingTransaction.setSubCategoryId(selectedSubCategoryID);
-                        existingTransaction.setDate(date);
-                        existingTransaction.setDescription(formattedDescription);
-                        apiService.updateTransaction(existingTransaction);
-                    } else {
-                        newTransaction = new Transaction(selectedSubCategoryID,
-                                date.toDateTime(),
-                                Double.parseDouble(amountField.getText().toString()),
-                                formattedDescription);
-                        apiService.createTransaction(newTransaction);
-                    }
+                if (editing) {
+                    existingTransaction.setAmount(Double.parseDouble(amountField.getText().toString()));
+                    existingTransaction.setSubCategoryId(selectedSubCategoryID);
+                    existingTransaction.setDate(date);
+                    existingTransaction.setDescription(formattedDescription);
+                    apiService.updateTransaction(existingTransaction);
+                } else {
+                    newTransaction = new Transaction(selectedSubCategoryID,
+                            date.toDateTime(),
+                            Double.parseDouble(amountField.getText().toString()),
+                            formattedDescription);
+                    apiService.createTransaction(newTransaction);
                 }
             });
         }
@@ -201,12 +197,9 @@ public class TransactionActivity extends AppCompatActivity implements ApiService
     private void deleteTransaction() {
         AlertDialog.Builder builder = new AlertDialog.Builder(TransactionActivity.this);
         builder.setMessage(R.string.delete_transaction)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.show();
-                        apiService.deleteTransaction(existingTransaction);
-                    }
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    progressDialog.show();
+                    apiService.deleteTransaction(existingTransaction);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {}).create().show();
     }

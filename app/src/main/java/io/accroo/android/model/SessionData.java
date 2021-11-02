@@ -10,12 +10,14 @@ import io.accroo.android.other.GsonUtil;
 public class SessionData {
 
     private UUID id;
+    @Expose private String devicePlatform;
     @Expose private String deviceBrand;
     @Expose private String deviceModel;
     @Expose private String deviceName;
     private String dateCreated, dateLastRefreshed;
 
-    public SessionData(String deviceBrand, String deviceModel, String deviceName) {
+    public SessionData(String devicePlatform, String deviceBrand, String deviceModel, String deviceName) {
+        this.devicePlatform = devicePlatform;
         this.deviceBrand = deviceBrand;
         this.deviceModel = deviceModel;
         this.deviceName = deviceName;
@@ -27,6 +29,14 @@ public class SessionData {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getDevicePlatform() {
+        return devicePlatform;
+    }
+
+    public void setDevicePlatform(String devicePlatform) {
+        this.devicePlatform = devicePlatform;
     }
 
     public String getDeviceBrand() {
@@ -80,6 +90,7 @@ public class SessionData {
     public String toString() {
         return "SessionData{" +
                 "id=" + id +
+                ", devicePlatform='" + devicePlatform + '\'' +
                 ", deviceBrand='" + deviceBrand + '\'' +
                 ", deviceModel='" + deviceModel + '\'' +
                 ", deviceName='" + deviceName + '\'' +
@@ -87,4 +98,5 @@ public class SessionData {
                 ", dateLastRefreshed='" + dateLastRefreshed + '\'' +
                 '}';
     }
+
 }

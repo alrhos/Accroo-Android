@@ -1,7 +1,9 @@
 package io.accroo.android.other;
 
 import android.content.Context;
+
 import androidx.appcompat.app.AlertDialog;
+
 import io.accroo.android.R;
 
 public class MessageDialog {

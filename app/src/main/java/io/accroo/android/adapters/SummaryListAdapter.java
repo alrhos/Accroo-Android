@@ -1,8 +1,6 @@
 package io.accroo.android.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +8,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
 
 import io.accroo.android.R;
 import io.accroo.android.model.GeneralCategory;
@@ -20,8 +23,6 @@ import io.accroo.android.model.RootCategory;
 import io.accroo.android.model.SubCategory;
 import io.accroo.android.model.Summary;
 import io.accroo.android.services.DataProvider;
-
-import java.util.ArrayList;
 
 /**
  * Created by oscar on 27/05/17.
@@ -116,19 +117,9 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 summaryViewHolder.startDateView.setText(startDate.toString(dateFormat));
                 summaryViewHolder.endDateView.setText(endDate.toString(dateFormat));
 
-                summaryViewHolder.startDateView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adapterInteractionListener.onStartDateClicked();
-                    }
-                });
+                summaryViewHolder.startDateView.setOnClickListener(v -> adapterInteractionListener.onStartDateClicked());
 
-                summaryViewHolder.endDateView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adapterInteractionListener.onEndDateClicked();
-                    }
-                });
+                summaryViewHolder.endDateView.setOnClickListener(v -> adapterInteractionListener.onEndDateClicked());
 
                 break;
 
@@ -159,20 +150,17 @@ public class SummaryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     ll.addView(a);
                 }
 
-                vh2.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (vh2.expanded) {
-                            vh2.details.setVisibility(View.GONE);
-                            vh2.category.setTextAppearance(R.style.Heading);
-                            vh2.amount.setTextAppearance(R.style.Heading);
-                        } else {
-                            vh2.details.setVisibility(View.VISIBLE);
-                            vh2.category.setTextAppearance(R.style.BoldSubHeading);
-                            vh2.amount.setTextAppearance(R.style.BoldSubHeading);
-                        }
-                        vh2.expanded = !vh2.expanded;
+                vh2.itemView.setOnClickListener(v -> {
+                    if (vh2.expanded) {
+                        vh2.details.setVisibility(View.GONE);
+                        vh2.category.setTextAppearance(R.style.Heading);
+                        vh2.amount.setTextAppearance(R.style.Heading);
+                    } else {
+                        vh2.details.setVisibility(View.VISIBLE);
+                        vh2.category.setTextAppearance(R.style.BoldSubHeading);
+                        vh2.amount.setTextAppearance(R.style.BoldSubHeading);
                     }
+                    vh2.expanded = !vh2.expanded;
                 });
 
                 break;

@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.SessionsActivity"
+            android:label="@string/title_activity_sessions"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ConfirmPasswordActivity"
             android:screenOrientation="portrait"
